@@ -35,9 +35,11 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
     const text = strip(body);
     const title = cleanTitle(headline(text));
     if (!title || CHATTER.test(title) || !isPromo(title) || !STRONG.test(title)) continue;
-    // prefer the exchange's own article link inside the post
-    const links = [...body.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => decodeEntities(m[1])).filter((u) => !/t\.me\/|twitter\.com|x\.com\/(?!.*status)/.test(u));
-    const url = links[0] ?? `https://t.me/${post}`;
+    // link to the exchange's own article when the post has one; otherwise to the post itself
+    // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)
+    const own = new URL(site).hostname.replace(/^(www|app)\./, "");
+    const links = [...body.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => decodeEntities(m[1]));
+    const url = links.find((u) => { try { const h = new URL(u).hostname; return h === own || h.endsWith("." + own); } catch { return false; } }) ?? `https://t.me/${post}`;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
       category: classify(title) !== "other" ? classify(title) : classify(text.slice(0, 400)), publishedAt: date, reward: parseReward(title), tags: [],

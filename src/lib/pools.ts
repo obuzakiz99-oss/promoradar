@@ -21,10 +21,10 @@ export const LP_API = ["binance", "bitget", "gate", "mexc", "kucoin", "lbank"] a
 export type LpExchange = (typeof LP_API)[number];
 /** Exchanges with Launchpool-style products but no open API — tracked through their official announcements. */
 export const LP_ANN: Record<string, string> = {
-  bybit: "https://www.bybit.com/en/trade/spot/launchpool", okx: "https://www.okx.com/jumpstart", htx: "https://www.htx.com/en-us/primepool/", bingx: "https://bingx.com/en/launchpool",
-  phemex: "https://phemex.com/earn-crypto/launchpool", bitmart: "https://www.bitmart.com/en-US/launchpool", coinex: "https://www.coinex.com/en/announcements",
-  xt: "https://www.xt.com/en/launchpool", weex: "https://www.weex.com/events", bitunix: "https://www.bitunix.com/activity",
-  whitebit: "https://whitebit.com/staking", bitrue: "https://www.bitrue.com/power-piggy",
+  bybit: "https://www.bybit.com/en/trade/spot/launchpool", okx: "https://www.okx.com/jumpstart", htx: "https://www.htx.com/en-us/financial/earn/", bingx: "https://bingx.com/en/launchpool",
+  phemex: "https://phemex.com/earn-crypto/launchpool", bitmart: "https://www.bitmart.com/en-US/launchpad", coinex: "https://www.coinex.com/en/announcements",
+  xt: "https://www.xt.com/en/activity/rewards-hub", weex: "https://www.weex.com/rewardhub", bitunix: "https://www.bitunix.com/activity/welfare-center",
+  whitebit: "https://whitebit.com/earn", bitrue: "https://www.bitrue.com/staking",
 };
 /** Titles that announce a Launchpool-type campaign (stake X → earn new token). */
 export const LP_RE = /launch ?pool|pool ?x\b|gem ?pool|jumpstart|prime ?pool|launchpad|boost ?hub|power ?piggy|stake .{1,40}(to )?(earn|mine|share)|staking (event|pool).{0,40}(new|airdrop)|mining pool|flash earn|subscribe .{1,40} to share|hold .{1,30} to share .{0,30}(token|[A-Z]{2,})/i;
