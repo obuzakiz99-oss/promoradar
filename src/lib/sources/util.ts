@@ -1,9 +1,28 @@
+import fs from "node:fs";
+import path from "node:path";
 import { SITE } from "@/config/site";
 
 export const UA = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0; +https://promoradar.example)", Accept: "application/json, text/html;q=0.9, application/xml;q=0.8, */*;q=0.5", "Accept-Language": "en-US,en;q=0.9" };
 
+/**
+ * EU relay: GitHub builds on US servers where OKX announcements and the Bybit API don't answer. A script on the owner's
+ * laptop fetches those exact official URLs and pushes relay/relay.json (branch `relay`); a fresh copy (< 3 h) is used
+ * instead of the live request. Locally (no relay folder) everything is fetched live.
+ */
+let RELAY: Record<string, { at: number; body: string }> | null = null;
+function fromRelay(url: string): string | undefined {
+  if (RELAY === null) {
+    try { RELAY = JSON.parse(fs.readFileSync(path.join(process.cwd(), "relay", "relay.json"), "utf8")).items ?? {}; }
+    catch { RELAY = {}; }
+  }
+  const hit = RELAY![url];
+  return hit && Date.now() - hit.at < 3 * 3600_000 ? hit.body : undefined;
+}
+
 /** Small responses: use Next's fetch cache (ISR). */
 export async function getJson<T = any>(url: string, timeout = 12_000, init?: { method?: string; headers?: Record<string, string>; body?: string }): Promise<T> {
+  const relayed = !init?.body ? fromRelay(url) : undefined;
+  if (relayed) return JSON.parse(relayed) as T;
   const r = await fetch(url, { method: init?.method, body: init?.body, headers: { ...UA, ...init?.headers }, next: { revalidate: SITE.revalidateSeconds }, signal: AbortSignal.timeout(timeout) });
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.json() as Promise<T>;

@@ -31,6 +31,14 @@ jobs:
           ref: data
           path: data
 
+      # OKX / Bybit data relayed from an EU machine (US runners get no answer from them)
+      - name: Get relay branch
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: relay
+          path: relay
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
