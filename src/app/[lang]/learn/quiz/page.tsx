@@ -18,7 +18,7 @@ type Params = Promise<{ lang: string }>;
 // beginners: only the plain dollar stablecoins; bonuses must really be sign-up / welcome offers on the exchange itself
 const SAFE = /^(USDT|USDC)$/;
 const WELCOME = /\b(new ?(user|comer)s?|newcomer|welcome|sign ?up|register|first (deposit|trade)|journey|start your)\b/i;
-const DEFI = /\b(aave|on-?chain|defi|x ?layer|wallet|dex|futures|perp)\b/i;
+const DEFI = /\b(aave|on-?chain|defi|x ?layer|wallet|dex|futures|perp|vip|mena|cis|sea|latam|region|exclusive|exclucsive)\b/i;   // + region-/VIP-only offers
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
