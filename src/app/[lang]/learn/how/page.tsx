@@ -35,13 +35,21 @@ export default async function LearnHow({ params }: { params: Params }) {
         <LearnHeader lang={lang} active="how" title={H.title} sub={H.sub} />
         <div className="mt-8 rounded-2xl border border-lime/25 bg-lime/[0.05] p-5">
           <h2 className="text-sm font-bold uppercase tracking-wider text-lime">{LEARN[lang].guides}</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {GUIDES[lang].map((g) => (
-              <Link key={g.id} href={`/${lang}/learn/guide/${g.id}`} className="flex h-11 items-center gap-2.5 rounded-xl border border-line bg-white/[0.03] pl-1.5 pr-4 text-sm font-bold hover:border-lime/50">
-                <VenueLogo v={venueOf(g.venue)} size={30} rounded="rounded-lg" />{g.title}
-              </Link>
-            ))}
-          </div>
+          {(["cex", "dex"] as const).map((kind) => {
+            const list = GUIDES[lang].filter((g) => (venueOf(g.venue).kind === "cex") === (kind === "cex"));
+            return (
+              <div key={kind} className={kind === "dex" ? "adv mt-4" : "mt-3"}>
+                <div className="mb-2 text-xs font-bold text-ink-3">{kind === "cex" ? "CEX" : "DEX / DeFi"} · {list.length}</div>
+                <div className="flex flex-wrap gap-2">
+                  {list.map((g) => (
+                    <Link key={g.id} href={`/${lang}/learn/guide/${g.id}`} className="flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.03] pl-1.5 pr-3.5 text-sm font-bold hover:border-lime/50">
+                      <VenueLogo v={venueOf(g.venue)} size={26} rounded="rounded-lg" />{venueOf(g.venue).name}{g.steps.some((s) => s.img) ? " 📷" : ""}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
         <nav className="mt-6 flex flex-wrap gap-2 text-sm font-bold">
           {H.sections.map((s) => <a key={s.id} href={`#${s.id}`} className="text-lime hover:underline">#{s.title.split(" /")[0].split(" (")[0]}</a>)}

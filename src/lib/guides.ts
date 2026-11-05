@@ -1,11 +1,14 @@
 import type { Locale } from "./i18n";
+import { venueOf } from "@/config/site";
+import { autoGuides } from "./guides-auto";
 
 /**
  * Exchange-specific step-by-step guides. Facts come from the exchange's own page / FAQ (source + date shown on the page);
  * screenshots are of PUBLIC pages only (public/guides/*), steps behind the login are described in text.
  */
 export interface GuideStep { h: string; b: string; img?: string; alt?: string }
-export interface Guide { id: string; venue: string; url: string; checked: string; title: string; sub: string; level: "easy" | "medium"; steps: GuideStep[]; facts: string[]; source: string }
+export interface GuideSection { title: string; url: string; level: "easy" | "medium" | "hard"; steps: GuideStep[] }
+export interface Guide { id: string; venue: string; url: string; checked: string; title: string; sub: string; level: "easy" | "medium" | "hard"; steps: GuideStep[]; sections?: GuideSection[]; facts: string[]; source: string }
 
 const bitget: Record<Locale, Guide> = {
   uk: {
@@ -64,5 +67,7 @@ const bitget: Record<Locale, Guide> = {
   },
 };
 
-export const GUIDES: Record<Locale, Guide[]> = { uk: [bitget.uk], en: [bitget.en], ru: [bitget.ru] };
+const all = (l: Locale) => [bitget[l], ...autoGuides(l, (id) => venueOf(id).name)];
+/** Hand-made guides (with screenshots) first, then the template ones for every other exchange and DEX. */
+export const GUIDES: Record<Locale, Guide[]> = { uk: all("uk"), en: all("en"), ru: all("ru") };
 export const GUIDE_IDS = GUIDES.en.map((g) => g.id);

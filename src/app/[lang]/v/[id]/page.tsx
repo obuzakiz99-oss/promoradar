@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { VENUES, venueOf } from "@/config/site";
+import { GUIDES } from "@/lib/guides";
+import { LEARN } from "@/lib/i18n-learn";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoExplorer } from "@/components/PromoExplorer";
 import { Footer } from "@/components/Sections";
@@ -47,6 +49,7 @@ export default async function VenuePage({ params }: { params: Params }) {
             <div className="flex flex-wrap gap-3">
               <a href={cfg.refUrl || cfg.site} target="_blank" rel={cfg.refUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6">{t.venue.join} ↗</a>
               <a href={cfg.site} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6">{t.venue.site} ↗</a>
+              {GUIDES[lang].some((g) => g.id === id || g.venue === id) && <Link href={`/${lang}/learn/guide/${GUIDES[lang].find((g) => g.id === id || g.venue === id)!.id}`} className="btn btn-ghost h-12 px-6">🧭 {LEARN[lang].cards.how[0]}</Link>}
             </div>
           </div>
         </header>

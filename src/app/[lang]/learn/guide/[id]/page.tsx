@@ -40,7 +40,7 @@ export default async function GuidePage({ params }: { params: Params }) {
         <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{g.title}</h1>
         <p className="mt-3 text-ink-2 sm:text-lg">{g.sub}</p>
 
-        <ol className="mt-10 space-y-6">
+        <ol className={g.steps.length ? "mt-10 space-y-6" : "hidden"}>
           {g.steps.map((s, i) => (
             <li key={s.h} className="card p-5 hover:transform-none sm:p-6">
               <div className="flex gap-4">
@@ -57,6 +57,27 @@ export default async function GuidePage({ params }: { params: Params }) {
             </li>
           ))}
         </ol>
+
+        {g.sections?.map((s) => (
+          <section key={s.title} className="mt-12">
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">{s.title}</h2>
+              <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[s.level]}`} title={LEVEL_TXT[lang][s.level][1]}>{LEVEL_TXT[lang][s.level][0]}</span>
+            </div>
+            <ol className="mt-5 space-y-3">
+              {s.steps.map((st, i) => (
+                <li key={st.h} className="card flex gap-4 p-5 hover:transform-none">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
+                  <div className="min-w-0">
+                    <h3 className="font-bold">{st.h}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-ink-2">{st.b}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <a href={s.url} target="_blank" rel="noopener" className="mt-4 inline-block text-sm font-bold text-lime hover:underline">{new URL(s.url).hostname.replace(/^www\./, "")} ↗</a>
+          </section>
+        ))}
 
         {g.facts.length > 0 && (
           <ul className="mt-8 space-y-2 rounded-2xl border border-line bg-white/[0.02] p-5 text-sm leading-relaxed text-ink-2">
