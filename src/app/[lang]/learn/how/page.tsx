@@ -4,6 +4,8 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
 import { LEVEL_CLS, LEVEL_TXT, type Level } from "@/lib/level";
 import { LP_ANN } from "@/lib/pools";
+import { GUIDES } from "@/lib/guides";
+import Link from "next/link";
 import { venueOf } from "@/config/site";
 import { Footer } from "@/components/Sections";
 import { LearnHeader, Steps } from "@/components/LearnNav";
@@ -31,6 +33,16 @@ export default async function LearnHow({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="how" title={H.title} sub={H.sub} />
+        <div className="mt-8 rounded-2xl border border-lime/25 bg-lime/[0.05] p-5">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-lime">{LEARN[lang].guides}</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {GUIDES[lang].map((g) => (
+              <Link key={g.id} href={`/${lang}/learn/guide/${g.id}`} className="flex h-11 items-center gap-2.5 rounded-xl border border-line bg-white/[0.03] pl-1.5 pr-4 text-sm font-bold hover:border-lime/50">
+                <VenueLogo v={venueOf(g.venue)} size={30} rounded="rounded-lg" />{g.title}
+              </Link>
+            ))}
+          </div>
+        </div>
         <nav className="mt-6 flex flex-wrap gap-2 text-sm font-bold">
           {H.sections.map((s) => <a key={s.id} href={`#${s.id}`} className="text-lime hover:underline">#{s.title.split(" /")[0].split(" (")[0]}</a>)}
         </nav>
