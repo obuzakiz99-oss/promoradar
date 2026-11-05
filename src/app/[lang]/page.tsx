@@ -28,7 +28,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   return (
     <>
       <main>
-        <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)} />
+        <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
+          learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
         <Ticker promos={promos} t={t} />
         <TopPools promos={promos} t={t} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}

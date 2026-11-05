@@ -1,4 +1,6 @@
 "use client";
+import { Term } from "./Term";
+import { plainProfit } from "@/lib/level";
 import { useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
@@ -89,13 +91,14 @@ export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: Ear
                   {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
                 </div>
                 <div className="mt-0.5 text-xs font-semibold text-ink-3">
-                  {A.type[o.type]}{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
+                  <Term k={o.type === "fixed" ? "fixed" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <div className="font-mono text-2xl font-bold tracking-tight text-ink">{pct(o.apr)}</div>
                   {o.aprMax ? <div className="font-mono text-xs font-bold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : <div className="text-[11px] text-ink-3">{A.base}</div>}
+                  {o.apr > 0 && <div className="nov text-[11px] font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
                 </div>
                 <a href={o.url} target="_blank" rel="noopener" className="btn btn-ghost hidden h-10 px-4 text-sm sm:inline-flex">{A.open} ↗</a>
               </div>

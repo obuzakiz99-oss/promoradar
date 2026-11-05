@@ -15,7 +15,7 @@ export function AprTabs({ t, lang, active }: { t: Dict; lang: Locale; active: "l
           key={x.id}
           href={x.href}
           aria-current={active === x.id ? "page" : undefined}
-          className={`flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${active === x.id ? "bg-lime text-[#0b0f05]" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
+          className={`${x.id === "dex" && active !== "dex" ? "adv " : ""}flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${active === x.id ? "bg-lime text-[#0b0f05]" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
         >
           <span aria-hidden="true">{x.icon}</span>{x.label}
         </Link>

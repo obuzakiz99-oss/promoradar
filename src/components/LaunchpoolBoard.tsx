@@ -1,4 +1,7 @@
 "use client";
+import { Term } from "./Term";
+import { useNovice } from "./NoviceToggle";
+import { LEVEL_CLS, LEVEL_TXT, plainProfit, poolLevel } from "@/lib/level";
 import { useEffect, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { Hedge, Pool, PoolProject } from "@/lib/pools";
@@ -66,6 +69,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const setAmount = (v: number) => setText(String(v));
   const [coin, setCoin] = useState("all");
   const [sort, setSort] = useState<Sort>("profit");
+  const novice = useNovice();
   useEffect(() => { setNow(Date.now()); const i = setInterval(() => setNow(Date.now()), 30_000); return () => clearInterval(i); }, []);
 
   const coins = useMemo(() => [...new Set(projects.flatMap((p) => p.pools.map((x) => x.stake)))].sort(), [projects]);
@@ -74,6 +78,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
     const out: Row[] = [];
     for (const p of projects) for (const pool of p.pools) {
       if (coin !== "all" && pool.stake !== coin) continue;
+      if (novice && poolLevel(pool.stake, p.token) === "hard") continue;   // beginners: no new-token / small-cap stakes
       const price = prices[pool.stake];
       const chgStake = changes[pool.stake], chgReward = changes[p.token];
       const maxUsd = pool.maxStake && price ? pool.maxStake * price : undefined;
@@ -105,7 +110,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
     if (sort === "hedged") out.sort((a, b) => realApr(b) - realApr(a));
     if (sort === "end") out.sort((a, b) => a.p.end - b.p.end);
     return out;
-  }, [projects, prices, changes, hedge, amount, coin, sort, now]);
+  }, [projects, prices, changes, hedge, amount, coin, sort, now, novice]);
 
   const best = rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
 
@@ -166,7 +171,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
         <div className="font-mono text-xs text-ink-3">{rows.length} {L.statLive}</div>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1" role="group">
           {(["profit", "hedged", "apr", "end"] as Sort[]).map((s) => (
-            <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s} className={`h-full rounded-lg px-2.5 text-xs font-bold sm:px-3 ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
+            <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s} className={`${s === "hedged" ? "adv " : ""}h-full rounded-lg px-2.5 text-xs font-bold sm:px-3 ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
               {s === "profit" ? L.sortProfit : s === "apr" ? L.sortApr : s === "hedged" ? L.hedgeApr : L.sortEnd}
             </button>
           ))}
@@ -182,10 +187,11 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           const span = p.end - p.start;
           const pct = live ? Math.min(100, Math.max(0, ((now - p.start) / span) * 100)) : 0;
           const isBest = r === best;
+          const lvl = poolLevel(pool.stake, p.token);
           return (
             <article
               key={`${p.id}:${pool.stake}`}
-              className={`card grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""}`}
+              className={`card grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
               style={{ ["--tint" as string]: ex?.color, animationDelay: `${Math.min(i, 10) * 30}ms` }}
             >
               {/* project */}
@@ -208,6 +214,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     <span>{ex?.name}</span>
                     <span>·</span>
                     <span className={live ? "text-lime" : "text-sky"}>{live ? L.live : L.upcoming}</span>
+                    <span className={`nov rounded px-1.5 ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
                     {pool.newUsers && <span className="rounded bg-amber/10 px-1.5 text-amber">{L.newUsers}</span>}
                     {pool.stake === p.token && <span className="rounded bg-rose/10 px-1.5 text-rose" title={L.priceRiskNote}>{L.priceRisk}</span>}
                   </div>
@@ -220,7 +227,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               {/* stake → earn */}
               <div className="flex items-center gap-2 text-sm">
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{L.stake}</div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3"><Term k="stake" lang={lang}>{L.stake}</Term></div>
                   <div className="mt-0.5 flex items-center gap-1.5 font-bold"><VenueLogo v={tokenVenue(pool.stake, pool.stakeLogo)} size={20} rounded="rounded-full" />{pool.stake}</div>
                 </div>
                 <span className="mt-4 text-ink-3">→</span>
@@ -232,13 +239,14 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* apr + limits */}
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{L.apr}</div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
                 <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
+                {pool.apr !== undefined && <div className="nov text-[11px] font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                 <div className="font-mono text-[11px] text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
                 </div>
                 {r.hc.needed && (
-                  <div className={`mt-1 text-[11px] font-bold ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={L.hedgeNote}>
+                  <div className={`adv mt-1 text-[11px] font-bold ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={L.hedgeNote}>
                     {L.hedgeApr}: <span className="font-mono">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</span>
                   </div>
                 )}
@@ -270,8 +278,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               </div>
 
               {/* hedge box + pros & cons */}
-              <div className="grid gap-4 border-t border-line pt-4 lg:col-span-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
-                <HedgeBox r={r} L={L} />
+              <div className="nov-1col grid gap-4 border-t border-line pt-4 lg:col-span-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
+                <div className="adv"><HedgeBox r={r} L={L} /></div>
                 <ProsCons pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
               </div>
             </article>

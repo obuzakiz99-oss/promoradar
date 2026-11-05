@@ -118,3 +118,11 @@ html, body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Novice mode (html[data-novice="1"], toggled in the header): .adv = advanced-only, .nov = shown only to beginners */
+.nov { display: none !important; }
+html[data-novice="1"] .nov { display: revert !important; }
+html[data-novice="1"] .adv { display: none !important; }
+/* glossary tooltips */
+.term { text-decoration: underline dotted rgb(200 255 61 / 0.55); text-underline-offset: 3px; cursor: help; }
+html[data-novice="1"] .nov-1col { grid-template-columns: minmax(0, 1fr) !important; }

@@ -5,6 +5,9 @@ import type { Dict, Locale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
 import { withBase } from "@/lib/base";
 import { TOOLS } from "@/lib/i18n-tools";
+import { LEARN } from "@/lib/i18n-learn";
+import { NoviceToggle } from "./NoviceToggle";
+import { NoviceBanner } from "./NoviceBanner";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   return (
@@ -17,19 +20,22 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
             {t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span>
           </Link>
           <Link href={`/${lang}/tools`} className="rounded-lg px-3 py-2 hover:text-ink">{TOOLS[lang].nav}</Link>
+          <Link href={`/${lang}/learn`} className="rounded-lg px-3 py-2 hover:text-ink">{LEARN[lang].nav}</Link>
           <a href={withBase(`/${lang}#how`)} className="hidden rounded-lg px-3 py-2 hover:text-ink xl:block">{t.nav.how}</a>
           <a href={withBase(`/${lang}#sources`)} className="hidden rounded-lg px-3 py-2 hover:text-ink lg:block">{t.nav.sources}</a>
           <a href={withBase(`/${lang}#pro`)} className="rounded-lg px-3 py-2 hover:text-ink">
             {t.nav.pro}
           </a>
         </nav>
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <NoviceToggle label={LEARN[lang].toggle} hint={LEARN[lang].toggleHint} />
           <LangSwitch current={lang} />
           <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm sm:inline-flex">
             <TgIcon /> {t.nav.telegram}
           </a>
         </div>
       </div>
+      <NoviceBanner text={LEARN[lang].banner} link={withBase(`/${lang}/learn/start/`)} linkLabel={LEARN[lang].bannerLink} off={LEARN[lang].bannerOff} />
     </header>
   );
 }

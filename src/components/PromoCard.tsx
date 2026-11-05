@@ -5,6 +5,7 @@ import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
+import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -47,10 +48,11 @@ export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang:
   const isDrop = p.venue.kind === "airdrop";
   const href = withBase(`/${lang}/p/${slugOf(p)}/`);
   const st = statusOf(p, now);
+  const lvl = promoLevel(p);
 
   return (
     <article
-      className={`card group relative flex flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""}`}
+      className={`card group relative flex flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
       {/* header */}
@@ -64,6 +66,7 @@ export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang:
           <div className={`mt-0.5 inline-flex items-center gap-1.5 text-xs font-semibold ${cs.text}`}>
             <span className="size-1.5 rounded-full" style={{ background: cs.dot }} />
             {t.cat[p.category]}
+            <span className={`nov ml-1 rounded px-1.5 py-px text-[10px] font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">

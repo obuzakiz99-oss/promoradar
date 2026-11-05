@@ -5,8 +5,9 @@ import { compactUsd } from "@/lib/format";
 import { TgIcon } from "./Header";
 import { RadarPicker, type RadarItem } from "./RadarPicker";
 
-export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBase }: {
+export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBase, learn }: {
   t: Dict; active: number; poolsUsd: number; sources: number; radar: RadarItem[]; radarVenues: Record<string, Venue>; venueBase: string;
+  learn?: { href: string; label: string };
 }) {
   return (
     <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-10 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-14">
@@ -31,6 +32,7 @@ export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBa
           </a>
           <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>
         </div>
+        {learn && <a href={learn.href} className="mt-4 inline-block text-sm font-bold text-lime hover:underline">🌱 {learn.label}</a>}
 
         <dl className="mt-12 grid max-w-xl grid-cols-3 gap-3">
           {[

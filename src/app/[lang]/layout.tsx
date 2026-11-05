@@ -9,6 +9,7 @@ import { LOCALES, getDict, isLocale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
+import { NOVICE_BOOT } from "@/lib/novice";
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -37,7 +38,11 @@ export default async function LangLayout({ children, params }: { children: React
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   return (
-    <html lang={lang}>
+    <html lang={lang} suppressHydrationWarning>
+      <head>
+        {/* novice mode is applied before first paint so hidden blocks don't flash */}
+        <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
+      </head>
       <body className="min-h-dvh">
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
