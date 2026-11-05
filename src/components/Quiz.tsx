@@ -6,7 +6,7 @@ import { LEARN } from "@/lib/i18n-learn";
 import { VenueLogo } from "./VenueLogo";
 
 export type QuizKind = "earn" | "fixed" | "newEarn" | "lp" | "lpMajor" | "bonus";
-export interface QuizItem { key: string; kind: QuizKind; venue: Venue; title: string; apr?: number; capUsd?: number; url: string; external: boolean }
+export interface QuizItem { key: string; kind: QuizKind; venue: Venue; title: string; apr?: number; capUsd?: number; days?: number; url: string; external: boolean }
 
 const PLAN: Record<string, QuizKind[]> = {
   "none:short": ["earn", "lp", "fixed"], "none:month": ["earn", "lp", "fixed"], "none:long": ["fixed", "earn", "lp"],
@@ -33,7 +33,8 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
   }, [done, ans, items]);
 
   const amount = Number(ans.amount ?? 100);
-  const monthly = (it: QuizItem) => (it.apr ? (Math.min(amount, it.capUsd ?? Infinity) * it.apr) / 100 / 12 : undefined);
+  // income for a month, or for the whole term when the offer is shorter (e.g. a 2-day new-user deposit)
+  const income = (it: QuizItem) => (it.apr ? (Math.min(amount, it.capUsd ?? Infinity) * it.apr) / 100 * Math.min(it.days ?? 30, 30) / 365 : undefined);
   const money = (x: number) => `$${x >= 10 ? x.toFixed(0) : x.toFixed(2)}`;
 
   if (!done) {
@@ -61,7 +62,7 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
       {picks.length === 0 ? <p className="mt-4 text-ink-3">{Q.empty}</p> : (
         <div className="mt-5 space-y-3">
           {picks.map((it) => {
-            const m = monthly(it);
+            const m = income(it);
             return (
               <a key={it.key} href={it.url} {...(it.external ? { target: "_blank", rel: "noopener" } : {})} className="card flex items-center gap-4 p-5">
                 <VenueLogo v={it.venue} size={42} />
@@ -71,7 +72,7 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
                 </div>
                 <div className="shrink-0 text-right">
                   {it.apr !== undefined && <div className="font-mono text-xl font-bold text-lime">{it.apr >= 100 ? Math.round(it.apr) : it.apr.toFixed(1)}%</div>}
-                  {m !== undefined && <div className="font-mono text-xs text-ink-2">≈ +{money(m)} {Q.perMonth}</div>}
+                  {m !== undefined && <div className="font-mono text-xs text-ink-2">≈ +{money(m)} {it.days && it.days < 30 ? Q.perDays.replace("{d}", String(it.days)) : Q.perMonth}</div>}
                 </div>
               </a>
             );

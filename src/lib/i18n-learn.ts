@@ -12,7 +12,7 @@ export interface LearnDict {
   safety: { title: string; sub: string; rules: Steps };
   quiz: {
     title: string; sub: string; q: Array<{ id: string; text: string; opts: Array<[string, string]> }>;
-    result: string; again: string; perMonth: string; noAccount: string; why: Record<string, string>; empty: string;
+    result: string; again: string; perMonth: string; perDays: string; noAccount: string; why: Record<string, string>; empty: string;
   };
   glossary: { title: string; sub: string; search: string };
 }
@@ -84,7 +84,7 @@ const uk: LearnDict = {
       { id: "risk", text: "Як ставитеся до ризику?", opts: [["none", "Не хочу втрачати навіть трохи"], ["some", "Готовий до невеликих коливань"], ["high", "Готовий ризикувати заради більшого"]] },
       { id: "account", text: "У вас уже є акаунт на біржі?", opts: [["no", "Ні, ще немає"], ["yes", "Так, є"]] },
     ],
-    result: "Вам підходить", again: "Пройти ще раз", perMonth: "за місяць", noAccount: "Спершу: Старт з нуля →",
+    result: "Вам підходить", again: "Пройти ще раз", perMonth: "за місяць", perDays: "за {d} дн.", noAccount: "Спершу: Старт з нуля →",
     why: { earn: "Earn на стейблкоїні: ціна не змінюється, забрати можна будь-коли", lp: "Launchpool зі стейком USDT: отримуєте нові токени, USDT не дешевшає", lpMajor: "Launchpool зі стейком великої монети: дохід вищий, але ціна монети коливається", bonus: "Бонус для нових користувачів цієї біржі", fixed: "Фіксований Earn: ставка вища, гроші заблоковані на строк" },
     empty: "Зараз немає відповідних варіантів — загляньте завтра.",
   },
@@ -158,7 +158,7 @@ const en: LearnDict = {
       { id: "risk", text: "How do you feel about risk?", opts: [["none", "I don't want to lose anything"], ["some", "Small swings are fine"], ["high", "I'll risk more for more"]] },
       { id: "account", text: "Do you already have an exchange account?", opts: [["no", "Not yet"], ["yes", "Yes"]] },
     ],
-    result: "Good fit for you", again: "Retake", perMonth: "a month", noAccount: "First: Start from zero →",
+    result: "Good fit for you", again: "Retake", perMonth: "a month", perDays: "in {d} days", noAccount: "First: Start from zero →",
     why: { earn: "Stablecoin Earn: price doesn't move, withdraw any time", lp: "Launchpool with USDT stake: earn new tokens, USDT doesn't fall", lpMajor: "Launchpool staking a big coin: higher income, but the coin's price moves", bonus: "New-user bonus on this exchange", fixed: "Fixed Earn: higher rate, money locked for a term" },
     empty: "No suitable options right now — check back tomorrow.",
   },
@@ -232,7 +232,7 @@ const ru: LearnDict = {
       { id: "risk", text: "Как относитесь к риску?", opts: [["none", "Не хочу терять даже немного"], ["some", "Готов к небольшим колебаниям"], ["high", "Готов рисковать ради большего"]] },
       { id: "account", text: "У вас уже есть аккаунт на бирже?", opts: [["no", "Нет, ещё нет"], ["yes", "Да, есть"]] },
     ],
-    result: "Вам подходит", again: "Пройти ещё раз", perMonth: "в месяц", noAccount: "Сначала: Старт с нуля →",
+    result: "Вам подходит", again: "Пройти ещё раз", perMonth: "в месяц", perDays: "за {d} дн.", noAccount: "Сначала: Старт с нуля →",
     why: { earn: "Earn на стейблкоине: цена не меняется, забрать можно когда угодно", lp: "Launchpool со стейком USDT: получаете новые токены, USDT не дешевеет", lpMajor: "Launchpool со стейком крупной монеты: доход выше, но цена монеты колеблется", bonus: "Бонус для новых пользователей этой биржи", fixed: "Фиксированный Earn: ставка выше, деньги заблокированы на срок" },
     empty: "Сейчас нет подходящих вариантов — загляните завтра.",
   },

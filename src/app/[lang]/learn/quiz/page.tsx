@@ -15,6 +15,11 @@ import { Quiz, type QuizItem } from "@/components/Quiz";
 
 type Params = Promise<{ lang: string }>;
 
+// beginners: only the plain dollar stablecoins; bonuses must really be sign-up / welcome offers on the exchange itself
+const SAFE = /^(USDT|USDC)$/;
+const WELCOME = /\b(new ?(user|comer)s?|newcomer|welcome|sign ?up|register|first (deposit|trade)|journey|start your)\b/i;
+const DEFI = /\b(aave|on-?chain|defi|x ?layer|wallet|dex|futures|perp)\b/i;
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
@@ -33,11 +38,11 @@ export default async function LearnQuiz({ params }: { params: Params }) {
 
   const items: QuizItem[] = [];
   // Earn on stablecoins: regular flexible / fixed (sane rates only) and new-user boosts
-  const stableEarn = earn.offers.filter((o) => isStable(o.coin) && o.apr > 0).sort((a, b) => b.apr - a.apr);
+  const stableEarn = earn.offers.filter((o) => SAFE.test(o.coin) && o.apr > 0).sort((a, b) => b.apr - a.apr);
   for (const o of stableEarn) {
     const kind = o.newUsers ? "newEarn" : o.type === "fixed" ? "fixed" : o.type === "flexible" ? "earn" : null;
     if (!kind || (!o.newUsers && o.apr > 30)) continue;
-    items.push({ key: `e:${o.exchange}:${o.coin}:${o.type}:${o.apr}`, kind, venue: venueOf(o.exchange), title: `${o.coin} · ${venueOf(o.exchange).name} Earn (${TYPE[lang][o.type]}${o.days ? `, ${o.days}d` : ""})`, apr: o.apr, capUsd: o.maxAmount, url: o.url, external: true });
+    items.push({ key: `e:${o.exchange}:${o.coin}:${o.type}:${o.apr}`, kind, venue: venueOf(o.exchange), title: `${o.coin} · ${venueOf(o.exchange).name} Earn (${TYPE[lang][o.type]}${o.days ? `, ${o.days}d` : ""})`, apr: o.apr, capUsd: o.maxAmount, days: o.type === "fixed" ? o.days : undefined, url: o.url, external: true });
   }
   // live Launchpools: stablecoin stake (easy) and big-coin stake (medium)
   const live = pools.projects.filter((p) => p.status === "live");
@@ -48,7 +53,7 @@ export default async function LearnQuiz({ params }: { params: Params }) {
     items.push({ key: `lp:${p.id}:${x.stake}`, kind: lvl === "easy" ? "lp" : "lpMajor", venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`, apr: x.apr, capUsd: x.maxStake && px ? x.maxStake * px : undefined, url: p.url, external: true });
   }
   // new-user bonuses from the promo feed (biggest first)
-  for (const p of promos.filter((p) => p.category === "bonus" && p.venue.kind === "cex" && (!p.endsAt || p.endsAt > fetchedAt)).sort((a, b) => (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0)))
+  for (const p of promos.filter((p) => p.category === "bonus" && p.venue.kind === "cex" && WELCOME.test(p.title) && !DEFI.test(p.title) && (!p.endsAt || p.endsAt > fetchedAt)).sort((a, b) => (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0)))
     items.push({ key: `b:${p.id}`, kind: "bonus", venue: p.venue, title: p.title, url: withBase(`/${lang}/p/${slugOf(p)}/`), external: false });
 
   return (
