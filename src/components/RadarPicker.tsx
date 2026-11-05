@@ -1,12 +1,12 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Category, Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
 
 export interface RadarItem { id: string; venue: string; title: string; category: Category; usd?: number; label?: string; href: string }
 
 const CATS: Array<Category | "all"> = ["all", "airdrop", "competition", "bonus", "earn", "listing"];
-const MAX = 12;
+const MAX = 12, MAX_PHONE = 9;   // fewer, roomier blips on narrow screens (easier to tap)
 const usdFmt = (x: number) => (x >= 1e6 ? `$${+(x / 1e6).toFixed(1)}M` : x >= 1e3 ? `$${Math.round(x / 1e3)}K` : `$${Math.round(x)}`);
 
 /** Blip positions: two rings, spread evenly, inner ring first (biggest venues closest to the centre). */
@@ -26,12 +26,19 @@ export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
 }) {
   const [cat, setCat] = useState<Category | "all">("all");
   const [sel, setSel] = useState<string | null>(null);
+  const [max, setMax] = useState(MAX);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const on = () => setMax(mq.matches ? MAX_PHONE : MAX);
+    on(); mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
 
   const ranked = useMemo(() => {
     const m = new Map<string, RadarItem[]>();
     for (const it of items) if (cat === "all" || it.category === cat) m.set(it.venue, [...(m.get(it.venue) ?? []), it]);
-    return [...m.entries()].filter(([v]) => venues[v]).sort((a, b) => b[1].length - a[1].length).slice(0, MAX);
-  }, [items, cat, venues]);
+    return [...m.entries()].filter(([v]) => venues[v]).sort((a, b) => b[1].length - a[1].length).slice(0, max);
+  }, [items, cat, venues, max]);
   const pos = spots(ranked.length);
   // nothing picked yet (or the pick isn't in this category) → show the busiest venue, so the card is never empty
   const cur = ranked.find(([v]) => v === sel) ?? ranked[0];
