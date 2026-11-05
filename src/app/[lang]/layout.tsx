@@ -1,15 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Unbounded, Manrope, JetBrains_Mono } from "next/font/google";
+// self-hosted variable fonts (Latin + Cyrillic) — no network calls at build time
+import "@fontsource-variable/unbounded";
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/jetbrains-mono";
 import "../globals.css";
 import { LOCALES, getDict, isLocale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
-
-const unbounded = Unbounded({ subsets: ["latin", "cyrillic"], weight: ["500", "600", "700"], variable: "--font-unbounded", display: "swap" });
-const manrope = Manrope({ subsets: ["latin", "cyrillic"], weight: ["400", "500", "600", "700", "800"], variable: "--font-manrope", display: "swap" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin", "cyrillic"], weight: ["500", "700"], variable: "--font-jetbrains", display: "swap" });
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -38,7 +37,7 @@ export default async function LangLayout({ children, params }: { children: React
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   return (
-    <html lang={lang} className={`${unbounded.variable} ${manrope.variable} ${jetbrains.variable}`}>
+    <html lang={lang}>
       <body className="min-h-dvh">
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
