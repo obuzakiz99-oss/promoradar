@@ -21,7 +21,7 @@ function spots(n: number): Array<[number, number]> {
 
 export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
   items: RadarItem[]; venues: Record<string, Venue>;
-  labels: { all: string; hint: string; promos: string; open: string; allOf: string };
+  labels: { all: string; hint: string; promos: string; open: string; allOf: string; cats: Partial<Record<Category, string>> };
   catLabels: Record<Category, string>; venueBase: string;
 }) {
   const [cat, setCat] = useState<Category | "all">("all");
@@ -33,17 +33,18 @@ export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
     return [...m.entries()].filter(([v]) => venues[v]).sort((a, b) => b[1].length - a[1].length).slice(0, MAX);
   }, [items, cat, venues]);
   const pos = spots(ranked.length);
-  const cur = ranked.find(([v]) => v === sel);
+  // nothing picked yet (or the pick isn't in this category) → show the busiest venue, so the card is never empty
+  const cur = ranked.find(([v]) => v === sel) ?? ranked[0];
   const top = cur ? cur[1].slice().sort((a, b) => (b.usd ?? 0) - (a.usd ?? 0)).slice(0, 4) : [];
   const counts = useMemo(() => Object.fromEntries(CATS.map((c) => [c, c === "all" ? items.length : items.filter((i) => i.category === c).length])), [items]);
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex flex-wrap justify-center gap-1.5">
+      <div className="mb-4 flex flex-wrap justify-center gap-1">
         {CATS.filter((c) => counts[c] > 0).map((c) => (
           <button key={c} type="button" onClick={() => { setCat(c); setSel(null); }}
-            className={`h-8 rounded-full border px-3 text-xs font-bold transition ${cat === c ? "border-lime/50 bg-lime/15 text-lime" : "border-line bg-white/[0.02] text-ink-3 hover:text-ink"}`}>
-            {c === "all" ? labels.all : catLabels[c].split(" / ")[0]} <span className="font-mono opacity-70">{counts[c]}</span>
+            className={`h-8 rounded-full border px-2.5 text-xs font-bold transition ${cat === c ? "border-lime/50 bg-lime/15 text-lime" : "border-line bg-white/[0.02] text-ink-3 hover:text-ink"}`}>
+            {c === "all" ? labels.all : labels.cats[c] ?? catLabels[c].split(" / ")[0]} <span className="font-mono opacity-70">{counts[c]}</span>
           </button>
         ))}
       </div>
@@ -58,9 +59,9 @@ export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
         {ranked.map(([id, list], i) => {
           const [x, y] = pos[i];
           const v = venues[id];
-          const on = sel === id;
+          const on = cur?.[0] === id;
           return (
-            <button key={id} type="button" onClick={() => setSel(on ? null : id)} title={`${v.name} · ${list.length}`}
+            <button key={id} type="button" onClick={() => setSel(id)} title={`${v.name} · ${list.length}`}
               aria-pressed={on} aria-label={`${v.name}: ${list.length} ${labels.promos}`}
               className="group absolute -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 focus:outline-none" style={{ left: `${x}%`, top: `${y}%` }}>
               <span className="absolute inset-0 animate-ping-slow rounded-full" style={{ background: v.color, animationDelay: `${(i * 0.7) % 6}s`, opacity: 0.3 }} />
@@ -71,7 +72,7 @@ export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
         })}
       </div>
 
-      <div className="mx-auto mt-4 min-h-[9.5rem] max-w-[400px]">
+      <div className="mx-auto mt-4 h-[12.5rem] max-w-[400px]">
         {!cur ? (
           <p className="pt-6 text-center text-sm text-ink-3">{labels.hint}</p>
         ) : (

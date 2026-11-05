@@ -10,7 +10,7 @@ const uk = {
   nav: { promos: "Акції", how: "Як це працює", sources: "Джерела", pro: "Pro", telegram: "Telegram" },
   hero: {
     kicker: "Оновлюється кожні 15 хвилин",
-    radar: { all: "Усі", hint: "Натисніть на біржу на радарі — покажемо її найкращі акції", promos: "акцій", open: "Відкрити", allOf: "Усі акції біржі" },
+    radar: { all: "Усі", hint: "Натисніть на біржу на радарі — покажемо її найкращі акції", promos: "акцій", open: "Відкрити", allOf: "Усі акції біржі", cats: { airdrop: "Airdrop", competition: "Змагання", bonus: "Бонуси", earn: "Earn", listing: "Лістинги" } },
     title1: "Промоакції бірж і DeFi",
     title2: "в одному місці",
     sub: "Airdrop, Launchpool, торгові змагання, бонуси, Earn і фарм ліквідності на DEX — ми автоматично збираємо акції з десятків бірж і протоколів, щоб ви не пропустили жодної.",
@@ -123,7 +123,7 @@ const en: Dict = {
   nav: { promos: "Promos", how: "How it works", sources: "Sources", pro: "Pro", telegram: "Telegram" },
   hero: {
     kicker: "Refreshed every 15 minutes",
-    radar: { all: "All", hint: "Tap an exchange on the radar to see its best promos", promos: "promos", open: "Open", allOf: "All promos of this venue" },
+    radar: { all: "All", hint: "Tap an exchange on the radar to see its best promos", promos: "promos", open: "Open", allOf: "All promos", cats: { airdrop: "Airdrop", competition: "Contests", bonus: "Bonuses", earn: "Earn", listing: "Listings" } },
     title1: "Exchange & DeFi promos",
     title2: "in one place",
     sub: "Airdrops, Launchpools, trading competitions, bonuses, Earn and DEX liquidity farming — we automatically collect campaigns from dozens of exchanges and protocols so you never miss one.",
@@ -231,7 +231,7 @@ const ru: Dict = {
   nav: { promos: "Акции", how: "Как это работает", sources: "Источники", pro: "Pro", telegram: "Telegram" },
   hero: {
     kicker: "Обновляется каждые 15 минут",
-    radar: { all: "Все", hint: "Нажмите на биржу на радаре — покажем её лучшие акции", promos: "акций", open: "Открыть", allOf: "Все акции биржи" },
+    radar: { all: "Все", hint: "Нажмите на биржу на радаре — покажем её лучшие акции", promos: "акций", open: "Открыть", allOf: "Все акции биржи", cats: { airdrop: "Airdrop", competition: "Конкурсы", bonus: "Бонусы", earn: "Earn", listing: "Листинги" } },
     title1: "Промоакции бирж и DeFi",
     title2: "в одном месте",
     sub: "Airdrop, Launchpool, торговые соревнования, бонусы, Earn и фарм ликвидности на DEX — мы автоматически собираем акции с десятков бирж и протоколов, чтобы вы не пропустили ни одной.",
