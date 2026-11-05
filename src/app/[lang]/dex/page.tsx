@@ -1,0 +1,51 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getDict, isLocale } from "@/lib/i18n";
+import { getDexPools } from "@/lib/dexpools";
+import { compactUsd } from "@/lib/format";
+import { AprTabs } from "@/components/AprTabs";
+import { DexBoard } from "@/components/DexBoard";
+import { Footer } from "@/components/Sections";
+
+export const revalidate = 1800;
+type Params = Promise<{ lang: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  const t = getDict(lang);
+  return { title: t.aprHub.dexTitle, description: t.aprHub.dexSub, alternates: { canonical: `/${lang}/dex` } };
+}
+
+export default async function DexPage({ params }: { params: Params }) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+  const t = getDict(lang);
+  const { pools, chains, categories, fetchedAt } = await getDexPools();
+  const tvl = pools.reduce((s, p) => s + p.tvl, 0);
+  const protocols = new Set(pools.map((p) => p.slug)).size;
+  return (
+    <>
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
+        <AprTabs t={t} lang={lang} active="dex" />
+        <header className="mt-8">
+          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{t.aprHub.dexTitle}</h1>
+          <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{t.aprHub.dexSub}</p>
+          <dl className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+            {[[pools.length.toLocaleString("en-US"), t.aprHub.colPool], [String(protocols), t.aprHub.colProto], [String(chains.length), t.aprHub.colChain], [compactUsd(tvl), t.aprHub.colTvl]].map(([v, l]) => (
+              <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3">
+                <dd className="font-display text-2xl font-semibold tracking-tight">{v}</dd>
+                <dt className="mt-0.5 text-xs font-semibold text-ink-3">{l}</dt>
+              </div>
+            ))}
+          </dl>
+        </header>
+        <div className="mt-8">
+          <DexBoard pools={pools} chains={chains} categories={categories} t={t} lang={lang} />
+        </div>
+        <p className="mt-8 text-xs text-ink-3">{t.aprHub.dexNote} · DefiLlama</p>
+      </main>
+      <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+    </>
+  );
+}

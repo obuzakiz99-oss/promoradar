@@ -1,0 +1,56 @@
+export type VenueKind = "cex" | "dex" | "defi" | "airdrop";
+
+export type Category =
+  | "airdrop"       // launchpool, launchpad, airdrops, jumpstart, megadrop, points
+  | "competition"   // trading competitions, trade-to-earn, tournaments
+  | "bonus"         // deposit / new-user / welcome bonuses
+  | "earn"          // staking, savings, flash earn, hold-to-earn
+  | "farming"       // DeFi liquidity / lending incentive rewards
+  | "listing"       // listing campaigns & token giveaways
+  | "referral"      // invite friends, affiliate
+  | "other";
+
+export interface Venue {
+  id: string;
+  name: string;
+  kind: VenueKind;
+  color: string;
+  ink: string;
+  monogram: string;
+  logo?: string;
+}
+
+export interface Reward {
+  amount: number;
+  unit: string;
+  usd?: number;
+  label: string;
+}
+
+export interface Promo {
+  id: string;
+  venue: Venue;
+  title: string;
+  url: string;               // original page / rules
+  joinUrl?: string;          // where "Join" leads (referral link or app)
+  category: Category;
+  publishedAt: number;       // ms; 0 for ongoing programmes without a date
+  startsAt?: number;
+  endsAt?: number;
+  reward?: Reward;
+  tags: string[];
+  sponsored?: boolean;
+  evergreen?: boolean;       // ongoing programme (farming pools, points)
+  meta?: {
+    source?: string;         // "airdrops.io", "DefiLlama"…
+    actions?: string;        // what to do (airdrops)
+    requires?: string[];     // telegram, x, email, kyc, discord…
+    confirmed?: boolean;
+    hot?: number;            // 0..100
+    apr?: number;            // reward APR, %
+    baseApr?: number;
+    tvlUsd?: number;
+    chain?: string;
+    symbol?: string;
+  };
+}
