@@ -3,6 +3,7 @@ import { Logo } from "./Logo";
 import { LangSwitch } from "./LangSwitch";
 import type { Dict, Locale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
+import { withBase } from "@/lib/base";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   return (
@@ -10,13 +11,13 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6">
         <Link href={`/${lang}`} aria-label={SITE.name}><Logo name={SITE.name} /></Link>
         <nav className="hidden items-center gap-1 text-sm font-semibold text-ink-2 md:flex">
-          <a href={`/${lang}#promos`} className="rounded-lg px-3 py-2 hover:text-ink">{t.nav.promos}</a>
+          <a href={withBase(`/${lang}#promos`)} className="rounded-lg px-3 py-2 hover:text-ink">{t.nav.promos}</a>
           <Link href={`/${lang}/launchpools`} className="rounded-lg px-3 py-2 hover:text-ink">
             {t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span>
           </Link>
-          <a href={`/${lang}#how`} className="rounded-lg px-3 py-2 hover:text-ink">{t.nav.how}</a>
-          <a href={`/${lang}#sources`} className="hidden rounded-lg px-3 py-2 hover:text-ink lg:block">{t.nav.sources}</a>
-          <a href={`/${lang}#pro`} className="rounded-lg px-3 py-2 hover:text-ink">
+          <a href={withBase(`/${lang}#how`)} className="rounded-lg px-3 py-2 hover:text-ink">{t.nav.how}</a>
+          <a href={withBase(`/${lang}#sources`)} className="hidden rounded-lg px-3 py-2 hover:text-ink lg:block">{t.nav.sources}</a>
+          <a href={withBase(`/${lang}#pro`)} className="rounded-lg px-3 py-2 hover:text-ink">
             {t.nav.pro}
           </a>
         </nav>

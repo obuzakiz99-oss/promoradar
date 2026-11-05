@@ -1,5 +1,6 @@
 import { getPools } from "@/lib/pools";
 
+export const dynamic = "force-static";
 export const revalidate = 300;
 
 /** Launchpool data (live + upcoming + archive) with prices, 24h changes and hedge venues. */

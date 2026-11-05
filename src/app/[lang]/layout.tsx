@@ -5,6 +5,7 @@ import "../globals.css";
 import { LOCALES, getDict, isLocale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
+import { withBase } from "@/lib/base";
 
 const unbounded = Unbounded({ subsets: ["latin", "cyrillic"], weight: ["500", "600", "700"], variable: "--font-unbounded", display: "swap" });
 const manrope = Manrope({ subsets: ["latin", "cyrillic"], weight: ["400", "500", "600", "700", "800"], variable: "--font-manrope", display: "swap" });
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     alternates: { canonical: `/${lang}`, languages: { uk: "/uk", en: "/en", ru: "/ru", "x-default": "/en" } },
     openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website" },
     twitter: { card: "summary_large_image", title, description: t.hero.sub },
-    icons: { icon: "/icon.svg" },
+    icons: { icon: withBase("/icon.svg") },
   };
 }
 

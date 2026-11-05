@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PromoRadar</title>
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="1; url=./uk/">
+  <style>html,body{margin:0;height:100%;background:#06080b;color:#a6b0bd;font:16px system-ui,sans-serif;display:grid;place-items:center}</style>
+  <script>
+    // pick the visitor's language: Ukrainian → uk, Russian/Belarusian/Kazakh → ru, otherwise en
+    (function () {
+      var saved = null; try { saved = localStorage.getItem("pr:lang"); } catch (e) {}
+      var l = (navigator.languages && navigator.languages[0] || navigator.language || "uk").toLowerCase();
+      var lang = saved || (/^uk/.test(l) ? "uk" : /^(ru|be|kk)/.test(l) ? "ru" : /^en/.test(l) ? "en" : "uk");
+      location.replace("./" + lang + "/");
+    })();
+  </script>
+</head>
+<body><a href="./uk/" style="color:#c8ff3d">PromoRadar →</a></body>
+</html>

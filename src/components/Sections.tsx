@@ -3,6 +3,7 @@ import type { SourceStatus } from "@/lib/sources";
 import { PRO, SITE } from "@/config/site";
 import { TgIcon } from "./Header";
 import { LogoMark } from "./Logo";
+import { withBase } from "@/lib/base";
 
 export function HowItWorks({ t }: { t: Dict }) {
   return (
@@ -134,8 +135,8 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
         </div>
         <div className="flex flex-col gap-3 text-sm md:items-end">
           <div className="flex flex-wrap gap-2">
-            <a href={`/rss.xml?lang=${lang}`} className="btn btn-ghost h-10">RSS</a>
-            <a href={`/${lang}#advertise`} className="btn btn-ghost h-10">{t.ads.title}</a>
+            <a href={withBase(`/rss-${lang}.xml`)} className="btn btn-ghost h-10">RSS</a>
+            <a href={withBase(`/${lang}#advertise`)} className="btn btn-ghost h-10">{t.ads.title}</a>
             <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-10"><TgIcon /> Telegram</a>
           </div>
           <p className="font-mono text-xs text-ink-3">

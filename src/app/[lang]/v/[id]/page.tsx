@@ -9,8 +9,8 @@ import { PromoExplorer } from "@/components/PromoExplorer";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
-export const dynamicParams = true;
-export function generateStaticParams() { return []; }
+export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
+export function generateStaticParams() { return Object.keys(VENUES).map((id) => ({ id })); }
 
 type Params = Promise<{ lang: string; id: string }>;
 

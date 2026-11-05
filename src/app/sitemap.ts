@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+export const dynamic = "force-static";
 import { SITE, VENUES } from "@/config/site";
 import { LOCALES } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";

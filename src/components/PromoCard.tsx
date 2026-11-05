@@ -2,6 +2,7 @@ import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
 import { ago, compactUsd, duration, shortDate } from "@/lib/format";
 import { slugOf, statusOf } from "@/lib/slug";
+import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
 
@@ -44,7 +45,7 @@ export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang:
   const m = p.meta ?? {};
   const isFarm = p.category === "farming" && m.apr !== undefined;
   const isDrop = p.venue.kind === "airdrop";
-  const href = `/${lang}/p/${slugOf(p)}`;
+  const href = withBase(`/${lang}/p/${slugOf(p)}/`);
   const st = statusOf(p, now);
 
   return (

@@ -1,5 +1,6 @@
 import { getEarn } from "@/lib/earn";
 
+export const dynamic = "force-static";
 export const revalidate = 900;
 
 /** Exchange Earn offers (Binance, Bybit, OKX, Gate, MEXC). */

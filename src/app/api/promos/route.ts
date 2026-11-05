@@ -1,5 +1,6 @@
 import { getPromos } from "@/lib/promos";
 
+export const dynamic = "force-static";
 export const revalidate = 900;
 
 /** Public JSON feed — handy for the future Telegram bot and partners. */

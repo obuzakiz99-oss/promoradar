@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og";
 import { SITE } from "@/config/site";
+import { LOCALES } from "@/lib/i18n";
 
+export const dynamic = "force-static";
+export function generateStaticParams() { return LOCALES.map((lang) => ({ lang })); }
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${SITE.name} — every exchange & DeFi promo in one place`;

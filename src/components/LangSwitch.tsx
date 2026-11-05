@@ -14,7 +14,7 @@ export function LangSwitch({ current }: { current: Locale }) {
         <Link
           key={l}
           href={`/${l}${rest}`}
-          onClick={() => { document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`; }}
+          onClick={() => { try { localStorage.setItem("pr:lang", l); } catch {} }}
           aria-current={l === current ? "true" : undefined}
           className={`rounded-full px-2.5 py-1.5 transition-colors ${l === current ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}
         >

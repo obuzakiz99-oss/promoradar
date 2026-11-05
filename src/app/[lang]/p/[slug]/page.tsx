@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
-import { findBySlug, statusOf } from "@/lib/slug";
+import { findBySlug, slugOf, statusOf } from "@/lib/slug";
 import { compactUsd, duration } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -13,8 +13,12 @@ import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
-export const dynamicParams = true;
-export function generateStaticParams() { return []; }
+export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
+/** Pre-render every current promo (needed for the static GitHub Pages build). */
+export async function generateStaticParams() {
+  const { promos } = await getPromos();
+  return promos.map((p) => ({ slug: slugOf(p) }));
+}
 
 type Params = Promise<{ lang: string; slug: string }>;
 

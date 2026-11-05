@@ -1,5 +1,6 @@
 import { getDexPools } from "@/lib/dexpools";
 
+export const dynamic = "force-static";
 export const revalidate = 1800;
 
 /** DEX / DeFi pools (DefiLlama Yields subset). */

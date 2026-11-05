@@ -11,7 +11,7 @@ export function VenueLogo({ v, size = 36, rounded = "rounded-xl" }: { v: Pick<Ve
     const i = ref.current;
     if (i?.complete) setState(i.naturalWidth > 0 ? "ok" : "fail");
   }, []);
-  const src = v.logo ? `/logo?u=${encodeURIComponent(v.logo)}` : undefined;
+  const src = v.logo || undefined; // direct CDN logo (works on static hosting too)
   return (
     <span
       className={`relative grid shrink-0 place-items-center overflow-hidden font-display font-bold ring-1 ring-white/10 ${rounded}`}
