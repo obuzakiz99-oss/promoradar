@@ -3,14 +3,11 @@ import type { Venue } from "@/lib/types";
 import { SITE } from "@/config/site";
 import { compactUsd } from "@/lib/format";
 import { TgIcon } from "./Header";
-import { VenueLogo } from "./VenueLogo";
+import { RadarPicker, type RadarItem } from "./RadarPicker";
 
-/** Blip positions on the radar (x%, y%, ping delay s). */
-const SPOTS: Array<[number, number, number]> = [
-  [68, 20, 0.2], [24, 32, 1.1], [80, 60, 2.0], [36, 78, 2.9], [55, 44, 3.8], [16, 58, 4.7], [62, 84, 5.4], [86, 36, 0.8],
-];
-
-export function Hero({ t, active, poolsUsd, sources, venues }: { t: Dict; active: number; poolsUsd: number; sources: number; venues: Venue[] }) {
+export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBase }: {
+  t: Dict; active: number; poolsUsd: number; sources: number; radar: RadarItem[]; radarVenues: Record<string, Venue>; venueBase: string;
+}) {
   return (
     <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-10 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-14">
       <div className="animate-fade-up">
@@ -50,24 +47,8 @@ export function Hero({ t, active, poolsUsd, sources, venues }: { t: Dict; active
         </dl>
       </div>
 
-      <div className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" aria-hidden="true">
-        <div className="absolute inset-0 rounded-full border border-line-2 bg-[radial-gradient(circle_at_center,rgb(200_255_61/0.07),transparent_65%)]" />
-        {[0.78, 0.56, 0.34].map((s) => (
-          <div key={s} className="absolute rounded-full border border-line" style={{ inset: `${((1 - s) / 2) * 100}%` }} />
-        ))}
-        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-line" />
-        <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-line" />
-        <div className="absolute inset-0 animate-sweep rounded-full" style={{ background: "conic-gradient(from 0deg, rgb(200 255 61 / 0.32), rgb(200 255 61 / 0.06) 18%, transparent 30%)" }} />
-        <div className="absolute left-1/2 top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime shadow-[0_0_24px_6px_rgb(200_255_61/0.5)]" />
-        {venues.slice(0, SPOTS.length).map((v, i) => {
-          const [x, y, d] = SPOTS[i];
-          return (
-            <div key={v.id} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>
-              <span className="absolute inset-0 animate-ping-slow rounded-full" style={{ background: v.color, animationDelay: `${d}s`, opacity: 0.3 }} />
-              <span className="relative block rounded-full ring-4 ring-bg"><VenueLogo v={v} size={44} rounded="rounded-full" /></span>
-            </div>
-          );
-        })}
+      <div className="animate-fade-up">
+        <RadarPicker items={radar} venues={radarVenues} labels={t.hero.radar} catLabels={t.cat} venueBase={venueBase} />
       </div>
     </section>
   );

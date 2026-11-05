@@ -2,6 +2,10 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos, topVenues, totalUsd } from "@/lib/promos";
 import { Hero } from "@/components/Hero";
+import type { RadarItem } from "@/components/RadarPicker";
+import { VENUES } from "@/config/site";
+import { slugOf } from "@/lib/slug";
+import { withBase } from "@/lib/base";
 import { PromoExplorer } from "@/components/PromoExplorer";
 import { Ticker, TopPools } from "@/components/Featured";
 import { LaunchpoolTeaser } from "@/components/LaunchpoolTeaser";
@@ -15,12 +19,16 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   const [{ promos, status, fetchedAt }, pools] = await Promise.all([getPromos(), getPools().catch(() => null)]);
+  const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
+  const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
+    id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`),
+  }));
   const venueCount = new Set(promos.filter((p) => p.venue.kind !== "airdrop").map((p) => p.venue.id)).size;
 
   return (
     <>
       <main>
-        <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} venues={topVenues(promos)} />
+        <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)} />
         <Ticker promos={promos} t={t} />
         <TopPools promos={promos} t={t} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}
