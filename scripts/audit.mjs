@@ -2,7 +2,8 @@
 // usage: node scripts/audit.mjs   (site must run on :3100)
 const H = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0)", Accept: "application/json" };
 const j = async (u) => (await fetch(u, { headers: H, signal: AbortSignal.timeout(30000) })).json();
-const site = (p) => j(`http://localhost:3100${p}`);
+const SITE = process.env.SITE || "http://localhost:3100";
+const site = (p) => j(`${SITE}${p}`);
 let bad = 0, ok = 0;
 const check = (cond, msg) => { if (cond) ok++; else { bad++; console.log("  ✕", msg); } };
 const close = (a, b, tol = 0.02) => Math.abs(a - b) <= Math.max(Math.abs(b) * tol, 1e-9);

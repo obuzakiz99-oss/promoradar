@@ -26,7 +26,8 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
   const r = useMemo(() => {
     const qty = v.capital / v.price;
     const margin = v.capital / v.leverage;
-    const liq = v.price * (1 + 1 / v.leverage - v.mmr / 100);
+    // isolated short is liquidated when margin − N·u = mmr·N·(1+u)  →  u = (1/L − mmr) / (1 + mmr)
+    const liq = v.price * (1 + (1 / v.leverage - v.mmr / 100) / (1 + v.mmr / 100));
     const rewards = (v.capital * v.apr) / 100 * (v.days / 365);
     const funding = (v.capital * v.funding) / 100 * (v.days / 365);
     const costs = (v.capital * v.fees) / 100;
