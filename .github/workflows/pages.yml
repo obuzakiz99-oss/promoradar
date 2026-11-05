@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write        # push APR history / posted-state to the `data` branch
   pages: write
   id-token: write
 
@@ -19,20 +19,55 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+
+      # APR history + Telegram state live on the `data` branch (created on first run)
+      - name: Get data branch
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: data
+          path: data
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
+
       - name: Build static site
         run: npm run build
         env:
           GITHUB_PAGES: "1"
           NEXT_PUBLIC_SITE_DOMAIN: ${{ github.repository_owner }}.github.io/promoradar
           NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Record APR snapshot
+        run: node scripts/snapshot.mjs
+
+      - name: Post to Telegram
+        run: node scripts/telegram-post.mjs
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SITE_URL: https://${{ github.repository_owner }}.github.io/promoradar
+          POST_LANG: ${{ vars.POST_LANG || 'uk' }}
+
+      - name: Save data branch
+        working-directory: data
+        run: |
+          if [ ! -d .git ]; then
+            git init -q -b data
+            git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          fi
+          git config user.name "promoradar-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "data: $(date -u +%FT%TZ)" || exit 0
+          git push -q origin HEAD:data
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
