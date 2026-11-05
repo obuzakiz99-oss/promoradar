@@ -3,8 +3,8 @@ import { SITE } from "@/config/site";
 export const UA = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0; +https://promoradar.example)", Accept: "application/json, text/html;q=0.9, application/xml;q=0.8, */*;q=0.5", "Accept-Language": "en-US,en;q=0.9" };
 
 /** Small responses: use Next's fetch cache (ISR). */
-export async function getJson<T = any>(url: string, timeout = 12_000): Promise<T> {
-  const r = await fetch(url, { headers: UA, next: { revalidate: SITE.revalidateSeconds }, signal: AbortSignal.timeout(timeout) });
+export async function getJson<T = any>(url: string, timeout = 12_000, init?: { method?: string; headers?: Record<string, string>; body?: string }): Promise<T> {
+  const r = await fetch(url, { method: init?.method, body: init?.body, headers: { ...UA, ...init?.headers }, next: { revalidate: SITE.revalidateSeconds }, signal: AbortSignal.timeout(timeout) });
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.json() as Promise<T>;
 }

@@ -16,9 +16,22 @@ export interface Pool {
 
 export type PoolStatus = "live" | "upcoming" | "ended";
 
+/** Exchanges whose Launchpool data we read from their public API. */
+export const LP_API = ["binance", "bitget", "gate", "mexc", "kucoin", "lbank"] as const;
+export type LpExchange = (typeof LP_API)[number];
+/** Exchanges with Launchpool-style products but no open API — tracked through their official announcements. */
+export const LP_ANN: Record<string, string> = {
+  bybit: "https://www.bybit.com/en/trade/spot/launchpool", okx: "https://www.okx.com/jumpstart", htx: "https://www.htx.com/en-us/primepool/", bingx: "https://bingx.com/en/launchpool",
+  phemex: "https://phemex.com/earn-crypto/launchpool", bitmart: "https://www.bitmart.com/en-US/launchpool", coinex: "https://www.coinex.com/en/announcements",
+  xt: "https://www.xt.com/en/launchpool", weex: "https://www.weex.com/events", bitunix: "https://www.bitunix.com/activity",
+  whitebit: "https://whitebit.com/staking", bitrue: "https://www.bitrue.com/power-piggy",
+};
+/** Titles that announce a Launchpool-type campaign (stake X → earn new token). */
+export const LP_RE = /launch ?pool|pool ?x\b|gem ?pool|jumpstart|prime ?pool|launchpad|boost ?hub|power ?piggy|stake .{1,40}(to )?(earn|mine|share)|staking (event|pool).{0,40}(new|airdrop)|mining pool|flash earn|subscribe .{1,40} to share|hold .{1,30} to share .{0,30}(token|[A-Z]{2,})/i;
+
 export interface PoolProject {
   id: string;
-  exchange: "gate" | "binance" | "mexc" | "kucoin";
+  exchange: LpExchange;
   token: string;            // reward token
   name: string;
   logo?: string;
@@ -133,6 +146,54 @@ async function kucoin(now: number): Promise<PoolProject[]> {
   });
 }
 
+/* ---------------- Bitget PoolX (public web API; status 1 upcoming · 2 running · 3 ended) ---------------- */
+async function bitget(now: number): Promise<PoolProject[]> {
+  const H = { "content-type": "application/json;charset=UTF-8", language: "en_US", locale: "en_US" };
+  const list = (status: number, pageSize: number) =>
+    getJson("https://www.bitget.com/v1/finance/poolx/product/page/list/new", 15_000, { method: "POST", headers: H, body: JSON.stringify({ pageNo: 1, pageSize, pre: false, status }) });
+  const out: any[] = [];
+  for (const [s, n] of [[2, 20], [1, 20], [3, 20]] as const) {   // sequential: Bitget rate-limits bursts (429)
+    const j = await list(s, n);
+    if (j?.code !== "200") throw new Error(`bitget: ${j?.msg ?? "bad response"}`);
+    out.push(...(j.data?.items ?? []));
+  }
+  const cnt = await getJson("https://www.bitget.com/v1/finance/poolx/product/count", 10_000, { method: "POST", headers: H, body: "{}" }).catch(() => null);
+  if (cnt?.data) TOTALS.bitget = ["overNum", "runningNum", "waitStartNum"].reduce((s, k) => s + (Number(cnt.data[k]) || 0), 0);
+  return out.map((p: any): PoolProject => {
+    const start = Number(p.startTime), end = Number(p.endTime);
+    const pools = (p.productSubList ?? []).map((x: any): Pool => ({
+      stake: x.productSubCoinName, stakeLogo: x.productSubCoinImgUrl, apr: num(x.apr), reward: num(x.totalRewards),
+      maxStake: num(x.userMaxAmount) || undefined, staked: num(x.totalStakedAmount), participants: num(x.userCount), newUsers: !!x.vipPool,
+    }));
+    return {
+      id: `bitget:${p.id}`, exchange: "bitget", token: p.productCoinName, name: p.productCoinName, logo: p.productCoinImgUrl, start, end,
+      status: statusOf(start, end, now), rewardTotal: num(p.totalRewards), url: p.productDetailLinkUrl || "https://www.bitget.com/launchhub/poolx",
+      participants: pools.reduce((s: number, x: Pool) => s + (x.participants ?? 0), 0) || undefined, pools,
+    };
+  });
+}
+
+/* ---------------- LBank BoostHub (public web API) ---------------- */
+// Each project has a sign-up pool (fixed share, no APR) and a "futures position" pool (APR on net futures positions, USDT-margined).
+async function lbank(now: number): Promise<PoolProject[]> {
+  const j = await getJson("https://www.lbank.com/lbk-api/finance-earn-center/launchpool/pageList", 15_000, {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pageNo: 1, pageSize: 20 }),
+  });
+  const list = j?.data?.resultList;
+  if (!Array.isArray(list)) throw new Error("lbank: bad response");
+  return list.map((r: any): PoolProject => {
+    const p = r.project ?? {}, b = r.prizeBasic, f = r.futurePrize;
+    const start = Number(p.startTime), end = Number(p.endTime), token = String(p.assetCode ?? "").toUpperCase();
+    const pools: Pool[] = [];
+    if (f) pools.push({ stake: "USDT", apr: num(f.rateAPR), reward: num(f.total), staked: num(f.sumHoldingAmount), newUsers: true });
+    return {
+      id: `lbank:${p.projectId}`, exchange: "lbank", token, name: p.projectName ?? token, start, end,
+      status: statusOf(start, end, now), rewardTotal: num(p.total), url: "https://www.lbank.com/boosthub",
+      participants: num(b?.participantCount), pools,
+    };
+  });
+}
+
 const STABLE = new Set(["USDT", "USDC", "USD1", "USDG", "FDUSD", "U", "DAI", "USDE", "PYUSD"]);
 
 /** USD prices + 24h change for coins from Gate's public spot tickers (one call, cached 10 min). */
@@ -186,14 +247,14 @@ async function hedgeFor(c: string): Promise<Hedge> {
 }
 
 async function hedges(coins: string[]): Promise<Record<string, Hedge>> {
-  const uniq = [...new Set(coins)].filter((c) => !STABLE.has(c)).slice(0, 25);
+  const uniq = [...new Set(coins)].filter((c) => !STABLE.has(c)).slice(0, 40);
   const res = await Promise.all(uniq.map((c) => cached(`hedge:${c}`, 5 * 60_000, () => hedgeFor(c)).catch(() => ({ perps: [] }) as Hedge)));
   return Object.fromEntries(uniq.map((c, i) => [c, res[i]]));
 }
 
 export async function getPools(): Promise<PoolsData> {
   const now = Date.now();
-  const src = { gate, binance, mexc, kucoin } as const;
+  const src = { gate, binance, mexc, kucoin, bitget, lbank } as const;
   const keys = Object.keys(src) as (keyof typeof src)[];
   const [res, market] = await Promise.all([Promise.allSettled(keys.map((k) => src[k](now))), prices().catch(() => ({ px: {}, chg: {} }) as { px: Record<string, number>; chg: Record<string, number> })]);
   const { px, chg } = market;

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 import { getPromos } from "@/lib/promos";
-import { getPools, isStable } from "@/lib/pools";
+import { getPools, isStable, LP_API } from "@/lib/pools";
 import { getEarn } from "@/lib/earn";
 import { getDexPools } from "@/lib/dexpools";
 import { venueOf } from "@/config/site";
@@ -58,7 +58,7 @@ export default async function Best({ params }: { params: Params }) {
     .map((p) => ({ key: p.id, venue: p.venue, title: p.title, usd: p.reward!.usd!, label: t.cat[p.category], href: withBase(`/${lang}/p/${slugOf(p)}/`) }));
 
   const live = pools.projects.filter((p) => p.status === "live");
-  const exchanges = Object.fromEntries(["gate", "binance", "mexc", "kucoin"].map((id) => [id, venueOf(id)]));
+  const exchanges = Object.fromEntries(LP_API.map((id) => [id, venueOf(id)]));
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">

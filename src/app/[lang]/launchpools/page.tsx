@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
-import { getPools, type PoolProject } from "@/lib/pools";
+import { getPools, LP_ANN, LP_API, LP_RE, type PoolProject } from "@/lib/pools";
+import { getPromos } from "@/lib/promos";
+import { slugOf } from "@/lib/slug";
+import { withBase } from "@/lib/base";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
 import { LaunchpoolBoard } from "@/components/LaunchpoolBoard";
@@ -20,7 +23,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title: `Launchpool Radar — ${t.lp.title}`, description: t.lp.sub, alternates: { canonical: `/${lang}/launchpools` } };
 }
 
-const EX_IDS = ["binance", "gate", "mexc", "kucoin"] as const;
+const EX_IDS = LP_API;
+const ANN_IDS = Object.keys(LP_ANN);
 const fmtNum = (n?: number) => (n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
 
 function period(p: PoolProject, lang: Locale) {
@@ -32,8 +36,13 @@ export default async function Launchpools({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   const L = t.lp;
-  const { projects, prices, changes, hedge, totals, status, fetchedAt } = await getPools();
+  const [{ projects, prices, changes, hedge, totals, status, fetchedAt }, { promos }] = await Promise.all([getPools(), getPromos()]);
   const now = fetchedAt;
+  // official Launchpool-type announcements from exchanges without an open API (last 45 days)
+  const ann = promos
+    .filter((p) => ANN_IDS.includes(p.venue.id) && LP_RE.test(p.title) && (p.endsAt ? p.endsAt > now : now - p.publishedAt < 45 * 86400_000))
+    .sort((a, b) => b.publishedAt - a.publishedAt).slice(0, 24);
+  const annVenues = Object.fromEntries(ANN_IDS.map((id) => [id, venueOf(id)]));
   const active = projects.filter((p) => p.status !== "ended");
   const ended = projects.filter((p) => p.status === "ended");
   const livePools = active.flatMap((p) => p.pools);
@@ -73,7 +82,7 @@ export default async function Launchpools({ params }: { params: Params }) {
               [String(livePools.length), L.statLive],
               [rewardsUsd ? compactUsd(rewardsUsd) : "—", L.statRewards],
               [bestApr ? `${bestApr >= 100 ? Math.round(bestApr) : bestApr.toFixed(1)}%` : "—", L.statBest],
-              [String(EX_IDS.length), L.statEx],
+              [String(EX_IDS.length + ANN_IDS.length), L.statEx],
             ].map(([v, l]) => (
               <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
                 <dt className="sr-only">{l}</dt>
@@ -106,6 +115,36 @@ export default async function Launchpools({ params }: { params: Params }) {
               </div>
             </div>
           )}
+        </section>
+
+        {/* exchanges without an API: official announcements */}
+        <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
+          <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.annTitle}</h2>
+          <p className="mt-1.5 text-sm text-ink-3">{L.annSub}</p>
+          {ann.length > 0 && (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {ann.map((p) => (
+                <a key={p.id} href={withBase(`/${lang}/p/${slugOf(p)}/`)} className="card flex gap-3 p-4">
+                  <VenueLogo v={p.venue} size={34} rounded="rounded-lg" />
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold text-ink-3">{p.venue.name}{p.publishedAt ? ` · ${shortDate(p.publishedAt, lang)}` : ""}</span>
+                    <span className="mt-0.5 line-clamp-2 block text-sm font-semibold leading-snug">{p.title}</span>
+                    {p.reward?.label && <span className="mt-1 block font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+          <p className="mt-5 text-sm text-ink-2">{ann.length ? "" : L.annNone}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {ANN_IDS.map((id) => (
+              <a key={id} href={LP_ANN[id]} target="_blank" rel="noopener" className="flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
+                <VenueLogo v={annVenues[id]} size={26} rounded="rounded-lg" />
+                {annVenues[id].name}
+                <span className="font-mono text-[11px] font-medium text-ink-3">{ann.filter((p) => p.venue.id === id).length || ""}</span>
+              </a>
+            ))}
+          </div>
         </section>
 
         {/* exchange stats */}

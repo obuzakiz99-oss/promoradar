@@ -38,6 +38,9 @@ export const CEX: Record<string, V> = {
   coinex:   cex("coinex",   "CoinEx",   "#28C8B4", "#04140F", "CX", "coinex",      "https://www.coinex.com"),
   bitrue:   cex("bitrue",   "Bitrue",   "#F5B915", "#15120A", "Bt", "bitrue",      "https://www.bitrue.com"),
   kraken:   cex("kraken",   "Kraken",   "#7B61FF", "#FFFFFF", "Kr", "kraken",      "https://www.kraken.com"),
+  lbank:    cex("lbank",    "LBank",    "#F6C946", "#15120A", "LB", undefined,     "https://www.lbank.com"),
+  phemex:   cex("phemex",   "Phemex",   "#E6E9EE", "#0B0D10", "Ph", undefined,     "https://phemex.com"),
+  bitmart:  cex("bitmart",  "BitMart",  "#22C2A8", "#04140F", "BM", undefined,     "https://www.bitmart.com"),
 };
 
 /** DEX / DeFi protocols with their own campaigns. */
