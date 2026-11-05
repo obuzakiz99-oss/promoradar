@@ -69,6 +69,9 @@ export const DEX_FEEDS: Array<{ venue: keyof typeof DEX; feed: string }> = [
 
 /** Official public Telegram announcement channels (read via the public t.me/s/<channel> preview). */
 export const TELEGRAM: Array<{ venue: string; channel: string }> = [
+  // fallbacks for exchanges whose APIs refuse GitHub's US build servers (duplicates with the API are merged)
+  { venue: "bybit",       channel: "Bybit_Announcements" },
+  { venue: "okx",         channel: "OKXAnnouncements" },
   { venue: "bitget",      channel: "bitget_announcements" },
   { venue: "mexc",        channel: "MEXCofficialNews" },
   { venue: "htx",         channel: "HTXGlobalAnnouncementChannel" },
