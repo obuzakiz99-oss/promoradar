@@ -8,7 +8,6 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { LEARN } from "@/lib/i18n-learn";
 import { NoviceToggle } from "./NoviceToggle";
 import { NoviceBanner } from "./NoviceBanner";
-import { FirstVisit } from "./FirstVisit";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   return (
@@ -36,7 +35,6 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           </a>
         </div>
       </div>
-      <FirstVisit text={LEARN[lang].prompt} yes={LEARN[lang].promptYes} no={LEARN[lang].promptNo} />
       <NoviceBanner text={LEARN[lang].banner} link={withBase(`/${lang}/learn/start/`)} linkLabel={LEARN[lang].bannerLink} off={LEARN[lang].bannerOff} />
     </header>
   );

@@ -10,6 +10,8 @@ import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
+import { LEARN } from "@/lib/i18n-learn";
+import { FirstVisit } from "@/components/FirstVisit";
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -47,6 +49,8 @@ export default async function LangLayout({ children, params }: { children: React
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
         {children}
+        {/* outside the header: its backdrop-filter would trap position:fixed */}
+        <FirstVisit text={LEARN[lang].prompt} yes={LEARN[lang].promptYes} no={LEARN[lang].promptNo} />
       </body>
     </html>
   );
