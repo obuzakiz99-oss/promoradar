@@ -14,23 +14,23 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     <header className="sticky top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6">
         <Link href={`/${lang}`} aria-label={SITE.name}><Logo name={SITE.name} /></Link>
-        <nav className="hidden items-center gap-1 text-sm font-semibold text-ink-2 md:flex">
+        <nav className="hidden items-center gap-0.5 whitespace-nowrap text-sm font-semibold text-ink-2 md:flex">
           <a href={withBase(`/${lang}#promos`)} className="rounded-lg px-3 py-2 hover:text-ink">{t.nav.promos}</a>
           <Link href={`/${lang}/launchpools`} className="rounded-lg px-3 py-2 hover:text-ink">
             {t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span>
           </Link>
           <Link href={`/${lang}/tools`} className="rounded-lg px-3 py-2 hover:text-ink">{TOOLS[lang].nav}</Link>
           <Link href={`/${lang}/learn`} className="rounded-lg px-3 py-2 hover:text-ink">{LEARN[lang].nav}</Link>
-          <a href={withBase(`/${lang}#how`)} className="hidden rounded-lg px-3 py-2 hover:text-ink xl:block">{t.nav.how}</a>
-          <a href={withBase(`/${lang}#sources`)} className="hidden rounded-lg px-3 py-2 hover:text-ink lg:block">{t.nav.sources}</a>
-          <a href={withBase(`/${lang}#pro`)} className="rounded-lg px-3 py-2 hover:text-ink">
+          <a href={withBase(`/${lang}#how`)} className="hidden rounded-lg px-3 py-2 hover:text-ink 2xl:block">{t.nav.how}</a>
+          <a href={withBase(`/${lang}#sources`)} className="hidden rounded-lg px-3 py-2 hover:text-ink xl:block">{t.nav.sources}</a>
+          <a href={withBase(`/${lang}#pro`)} className="hidden rounded-lg px-3 py-2 hover:text-ink lg:block">
             {t.nav.pro}
           </a>
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <NoviceToggle label={LEARN[lang].toggle} hint={LEARN[lang].toggleHint} />
           <LangSwitch current={lang} />
-          <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm sm:inline-flex">
+          <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">
             <TgIcon /> {t.nav.telegram}
           </a>
         </div>
