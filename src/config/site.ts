@@ -3,7 +3,8 @@ import type { Category, Venue } from "@/lib/types";
 /** Global site settings. Change the name/domain here once you pick them. */
 export const SITE = {
   name: "PromoRadar",
-  domain: "promoradar.example",          // TODO: your domain
+  // your domain: set NEXT_PUBLIC_SITE_DOMAIN in Vercel once you connect one; until then the Vercel URL is used
+  domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || process.env.VERCEL_PROJECT_PRODUCTION_URL || "promoradar.example",
   telegram: "https://t.me/",              // TODO: your Telegram channel
   contactEmail: "hello@promoradar.example",
   revalidateSeconds: 900,                 // feeds are re-read every 15 min
