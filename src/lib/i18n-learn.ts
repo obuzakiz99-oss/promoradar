@@ -18,7 +18,7 @@ export interface LearnDict {
 }
 
 const uk: LearnDict = {
-  nav: "Новачкам", prompt: "Вперше в крипті? Увімкніть режим новачка — покажемо тільки прості акції й пояснимо всі терміни.", promptYes: "Увімкнути", promptNo: "Ні, дякую", guides: "Детальні інструкції зі скриншотами", toggle: "Новачок", toggleHint: "Режим новачка: простіші акції, пояснення термінів, прибуток у доларах",
+  nav: "Новачкам", prompt: "Вперше в крипті? Увімкніть режим новачка — покажемо тільки прості акції й пояснимо всі терміни.", promptYes: "Увімкнути", promptNo: "Ні, дякую", guides: "Інструкції для кожної біржі і DEX (📷 — зі скриншотами)", toggle: "Новачок", toggleHint: "Режим новачка: простіші акції, пояснення термінів, прибуток у доларах",
   banner: "Режим новачка: показуємо простіші й безпечніші варіанти, складні (ф'ючерси, DeFi, хедж) сховані. Наводьте на підкреслені слова — там пояснення.",
   bannerLink: "З чого почати →", bannerOff: "Вимкнути",
   hubTitle: "Новачкам", hubSub: "Усе, щоб заробити на акціях бірж, навіть якщо ви ніколи не купували криптовалюту.",
@@ -92,7 +92,7 @@ const uk: LearnDict = {
 };
 
 const en: LearnDict = {
-  nav: "Beginners", prompt: "New to crypto? Turn on beginner mode — we'll show only simple promos and explain every term.", promptYes: "Turn on", promptNo: "No, thanks", guides: "Detailed guides with screenshots", toggle: "Beginner", toggleHint: "Beginner mode: simpler promos, explained terms, profit in dollars",
+  nav: "Beginners", prompt: "New to crypto? Turn on beginner mode — we'll show only simple promos and explain every term.", promptYes: "Turn on", promptNo: "No, thanks", guides: "Guides for every exchange and DEX (📷 = with screenshots)", toggle: "Beginner", toggleHint: "Beginner mode: simpler promos, explained terms, profit in dollars",
   banner: "Beginner mode: we show simpler and safer options and hide advanced ones (futures, DeFi, hedging). Hover the underlined words for explanations.",
   bannerLink: "Where to start →", bannerOff: "Turn off",
   hubTitle: "Beginners", hubSub: "Everything you need to earn from exchange promos, even if you've never bought crypto.",
@@ -166,7 +166,7 @@ const en: LearnDict = {
 };
 
 const ru: LearnDict = {
-  nav: "Новичкам", prompt: "Впервые в крипте? Включите режим новичка — покажем только простые акции и объясним все термины.", promptYes: "Включить", promptNo: "Нет, спасибо", guides: "Подробные инструкции со скриншотами", toggle: "Новичок", toggleHint: "Режим новичка: простые акции, объяснения терминов, прибыль в долларах",
+  nav: "Новичкам", prompt: "Впервые в крипте? Включите режим новичка — покажем только простые акции и объясним все термины.", promptYes: "Включить", promptNo: "Нет, спасибо", guides: "Инструкции для каждой биржи и DEX (📷 — со скриншотами)", toggle: "Новичок", toggleHint: "Режим новичка: простые акции, объяснения терминов, прибыль в долларах",
   banner: "Режим новичка: показываем более простые и безопасные варианты, сложные (фьючерсы, DeFi, хедж) скрыты. Наводите на подчёркнутые слова — там объяснения.",
   bannerLink: "С чего начать →", bannerOff: "Выключить",
   hubTitle: "Новичкам", hubSub: "Всё, чтобы заработать на акциях бирж, даже если вы никогда не покупали криптовалюту.",
