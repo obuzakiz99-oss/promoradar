@@ -8,7 +8,7 @@ import { VenueLogo } from "./VenueLogo";
 const TX: Record<Locale, {
   planTitle: string; planSub: string; have: string; lp: (stake: string, token: string, ex: string) => string; forDays: (d: number) => string; perMonth: string;
   earn: (coin: string, ex: string) => string; rest: string; bonus: string; total: string; go: string; none: string;
-  btTitle: string; btSub: (d: number) => string; would: string; inLp: string; inEarn: (apr: string) => string; top: string; held: (v: string) => string; note: string; noBt: string; yearly: string; extraTitle: string; welcome: string; newEarn: string; withExtras: string; extraNote: string;
+  btTitle: string; btSub: (d: number) => string; would: string; inLp: string; inEarn: (apr: string) => string; top: string; held: (v: string) => string; note: string; noBt: string; yearly: string; extraTitle: string; bonusTile: string; welcome: string; newEarn: string; withExtras: string; extraNote: string;
 }> = {
   uk: {
     planTitle: "Ваш план на сьогодні", planSub: "Введіть суму — покажемо, куди її покласти просто зараз і скільки це принесе.", have: "У мене є",
@@ -16,7 +16,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} на ${e} — забрати будь-коли`, rest: "решта суми", bonus: "Бонус новачку", total: "Разом ≈ за 30 днів", go: "Відкрити", none: "Зараз немає простих варіантів — загляньте пізніше.",
     btTitle: "Скільки ви могли б заробити", btSub: (d) => `Якби ${d} днів тому ви тримали суму в найкращих Launchpool на стейблкоїнах (до ліміту кожного пулу), а решту — в Earn USDT, і одразу продавали нагороди:`,
     would: "зараз мали б", inLp: "з Launchpool", inEarn: (a) => `з Earn USDT (${a}, за поточною ставкою)`, top: "Найприбутковіші пули", held: (v) => `Якби тримали отримані токени, а не продавали: ${v}`,
-    note: "Розрахунок на реальних даних бірж за фінальним APR кожного пулу (він нижчий за стартовий — тобто оцінка обережна). Минулий результат не гарантує майбутнього.", noBt: "Поки замало даних для розрахунку.", yearly: "річних", extraTitle: "+ Разові бонуси новачкам (доступні зараз)", welcome: "Бонус за реєстрацію", newEarn: "Підвищена ставка для нових", withExtras: "Разом з бонусами", extraNote: "Отримати можна один раз на кожній біржі; бонус часто видають купоном. Це поточні пропозиції бірж, а не гарантія.",
+    note: "Розрахунок на реальних даних бірж за фінальним APR кожного пулу (він нижчий за стартовий — тобто оцінка обережна). Минулий результат не гарантує майбутнього.", noBt: "Поки замало даних для розрахунку.", yearly: "річних", extraTitle: "+ Разові бонуси новачкам (доступні зараз)", bonusTile: "бонуси новачкам", welcome: "Бонус за реєстрацію", newEarn: "Підвищена ставка для нових", withExtras: "Разом з бонусами", extraNote: "Отримати можна один раз на кожній біржі; бонус часто видають купоном. Це поточні пропозиції бірж, а не гарантія.",
   },
   en: {
     planTitle: "Your plan for today", planSub: "Enter an amount — we'll show where to put it right now and what it brings.", have: "I have",
@@ -24,7 +24,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} on ${e} — withdraw any time`, rest: "the rest", bonus: "New-user bonus", total: "Total ≈ in 30 days", go: "Open", none: "No simple options right now — check back later.",
     btTitle: "What you could have earned", btSub: (d) => `If ${d} days ago you had kept the amount in the best stablecoin Launchpools (up to each pool's cap) and the rest in USDT Earn, selling rewards right away:`,
     would: "you'd now have", inLp: "from Launchpools", inEarn: (a) => `from USDT Earn (${a}, at today's rate)`, top: "Most profitable pools", held: (v) => `If you had kept the reward tokens instead of selling: ${v}`,
-    note: "Calculated on real exchange data using each pool's final APR (lower than the launch APR — a cautious estimate). Past results don't guarantee future ones.", noBt: "Not enough data yet.", yearly: "a year", extraTitle: "+ One-time newcomer bonuses (available now)", welcome: "Sign-up bonus", newEarn: "Boosted new-user rate", withExtras: "Total with bonuses", extraNote: "Each can be claimed once per exchange; bonuses are often vouchers. These are the exchanges' current offers, not a guarantee.",
+    note: "Calculated on real exchange data using each pool's final APR (lower than the launch APR — a cautious estimate). Past results don't guarantee future ones.", noBt: "Not enough data yet.", yearly: "a year", extraTitle: "+ One-time newcomer bonuses (available now)", bonusTile: "newcomer bonuses", welcome: "Sign-up bonus", newEarn: "Boosted new-user rate", withExtras: "Total with bonuses", extraNote: "Each can be claimed once per exchange; bonuses are often vouchers. These are the exchanges' current offers, not a guarantee.",
   },
   ru: {
     planTitle: "Ваш план на сегодня", planSub: "Введите сумму — покажем, куда её положить прямо сейчас и сколько это принесёт.", have: "У меня есть",
@@ -32,7 +32,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} на ${e} — забрать в любой момент`, rest: "остаток суммы", bonus: "Бонус новичку", total: "Итого ≈ за 30 дней", go: "Открыть", none: "Сейчас нет простых вариантов — загляните позже.",
     btTitle: "Сколько вы могли бы заработать", btSub: (d) => `Если бы ${d} дней назад вы держали сумму в лучших Launchpool на стейблкоинах (до лимита каждого пула), а остаток — в Earn USDT, и сразу продавали награды:`,
     would: "сейчас имели бы", inLp: "с Launchpool", inEarn: (a) => `с Earn USDT (${a}, по текущей ставке)`, top: "Самые прибыльные пулы", held: (v) => `Если бы держали полученные токены, а не продавали: ${v}`,
-    note: "Расчёт на реальных данных бирж по финальному APR каждого пула (он ниже стартового — то есть оценка осторожная). Прошлый результат не гарантирует будущего.", noBt: "Пока мало данных для расчёта.", yearly: "годовых", extraTitle: "+ Разовые бонусы новичкам (доступны сейчас)", welcome: "Бонус за регистрацию", newEarn: "Повышенная ставка для новых", withExtras: "Итого с бонусами", extraNote: "Получить можно один раз на каждой бирже; бонус часто выдают купоном. Это текущие предложения бирж, а не гарантия.",
+    note: "Расчёт на реальных данных бирж по финальному APR каждого пула (он ниже стартового — то есть оценка осторожная). Прошлый результат не гарантирует будущего.", noBt: "Пока мало данных для расчёта.", yearly: "годовых", extraTitle: "+ Разовые бонусы новичкам (доступны сейчас)", bonusTile: "бонусы новичкам", welcome: "Бонус за регистрацию", newEarn: "Повышенная ставка для новых", withExtras: "Итого с бонусами", extraNote: "Получить можно один раз на каждой бирже; бонус часто выдают купоном. Это текущие предложения бирж, а не гарантия.",
   },
 };
 
@@ -68,6 +68,9 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
   }, [amount, plan, venues, T]);
   const total = rows.reduce((s, r) => s + r.income, 0);
   const res = bt.results.find((r) => r.amount === btAmount) ?? bt.results[0];
+  // one-time newcomer bonuses on top (new-user Earn pays only on what you put in, up to its cap)
+  const bonusAdd = res ? extras.reduce((s, x) => s + (x.kind === "newEarn" && x.cap ? x.usd * Math.min(1, res.amount / x.cap) : x.usd), 0) : 0;
+  const btTotal = res ? res.profit + bonusAdd : 0;
 
   const Presets = ({ v, set }: { v: number; set: (n: number) => void }) => (
     <div className="flex gap-1.5">
@@ -132,13 +135,14 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
             <div className="mt-4"><Presets v={btAmount} set={setBtAmount} /></div>
             <div className="mt-5 flex flex-wrap items-end gap-x-4 gap-y-1">
               <span className="font-mono text-lg text-ink-3">{usd(res.amount)} →</span>
-              <span className="font-display text-4xl font-semibold text-gradient">{usd(res.amount + res.profit)}</span>
-              <span className="font-mono text-sm font-bold text-lime">{sgn(res.profit)} · {((res.profit / res.amount) * 100).toFixed(1)}% <span className="text-ink-3">(≈ {((res.profit / res.amount) * (365 / bt.days) * 100).toFixed(1)}% {T.yearly})</span></span>
+              <span className="font-display text-4xl font-semibold text-gradient">{usd(res.amount + btTotal)}</span>
+              <span className="font-mono text-sm font-bold text-lime">{sgn(btTotal)} · {((btTotal / res.amount) * 100).toFixed(1)}%</span>
             </div>
             <div className="mt-1 text-xs text-ink-3">{T.would}</div>
-            <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
+            <dl className={`mt-4 grid gap-2 text-sm ${bonusAdd > 0 ? "grid-cols-3" : "grid-cols-2"}`}>
               <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-[11px] font-semibold text-ink-3">{T.inLp}</dt><dd className="font-mono font-bold">+{usd(res.lpPart)}</dd></div>
               <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-[11px] font-semibold text-ink-3">{T.inEarn(`${bt.idleApr.toFixed(1)}%`)}</dt><dd className="font-mono font-bold">+{usd(res.idlePart)}</dd></div>
+              {bonusAdd > 0 && <div className="rounded-xl bg-lime/[0.08] px-3 py-2"><dt className="text-[11px] font-semibold text-lime">{T.bonusTile}</dt><dd className="font-mono font-bold text-lime">+{usd(bonusAdd)}</dd></div>}
             </dl>
             {res.pools.length > 0 && (
               <div className="mt-4">
