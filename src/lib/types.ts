@@ -55,6 +55,10 @@ export interface Promo {
     symbol?: string;
     perUser?: { amount: number; unit: string; usd?: number; text: string };   // most one person can get (from the rules)
     minEntry?: { amount: number; unit: string; kind: "trade" | "deposit" | "stake" | "hold" | "buy"; text: string };   // smallest $ threshold that earns anything
-    datesFromRules?: boolean;   // start/end were read from the rules text
+    datesFromRules?: boolean;
+    geo?: { only?: string; noUA?: boolean; noEU?: boolean; text?: string };   // region-exclusive / country restrictions
+    forNew?: boolean;          // only for new users
+    noDeposit?: boolean;       // quiz / register-to-claim / check-in style: no money needed
+    thin?: boolean;            // no amount, no dates, no rules yet (teaser-like) — shown last   // start/end were read from the rules text
   };
 }

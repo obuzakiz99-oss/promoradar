@@ -3,7 +3,7 @@ import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
-import { getDetails, termsOf, type PromoDetails } from "./details";
+import { geoOf, getDetails, termsOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
 import type { Promo, Venue } from "./types";
@@ -34,6 +34,7 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
         actions: m.actions && tr(m.actions),
         perUser: m.perUser && { ...m.perUser, text: tr(m.perUser.text) },
         minEntry: m.minEntry && { ...m.minEntry, text: tr(m.minEntry.text) },
+        geo: m.geo && { ...m.geo, text: m.geo.text && tr(m.geo.text) },
       },
     };
   });
@@ -94,6 +95,18 @@ async function getPromosLive(): Promise<Collected> {
       p.meta = meta;
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
+    // region / audience / effort flags for the filters
+    const meta = { ...(p.meta ?? {}) };
+    const geo = geoOf(p.title, d);
+    if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
+    if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
+      || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
+    if (!meta.minEntry && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)) meta.noDeposit = true;
+    const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
+    // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
+    if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;
+    if (thin) meta.thin = true;
+    p.meta = Object.keys(meta).length ? meta : p.meta;
     promos.push(p);
   }
   // translations (DeepL Free, cached in data/translations.json) — most visible texts first, full rules last
@@ -104,6 +117,7 @@ async function getPromosLive(): Promise<Collected> {
     if (p.meta?.perUser) texts.push(p.meta.perUser.text);
     if (p.meta?.minEntry) texts.push(p.meta.minEntry.text);
     if (p.meta?.actions) texts.push(p.meta.actions);
+    if (p.meta?.geo?.text) texts.push(p.meta.geo.text);
     if (d) texts.push(...d.facts.map((f) => f.text));
   }
   for (const p of promos) {

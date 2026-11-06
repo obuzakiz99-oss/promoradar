@@ -8,7 +8,28 @@ import { VenueLogo } from "./VenueLogo";
 import { useSaved } from "./SaveButton";
 import { statusOf, type Status } from "@/lib/slug";
 
-type Sort = "newest" | "ending" | "biggest";
+type Sort = "newest" | "ending" | "biggest" | "perUser" | "minEntry";
+type Country = "any" | "ua" | "eu";
+type Quick = "noDeposit" | "low" | "forNew";
+
+const GX: Record<Locale, {
+  country: string; any: string; ua: string; eu: string; hidden: (n: number) => string;
+  quick: Record<Quick, string>; perUser: string; minEntry: string;
+}> = {
+  uk: { country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "🆓 Без вкладень", low: "💵 Поріг до $100", forNew: "🆕 Для нових" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
+  en: { country: "Country", any: "🌍 Any", ua: "🇺🇦 Ukraine", eu: "🇪🇺 EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "🆓 No deposit", low: "💵 Entry ≤ $100", forNew: "🆕 New users" }, perUser: "Most per person", minEntry: "Lowest entry" },
+  ru: { country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "🆓 Без вложений", low: "💵 Порог до $100", forNew: "🆕 Для новых" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
+};
+
+/** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
+const OK_FOR: Record<Exclude<Country, "any">, RegExp> = { ua: /^(CEE|CIS.*|Europe|Ukraine|region)$/i, eu: /^(CEE|CIS & CEE|Europe|EEA|region)$/i };
+export function geoAllowed(p: Promo, c: Country): boolean {
+  const g = p.meta?.geo;
+  if (!g || c === "any") return true;
+  if (c === "ua" && g.noUA) return false;
+  if (c === "eu" && g.noEU) return false;
+  return !g.only || OK_FOR[c].test(g.only);
+}
 type Kind = VenueKind | "all" | "saved";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];
@@ -16,6 +37,8 @@ const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
 const PAGE = 24;
 const VENUE_CHIPS = 9;
 
+/** Smallest known money needed: 0 for no-deposit promos, unknown last. */
+const entry = (p: Promo) => (p.meta?.noDeposit ? 0 : p.meta?.minEntry?.amount ?? Infinity);
 const value = (p: Promo) => p.reward?.usd ?? (p.meta?.apr !== undefined ? p.meta.apr * 100 : -1);
 
 export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: { promos: Promo[]; t: Dict; lang: Locale; serverNow: number; showKinds?: boolean }) {
@@ -29,13 +52,19 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
   const [limit, setLimit] = useState(PAGE);
+  const G = GX[lang];
+  const [country, setCountryS] = useState<Country>(lang === "uk" ? "ua" : "any");
+  const [quick, setQuick] = useState<Set<Quick>>(new Set());
+  useEffect(() => { try { const c = localStorage.getItem("pr:country"); if (c === "any" || c === "ua" || c === "eu") setCountryS(c); } catch { /* blocked */ } }, []);
+  const setCountry = (c: Country) => { setCountryS(c); try { localStorage.setItem("pr:country", c); } catch { /* blocked */ } };
+  const toggleQuick = (k: Quick) => setQuick((s) => { const n = new Set(s); n.has(k) ? n.delete(k) : n.add(k); return n; });
 
   useEffect(() => {
     setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
-  useEffect(() => setLimit(PAGE), [kind, cat, venues, q, sort, status]);
+  useEffect(() => setLimit(PAGE), [kind, cat, venues, q, sort, status, country, quick]);
 
   // "since your last visit": the previous visit time is frozen for this browser session, the new one saved for next time
   const [since, setSince] = useState<number | null>(null);
@@ -54,9 +83,14 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
     return c;
   }, [promos, saved]);
 
+  const geoOk = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
+  const geoHidden = promos.length - geoOk.length;
   const byKind = useMemo(
-    () => promos.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)),
-    [promos, kind, saved, status, now],
+    () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
+      && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
+      && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
+      && (!quick.has("forNew") || !!p.meta?.forNew)),
+    [geoOk, kind, saved, status, now, quick],
   );
 
   const venueList = useMemo(() => {
@@ -86,11 +120,15 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
     if (sort === "newest") rest.sort((a, b) => b.publishedAt - a.publishedAt || value(b) - value(a));
     if (sort === "ending") rest.sort((a, b) => (a.endsAt ?? Infinity) - (b.endsAt ?? Infinity) || b.publishedAt - a.publishedAt);
     if (sort === "biggest") rest.sort((a, b) => value(b) - value(a));
-    return [...sponsored, ...rest];
+    if (sort === "perUser") rest.sort((a, b) => (b.meta?.perUser?.usd ?? -1) - (a.meta?.perUser?.usd ?? -1) || value(b) - value(a));
+    if (sort === "minEntry") rest.sort((a, b) => entry(a) - entry(b) || b.publishedAt - a.publishedAt);
+    // teaser-like posts (no amount, no dates, no rules yet) go after everything else
+    const full = rest.filter((p) => !p.meta?.thin), thin = rest.filter((p) => p.meta?.thin);
+    return [...sponsored, ...full, ...thin];
   }, [base, cat, sort]);
 
   const toggleVenue = (id: string) => setVenues((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
-  const dirty = kind !== "all" || cat !== "all" || venues.size > 0 || q !== "" || sort !== "newest" || status !== "all";
+  const dirty = kind !== "all" || cat !== "all" || venues.size > 0 || q !== "" || sort !== "newest" || status !== "all" || quick.size > 0;
   const shownVenues = allVenues ? venueList : venueList.slice(0, VENUE_CHIPS);
 
   return (
@@ -138,14 +176,16 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
             />
             {q && <button onClick={() => setQ("")} className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Clear">✕</button>}
           </label>
-          <div className="flex h-11 shrink-0 items-center self-start rounded-xl border border-line bg-white/[0.02] p-1 lg:ml-auto" role="group" aria-label={t.filters.sort}>
-            {(["newest", "ending", "biggest"] as Sort[]).map((s) => (
-              <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s}
-                className={`h-full rounded-lg px-2.5 text-xs font-bold transition-colors sm:px-3 ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
-                {t.filters[s]}
-              </button>
-            ))}
-          </div>
+          <label className="relative shrink-0 self-start lg:ml-auto">
+            <span className="sr-only">{t.filters.sort}</span>
+            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}
+              className="h-11 appearance-none rounded-xl border border-line bg-surface pl-3 pr-9 text-xs font-bold text-ink focus:border-lime/50 focus:outline-none">
+              {(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => (
+                <option key={s} value={s}>↕ {s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s]}</option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
+          </label>
         </div>
 
         <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1" role="tablist" aria-label="Category">
@@ -159,17 +199,17 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
             </button>
           ))}
           {dirty && (
-            <button className="chip ml-auto border-dashed" onClick={() => { setKind("all"); setCat("all"); setVenues(new Set()); setQ(""); setSort("newest"); setStatus("all"); }}>
+            <button className="chip ml-auto border-dashed" onClick={() => { setKind("all"); setCat("all"); setVenues(new Set()); setQ(""); setSort("newest"); setStatus("all"); setQuick(new Set()); }}>
               ✕ {t.filters.reset}
             </button>
           )}
         </div>
       </div>
 
-      {/* venues */}
-      {/* venues: folded into one dropdown so the filter area stays short */}
+      {/* venues dropdown · country · quick filters */}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
       {venueList.length > 1 && (
-        <details className="group relative mt-4 w-fit">
+        <details className="group relative w-fit">
           <summary className={`flex h-9 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {t.filters.venues}
             {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}
@@ -187,6 +227,24 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
             ))}
           </div>
         </details>
+      )}
+        <label className="relative">
+          <span className="sr-only">{G.country}</span>
+          <select value={country} onChange={(e) => setCountry(e.target.value as Country)} title={G.country}
+            className={`h-9 appearance-none rounded-xl border pl-3 pr-8 text-[13px] font-bold focus:outline-none ${country !== "any" ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-surface text-ink-2"}`}>
+            {(["any", "ua", "eu"] as Country[]).map((c) => <option key={c} value={c}>{G[c]}</option>)}
+          </select>
+          <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
+        </label>
+        {(["noDeposit", "low", "forNew"] as Quick[]).map((k) => (
+          <button key={k} type="button" onClick={() => toggleQuick(k)} aria-pressed={quick.has(k)}
+            className={`h-9 rounded-xl border px-3 text-[13px] font-bold transition-colors ${quick.has(k) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
+            {G.quick[k]}
+          </button>
+        ))}
+      </div>
+      {geoHidden > 0 && (
+        <p className="mt-2 text-xs text-ink-3">{G.hidden(geoHidden)} · <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setCountry("any")}>{G.any}</button></p>
       )}
 
       {/* grid */}

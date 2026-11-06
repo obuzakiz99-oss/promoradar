@@ -277,6 +277,31 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   return out;
 }
 
+/* ------------------------------------------------------------------ geography */
+export interface Geo { only?: string; noUA?: boolean; noEU?: boolean; text?: string }
+const REGION = "MENA|SEA|LATAM|CIS(?:\\s*(?:&|and)\\s*CEE)?|CEE|APAC|South Asia|Southeast Asia|Middle East|Africa|Türkiye|Turkey|India|Indonesia|Vietnam|Philippines|Nigeria|Kenya|Brazil|Pakistan|Bangladesh|Korea|Japan|Thailand|Argentina|Mexico|Europe|EEA|Ukraine|Kazakhstan|Uzbekistan|Russia";
+const REGION_TITLE = new RegExp(`(?:^|[\\[(\\s])(${REGION})\\b`, "i");
+const RESTRICT = /\b(not (be )?(available|eligible|open|permitted)|excluded|prohibited|restricted|ineligible|cannot participate|may not participate)\b/i;
+
+/** Region-exclusive promos (from the title) and country restrictions (from the rules). */
+export function geoOf(title: string, d?: PromoDetails): Geo {
+  const g: Geo = {};
+  const r = title.match(REGION_TITLE)?.[1];
+  // "[MENA Exclusive] …", "SEA Festival …", "Binance P2P Kenya: …", "CIS & CEE Exclusive: …"
+  if (r && (/exclusive|only\b|\bP2P\b/i.test(title) || title.search(REGION_TITLE) < 14)) g.only = r.length <= 4 ? r.toUpperCase() : r.replace(/\s+/g, " ");
+  else if (/region[- ]exclusive/i.test(title)) g.only = "region";
+  for (const b of d?.blocks ?? []) {
+    if (!RESTRICT.test(b.x)) continue;
+    // occupied areas (Crimea, Donetsk, Luhansk…) are on most lists — that is not "Ukraine is excluded"
+    const x = b.x.replace(/\b(crimea|donetsk|luhansk|sevastopol|kherson|zaporizh\w*)\b[^,;.]*/gi, "")
+      .replace(/\b(occupied|non-government[- ]controlled|certain|temporarily occupied) (areas|regions|territories) of ukraine/gi, "");
+    if (/\bUkraine\b/i.test(x)) { g.noUA = true; g.text ??= b.x; }
+    if (/\b(EEA|European Economic Area|European Union|EU member states?|EU (users|residents)|users (in|from) (the )?(EU|Europe))\b/i.test(x)) { g.noEU = true; g.text ??= b.x; }
+  }
+  if (g.text && g.text.length > 260) g.text = `${g.text.slice(0, 257).replace(/\s+\S*$/, "")}…`;
+  return g;
+}
+
 /* ------------------------------------------------------------------ per-source fetchers */
 const ZENDESK: Record<string, string> = { xt: "xtsupport.zendesk.com", bitunix: "support.bitunix.com", weex: "weexsupport.zendesk.com" };
 

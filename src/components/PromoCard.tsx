@@ -39,6 +39,12 @@ function ReqIcon({ k }: { k: string }) {
 const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
 const RULES: Record<Locale, string> = { uk: "Умови", en: "Rules", ru: "Условия" };
 const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 1 людину`, en: (v) => `up to ${v} per person`, ru: (v) => `до ${v} на 1 человека` };
+const GEO_ONLY: Record<Locale, (r: string) => string> = {
+  uk: (r) => (r === "region" ? "Лише для окремих регіонів" : `Лише ${r}`), en: (r) => (r === "region" ? "Selected regions only" : `${r} only`), ru: (r) => (r === "region" ? "Только для отдельных регионов" : `Только ${r}`),
+};
+const NO_UA: Record<Locale, string> = { uk: "⚠ Обмеження для України", en: "⚠ Not for Ukraine", ru: "⚠ Ограничение для Украины" };
+const FOR_NEW: Record<Locale, string> = { uk: "Для нових користувачів", en: "New users", ru: "Для новых пользователей" };
+const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };
 const PER_T: Record<Locale, string> = { uk: "До на 1 людину", en: "Per person, up to", ru: "До на 1 человека" };
 
@@ -77,12 +83,14 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
           </div>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          {p.sponsored && <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>}
-          {fresh && <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>}
-          {!p.sponsored && !fresh && isNew && <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>}
-          {st === "upcoming" && <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>}
-          {st === "ending" && <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>}
-          {isDrop && (m.hot ?? 0) >= 60 && <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>}
+          {/* one badge only, so the exchange name always fits (most important first) */}
+          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>
+            : st === "ending" ? <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>
+            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>
+            : st === "upcoming" ? <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>
+            : isDrop && (m.hot ?? 0) >= 60 ? <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>
+            : isNew ? <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>
+            : null}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
       </div>
@@ -109,6 +117,16 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
             <p className="mt-2 line-clamp-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}
         </>
+      )}
+
+      {/* who it is for */}
+      {(m.geo?.only || m.geo?.noUA || m.forNew || m.noDeposit) && (
+        <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px] font-bold">
+          {m.geo?.only && <span className="rounded-md bg-amber/10 px-1.5 py-0.5 text-amber">🌍 {GEO_ONLY[lang](m.geo.only)}</span>}
+          {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-1.5 py-0.5 text-rose">{NO_UA[lang]}</span>}
+          {m.forNew && <span className="rounded-md bg-sky/10 px-1.5 py-0.5 text-sky">🆕 {FOR_NEW[lang]}</span>}
+          {m.noDeposit && <span className="rounded-md bg-lime/10 px-1.5 py-0.5 text-lime">🆓 {NO_DEP[lang]}</span>}
+        </div>
       )}
 
       {/* footer */}

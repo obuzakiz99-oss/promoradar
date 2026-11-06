@@ -7,12 +7,15 @@ import { getDict } from "@/lib/i18n";
 import { duration } from "@/lib/format";
 import { useSaved, toggleSaved } from "./SaveButton";
 import { VenueLogo } from "./VenueLogo";
+import { deadlineReminder, icsFile } from "@/lib/ics";
 
 export interface MyPromo { id: string; title: string; venue: Venue; url: string; href: string; endsAt?: number; category: string; reward?: string }
 type Status = "saved" | "joined" | "done" | "skipped";
 interface Track { status: Status; earned?: number; note?: string; title?: string; venue?: string }
 
 const KEY = "pr:track";
+const CAL_T: Record<Locale, string> = { uk: "Дедлайн акції", en: "Promo deadline", ru: "Дедлайн акции" };
+const CAL_ALL: Record<Locale, string> = { uk: "Дедлайни в календар (.ics) — нагадування за день", en: "Deadlines to calendar (.ics) — a day-before reminder", ru: "Дедлайны в календарь (.ics) — напоминание за день" };
 const load = (): Record<string, Track> => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } };
 
 export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
@@ -38,13 +41,26 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
     a.download = "promoradar-my-promos.csv"; a.click();
   };
 
+  // every saved promo with a known end → one .ics with a reminder a day before each deadline
+  const withEnd = rows.filter((r) => r.p?.endsAt && r.p.endsAt > now && r.tr.status !== "skipped" && r.tr.status !== "done");
+  const exportIcs = () => {
+    const ev = withEnd.map(({ p }) => ({
+      uid: p!.id.replace(/[^a-z0-9]/gi, "-"), title: `⏳ ${CAL_T[lang]}: ${p!.title}`.slice(0, 180), at: deadlineReminder(p!.endsAt!, Date.now()),
+      description: `${p!.venue.name} · ${new Date(p!.endsAt!).toUTCString()}`, url: location.origin + p!.href,
+    }));
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([icsFile(ev)], { type: "text/calendar" }));
+    a.download = "promoradar-deadlines.ics"; a.click();
+  };
+
   if (!rows.length) return <div className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{T.emptyMy}</div>;
   return (
     <div className="mt-8">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">${total.toLocaleString("en-US", { maximumFractionDigits: 2 })}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold">{activeN}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.status.joined} · {T.active}</div></div>
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>
+        <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">📅 {withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>
       </div>
       <ul className="mt-6 space-y-2">
         {rows.map(({ id, p, tr }) => {
