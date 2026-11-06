@@ -5,7 +5,7 @@ import { PROX } from "@/lib/i18n-pro";
 import { getInsights } from "@/lib/insights";
 import { venueOf } from "@/config/site";
 import { shortDate } from "@/lib/format";
-import { AprTabs } from "@/components/AprTabs";
+import { TraderTabs } from "@/components/TraderTabs";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 
@@ -33,7 +33,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
-        <AprTabs t={t} lang={lang} active="lp" updated={fetchedAt} />
+        <TraderTabs lang={lang} active="insights" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">📊 {P.insTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.insSub}</p>
 

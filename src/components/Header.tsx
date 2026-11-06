@@ -8,14 +8,16 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { LEARN } from "@/lib/i18n-learn";
 import { NoviceToggle } from "./NoviceToggle";
 import { NoviceBanner } from "./NoviceBanner";
+import { TRADER_NAV } from "./TraderTabs";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   // one list for desktop and the phone menu; `wide` = only on big screens in the desktop bar
-  const items: Array<{ href: string; label: React.ReactNode; wide?: string; external?: boolean }> = [
+  const items: Array<{ href: string; label: React.ReactNode; wide?: string; adv?: boolean }> = [
     { href: withBase(`/${lang}/#promos`), label: t.nav.promos },
     { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></> },
     { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav },
+    { href: withBase(`/${lang}/funding/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block" },
     { href: withBase(`/${lang}/#how`), label: t.nav.how, wide: "2xl:block" },
     { href: withBase(`/${lang}/#sources`), label: t.nav.sources, wide: "xl:block" },
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block" }] : []),
@@ -26,7 +28,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
         <Link href={`/${lang}`} aria-label={SITE.name}><Logo name={SITE.name} /></Link>
         <nav className="hidden items-center gap-0.5 whitespace-nowrap text-sm font-semibold text-ink-2 md:flex">
           {items.map((it, i) => (
-            <a key={i} href={it.href} className={`${it.wide ? `hidden ${it.wide}` : ""} rounded-lg px-3 py-2 hover:text-ink`}>{it.label}</a>
+            <a key={i} href={it.href} className={`${it.wide ? `hidden ${it.wide}` : ""} ${it.adv ? "adv" : ""} rounded-lg px-3 py-2 hover:text-ink`}>{it.label}</a>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
@@ -45,7 +47,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
             </summary>
             <nav className="absolute right-0 top-12 w-64 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl">
               {items.map((it, i) => (
-                <a key={i} href={it.href} className="flex h-11 items-center rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink">{it.label}</a>
+                <a key={i} href={it.href} className={`${it.adv ? "adv " : ""}flex h-11 items-center rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink`}>{it.label}</a>
               ))}
               {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink"><TgIcon /> {t.nav.telegram}</a>}
               <div className="mt-1 border-t border-line px-2 pt-3 pb-1"><LangSwitch current={lang} /></div>

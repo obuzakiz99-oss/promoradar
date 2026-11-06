@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { PROX } from "@/lib/i18n-pro";
 import { FUNDING_EX, getFunding } from "@/lib/funding";
-import { AprTabs } from "@/components/AprTabs";
+import { TraderTabs } from "@/components/TraderTabs";
 import { FundingBoard } from "@/components/FundingBoard";
 import { Footer } from "@/components/Sections";
 
@@ -25,7 +25,7 @@ export default async function FundingPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <AprTabs t={t} lang={lang} active="funding" updated={fetchedAt} />
+        <TraderTabs lang={lang} active="funding" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">⚖️ {P.fundTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.fundSub}</p>
         <p className="mt-2 max-w-3xl text-sm text-ink-3">{P.fundHow}</p>

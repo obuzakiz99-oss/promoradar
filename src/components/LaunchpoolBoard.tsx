@@ -13,6 +13,7 @@ import { compactUsd, duration } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
+const MORE: Record<Locale, string> = { uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
 const PRESETS = [100, 1000, 10000];
 
 function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | "color" | "ink" | "monogram"> {
@@ -279,11 +280,16 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 {p.rulesUrl && <a href={p.rulesUrl} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-3 text-sm">{L.rules}</a>}
               </div>
 
-              {/* hedge box + pros & cons */}
-              <div className="nov-1col grid gap-4 border-t border-line pt-4 lg:col-span-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
-                <div className="adv"><HedgeBox r={r} L={L} /></div>
-                <ProsCons pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
-              </div>
+              {/* hedge box + pros & cons — folded under "More" to keep the card light */}
+              <details className="group border-t border-line pt-3 lg:col-span-5">
+                <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
+                  <span className="transition-transform group-open:rotate-90">▸</span>{MORE[lang]}
+                </summary>
+                <div className="nov-1col mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
+                  <div className="adv"><HedgeBox r={r} L={L} /></div>
+                  <ProsCons pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
+                </div>
+              </details>
             </article>
           );
         })}

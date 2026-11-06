@@ -167,22 +167,26 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
       </div>
 
       {/* venues */}
+      {/* venues: folded into one dropdown so the filter area stays short */}
       {venueList.length > 1 && (
-        <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label={t.filters.venues}>
-          {shownVenues.map(({ v, n }) => (
-            <button key={v.id} onClick={() => toggleVenue(v.id)} aria-pressed={venues.has(v.id)}
-              className={`flex h-9 items-center gap-2 rounded-xl border pl-1.5 pr-3 text-[13px] font-bold transition-all ${venues.has(v.id) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:border-line-2 hover:text-ink"}`}>
-              <VenueLogo v={v} size={24} rounded="rounded-lg" />
-              {v.name}
-              <span className="font-mono text-[11px] text-ink-3">{n}</span>
-            </button>
-          ))}
-          {venueList.length > VENUE_CHIPS && (
-            <button onClick={() => setAllVenues((x) => !x)} className="h-9 rounded-xl border border-dashed border-line-2 px-3 text-[13px] font-bold text-ink-2 hover:text-ink">
-              {allVenues ? t.filters.less : `${t.filters.more} +${venueList.length - VENUE_CHIPS}`}
-            </button>
-          )}
-        </div>
+        <details className="group relative mt-4 w-fit">
+          <summary className={`flex h-9 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
+            {t.filters.venues}
+            {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}
+            {venues.size > 0 && <span className="font-mono text-[11px] text-lime">{venues.size}</span>}
+            <span className="text-ink-3 transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div className="absolute left-0 top-11 z-30 grid w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
+            {venueList.map(({ v, n }) => (
+              <button key={v.id} type="button" onClick={() => toggleVenue(v.id)} aria-pressed={venues.has(v.id)}
+                className={`flex h-9 items-center gap-2 rounded-xl border pl-1.5 pr-3 text-[13px] font-bold transition-all ${venues.has(v.id) ? "border-lime/60 bg-lime/10 text-ink" : "border-transparent text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
+                <VenueLogo v={v} size={22} rounded="rounded-lg" />
+                <span className="truncate">{v.name}</span>
+                <span className="ml-auto font-mono text-[11px] text-ink-3">{n}</span>
+              </button>
+            ))}
+          </div>
+        </details>
       )}
 
       {/* grid */}

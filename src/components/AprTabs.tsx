@@ -15,8 +15,6 @@ export function AprTabs({ t, lang, active, updated }: { t: Dict; lang: Locale; a
     { id: "lp", href: `/${lang}/launchpools`, label: t.aprHub.tabLp, icon: "🚀" },
     { id: "earn", href: `/${lang}/earn`, label: t.aprHub.tabEarn, icon: "🏦" },
     { id: "dex", href: `/${lang}/dex`, label: t.aprHub.tabDex, icon: "🦄", adv: true },
-    { id: "fixed", href: `/${lang}/fixed`, label: EXTRA[lang].fixed, icon: "📌", adv: true },
-    { id: "funding", href: `/${lang}/funding`, label: EXTRA[lang].funding, icon: "⚖️", adv: true },
   ];
   return (
     <div className="flex flex-wrap items-center gap-3">

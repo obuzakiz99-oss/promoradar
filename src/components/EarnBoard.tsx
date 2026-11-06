@@ -113,27 +113,6 @@ export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: Ear
         })}
       </div>
 
-      {/* grid of popular coins */}
-      <h2 className="mt-14 font-display text-2xl font-semibold tracking-tight">{A.grid}</h2>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {grid.map(({ c, best, boosted, n }) => (
-          <button key={c} onClick={() => { setCoin(c); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="card p-4 text-left">
-            <div className="flex items-center justify-between">
-              <span className="font-display text-lg font-semibold">{c}</span>
-              <span className="font-mono text-[11px] text-ink-3">{n} {A.exchanges}</span>
-            </div>
-            <div className="mt-3 flex items-end justify-between gap-2">
-              <div>
-                <div className="font-mono text-2xl font-bold">{pct(best.apr)}</div>
-                <div className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold text-ink-3"><VenueLogo v={exchanges[best.exchange]} size={16} rounded="rounded" />{exchanges[best.exchange].name}</div>
-              </div>
-              {(boosted.aprMax ?? 0) > best.apr && (
-                <div className="text-right font-mono text-xs font-bold text-lime">{A.upTo} {pct(boosted.aprMax!)}<div className="font-sans text-[10px] font-semibold text-ink-3">{exchanges[boosted.exchange].name}</div></div>
-              )}
-            </div>
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

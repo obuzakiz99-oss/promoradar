@@ -4,7 +4,7 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { PROX } from "@/lib/i18n-pro";
 import { getFixed } from "@/lib/fixed";
 import { shortDate } from "@/lib/format";
-import { AprTabs } from "@/components/AprTabs";
+import { TraderTabs } from "@/components/TraderTabs";
 import { Term } from "@/components/Term";
 import { Footer } from "@/components/Sections";
 
@@ -27,7 +27,7 @@ export default async function FixedPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
-        <AprTabs t={t} lang={lang} active="fixed" updated={fetchedAt} />
+        <TraderTabs lang={lang} active="fixed" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">📌 {P.fixTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.fixSub}</p>
         {rows.length === 0 ? <p className="mt-8 text-ink-3">{P.noData}</p> : (
