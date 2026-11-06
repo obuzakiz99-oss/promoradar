@@ -312,6 +312,57 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   return out;
 }
 
+/* ------------------------------------------------------------------ reward tiers (for the "how much will I get" calculator) */
+export interface Tier { min: number; reward: string; amount: number; unit: string }
+const DOLLAR = /(?:≥|>=|at least|over|from|min(?:imum)?\.?)?\s*\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\s*(USDT|USDC|USD|\$)/i;
+const PRIZE = /(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\s*([A-Z][A-Z0-9]{1,9}|USDT|USDC)\b/;
+/**
+ * Threshold → reward rows from the rules' tables, e.g. "Stock trading volume ≥ 500 USDT · 1 draw chance",
+ * "Net deposit ≥ 100 USDT · 10 USDT". Only rows whose reward is a token amount are used; ≥ 2 rows needed.
+ */
+export function tiersOf(blocks: Block[]): Tier[] {
+  // each table separately (rows next to each other); the first one that reads like personal tiers wins
+  const groups: Block[][] = [];
+  blocks.forEach((b, i) => {
+    if (b.t !== "tr") return;
+    if (i > 0 && blocks[i - 1].t === "tr") groups[groups.length - 1].push(b);
+    else groups.push([b]);
+  });
+  for (const g of groups) {
+    const t = tableTiers(g);
+    // personal tiers: thresholds a person can reach, same reward unit, reward grows with the threshold
+    if (t.length >= 2 && t.every((x) => x.min <= 5_000_000 && x.unit === t[0].unit) && t.every((x, i) => i === 0 || x.amount > t[i - 1].amount)) return t;
+  }
+  return [];
+}
+
+function tableTiers(rows: Block[]): Tier[] {
+  const out: Tier[] = [];
+  for (const b of rows) {
+    if (b.t !== "tr" || !b.cells || b.cells.length < 2) continue;
+    const condIdx = b.cells.findIndex((c) => DOLLAR.test(c) && /≥|>=|at least|volume|deposit|trade|trading|stake|hold|net|reach|\d\s*(USDT|USDC|USD)/i.test(c));
+    if (condIdx < 0) continue;
+    const m = b.cells[condIdx].match(DOLLAR)!;
+    const min = Number(m[1].replace(/,/g, "")) * (m[2] ? (/m/i.test(m[2]) ? 1e6 : 1e3) : 1);
+    const rewardCell = b.cells.find((c, i) => i !== condIdx && PRIZE.test(c) && !/≥|>=|volume|deposit/i.test(c));
+    if (!rewardCell || !(min > 0)) continue;
+    const r = rewardCell.match(PRIZE)!;
+    const amount = Number(r[1].replace(/,/g, "")) * (r[2] ? (/m/i.test(r[2]) ? 1e6 : 1e3) : 1);
+    if (!(amount > 0) || /^(APR|APY|VIP|KYC|UID)$/.test(r[3])) continue;
+    out.push({ min, reward: rewardCell.length > 60 ? `${amount.toLocaleString("en-US")} ${r[3]}` : rewardCell, amount, unit: r[3] });
+  }
+  const uniq = out.filter((t, i) => out.findIndex((x) => x.min === t.min) === i).sort((a, b) => a.min - b.min);
+  return uniq.length >= 2 && uniq.length <= 15 ? uniq : [];
+}
+/** "Earn up to 7% APR", "6% reference APR" → the advertised yearly rate (for interest-type promos). */
+export function aprOf(title: string, lines: string[]): number | undefined {
+  for (const s of [title, ...lines.slice(0, 15)]) {
+    const m = s.match(/(\d{1,3}(?:\.\d+)?)\s?%\s?(?:reference\s+|estimated\s+|annual(?:ized)?\s+)?(APR|APY)/i);
+    if (m) { const v = Number(m[1]); if (v > 0 && v <= 1000) return v; }
+  }
+  return undefined;
+}
+
 /* ------------------------------------------------------------------ geography */
 export interface Geo { only?: string; noUA?: boolean; noEU?: boolean; text?: string }
 const REGION = "MENA|SEA|LATAM|CIS(?:\\s*(?:&|and)\\s*CEE)?|CEE|APAC|South Asia|Southeast Asia|Middle East|Africa|Türkiye|Turkey|India|Indonesia|Vietnam|Philippines|Nigeria|Kenya|Brazil|Pakistan|Bangladesh|Korea|Japan|Thailand|Argentina|Mexico|Europe|EEA|Ukraine|Kazakhstan|Uzbekistan|Russia";

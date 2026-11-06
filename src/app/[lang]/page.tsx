@@ -3,7 +3,8 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos, topVenues, totalUsd } from "@/lib/promos";
 import { Hero } from "@/components/Hero";
 import type { RadarItem } from "@/components/RadarPicker";
-import { HAS_PRO, HAS_TG, VENUES } from "@/config/site";
+import { HAS_PRO, HAS_TG, SITE, VENUES } from "@/config/site";
+import { TodayTop } from "@/components/TodayTop";
 import { slugOf } from "@/lib/slug";
 import { promoLevel } from "@/lib/level";
 import { withBase } from "@/lib/base";
@@ -32,6 +33,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <main>
         <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
+        <TodayTop promos={promos} lang={lang} now={fetchedAt} siteUrl={`https://${SITE.domain}`} />
         <Ticker promos={promos} t={t} />
         <TopPools promos={promos} t={t} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}

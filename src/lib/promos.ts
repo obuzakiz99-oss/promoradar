@@ -3,7 +3,7 @@ import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, MANUAL, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
-import { factsOf, geoOf, getDetails, poolOf, termsOf, type PromoDetails } from "./details";
+import { aprOf, factsOf, geoOf, getDetails, poolOf, termsOf, tiersOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
 import type { Promo, Venue } from "./types";
@@ -104,6 +104,12 @@ async function getPromosLive(): Promise<Collected> {
         meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
       }
       if (tm.minEntry) meta.minEntry = tm.minEntry;
+      // calculator inputs: reward tiers, advertised APR, futures vs spot (fees)
+      const tiers = tiersOf(d.blocks);
+      if (tiers.length) meta.tiers = tiers;
+      const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
+      if (apr !== undefined && meta.apr === undefined) meta.aprPct = apr;
+      if (/\b(futures|perps?|perpetual|contract|CFD)\b/i.test(`${p.title} ${tm.minEntry?.text ?? ""}`)) meta.futures = true;
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
       if (!p.reward && p.category !== "farming") {
         const pool = poolOf([p.title, ...d.blocks.map((b) => b.x)]);

@@ -13,6 +13,7 @@ import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
+import { EarnCalc } from "@/components/EarnCalc";
 
 export const revalidate = 900;
 export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
@@ -259,6 +260,11 @@ export default async function PromoPage({ params }: { params: Params }) {
               </div>
             )}
           </div>
+        )}
+
+        {/* "how much would I get" — only when the rules give something to calculate with */}
+        {p.category !== "farming" && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
+          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
 
         {/* who can join: region-exclusive / restricted countries / new users only */}
