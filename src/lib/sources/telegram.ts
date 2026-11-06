@@ -50,15 +50,25 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
   const store = loadStore();
   const deep = !store.backfilled[ch] || Date.now() - store.backfilled[ch] > 7 * 86400_000;   // re-backfill weekly
   const out: Promo[] = [];
-  let before = "";
+  let before = "", done = false, failed: unknown = null;
   for (let page = 0; page < (deep ? 12 : 2); page++) {
-    const html = await getText(`https://t.me/s/${ch}${before ? `?before=${before}` : ""}`, 15_000);
+    const url = `https://t.me/s/${ch}${before ? `?before=${before}` : ""}`;
+    // Telegram sometimes drops a request (seen on GitHub runners) — retry once, then keep what we already have
+    let html = "";
+    for (let a = 0; a < 3 && !html; a++) {
+      try { html = await getText(url, 15_000); } catch (e) { failed = e; await new Promise((r) => setTimeout(r, 2500 * (a + 1))); }
+    }
+    if (!html) break;
+    failed = null;
     const { promos, minId, oldest } = parsePage(html, venue, ch);
     out.push(...promos);
-    if (!minId || oldest < Date.now() - BACK_MS) break;
+    if (!minId || oldest < Date.now() - BACK_MS) { done = true; break; }
     before = String(minId);
   }
-  if (deep) store.backfilled[ch] = Date.now();
+  if (deep && done) store.backfilled[ch] = Date.now();
+  // nothing fetched and nothing stored → report the error; otherwise the stored promos still count
+  const stored = Object.values(store.promos).some((p) => p.id.toLowerCase().startsWith(`tg:${ch.toLowerCase()}/`));
+  if (failed && !out.length && !stored) throw failed;
   // merge with what earlier builds found (a post that scrolled out of the preview is still a running promo)
   for (const p of out) store.promos[p.id] = p;
   // a post without an end date is kept 14 days (most exchange campaigns run 1–2 weeks); with an end date — until it ends
@@ -104,8 +114,8 @@ function parsePage(html: string, venue: string, ch: string): { promos: Promo[]; 
 export async function telegram(): Promise<{ promos: Promo[]; status: TgStatus }> {
   // channels one after another (a few at a time) — the deep first run makes ~10 requests per channel
   const res: PromiseSettledResult<Promo[]>[] = [];
-  for (let i = 0; i < TELEGRAM.length; i += 4) {
-    res.push(...await Promise.allSettled(TELEGRAM.slice(i, i + 4).map((c) => channel(c.venue, c.channel))));
+  for (let i = 0; i < TELEGRAM.length; i += 3) {
+    res.push(...await Promise.allSettled(TELEGRAM.slice(i, i + 3).map((c) => channel(c.venue, c.channel))));
   }
   saveStore();
   const status: TgStatus = {};
