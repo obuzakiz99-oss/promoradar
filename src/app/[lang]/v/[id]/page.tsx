@@ -29,7 +29,7 @@ export default async function VenuePage({ params }: { params: Params }) {
   const t = getDict(lang);
   const cfg = VENUES[id];
   const v = venueOf(id);
-  const { promos, fetchedAt } = await getPromos();
+  const { promos, fetchedAt } = await getPromos(lang);
   const mine = promos.filter((p) => p.venue.id === id);
   const others = Object.keys(VENUES).filter((k) => k !== id);
 

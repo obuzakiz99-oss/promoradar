@@ -42,7 +42,7 @@ export default async function Launchpools({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   const L = t.lp;
-  const [{ projects, prices, changes, hedge, totals, status, fetchedAt }, { promos }] = await Promise.all([getPools(), getPromos()]);
+  const [{ projects, prices, changes, hedge, totals, status, fetchedAt }, { promos }] = await Promise.all([getPools(), getPromos(lang)]);
   const now = fetchedAt;
   // official Launchpool-type announcements from exchanges without an open API (last 45 days)
   const ann = promos

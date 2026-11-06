@@ -29,7 +29,7 @@ export default async function Bonuses({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TOOLS[lang];
-  const { promos, fetchedAt } = await getPromos();
+  const { promos, fetchedAt } = await getPromos(lang);
   const groups = new Map<string, Promo[]>();
   for (const p of promos.filter(isNewUser)) groups.set(p.venue.id, [...(groups.get(p.venue.id) ?? []), p]);
   const rows = [...groups].map(([id, list]) => {

@@ -12,7 +12,7 @@ import { decodeEntities, getJson, getText } from "./sources/util";
 export type Block = { t: "h" | "p" | "li" | "tr"; x: string; cells?: string[] };
 export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "kyc";
 export interface Fact { k: FactKey; text: string }
-export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number }
+export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number }
 
 const VER = 2;               // bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build

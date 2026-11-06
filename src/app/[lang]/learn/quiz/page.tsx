@@ -34,7 +34,7 @@ export default async function LearnQuiz({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), Q = LEARN[lang].quiz;
-  const [earn, pools, { promos, fetchedAt }] = await Promise.all([getEarn(), getPools(), getPromos()]);
+  const [earn, pools, { promos, fetchedAt }] = await Promise.all([getEarn(), getPools(), getPromos(lang)]);
 
   const items: QuizItem[] = [];
   // Earn on stablecoins: regular flexible / fixed (sane rates only) and new-user boosts

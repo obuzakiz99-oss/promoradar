@@ -12,7 +12,8 @@ const kebab = (s: string) =>
 
 /** URL slug for a promo: "<hash>-<venue>-<title-words>". */
 export function slugOf(p: Promo): string {
-  const text = p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? p.title : `${p.venue.name} ${p.title}`;
+  const title = p.titleOrig ?? p.title;     // same slug in every language
+  const text = title.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? title : `${p.venue.name} ${title}`;
   return `${hash(p.id)}-${kebab(p.venue.kind === "airdrop" ? `${text} airdrop` : text) || "promo"}`;
 }
 

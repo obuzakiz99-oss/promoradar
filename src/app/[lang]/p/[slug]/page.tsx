@@ -26,7 +26,7 @@ type Params = Promise<{ lang: string; slug: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!isLocale(lang)) return {};
-  const p = findBySlug((await getPromos()).promos, slug);
+  const p = findBySlug((await getPromos(lang)).promos, slug);
   if (!p) return { title: "404" };
   const t = getDict(lang);
   const bits = [p.venue.name, t.cat[p.category], p.reward?.label, p.meta?.apr ? `+${p.meta.apr}% APR` : ""].filter(Boolean).join(" · ");
@@ -37,10 +37,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const RULES_TX: Record<Locale, {
   title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
   none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
+  noteTr: (v: string) => string; keySubTr: string;
   minTitle: string; from: string; kind: Record<"trade" | "deposit" | "stake" | "hold" | "buy", string>;
   perUser: string; upTo: string; noCap: string; published: string; noEnd: string; left: string; poolShared: string; noCapShort: string;
 }> = {
   uk: {
+    noteTr: (v) => `Машинний переклад (DeepL) офіційних умов ${v}. Якщо щось незрозуміло або розходиться — діє оригінал на сайті біржі.`,
+    keySubTr: "Ключові рядки з офіційних правил біржі (машинний переклад). Повний текст — нижче.",
     minTitle: "Щоб отримати хоч щось", from: "від", kind: { trade: "Торгівля", deposit: "Депозит", stake: "Стейк", hold: "Тримати", buy: "Купівля" },
     published: "опубліковано", noEnd: "Біржа не вказала дату завершення", left: "залишилось", poolShared: "Максимум на людину не вказано · спільний фонд", noCapShort: "Максимум на одну людину біржа не вказала — дивіться умови нижче",
     perUser: "Можна заробити (1 людина)", upTo: "до", noCap: "Біржа не вказує максимум на одну людину — нагорода ділиться між учасниками за правилами акції (див. нижче).",
@@ -53,6 +56,8 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
   },
   en: {
+    noteTr: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
+    keySubTr: "Key lines from the exchange's official rules. Full text below.",
     minTitle: "To get anything at all", from: "from", kind: { trade: "Trade", deposit: "Deposit", stake: "Stake", hold: "Hold", buy: "Buy" },
     published: "published", noEnd: "The exchange gave no end date", left: "left", poolShared: "No per-person maximum stated · shared pool", noCapShort: "The exchange states no per-person maximum — see the rules below",
     perUser: "One person can get", upTo: "up to", noCap: "The exchange doesn't state a per-person maximum — the reward is split between participants under the rules (see below).",
@@ -65,6 +70,8 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
   },
   ru: {
+    noteTr: (v) => `Машинный перевод (DeepL) официальных условий ${v}. Если что-то непонятно или расходится — действует оригинал на сайте биржи.`,
+    keySubTr: "Ключевые строки из официальных правил биржи (машинный перевод). Полный текст — ниже.",
     minTitle: "Чтобы получить хоть что-то", from: "от", kind: { trade: "Торговля", deposit: "Депозит", stake: "Стейк", hold: "Держать", buy: "Покупка" },
     published: "опубликовано", noEnd: "Биржа не указала дату окончания", left: "осталось", poolShared: "Максимум на человека не указан · общий фонд", noCapShort: "Максимум на одного человека биржа не указала — смотрите условия ниже",
     perUser: "Можно заработать (1 человек)", upTo: "до", noCap: "Биржа не указывает максимум на одного человека — награда делится между участниками по правилам акции (см. ниже).",
@@ -113,7 +120,7 @@ function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
   ) : <BlockView key={i} b={g} />;
   const cut = (() => { let n = 0; for (let i = 0; i < groups.length; i++) { n += Array.isArray(groups[i]) ? 4 : 1; if (n >= 28) return i + 1; } return groups.length; })();
   return (
-    <div lang="en" className="mt-4 space-y-2 text-sm leading-relaxed text-ink-2">
+    <div className="mt-4 space-y-2 text-sm leading-relaxed text-ink-2">
       {groups.slice(0, cut).map(render)}
       {cut < groups.length && (
         <details className="group">
@@ -132,7 +139,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
-  const { promos, fetchedAt, details } = await getPromos();
+  const { promos, fetchedAt, details } = await getPromos(lang);
   const p = findBySlug(promos, slug);
   if (!p) notFound();
   const now = fetchedAt;
@@ -156,7 +163,7 @@ export default async function PromoPage({ params }: { params: Params }) {
     <span>
       <span className="text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}</span>
       {pu.usd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(pu.usd)})</span>}
-      <span lang="en" className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
+      <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
     </span>
   ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
@@ -228,7 +235,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
                 <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
                 <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString("en-US")}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
-                <div lang="en" className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
+                <div className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
               </div>
             )}
           </div>
@@ -238,12 +245,12 @@ export default async function PromoPage({ params }: { params: Params }) {
         {det && det.facts.length > 0 && (
           <section className="card mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
             <h2 className="font-display text-xl font-semibold tracking-tight">📌 {R.keyTitle}</h2>
-            <p className="mt-1 text-xs text-ink-3">{R.keySub}</p>
+            <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0 ? R.keySubTr : R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">
               {det.facts.map((f, i) => (
                 <div key={i} className="grid gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
                   <dt className="font-semibold text-ink-3">{R.fact[f.k]}</dt>
-                  <dd lang="en" className="text-ink">{f.text}</dd>
+                  <dd className="text-ink">{f.text}</dd>
                 </div>
               ))}
             </dl>
@@ -299,7 +306,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           </div>
           {det && det.blocks.length > 0 ? (
             <>
-              <p className="mt-1 text-xs text-ink-3">{R.note(p.venue.name)}{det.partial ? ` ${R.partial}` : ""}</p>
+              <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0.5 ? R.noteTr(p.venue.name) : R.note(p.venue.name)}{det.partial ? ` ${R.partial}` : ""}</p>
               <Rules blocks={det.blocks} more={R.more} />
             </>
           ) : (

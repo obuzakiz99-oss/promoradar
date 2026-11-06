@@ -24,7 +24,7 @@ export default async function Calendar({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TOOLS[lang];
-  const [{ promos, fetchedAt }, pools] = await Promise.all([getPromos(), getPools()]);
+  const [{ promos, fetchedAt }, pools] = await Promise.all([getPromos(lang), getPools()]);
   const now = fetchedAt, horizon = now + 45 * 86400_000;
   const events: CalEvent[] = [];
   for (const p of promos) {

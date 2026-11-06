@@ -9,7 +9,7 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 export async function rssResponse(lang: Locale): Promise<Response> {
   const t = getDict(lang);
   const base = `https://${SITE.domain}`;
-  const { promos } = await getPromos();
+  const { promos } = await getPromos(lang);
   const items = promos.filter((p) => p.publishedAt > 0).slice(0, 60).map((p) => `
     <item>
       <title>${esc(`${p.venue.name}: ${p.title}`)}</title>

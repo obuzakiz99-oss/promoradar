@@ -20,7 +20,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   // "your plan for today" and the 90-day backtest (MoneyBlock) were removed from the home page 06.11 at the user's request
-  const [{ promos, status, fetchedAt }, pools] = await Promise.all([getPromos(), getPools().catch(() => null)]);
+  const [{ promos, status, fetchedAt }, pools] = await Promise.all([getPromos(lang), getPools().catch(() => null)]);
   const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
     id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",

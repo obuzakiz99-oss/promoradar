@@ -7,7 +7,10 @@ import { airdrops, dexBlogs, farming, lighter } from "./defi";
 import { telegram } from "./telegram";
 
 export type SourceStatus = { ok: boolean; count: number; error?: string; name: string; kind: string; via: string };
-export interface Collected { promos: Promo[]; status: Record<string, SourceStatus>; fetchedAt: number; details?: Record<string, PromoDetails> }
+export interface Collected {
+  promos: Promo[]; status: Record<string, SourceStatus>; fetchedAt: number; details?: Record<string, PromoDetails>;
+  i18n?: Record<"uk" | "ru", Record<string, string>>;   // original text → translation
+}
 
 function fromRaw(r: Raw): Promo | null {
   const title = cleanTitle(r.title);

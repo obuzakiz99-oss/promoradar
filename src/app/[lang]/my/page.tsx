@@ -22,7 +22,7 @@ export default async function My({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TOOLS[lang];
-  const { promos, fetchedAt } = await getPromos();
+  const { promos, fetchedAt } = await getPromos(lang);
   const light: MyPromo[] = promos.map((p) => ({
     id: p.id, title: p.title, venue: p.venue, url: p.url, href: withBase(`/${lang}/p/${slugOf(p)}/`), endsAt: p.endsAt, category: p.category, reward: p.reward?.label,
   }));

@@ -35,7 +35,7 @@ export default async function Best({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TOOLS[lang];
-  const [{ promos, fetchedAt }, pools, earn, dex] = await Promise.all([getPromos(), getPools(), getEarn(), getDexPools()]);
+  const [{ promos, fetchedAt }, pools, earn, dex] = await Promise.all([getPromos(lang), getPools(), getEarn(), getDexPools()]);
   const now = fetchedAt;
   const A = t.aprHub;
 

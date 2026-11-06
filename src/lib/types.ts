@@ -31,6 +31,7 @@ export interface Promo {
   id: string;
   venue: Venue;
   title: string;
+  titleOrig?: string;        // original-language title when `title` is a translation (slugs use this)
   url: string;               // original page / rules
   joinUrl?: string;          // where "Join" leads (referral link or app)
   category: Category;

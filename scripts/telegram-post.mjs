@@ -34,12 +34,14 @@ state ??= { ids: [] };
 const seen = new Set(state.ids);
 
 const msgs = [];
-const promos = read("promos").promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen);
+const feed = read("promos");
+const trTitle = (p) => feed.titles?.[LANG]?.[p.id] ?? p.title;   // translated title for the posting language
+const promos = feed.promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen);
 for (const p of promos) {
   const key = `promo:${p.id}`; if (seen.has(key)) continue;
   if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
   msgs.push([key, [
-    `<b>${L.promo} · ${esc(p.venue.name)}</b>`, esc(p.title),
+    `<b>${L.promo} · ${esc(p.venue.name)}</b>`, esc(trTitle(p)),
     p.reward ? `${L.pool}: <b>${esc(p.reward.label)}</b>` : "", p.endsAt ? `${L.ends}: ${date(p.endsAt)}` : "",
     SITE ? `<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : `<a href="${esc(p.url)}">${L.more} →</a>`,
   ].filter(Boolean).join("\n")]);

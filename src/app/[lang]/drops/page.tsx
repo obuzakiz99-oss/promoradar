@@ -25,7 +25,7 @@ export default async function DropsPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), D = DROP_TEXT[lang], P = D.page;
-  const [{ promos, fetchedAt }, pm] = await Promise.all([getPromos(), getPmRewards()]);
+  const [{ promos, fetchedAt }, pm] = await Promise.all([getPromos(lang), getPmRewards()]);
   const live = promos.filter((p) => (!p.endsAt || p.endsAt > fetchedAt) && p.venue.kind !== "airdrop");
   const byType = Object.fromEntries(DROP_TYPES.map((k) => [k, live.filter((p) => dropType(p.title) === k)]));
   const X = EXTRA_TEXT[lang];
