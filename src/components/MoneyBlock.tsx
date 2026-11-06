@@ -2,13 +2,13 @@
 import { useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
-import type { Backtest, PlanData } from "@/lib/money";
+import type { Backtest, Extra, PlanData } from "@/lib/money";
 import { VenueLogo } from "./VenueLogo";
 
 const TX: Record<Locale, {
   planTitle: string; planSub: string; have: string; lp: (stake: string, token: string, ex: string) => string; forDays: (d: number) => string; perMonth: string;
   earn: (coin: string, ex: string) => string; rest: string; bonus: string; total: string; go: string; none: string;
-  btTitle: string; btSub: (d: number) => string; would: string; inLp: string; inEarn: (apr: string) => string; top: string; held: (v: string) => string; note: string; noBt: string; yearly: string;
+  btTitle: string; btSub: (d: number) => string; would: string; inLp: string; inEarn: (apr: string) => string; top: string; held: (v: string) => string; note: string; noBt: string; yearly: string; extraTitle: string; welcome: string; newEarn: string; withExtras: string; extraNote: string;
 }> = {
   uk: {
     planTitle: "Ваш план на сьогодні", planSub: "Введіть суму — покажемо, куди її покласти просто зараз і скільки це принесе.", have: "У мене є",
@@ -16,7 +16,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} на ${e} — забрати будь-коли`, rest: "решта суми", bonus: "Бонус новачку", total: "Разом ≈ за 30 днів", go: "Відкрити", none: "Зараз немає простих варіантів — загляньте пізніше.",
     btTitle: "Скільки ви могли б заробити", btSub: (d) => `Якби ${d} днів тому ви тримали суму в найкращих Launchpool на стейблкоїнах (до ліміту кожного пулу), а решту — в Earn USDT, і одразу продавали нагороди:`,
     would: "зараз мали б", inLp: "з Launchpool", inEarn: (a) => `з Earn USDT (${a}, за поточною ставкою)`, top: "Найприбутковіші пули", held: (v) => `Якби тримали отримані токени, а не продавали: ${v}`,
-    note: "Розрахунок на реальних даних бірж за фінальним APR кожного пулу (він нижчий за стартовий — тобто оцінка обережна). Минулий результат не гарантує майбутнього.", noBt: "Поки замало даних для розрахунку.", yearly: "річних",
+    note: "Розрахунок на реальних даних бірж за фінальним APR кожного пулу (він нижчий за стартовий — тобто оцінка обережна). Минулий результат не гарантує майбутнього.", noBt: "Поки замало даних для розрахунку.", yearly: "річних", extraTitle: "+ Разові бонуси новачкам (доступні зараз)", welcome: "Бонус за реєстрацію", newEarn: "Підвищена ставка для нових", withExtras: "Разом з бонусами", extraNote: "Отримати можна один раз на кожній біржі; бонус часто видають купоном. Це поточні пропозиції бірж, а не гарантія.",
   },
   en: {
     planTitle: "Your plan for today", planSub: "Enter an amount — we'll show where to put it right now and what it brings.", have: "I have",
@@ -24,7 +24,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} on ${e} — withdraw any time`, rest: "the rest", bonus: "New-user bonus", total: "Total ≈ in 30 days", go: "Open", none: "No simple options right now — check back later.",
     btTitle: "What you could have earned", btSub: (d) => `If ${d} days ago you had kept the amount in the best stablecoin Launchpools (up to each pool's cap) and the rest in USDT Earn, selling rewards right away:`,
     would: "you'd now have", inLp: "from Launchpools", inEarn: (a) => `from USDT Earn (${a}, at today's rate)`, top: "Most profitable pools", held: (v) => `If you had kept the reward tokens instead of selling: ${v}`,
-    note: "Calculated on real exchange data using each pool's final APR (lower than the launch APR — a cautious estimate). Past results don't guarantee future ones.", noBt: "Not enough data yet.", yearly: "a year",
+    note: "Calculated on real exchange data using each pool's final APR (lower than the launch APR — a cautious estimate). Past results don't guarantee future ones.", noBt: "Not enough data yet.", yearly: "a year", extraTitle: "+ One-time newcomer bonuses (available now)", welcome: "Sign-up bonus", newEarn: "Boosted new-user rate", withExtras: "Total with bonuses", extraNote: "Each can be claimed once per exchange; bonuses are often vouchers. These are the exchanges' current offers, not a guarantee.",
   },
   ru: {
     planTitle: "Ваш план на сегодня", planSub: "Введите сумму — покажем, куда её положить прямо сейчас и сколько это принесёт.", have: "У меня есть",
@@ -32,7 +32,7 @@ const TX: Record<Locale, {
     earn: (c, e) => `Earn ${c} на ${e} — забрать в любой момент`, rest: "остаток суммы", bonus: "Бонус новичку", total: "Итого ≈ за 30 дней", go: "Открыть", none: "Сейчас нет простых вариантов — загляните позже.",
     btTitle: "Сколько вы могли бы заработать", btSub: (d) => `Если бы ${d} дней назад вы держали сумму в лучших Launchpool на стейблкоинах (до лимита каждого пула), а остаток — в Earn USDT, и сразу продавали награды:`,
     would: "сейчас имели бы", inLp: "с Launchpool", inEarn: (a) => `с Earn USDT (${a}, по текущей ставке)`, top: "Самые прибыльные пулы", held: (v) => `Если бы держали полученные токены, а не продавали: ${v}`,
-    note: "Расчёт на реальных данных бирж по финальному APR каждого пула (он ниже стартового — то есть оценка осторожная). Прошлый результат не гарантирует будущего.", noBt: "Пока мало данных для расчёта.", yearly: "годовых",
+    note: "Расчёт на реальных данных бирж по финальному APR каждого пула (он ниже стартового — то есть оценка осторожная). Прошлый результат не гарантирует будущего.", noBt: "Пока мало данных для расчёта.", yearly: "годовых", extraTitle: "+ Разовые бонусы новичкам (доступны сейчас)", welcome: "Бонус за регистрацию", newEarn: "Повышенная ставка для новых", withExtras: "Итого с бонусами", extraNote: "Получить можно один раз на каждой бирже; бонус часто выдают купоном. Это текущие предложения бирж, а не гарантия.",
   },
 };
 
@@ -40,7 +40,7 @@ const PRESETS = [100, 1000, 10000];
 const usd = (x: number, d = x < 10 ? 2 : 0) => `$${x.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: 0 })}`;
 const sgn = (x: number) => `${x >= 0 ? "+" : "−"}${usd(Math.abs(x))}`;
 
-export function MoneyBlock({ lang, plan, bt, venues }: { lang: Locale; plan: PlanData; bt: Backtest; venues: Record<string, Venue> }) {
+export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Locale; plan: PlanData; bt: Backtest; venues: Record<string, Venue>; extras?: Extra[] }) {
   const T = TX[lang];
   const [amount, setAmount] = useState(1000);
   const [btAmount, setBtAmount] = useState(1000);
@@ -155,6 +155,32 @@ export function MoneyBlock({ lang, plan, bt, venues }: { lang: Locale; plan: Pla
                 </ul>
               </div>
             )}
+            {extras.length > 0 && (() => {
+              // new-user Earn only pays on what you actually put in (up to its cap)
+              const ex = extras.map((x) => ({ ...x, got: x.kind === "newEarn" && x.cap ? x.usd * Math.min(1, res.amount / x.cap) : x.usd }));
+              const add = ex.reduce((s, x) => s + x.got, 0);
+              return (
+                <div className="mt-4 rounded-xl border border-lime/25 bg-lime/[0.05] p-3">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-lime">{T.extraTitle}</div>
+                  <ul className="mt-2 space-y-1.5">
+                    {ex.map((x) => (
+                      <li key={x.key}>
+                        <a href={x.url} {...(x.url.startsWith("http") ? { target: "_blank", rel: "noopener" } : {})} className="flex items-center gap-2 text-sm hover:text-lime">
+                          {venues[x.exchange] && <VenueLogo v={venues[x.exchange]} size={20} rounded="rounded-md" />}
+                          <span className="min-w-0 flex-1 truncate"><span className="font-semibold">{x.kind === "welcome" ? T.welcome : T.newEarn}</span> <span className="text-xs text-ink-3">· {x.title}</span></span>
+                          <span className="shrink-0 font-mono text-xs font-bold text-lime">+{usd(x.got)}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2 border-t border-lime/20 pt-2">
+                    <span className="text-xs font-semibold text-ink-2">{T.withExtras}</span>
+                    <span className="font-mono text-sm font-bold text-lime">{usd(res.amount)} → {usd(res.amount + res.profit + add)} <span className="text-ink-3">({sgn(res.profit + add)})</span></span>
+                  </div>
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-ink-3">{T.extraNote}</p>
+                </div>
+              );
+            })()}
             {res.heldDelta !== undefined && Math.abs(res.heldDelta) >= 0.01 && (
               <p className="mt-4 text-xs font-semibold text-ink-2">{T.held(`${sgn(res.lpPart + res.heldDelta + res.idlePart)} ${res.heldDelta < 0 ? "↓" : "↑"}`)}</p>
             )}

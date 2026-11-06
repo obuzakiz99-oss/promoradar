@@ -34,6 +34,29 @@ export function planData(pools: PoolsData, earn: EarnData, promos: Promo[], bonu
   };
 }
 
+/* ------------------------------------------------------------------ one-time extras */
+/**
+ * Money a newcomer can add on top, once per exchange: welcome bonuses (real sign-up offers, not regional/VIP, not shared prize
+ * pools) and boosted new-user Earn on stablecoins (cap × APR × term). Values are today's offers, shown as "available now".
+ */
+export interface Extra { key: string; exchange: string; kind: "welcome" | "newEarn"; title: string; usd: number; cap?: number; url: string }
+
+export function oneTimeExtras(earn: EarnData, promos: Promo[], bonusHref: (p: Promo) => string, now: number): Extra[] {
+  const best = new Map<string, Extra>();
+  const keep = (x: Extra) => { const k = `${x.kind}:${x.exchange}`; if ((best.get(k)?.usd ?? -1) < x.usd) best.set(k, x); };
+  for (const p of promos) {
+    if (p.category !== "bonus" || p.venue.kind !== "cex" || !WELCOME.test(p.title) || NOT_FOR_ALL.test(p.title) || (p.endsAt && p.endsAt < now)) continue;
+    const usd = p.reward?.usd;
+    if (!usd || usd > 500) continue;                       // bigger numbers are shared pools, not a personal bonus
+    keep({ key: `w:${p.id}`, exchange: p.venue.id, kind: "welcome", title: p.title, usd, url: bonusHref(p) });
+  }
+  for (const o of earn.offers) {
+    if (!o.newUsers || !SAFE.test(o.coin) || !(o.apr > 0) || !o.maxAmount || !o.days) continue;
+    keep({ key: `e:${o.exchange}:${o.coin}:${o.days}`, exchange: o.exchange, kind: "newEarn", title: `${o.coin} ${o.apr}% · ${o.days}d · ≤ ${o.maxAmount} ${o.coin}`, usd: (o.maxAmount * o.apr) / 100 * (o.days / 365), cap: o.maxAmount, url: o.url });
+  }
+  return [...best.values()].sort((a, b) => b.usd - a.usd);
+}
+
 /* ------------------------------------------------------------------ 90-day backtest */
 export interface BtPool { token: string; exchange: string; stake: string; start: number; apr: number; earned: number }
 export interface BtResult { amount: number; profit: number; lpPart: number; idlePart: number; pools: BtPool[]; heldDelta?: number }

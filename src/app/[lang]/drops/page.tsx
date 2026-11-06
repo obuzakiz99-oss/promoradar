@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { getPmRewards } from "@/lib/pmrewards";
-import { DROP_ICON, DROP_LEVEL, DROP_TEXT, DROP_TYPES, dropType } from "@/lib/drops";
+import { CLAIM_RE, DROP_ICON, DROP_LEVEL, DROP_TEXT, DROP_TYPES, EXTRA_TEXT, dropType, isFreeStable } from "@/lib/drops";
+import type { Level } from "@/lib/level";
 import { LEVEL_CLS, LEVEL_TXT } from "@/lib/level";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
@@ -27,6 +28,13 @@ export default async function DropsPage({ params }: { params: Params }) {
   const [{ promos, fetchedAt }, pm] = await Promise.all([getPromos(), getPmRewards()]);
   const live = promos.filter((p) => (!p.endsAt || p.endsAt > fetchedAt) && p.venue.kind !== "airdrop");
   const byType = Object.fromEntries(DROP_TYPES.map((k) => [k, live.filter((p) => dropType(p.title) === k)]));
+  const X = EXTRA_TEXT[lang];
+  // cross-cutting lists first, then the types
+  const sections: Array<{ id: string; icon: string; text: { title: string; what: string; how: string[]; risk: string }; level: Level; list: typeof live }> = [
+    { id: "free", icon: "💵", text: X.free, level: "easy", list: live.filter(isFreeStable) },
+    { id: "claim", icon: "🎁", text: X.claim, level: "easy", list: live.filter((p) => CLAIM_RE.test(p.title)) },
+    ...DROP_TYPES.map((k) => ({ id: k, icon: DROP_ICON[k], text: D[k], level: DROP_LEVEL[k], list: byType[k] })),
+  ];
 
   return (
     <>
@@ -36,32 +44,31 @@ export default async function DropsPage({ params }: { params: Params }) {
         <div className="mt-4"><Updated at={fetchedAt} lang={lang} /></div>
         {/* jump links */}
         <nav className="mt-6 flex flex-wrap gap-2">
-          {DROP_TYPES.map((k) => (
-            <a key={k} href={`#${k}`} className="flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink">
-              {DROP_ICON[k]} {D[k].title} <span className="font-mono text-ink-3">{byType[k].length}</span>
+          {sections.map((s) => (
+            <a key={s.id} href={`#${s.id}`} className={`${s.level === "hard" ? "adv " : ""}flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink`}>
+              {s.icon} {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>
             </a>
           ))}
           <a href="#polymarket" className="adv flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink">🎯 Polymarket</a>
         </nav>
 
-        {DROP_TYPES.map((k) => {
-          const lvl = DROP_LEVEL[k], list = byType[k];
+        {sections.map(({ id: k, icon, text: T, level: lvl, list }) => {
           return (
             <section key={k} id={k} className={`mt-14 scroll-mt-20 ${lvl === "hard" ? "adv" : ""}`}>
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-display text-2xl font-semibold tracking-tight">{DROP_ICON[k]} {D[k].title}</h2>
+                <h2 className="font-display text-2xl font-semibold tracking-tight">{icon} {T.title}</h2>
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
-              <p className="mt-2 max-w-3xl text-ink-2">{D[k].what}</p>
+              <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
               <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1.2fr]">
                 <div className="card p-5 hover:transform-none">
                   <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
                   <ol className="mt-3 space-y-2.5 text-sm">
-                    {D[k].how.map((s, i) => (
+                    {T.how.map((s, i) => (
                       <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{s}</span></li>
                     ))}
                   </ol>
-                  <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3">⚠️ <b className="text-ink-2">{P.risk}:</b> {D[k].risk}</p>
+                  <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3">⚠️ <b className="text-ink-2">{P.risk}:</b> {T.risk}</p>
                 </div>
                 <div>
                   {list.length === 0 ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.none}</p> : (

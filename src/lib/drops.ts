@@ -60,6 +60,33 @@ export const DROP_TEXT: Record<Locale, Record<DropType, Text> & { page: { title:
   },
 };
 
+/* ---- two cross-cutting lists shown above the types ---- */
+const STABLE_UNIT = /^(USDT|USDC|USD1|FDUSD|USD)$/i;
+/** Needs money or trading to qualify → not "free". */
+const COSTS = /deposit|trade|trading|futures|volume|stake|staking|hold|subscribe|lock|invest|buy|convert|p2p|copy|vip|leverage|margin/i;
+/** Stablecoin rewards you can get without putting money in: quizzes, tasks, social, referrals-free giveaways. */
+const NOT_FREE_CAT = new Set(["competition", "earn", "bonus", "farming"]);
+const NOT_FOR_ALL = /exclusive|exclucsive|region|south asia|mena|cis|latam|wsot|compete|jackpot|spin|mining/i;
+export const isFreeStable = (p: { title: string; category?: string; reward?: { unit?: string } }) =>
+  !!p.reward?.unit && STABLE_UNIT.test(p.reward.unit) && !COSTS.test(p.title) && !NOT_FOR_ALL.test(p.title) && !NOT_FREE_CAT.has(p.category ?? "");
+/** Live claims / airdrops already being distributed — check your account or claim page. */
+export const CLAIM_RE = /\bclaim\b|claimable|distribution (has been |is )?(completed|complete|started|live)|has completed .*distribution|now (live|open) for claim|airdrop (is )?live/i;
+
+export const EXTRA_TEXT: Record<Locale, { free: Text; claim: Text }> = {
+  uk: {
+    free: { title: "Стейблкоїни без вкладень", what: "Акції, де нагорода в USDT/USDC і для участі не треба ні депозиту, ні торгівлі: вікторини, завдання, соцмережі.", how: ["Відкрийте акцію і перевірте умови — іноді потрібна лише верифікація (KYC).", "Виконайте завдання: урок, вікторина, підписка, публікація.", "Нагорода — купон або USDT на рахунку; купони використовуйте до кінця строку."], risk: "Без вкладень, але суми невеликі, а для деяких акцій потрібен KYC." },
+    claim: { title: "Можна забрати зараз (Claim live)", what: "Аірдропи й нагороди, які вже роздають: біржа завершила розподіл або відкрила сторінку отримання.", how: ["Перевірте історію активів на біржі (розділ «Нагороди» / «Airdrop») — часто токени вже нараховані.", "Якщо потрібен Claim — натисніть його до кінцевої дати, інакше нагорода згорить.", "Остерігайтеся фейкових «claim»-сайтів: забирайте лише на офіційному сайті біржі."], risk: "Фішинг: шахраї копіюють сторінки claim. Ніколи не вводьте seed-фразу." },
+  },
+  en: {
+    free: { title: "Stablecoins with no deposit", what: "Promos paying USDT/USDC where you don't need to deposit or trade: quizzes, tasks, social.", how: ["Open the promo and check the terms — sometimes only identity verification (KYC) is needed.", "Do the task: a lesson, a quiz, a follow, a post.", "The reward is a voucher or USDT in your account; use vouchers before they expire."], risk: "No money in, but amounts are small and some promos require KYC." },
+    claim: { title: "Claim now (live)", what: "Airdrops and rewards already being paid out: the exchange finished the distribution or opened a claim page.", how: ["Check your asset history on the exchange (Rewards / Airdrop) — tokens are often already credited.", "If a Claim is needed, press it before the deadline or the reward expires.", "Beware of fake 'claim' sites: only claim on the exchange's official site."], risk: "Phishing: scammers copy claim pages. Never enter a seed phrase." },
+  },
+  ru: {
+    free: { title: "Стейблкоины без вложений", what: "Акции, где награда в USDT/USDC и для участия не нужен ни депозит, ни торговля: викторины, задания, соцсети.", how: ["Откройте акцию и проверьте условия — иногда нужна только верификация (KYC).", "Выполните задание: урок, викторина, подписка, публикация.", "Награда — купон или USDT на счёте; купоны используйте до конца срока."], risk: "Без вложений, но суммы небольшие, а для некоторых акций нужен KYC." },
+    claim: { title: "Можно забрать сейчас (Claim live)", what: "Аирдропы и награды, которые уже раздают: биржа завершила распределение или открыла страницу получения.", how: ["Проверьте историю активов на бирже (раздел «Награды» / «Airdrop») — часто токены уже начислены.", "Если нужен Claim — нажмите его до конечной даты, иначе награда сгорит.", "Остерегайтесь фейковых «claim»-сайтов: забирайте только на официальном сайте биржи."], risk: "Фишинг: мошенники копируют страницы claim. Никогда не вводите seed-фразу." },
+  },
+};
+
 /** Which type a promo belongs to (first match wins, in DROP_TYPES order), or undefined. */
 export function dropType(title: string): DropType | undefined {
   return DROP_TYPES.find((t) => DROP_RE[t].test(title));

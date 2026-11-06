@@ -1,10 +1,31 @@
+import fs from "node:fs";
+import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
+/**
+ * During the static GitHub build every language page (and the build's worker processes) must see the SAME promo list —
+ * otherwise a Telegram post appearing between the uk and en renders breaks the language links of promo pages.
+ * So the first collection of a build is written to .next/cache/promos-build.json and reused for 20 minutes.
+ */
 export async function getPromos(): Promise<Collected> {
+  if (process.env.GITHUB_PAGES === "1") {
+    const file = path.join(process.cwd(), ".next", "cache", "promos-build.json");
+    try {
+      const st = fs.statSync(file);
+      if (Date.now() - st.mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")) as Collected;
+    } catch { /* first call of this build */ }
+    const fresh = await getPromosLive();
+    try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only fs: fine */ }
+    return fresh;
+  }
+  return getPromosLive();
+}
+
+async function getPromosLive(): Promise<Collected> {
   const data = await collectAll();
   const now = Date.now();
   const sponsored: Promo[] = SPONSORED.filter((s) => new Date(s.until).getTime() > now).map((s) => {

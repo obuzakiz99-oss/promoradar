@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
+import { CheckSteps } from "./CheckSteps";
 
 export const LEARN_IDS = ["start", "how", "safety", "quiz", "glossary"] as const;
 export type LearnId = (typeof LEARN_IDS)[number];
@@ -26,19 +27,7 @@ export function LearnHeader({ lang, active, title, sub }: { lang: Locale; active
   );
 }
 
-/** Numbered step list. */
-export function Steps({ steps }: { steps: Array<[string, string]> }) {
-  return (
-    <ol className="space-y-3">
-      {steps.map(([h, b], i) => (
-        <li key={h} className="card flex gap-4 p-5 hover:transform-none">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
-          <div>
-            <h3 className="font-bold">{h}</h3>
-            <p className="mt-1 text-sm leading-relaxed text-ink-2">{b}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
+/** Numbered step list with tick boxes (progress saved in the browser under `id`). */
+export function Steps({ steps, id, lang }: { steps: Array<[string, string]>; id: string; lang: Locale }) {
+  return <CheckSteps id={id} lang={lang} steps={steps.map(([h, b]) => ({ h, b }))} />;
 }

@@ -62,7 +62,7 @@ export default async function LearnHow({ params }: { params: Params }) {
                 <h2 className="font-display text-2xl font-semibold tracking-tight">{s.title}</h2>
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
-              <div className="mt-5"><Steps steps={s.steps} /></div>
+              <div className="mt-5"><Steps steps={s.steps} id={`how-${s.id}`} lang={lang} /></div>
               <p className="mt-4 text-sm leading-relaxed text-ink-3">⚠️ {s.watch}</p>
             </section>
           );

@@ -10,6 +10,7 @@ import { withBase } from "@/lib/base";
 import { shortDate } from "@/lib/format";
 import { Footer } from "@/components/Sections";
 import { VenueLogo } from "@/components/VenueLogo";
+import { CheckSteps } from "@/components/CheckSteps";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return GUIDE_IDS.map((id) => ({ id })); }
@@ -40,23 +41,7 @@ export default async function GuidePage({ params }: { params: Params }) {
         <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{g.title}</h1>
         <p className="mt-3 text-ink-2 sm:text-lg">{g.sub}</p>
 
-        <ol className={g.steps.length ? "mt-10 space-y-6" : "hidden"}>
-          {g.steps.map((s, i) => (
-            <li key={s.h} className="card p-5 hover:transform-none sm:p-6">
-              <div className="flex gap-4">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
-                <div className="min-w-0">
-                  <h2 className="text-lg font-bold">{s.h}</h2>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{s.b}</p>
-                </div>
-              </div>
-              {s.img && (
-                // eslint-disable-next-line @next/next/no-img-element -- static export, plain img
-                <img src={withBase(s.img)} alt={s.alt ?? ""} loading="lazy" className="mt-4 w-full rounded-xl border border-line" />
-              )}
-            </li>
-          ))}
-        </ol>
+        {g.steps.length > 0 && <div className="mt-10"><CheckSteps id={`guide-${g.id}`} lang={lang} big steps={g.steps.map((s) => ({ ...s, img: s.img ? withBase(s.img) : undefined }))} /></div>}
 
         {g.sections?.map((s) => (
           <section key={s.title} className="mt-12">
@@ -64,17 +49,7 @@ export default async function GuidePage({ params }: { params: Params }) {
               <h2 className="font-display text-2xl font-semibold tracking-tight">{s.title}</h2>
               <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[s.level]}`} title={LEVEL_TXT[lang][s.level][1]}>{LEVEL_TXT[lang][s.level][0]}</span>
             </div>
-            <ol className="mt-5 space-y-3">
-              {s.steps.map((st, i) => (
-                <li key={st.h} className="card flex gap-4 p-5 hover:transform-none">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
-                  <div className="min-w-0">
-                    <h3 className="font-bold">{st.h}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-2">{st.b}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <div className="mt-5"><CheckSteps id={`guide-${g.id}-${s.title}`} lang={lang} steps={s.steps} /></div>
             <a href={s.url} target="_blank" rel="noopener" className="mt-4 inline-block text-sm font-bold text-lime hover:underline">{new URL(s.url).hostname.replace(/^www\./, "")} ↗</a>
           </section>
         ))}

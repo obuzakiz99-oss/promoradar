@@ -13,7 +13,7 @@ import { LaunchpoolTeaser } from "@/components/LaunchpoolTeaser";
 import { getPools, LP_API } from "@/lib/pools";
 import { getEarn } from "@/lib/earn";
 import { getInsights } from "@/lib/insights";
-import { backtest, idleUsdtApr, planData } from "@/lib/money";
+import { backtest, idleUsdtApr, oneTimeExtras, planData } from "@/lib/money";
 import { MoneyBlock } from "@/components/MoneyBlock";
 import { HowItWorks, ProSection, SourcesSection, AdsSection, Footer } from "@/components/Sections";
 
@@ -28,6 +28,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const plan = pools && earn ? planData(pools, earn, promos, (p) => withBase(`/${lang}/p/${slugOf(p)}/`)) : null;
   const held = Object.fromEntries((ins?.after ?? []).map((a) => [a.token, a.now / a.d0]));
   const bt = pools && earn ? backtest(pools, idleUsdtApr(earn), held, [100, 1000, 10000]) : null;
+  const extras = earn ? oneTimeExtras(earn, promos, (p) => withBase(`/${lang}/p/${slugOf(p)}/`), fetchedAt) : [];
   const moneyVenues = Object.fromEntries([...LP_API, "okx", "bybit", "htx", "bitunix", "whitebit", "bitrue", "kraken", "coinex", "xt"].map((id) => [id, venueOf(id)]));
   const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
@@ -40,7 +41,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <main>
         <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
-        {plan && bt && <MoneyBlock lang={lang} plan={plan} bt={bt} venues={moneyVenues} />}
+        {plan && bt && <MoneyBlock lang={lang} plan={plan} bt={bt} venues={moneyVenues} extras={extras} />}
         <Ticker promos={promos} t={t} />
         <TopPools promos={promos} t={t} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}

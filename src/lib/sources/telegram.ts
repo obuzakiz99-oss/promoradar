@@ -34,7 +34,7 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
     if (!body || !date) continue;
     const text = strip(body);
     const title = cleanTitle(headline(text));
-    if (!title || (CHATTER.test(title) && !/kickstarter/i.test(title)) || !isPromo(title) || !STRONG.test(title)) continue;
+    if (!title || (CHATTER.test(title) && !/kickstarter|\bclaim\b|airdrop distribut/i.test(title)) || !isPromo(title) || !STRONG.test(title)) continue;
     // link to the exchange's own article when the post has one; otherwise to the post itself
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)
     const own = new URL(site).hostname.replace(/^(www|app)\./, "");
