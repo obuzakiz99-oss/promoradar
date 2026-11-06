@@ -1,4 +1,4 @@
-import { cached, getBigJson, getJson } from "./sources/util";
+import { cached, getBigJson, getJson, relayedAt } from "./sources/util";
 
 /**
  * Perpetual funding across exchanges, annualised (% per year). Positive = longs pay shorts (a short RECEIVES it).
@@ -15,7 +15,9 @@ export interface FundingRow {
   max: number; maxEx: FundingEx; min: number; minEx: FundingEx; spread: number;
   volUsd?: number;                              // biggest 24h perp volume we know of
 }
-export interface FundingData { rows: FundingRow[]; status: Record<string, { ok: boolean; n: number; error?: string }>; fetchedAt: number }
+export interface FundingData { rows: FundingRow[]; status: Record<string, { ok: boolean; n: number; error?: string; at?: number }>; fetchedAt: number }
+/** The URL whose timestamp tells how fresh each exchange's numbers are (relayed ones can be up to ~30 min older). */
+const MAIN_URL: Partial<Record<FundingEx, string>> = { Binance: "https://fapi.binance.com/fapi/v1/premiumIndex", Bybit: "https://api.bybit.com/v5/market/tickers?category=linear" };
 
 const apr = (rate: number, hours: number) => rate * (24 / hours) * 365 * 100;
 type One = Map<string, { apr: number; h: number; vol?: number }>;
@@ -81,7 +83,7 @@ export async function getFunding(): Promise<FundingData> {
   const per = new Map<FundingEx, One>();
   res.forEach((r, i) => {
     const e = FUNDING_EX[i];
-    if (r.status === "fulfilled") { per.set(e, r.value); status[e] = { ok: true, n: r.value.size }; }
+    if (r.status === "fulfilled") { per.set(e, r.value); status[e] = { ok: true, n: r.value.size, at: (MAIN_URL[e] && relayedAt(MAIN_URL[e]!)) || Date.now() }; }
     else status[e] = { ok: false, n: 0, error: String(r.reason).slice(0, 120) };
   });
   const coins = new Set<string>();

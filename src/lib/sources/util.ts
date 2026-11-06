@@ -19,6 +19,12 @@ function fromRelay(url: string): string | undefined {
   return hit && Date.now() - hit.at < 3 * 3600_000 ? hit.body : undefined;
 }
 
+/** When the relayed copy of `url` was fetched (ms), or undefined if the URL is fetched live. */
+export function relayedAt(url: string): number | undefined {
+  if (!fromRelay(url)) return undefined;
+  return RELAY![url].at;
+}
+
 /** Small responses: use Next's fetch cache (ISR). */
 export async function getJson<T = any>(url: string, timeout = 12_000, init?: { method?: string; headers?: Record<string, string>; body?: string }): Promise<T> {
   const relayed = !init?.body ? fromRelay(url) : undefined;

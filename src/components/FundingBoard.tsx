@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { FundingEx, FundingRow } from "@/lib/funding";
 import { PROX } from "@/lib/i18n-pro";
@@ -8,7 +8,11 @@ const pct = (x: number) => `${x > 0 ? "+" : ""}${Math.abs(x) >= 100 ? Math.round
 const usd = (x?: number) => (x === undefined ? "—" : x >= 1e9 ? `$${(x / 1e9).toFixed(1)}B` : x >= 1e6 ? `$${(x / 1e6).toFixed(0)}M` : `$${Math.round(x / 1e3)}K`);
 const VOLS = [0, 1e6, 10e6, 100e6];
 
-export function FundingBoard({ rows, exchanges, down, lang }: { rows: FundingRow[]; exchanges: FundingEx[]; down: string[]; lang: Locale }) {
+const AGO: Record<Locale, (m: number) => string> = { uk: (m) => (m < 1 ? "щойно" : `${m} хв тому`), en: (m) => (m < 1 ? "just now" : `${m} min ago`), ru: (m) => (m < 1 ? "только что" : `${m} мин назад`) };
+
+export function FundingBoard({ rows, exchanges, down, lang, ages = {} }: { rows: FundingRow[]; exchanges: FundingEx[]; down: string[]; lang: Locale; ages?: Partial<Record<FundingEx, number>> }) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => { setNow(Date.now()); const i = setInterval(() => setNow(Date.now()), 60_000); return () => clearInterval(i); }, []);
   const P = PROX[lang];
   const [q, setQ] = useState("");
   const [minVol, setMinVol] = useState(10e6);
@@ -37,7 +41,10 @@ export function FundingBoard({ rows, exchanges, down, lang }: { rows: FundingRow
               <th className="px-4 py-3">{P.coin}</th>
               <th className="px-4 py-3 text-right">{P.spread}</th>
               <th className="px-4 py-3">{P.shortOn} / {P.longOn}</th>
-              {exchanges.map((e) => <th key={e} className="px-3 py-3 text-right">{e}</th>)}
+              {exchanges.map((e) => {
+                const m = now && ages[e] ? Math.max(0, Math.round((now - ages[e]!) / 60_000)) : undefined;
+                return <th key={e} className="px-3 py-3 text-right">{e}{m !== undefined && <span className={`block text-[9px] font-semibold normal-case tracking-normal ${m > 45 ? "text-amber" : "text-ink-3"}`}>{AGO[lang](m)}</span>}</th>;
+              })}
               <th className="px-4 py-3 text-right">{P.vol}</th>
             </tr>
           </thead>

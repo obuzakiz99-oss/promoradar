@@ -90,11 +90,11 @@ export const API_DOC: Record<Locale, { title: string; sub: string; note: string;
 };
 
 export const API_ENDPOINTS: Array<{ path: string; desc: Record<Locale, string> }> = [
-  { path: "/api/promos", desc: { uk: "Усі акції: біржа, тип, винагорода, дати, посилання", en: "All promos: venue, type, reward, dates, link", ru: "Все акции: биржа, тип, награда, даты, ссылка" } },
-  { path: "/api/pools", desc: { uk: "Launchpool: пули, APR, ліміти, ціни, хедж-дані", en: "Launchpools: pools, APR, caps, prices, hedge data", ru: "Launchpool: пулы, APR, лимиты, цены, хедж-данные" } },
-  { path: "/api/earn", desc: { uk: "Ставки Earn бірж по монетах", en: "Exchange Earn rates by coin", ru: "Ставки Earn бирж по монетам" } },
-  { path: "/api/dex", desc: { uk: "Пули DEX і DeFi (DefiLlama): TVL, APY, тип", en: "DEX & DeFi pools (DefiLlama): TVL, APY, type", ru: "Пулы DEX и DeFi (DefiLlama): TVL, APY, тип" } },
-  { path: "/api/funding", desc: { uk: "Фандинг ф'ючерсів на 5 біржах, річний, і різниця між ними", en: "Perp funding on 5 exchanges, annualised, and the spread", ru: "Фандинг фьючерсов на 5 биржах, годовой, и разница между ними" } },
-  { path: "/api/fixed", desc: { uk: "Фіксована дохідність Pendle PT на стейблкоїнах", en: "Pendle PT fixed yields on stablecoins", ru: "Фиксированная доходность Pendle PT на стейблкоинах" } },
+  { path: "/api/promos.json", desc: { uk: "Усі акції: біржа, тип, винагорода, дати, посилання", en: "All promos: venue, type, reward, dates, link", ru: "Все акции: биржа, тип, награда, даты, ссылка" } },
+  { path: "/api/pools.json", desc: { uk: "Launchpool: пули, APR, ліміти, ціни, хедж-дані", en: "Launchpools: pools, APR, caps, prices, hedge data", ru: "Launchpool: пулы, APR, лимиты, цены, хедж-данные" } },
+  { path: "/api/earn.json", desc: { uk: "Ставки Earn бірж по монетах", en: "Exchange Earn rates by coin", ru: "Ставки Earn бирж по монетам" } },
+  { path: "/api/dex.json", desc: { uk: "Пули DEX і DeFi (DefiLlama): TVL, APY, тип", en: "DEX & DeFi pools (DefiLlama): TVL, APY, type", ru: "Пулы DEX и DeFi (DefiLlama): TVL, APY, тип" } },
+  { path: "/api/funding.json", desc: { uk: "Фандинг ф'ючерсів на 5 біржах, річний, і різниця між ними", en: "Perp funding on 5 exchanges, annualised, and the spread", ru: "Фандинг фьючерсов на 5 биржах, годовой, и разница между ними" } },
+  { path: "/api/fixed.json", desc: { uk: "Фіксована дохідність Pendle PT на стейблкоїнах", en: "Pendle PT fixed yields on stablecoins", ru: "Фиксированная доходность Pendle PT на стейблкоинах" } },
   { path: "/rss-uk.xml", desc: { uk: "RSS нових акцій (також -en, -ru)", en: "RSS of new promos (also -en, -ru)", ru: "RSS новых акций (также -en, -ru)" } },
 ];

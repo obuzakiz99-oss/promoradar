@@ -48,7 +48,7 @@ export default async function DocPage({ params }: { params: Params }) {
                 </tbody>
               </table>
             </div>
-            <pre className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white/[0.02] p-4 font-mono text-xs text-ink-2">{`curl ${base}/api/funding`}</pre>
+            <pre className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white/[0.02] p-4 font-mono text-xs text-ink-2">{`curl ${base}/api/funding.json`}</pre>
             <p className="mt-4 text-sm text-ink-3">{API_DOC[lang].note}</p>
           </>
         ) : (
