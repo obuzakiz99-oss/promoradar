@@ -120,11 +120,15 @@ async function getPromosLive(): Promise<Collected> {
     if (p.meta?.geo?.text) texts.push(p.meta.geo.text);
     if (d) texts.push(...d.facts.map((f) => f.text));
   }
-  for (const p of promos) {
+  // Full rules are long (≈3k chars each) and DeepL Free gives 500k/month, so only Ukrainian gets them, most valuable
+  // promos first: open to Ukraine, then by what one person / the pool can get. Russian gets titles + key points.
+  const worth = (p: Promo) => (p.meta?.geo?.only || p.meta?.geo?.noUA ? -1e9 : 0) + (p.meta?.perUser?.usd ?? 0) * 10 + (p.reward?.usd ?? 0) / 100 - (p.meta?.thin ? 1e6 : 0);
+  const rules: string[] = [];
+  for (const p of [...promos].sort((a, b) => worth(b) - worth(a))) {
     const d = details[p.id];
-    if (d) for (const b of d.blocks) { if (b.t === "tr") texts.push(...(b.cells ?? [])); else texts.push(b.x); }
+    if (d) for (const b of d.blocks) { if (b.t === "tr") rules.push(...(b.cells ?? [])); else rules.push(b.x); }
   }
-  const i18n = await translateAll(texts).catch(() => undefined);
+  const i18n = await translateAll({ uk: [...texts, ...rules], ru: texts }).catch(() => undefined);
   return { ...data, promos, details, i18n };
 }
 

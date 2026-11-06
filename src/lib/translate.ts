@@ -12,7 +12,7 @@ export type TLang = "uk" | "ru";
 const LANGS: TLang[] = ["uk", "ru"];
 const TARGET: Record<TLang, string> = { uk: "UK", ru: "RU" };
 const FILE = () => path.join(process.cwd(), "data", "translations.json");
-const PER_BUILD = 60_000;      // chars per language per build — keeps one build from eating the month
+const PER_BUILD = 100_000;     // chars per language per build — keeps one build from eating the month
 const RESERVE = 15_000;        // leave a little of the monthly quota unused
 const KEEP_MS = 60 * 86400_000;
 
@@ -56,15 +56,17 @@ async function quotaLeft(apiKey: string): Promise<number> {
  * Make sure `texts` (in priority order) are translated as far as the quota allows; returns a lookup original → translated
  * for every text that has a translation (old or new). Never throws.
  */
-export async function translateAll(texts: string[]): Promise<Record<TLang, Record<string, string>>> {
+export async function translateAll(lists: Record<TLang, string[]>): Promise<Record<TLang, Record<string, string>>> {
   const store = load();
   const now = Date.now();
-  const uniq = [...new Set(texts.map((s) => s.trim()).filter((s) => s && !skip(s)))];
+  const clean = (xs: string[]) => [...new Set(xs.map((s) => s.trim()).filter((s) => s && !skip(s)))];
+  const want: Record<TLang, string[]> = { uk: clean(lists.uk), ru: clean(lists.ru) };
+  const uniq = [...new Set([...want.uk, ...want.ru])];
   const apiKey = process.env.DEEPL_API_KEY;
   if (apiKey) {
     let left = await quotaLeft(apiKey).catch(() => 0);
     for (const lang of LANGS) {
-      const todo = uniq.filter((s) => !store[lang][key(s)] && !isCyr(s));
+      const todo = want[lang].filter((s) => !store[lang][key(s)] && !isCyr(s));
       let budget = Math.min(PER_BUILD, left);
       // batches of up to 40 texts / ~20k chars, highest priority first
       for (let i = 0; i < todo.length && budget > 0;) {
@@ -88,6 +90,6 @@ export async function translateAll(texts: string[]): Promise<Record<TLang, Recor
     try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
   }
   const out = { uk: {}, ru: {} } as Record<TLang, Record<string, string>>;
-  for (const lang of LANGS) for (const s of uniq) { const hit = store[lang][key(s)]; if (hit) out[lang][s] = hit.t; }
+  for (const lang of LANGS) for (const s of want[lang]) { const hit = store[lang][key(s)]; if (hit) out[lang][s] = hit.t; }
   return out;
 }
