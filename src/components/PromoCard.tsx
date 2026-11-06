@@ -38,6 +38,8 @@ function ReqIcon({ k }: { k: string }) {
 
 const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
 const RULES: Record<Locale, string> = { uk: "Умови", en: "Rules", ru: "Условия" };
+const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 1 людину`, en: (v) => `up to ${v} per person`, ru: (v) => `до ${v} на 1 человека` };
+const PER_T: Record<Locale, string> = { uk: "До на 1 людину", en: "Per person, up to", ru: "До на 1 человека" };
 
 export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean }) {
   const cs = CAT_STYLE[p.category];
@@ -121,6 +123,12 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
             <div>
               <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}</div>
+              {m.perUser && <div className="mt-0.5 font-mono text-[11px] font-bold text-lime">{PER[lang](`${m.perUser.amount.toLocaleString("en-US")} ${m.perUser.unit}`)}</div>}
+            </div>
+          ) : m.perUser ? (
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>

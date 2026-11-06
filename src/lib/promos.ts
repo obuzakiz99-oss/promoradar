@@ -3,7 +3,8 @@ import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
-import { getDetails } from "./details";
+import { getDetails, termsOf, type PromoDetails } from "./details";
+import { prices } from "./pools";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -35,9 +36,28 @@ async function getPromosLive(): Promise<Collected> {
       publishedAt: now, endsAt: new Date(s.until).getTime(), reward: s.reward ? parseReward(s.reward) : undefined, tags: [], sponsored: true,
     };
   });
-  const promos = [...sponsored, ...data.promos];
+  const all = [...sponsored, ...data.promos];
   // full rules from the exchanges' own announcements (cached across builds in data/details.json)
-  const details = await getDetails(promos).catch(() => ({}));
+  const details: Record<string, PromoDetails> = await getDetails(all).catch(() => ({}));
+  const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
+  const promos: Promo[] = [];
+  for (const p of all) {
+    const d = details[p.id];
+    if (d) {
+      // exact dates and the per-person maximum, read from the rules
+      const tm = termsOf(d, p.title, p.publishedAt, p.reward?.amount);
+      const meta = { ...(p.meta ?? {}) };
+      if (!p.startsAt && tm.start && tm.start > now - 400 * 86400_000) { p.startsAt = tm.start; meta.datesFromRules = true; }
+      if (!p.endsAt && tm.end) { p.endsAt = tm.end; meta.datesFromRules = true; }
+      if (tm.perUser) {
+        const rate = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/.test(tm.perUser.unit) ? 1 : px[tm.perUser.unit];
+        meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
+      }
+      p.meta = meta;
+    }
+    if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
+    promos.push(p);
+  }
   return { ...data, promos, details };
 }
 

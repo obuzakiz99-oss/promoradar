@@ -20,7 +20,7 @@ const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
 
 /* ------------------------------------------------------------------ HTML → blocks */
-const BOILER = /^(this is a general announcement|products and services referred to here may not|risk warning|disclaimer:?$|thanks for your support|thank you for your support|the .* team$|binance reserves the right|follow us|join us|find us on|download the app|bitget team|kucoin team|gate team|\d{4}-\d{2}-\d{2}$)/i;
+const BOILER = /^(this is a general announcement|sign up and claim up to|products and services referred to here may not|risk warning|disclaimer:?$|thanks for your support|thank you for your support|the .* team$|binance reserves the right|follow us|join us|find us on|download the app|bitget team|kucoin team|gate team|\d{4}-\d{2}-\d{2}$)/i;
 
 const ENT: Record<string, string> = {
   bull: "•", times: "×", ldquo: "“", rdquo: "”", lsquo: "‘", rsquo: "’", mdash: "—", ndash: "–", hellip: "…", middot: "·", ge: "≥", le: "≤",
@@ -129,6 +129,120 @@ function factsOf(blocks: Block[]): Fact[] {
   }
   const order: FactKey[] = ["period", "who", "min", "how", "payout", "kyc", "region"];
   return out.sort((a, b) => order.indexOf(a.k) - order.indexOf(b.k));
+}
+
+/* ------------------------------------------------------------------ exact dates + how much one person can get */
+const MON: Record<string, number> = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+// whole month names only ("5 market" must not read as 5 March)
+const MRE = "(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)\\.?(?![a-z])";
+const TIME = "(\\d{1,2}):(\\d{2})(?::\\d{2})?\\s*(am|pm)?";
+const D_ISO = new RegExp(`(\\d{4})[-/.](\\d{1,2})[-/.](\\d{1,2})(?:[ T,]+(?:at\\s*)?${TIME})?`, "gi");
+const D_MDY = new RegExp(`\\b${MRE}\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
+const D_DMY = new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+${MRE},?\\s+(\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
+const TIME_BEFORE = new RegExp(`${TIME}\\s*(?:\\((?:UTC|GMT)[^)]*\\))?\\s*(?:on|,)?\\s*$`, "i");
+// without a year ("from 3 Nov to 2 Dec", "Nov 6 – Nov 13") — only used when the year is known from the publish date
+const D_MD = new RegExp(`\\b${MRE}\\s+(\\d{1,2})(?:st|nd|rd|th)?\\b(?!,?\\s*\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
+const D_DM = new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+${MRE}(?!\\w)(?!,?\\s*\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
+
+/** All date-times in a line (ms, UTC; "UTC+8" etc. in the line is honoured), in reading order. */
+export function datesIn(line: string, refMs?: number): Array<{ ms: number; hasTime: boolean }> {
+  const tz = line.match(/\b(?:UTC|GMT)\s*([+-])\s*(\d{1,2})(?::?(\d{2}))?/i);
+  const off = tz ? (tz[1] === "-" ? -1 : 1) * (Number(tz[2]) * 60 + Number(tz[3] ?? 0)) : 0;
+  const hits: Array<{ i: number; end: number; ms: number; hasTime: boolean }> = [];
+  const add = (i: number, len: number, y: number, mo: number, d: number, hh?: string, mm?: string, ap?: string) => {
+    if (hits.some((h) => i < h.end && i + len > h.i)) return;           // overlapping match from another pattern
+    let H = hh !== undefined ? Number(hh) : undefined, M = mm !== undefined ? Number(mm) : 0;
+    if (H === undefined) {                                               // "14:00 on November 4, 2026"
+      const b = line.slice(Math.max(0, i - 28), i).match(TIME_BEFORE);
+      if (b) { H = Number(b[1]); M = Number(b[2]); ap = b[3]; }
+    }
+    if (H !== undefined && ap) { if (/pm/i.test(ap) && H < 12) H += 12; if (/am/i.test(ap) && H === 12) H = 0; }
+    if (y < 2020 || y > 2035 || mo < 0 || mo > 11 || d < 1 || d > 31 || (H ?? 0) > 23) return;
+    const ms = Date.UTC(y, mo, d, H ?? 0, M) - off * 60_000;
+    hits.push({ i, end: i + len, ms, hasTime: H !== undefined });
+  };
+  for (const m of line.matchAll(D_ISO)) add(m.index!, m[0].length, +m[1], +m[2] - 1, +m[3], m[4], m[5], m[6]);
+  for (const m of line.matchAll(D_MDY)) add(m.index!, m[0].length, +m[3], MON[m[1].slice(0, 3).toLowerCase()], +m[2], m[4], m[5], m[6]);
+  for (const m of line.matchAll(D_DMY)) add(m.index!, m[0].length, +m[3], MON[m[2].slice(0, 3).toLowerCase()], +m[1], m[4], m[5], m[6]);
+  if (refMs) {
+    const ref = new Date(refMs);
+    // a month well before the publish month belongs to next year (e.g. "28 Dec – 4 Jan" published in December)
+    const yearOf = (mo: number) => ref.getUTCFullYear() + (mo < ref.getUTCMonth() - 5 ? 1 : 0);
+    for (const m of line.matchAll(D_MD)) { const mo = MON[m[1].slice(0, 3).toLowerCase()]; add(m.index!, m[0].length, yearOf(mo), mo, +m[2], m[3], m[4], m[5]); }
+    for (const m of line.matchAll(D_DM)) { const mo = MON[m[2].slice(0, 3).toLowerCase()]; add(m.index!, m[0].length, yearOf(mo), mo, +m[1], m[3], m[4], m[5]); }
+  }
+  return hits.sort((a, b) => a.i - b.i).map(({ ms, hasTime }) => ({ ms, hasTime }));
+}
+
+export interface PerUser { amount: number; unit: string; text: string }
+export interface Terms { start?: number; end?: number; perUser?: PerUser }
+
+const NUM = "\\$?\\s?([\\d][\\d,]*(?:\\.\\d+)?)\\s*(k|m|million|thousand)?\\s*";
+const UNIT = "(usdt|usdc|usd|fdusd|[A-Z][A-Z0-9]{1,9})?";
+const PER_USER: RegExp[] = [
+  // "maximum cap of 33,300 KOR per user", "up to 500 USDT per user", "capped at $200 per participant"
+  new RegExp(`\\b(?:up to|maximum(?: of)?|max(?:imum)? (?:reward|cap|bonus|prize)s?(?: of| is)?|capped at|cap of)\\s*${NUM}${UNIT}[^.;]{0,50}?\\b(?:per|for each|each) (?:user|person|participant|account|uid|winner|eligible user)`, "i"),
+  // "each eligible user will receive 10 USDT", "every participant can earn up to 50 USDT"
+  new RegExp(`\\b(?:each|every) (?:eligible |qualified |new )?(?:user|participant|winner)[^.;]{0,40}?\\b(?:receive|get|earn|win|claim|share|be rewarded)s?(?: with)?\\s*(?:up to\\s*)?${NUM}${UNIT}`, "i"),
+  // "10 USDT per user", "$50 per person"
+  new RegExp(`${NUM}${UNIT}\\s*(?:in [a-z ]{0,20})?\\s*(?:per|for each|each) (?:user|person|participant|uid|winner)\\b`, "i"),
+  // "Earn up to 12,000 USDC", "Get up to $100" (headline style; checked after the stricter ones)
+  new RegExp(`\\b(?:earn|get|receive|win|claim|grab|enjoy|unlock)\\s+(?:up to\\s+)?(?:a\\s+)?(?:total(?: of)?\\s+)?${NUM}${UNIT}`, "i"),
+];
+
+function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
+  for (const re of PER_USER) {
+    for (const line of lines) {
+      const m = line.match(re);
+      if (!m) continue;
+      const g = m.slice(1).filter((x) => x !== undefined);
+      // groups come as [number, multiplier?, unit?] — find them by shape
+      const numS = g.find((x) => /^\d[\d,]*(\.\d+)?$/.test(x));
+      if (!numS) continue;
+      const mult = g.find((x) => /^(k|m|million|thousand)$/i.test(x));
+      let amount = Number(numS.replace(/,/g, "")) * (mult ? (/^(m|million)$/i.test(mult) ? 1e6 : 1e3) : 1);
+      // a unit is a ticker (written in capitals) or a dollar stable — not words like "tokens"/"rewards"
+      const unitRaw = g.find((x) => /^[A-Za-z][A-Za-z0-9]{1,9}$/.test(x) && (/^(usdt|usdc|usd|fdusd)$/i.test(x) || (x === x.toUpperCase() && /[A-Z]/.test(x))) && !/^(K|M|UID|VIP|KYC|APR|APY)$/.test(x));
+      const unit = unitRaw ? (/^usd$/i.test(unitRaw) ? "USD" : unitRaw.toUpperCase()) : /\$/.test(m[0]) ? "USD" : "";
+      if (!unit || !(amount > 0) || amount > 5e8) continue;
+      // staking / deposit / volume limits per user are not winnings
+      const before = line.slice(0, m.index!).split(/[,.;:!?]/).pop() ?? "";        // same clause only
+      const around = before.slice(-45) + m[0];
+      if (/\b(stak\w*|deposit\w*|subscri\w*|invest\w*|lock\w*|position|volume|limit|quota|hold(ing)?s?|borrow\w*|loan|margin|principal)\b/i.test(around)) continue;
+      if (poolAmount && amount >= poolAmount * 0.999) continue;            // that's the whole prize pool, not one person's share
+      // headline style "earn up to 600%" / "earn 10 USDT APR…" isn't a per-person amount
+      if (re === PER_USER[3] && /^\s*(%|apr|apy)/i.test(line.slice(m.index! + m[0].length, m.index! + m[0].length + 8))) continue;
+      amount = Math.round(amount * 100) / 100;
+      return { amount, unit, text: line.length > 220 ? `${line.slice(0, 217).replace(/\s+\S*$/, "")}…` : line };
+    }
+  }
+  return undefined;
+}
+
+/** Start/end of the whole campaign and the most one person can get, read from the rules text (+ title). */
+export function termsOf(d: PromoDetails | undefined, title: string, publishedAt: number, poolAmount?: number): Terms {
+  const lines = (d?.blocks ?? []).map((b) => b.x).filter((x) => !BOILER.test(x));
+  const out: Terms = {};
+  const lo = (publishedAt || Date.now()) - 150 * 86400_000, hi = (publishedAt || Date.now()) + 400 * 86400_000;
+  const ok = (ms: number) => ms > lo && ms < hi;
+  const periodRe = FACT_RE[0][1];
+  const starts: number[] = [], ends: number[] = [];
+  for (const l of lines) {
+    if (/distribut|credited|airdropp?ed|snapshot|listing|trading (opening|opens|starts)|deposit (opening|opens)|withdrawal/i.test(l) && !periodRe.test(l)) continue;
+    const ds = datesIn(l, publishedAt || undefined).filter((x) => ok(x.ms));
+    if (ds.length >= 2 && (periodRe.test(l) || /\b(from|between)\b|\bto\b|[–—-]/i.test(l))) {
+      starts.push(ds[0].ms);
+      const e = ds[ds.length - 1];
+      ends.push(e.hasTime ? e.ms : e.ms + 86400_000 - 60_000);             // a bare end date means the end of that day
+    } else if (ds.length === 1 && /\b(ends?|until|deadline|closes?|expires?)\b/i.test(l) && !/\bstart/i.test(l)) {
+      ends.push(ds[0].hasTime ? ds[0].ms : ds[0].ms + 86400_000 - 60_000);
+    }
+  }
+  if (starts.length) out.start = Math.min(...starts);
+  if (ends.length) out.end = Math.max(...ends);
+  if (out.start && out.end && out.end <= out.start) { delete out.start; delete out.end; }
+  out.perUser = perUserOf([title, ...lines], poolAmount);
+  return out;
 }
 
 /* ------------------------------------------------------------------ per-source fetchers */

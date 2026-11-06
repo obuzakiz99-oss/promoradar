@@ -37,8 +37,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const RULES_TX: Record<Locale, {
   title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
   none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
+  perUser: string; upTo: string; noCap: string; published: string; noEnd: string; left: string; poolShared: string; noCapShort: string;
 }> = {
   uk: {
+    published: "опубліковано", noEnd: "Біржа не вказала дату завершення", left: "залишилось", poolShared: "Максимум на людину не вказано · спільний фонд", noCapShort: "Максимум на одну людину біржа не вказала — дивіться умови нижче",
+    perUser: "Можна заробити (1 людина)", upTo: "до", noCap: "Біржа не вказує максимум на одну людину — нагорода ділиться між учасниками за правилами акції (див. нижче).",
     title: "Умови та правила", keyTitle: "Головне з правил", keySub: "Ключові рядки з офіційних правил біржі (мовою оригіналу). Повний текст — нижче.",
     translate: "Перекласти українською", original: (v) => `Оригінал на ${v}`,
     note: (v) => `Повний текст умов з офіційного оголошення ${v}, мовою оригіналу. Якщо щось розходиться — діють правила на сайті біржі.`,
@@ -48,6 +51,8 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
   },
   en: {
+    published: "published", noEnd: "The exchange gave no end date", left: "left", poolShared: "No per-person maximum stated · shared pool", noCapShort: "The exchange states no per-person maximum — see the rules below",
+    perUser: "One person can get", upTo: "up to", noCap: "The exchange doesn't state a per-person maximum — the reward is split between participants under the rules (see below).",
     title: "Conditions & rules", keyTitle: "Key points", keySub: "Key lines from the exchange's official rules. Full text below.",
     translate: "", original: (v) => `Original on ${v}`,
     note: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
@@ -57,6 +62,8 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
   },
   ru: {
+    published: "опубликовано", noEnd: "Биржа не указала дату окончания", left: "осталось", poolShared: "Максимум на человека не указан · общий фонд", noCapShort: "Максимум на одного человека биржа не указала — смотрите условия ниже",
+    perUser: "Можно заработать (1 человек)", upTo: "до", noCap: "Биржа не указывает максимум на одного человека — награда делится между участниками по правилам акции (см. ниже).",
     title: "Условия и правила", keyTitle: "Главное из правил", keySub: "Ключевые строки из официальных правил биржи (на языке оригинала). Полный текст — ниже.",
     translate: "Перевести на русский", original: (v) => `Оригинал на ${v}`,
     note: (v) => `Полный текст условий из официального объявления ${v}, на языке оригинала. Если что-то расходится — действуют правила на сайте биржи.`,
@@ -140,8 +147,17 @@ export default async function PromoPage({ params }: { params: Params }) {
     ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category),
   ].slice(0, 6);
 
+  const pu = m.perUser;
+  const perUserCell: React.ReactNode = pu ? (
+    <span>
+      <span className="text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}</span>
+      {pu.usd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(pu.usd)})</span>}
+      <span lang="en" className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
+    </span>
+  ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
     [t.detail.reward, m.apr !== undefined ? <span className="text-[#7ee787]">+{m.apr}% APR</span> : p.reward ? p.reward.label + (p.reward.usd && p.reward.unit !== "USD" ? ` (≈${compactUsd(p.reward.usd)})` : "") : t.detail.noData],
+      ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],
     [t.detail.published, p.publishedAt ? dateFull(p.publishedAt, lang) : t.detail.noData],
@@ -182,9 +198,34 @@ export default async function PromoPage({ params }: { params: Params }) {
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
         </div>
 
+        {/* the three things people ask first: when it starts, when it ends, how much one person can get */}
+        {p.category !== "farming" && (
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="card p-4 hover:transform-none">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.detail.start}</div>
+              <div className="mt-1 font-mono text-sm font-bold text-ink">{p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</div>
+            </div>
+            <div className="card p-4 hover:transform-none">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.detail.end}</div>
+              <div className="mt-1 font-mono text-sm font-bold text-ink">{p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</div>
+              {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}>⏳ {R.left} {duration(p.endsAt - now, t.time)}</div>}
+            </div>
+            <div className="card p-4 hover:transform-none ring-1 ring-lime/20">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
+              {pu ? (
+                <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}
+                  {pu.usd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(pu.usd)}</span>}
+                </div>
+              ) : (
+                <div className="mt-1 text-xs leading-snug text-ink-2">{p.reward ? `${R.poolShared} ${p.reward.label}` : R.noCapShort}</div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* key points pulled from the official rules */}
         {det && det.facts.length > 0 && (
-          <section className="card mt-8 p-6 hover:transform-none ring-1 ring-lime/15">
+          <section className="card mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
             <h2 className="font-display text-xl font-semibold tracking-tight">📌 {R.keyTitle}</h2>
             <p className="mt-1 text-xs text-ink-3">{R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">

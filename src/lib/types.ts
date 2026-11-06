@@ -52,5 +52,7 @@ export interface Promo {
     tvlUsd?: number;
     chain?: string;
     symbol?: string;
+    perUser?: { amount: number; unit: string; usd?: number; text: string };   // most one person can get (from the rules)
+    datesFromRules?: boolean;   // start/end were read from the rules text
   };
 }

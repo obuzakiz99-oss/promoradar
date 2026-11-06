@@ -199,7 +199,7 @@ async function lbank(now: number): Promise<PoolProject[]> {
 const STABLE = new Set(["USDT", "USDC", "USD1", "USDG", "FDUSD", "U", "DAI", "USDE", "PYUSD"]);
 
 /** USD prices + 24h change for coins from Gate's public spot tickers (one call, cached 10 min). */
-async function prices(): Promise<{ px: Record<string, number>; chg: Record<string, number> }> {
+export async function prices(): Promise<{ px: Record<string, number>; chg: Record<string, number> }> {
   return cached("gate-tickers", 10 * 60_000, async () => {
     const t = await getBigJson<any[]>("https://api.gateio.ws/api/v4/spot/tickers", 20_000);
     const px: Record<string, number> = {}, chg: Record<string, number> = {};
