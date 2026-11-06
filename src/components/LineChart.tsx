@@ -4,7 +4,7 @@ export interface Series { name: string; color: string; points: Array<[number, nu
 const PALETTE = ["#c8ff3d", "#3de0c8", "#5ab8ff", "#ffb547", "#a38bff", "#ff6b8b", "#7ee787", "#f2c67c"];
 export const seriesColor = (i: number) => PALETTE[i % PALETTE.length];
 
-export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA" }: { series: Series[]; height?: number; unit?: string; locale?: string }) {
+export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean }) {
   const all = series.flatMap((s) => s.points);
   if (all.length < 2) return null;
   const W = 720, H = height, L = 44, R = 12, Tp = 12, B = 26;
@@ -12,11 +12,11 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA" }
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
   let y0 = Math.min(...ys), y1 = Math.max(...ys);
   if (y1 - y0 < 0.5) { y0 -= 0.5; y1 += 0.5; }
-  const pad = (y1 - y0) * 0.08; y0 = Math.max(0, y0 - pad); y1 += pad;
+  const pad = (y1 - y0) * 0.08; y0 = signed ? Math.min(0, y0 - pad) : Math.max(0, y0 - pad); y1 = signed ? Math.max(0, y1 + pad) : y1 + pad;   // signed: change in % (can be negative), 0 always visible
   const X = (t: number) => L + ((t - x0) / Math.max(1, x1 - x0)) * (W - L - R);
   const Y = (v: number) => Tp + (1 - (v - y0) / (y1 - y0)) * (H - Tp - B);
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((k) => y0 + (y1 - y0) * k);
-  const fmt = (v: number) => (v >= 100 ? Math.round(v).toString() : v >= 10 ? v.toFixed(1) : v.toFixed(2));
+  const fmt = (v: number) => { const a = Math.abs(v), s = a >= 100 ? Math.round(v).toString() : a >= 10 ? v.toFixed(1) : v.toFixed(signed ? 1 : 2); return signed && v > 0 ? `+${s}` : s; };
   const dates = [x0, x0 + (x1 - x0) / 2, x1];
   return (
     <figure>
@@ -27,6 +27,7 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA" }
             <text x={L - 6} y={Y(v) + 4} textAnchor="end" fontSize="11" fill="#6b7685" fontFamily="var(--font-mono)">{fmt(v)}{unit}</text>
           </g>
         ))}
+        {signed && <line x1={L} x2={W - R} y1={Y(0)} y2={Y(0)} stroke="rgb(255 255 255 / 0.35)" strokeDasharray="4 4" />}
         {dates.map((t, i) => (
           <text key={t} x={X(t)} y={H - 6} textAnchor={i === 0 ? "start" : i === 2 ? "end" : "middle"} fontSize="11" fill="#6b7685">
             {new Date(t).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}

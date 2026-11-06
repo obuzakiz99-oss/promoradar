@@ -152,7 +152,7 @@ async function bitget(now: number): Promise<PoolProject[]> {
   const list = (status: number, pageSize: number) =>
     getJson("https://www.bitget.com/v1/finance/poolx/product/page/list/new", 15_000, { method: "POST", headers: H, body: JSON.stringify({ pageNo: 1, pageSize, pre: false, status }) });
   const out: any[] = [];
-  for (const [s, n] of [[2, 20], [1, 20], [3, 20]] as const) {   // sequential: Bitget rate-limits bursts (429)
+  for (const [s, n] of [[2, 20], [1, 20], [3, 50]] as const) {   // sequential: Bitget rate-limits bursts (429)
     const j = await list(s, n);
     if (j?.code !== "200") throw new Error(`bitget: ${j?.msg ?? "bad response"}`);
     out.push(...(j.data?.items ?? []));

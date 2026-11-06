@@ -1,12 +1,12 @@
 // Append one APR snapshot to data/history.json from the freshly built site (out/api/*).
-// Run by the GitHub workflow after `npm run build`. Keeps ~45 days.
+// Run by the GitHub workflow after `npm run build`. Keeps ~120 days (the history page shows 3 months).
 import fs from "node:fs";
 import path from "node:path";
 
 const OUT = process.env.OUT_DIR || "out";
 const FILE = path.join("data", "history.json");
 const COINS = ["USDT", "USDC", "BTC", "ETH", "SOL", "BNB"];
-const KEEP_MS = 45 * 86400_000;
+const KEEP_MS = 120 * 86400_000;
 
 const read = (f) => JSON.parse(fs.readFileSync(path.join(OUT, "api", f), "utf8"));
 const earn = read("earn");
