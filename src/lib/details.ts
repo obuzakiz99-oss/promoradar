@@ -175,7 +175,36 @@ export function datesIn(line: string, refMs?: number): Array<{ ms: number; hasTi
 }
 
 export interface PerUser { amount: number; unit: string; text: string }
-export interface Terms { start?: number; end?: number; perUser?: PerUser }
+export type EntryKind = "trade" | "deposit" | "stake" | "hold" | "buy";
+export interface MinEntry { amount: number; unit: string; kind: EntryKind; text: string }
+export interface Terms { start?: number; end?: number; perUser?: PerUser; minEntry?: MinEntry }
+
+/** The smallest dollar threshold that earns anything ("trade at least 500 USDT", "volume ≥ 500 USDT", "deposit at least $100"). */
+const ENTRY_RE = /(?:at least|minimum(?: of)?|min\.?|no less than|≥|>=|reach(?:es|ing)?|exceed(?:s|ing)?|greater than or equal to(?: the equivalent of)?)\s*(\$)?\s?(\d[\d,]*(?:\.\d+)?)\s*(k\b|m\b)?\s*(USDT|USDC|USD|FDUSD|\$)?/gi;
+const KIND_RE: Array<[EntryKind, RegExp]> = [
+  ["trade", /\b(trad(e|es|ed|ing)|volume|futures|spot|perps?|swap|copy)\b/i],
+  ["deposit", /\b(deposit\w*|top[- ]?up|net inflow|fiat)\b/i],
+  ["stake", /\b(stak\w*|subscri\w*|lock\w*|launchpool|earn product|savings)\b/i],
+  ["hold", /\b(hold\w*|balance|average daily)\b/i],
+  ["buy", /\b(buy|purchase\w*|convert)\b/i],
+];
+function minEntryOf(lines: string[]): MinEntry | undefined {
+  let best: MinEntry | undefined;
+  for (const line of lines) {
+    for (const m of line.matchAll(ENTRY_RE)) {
+      const dollar = m[1] || m[4];
+      if (!dollar) continue;                                             // only dollar amounts (not "3 friends", "5 trades")
+      const amount = Number(m[2].replace(/,/g, "")) * (m[3] ? (/m/i.test(m[3]) ? 1e6 : 1e3) : 1);
+      if (!(amount >= 1) || amount > 1e7) continue;
+      const clause = line.slice(Math.max(0, m.index! - 70), m.index! + m[0].length + 40).split(/[.;]/).find((c) => c.includes(m[0])) ?? line;
+      if (/\b(reward|prize|bonus|voucher|airdrop|pool|cap(ped)?|up to|max(imum)? (reward|payout))\b/i.test(clause.slice(0, clause.indexOf(m[0]))) && !/\b(volume|deposit|trade|stake|hold)\b/i.test(clause)) continue;
+      const kind = KIND_RE.find(([, re]) => re.test(clause))?.[0];
+      if (!kind) continue;
+      if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line.length > 220 ? `${line.slice(0, 217).replace(/\s+\S*$/, "")}…` : line };
+    }
+  }
+  return best;
+}
 
 const NUM = "\\$?\\s?([\\d][\\d,]*(?:\\.\\d+)?)\\s*(k|m|million|thousand)?\\s*";
 const UNIT = "(usdt|usdc|usd|fdusd|[A-Z][A-Z0-9]{1,9})?";
@@ -243,6 +272,7 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   if (ends.length) out.end = Math.max(...ends);
   if (out.start && out.end && out.end <= out.start) { delete out.start; delete out.end; }
   out.perUser = perUserOf([title, ...lines], poolAmount);
+  out.minEntry = minEntryOf(lines);
   return out;
 }
 

@@ -37,9 +37,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const RULES_TX: Record<Locale, {
   title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
   none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
+  minTitle: string; from: string; kind: Record<"trade" | "deposit" | "stake" | "hold" | "buy", string>;
   perUser: string; upTo: string; noCap: string; published: string; noEnd: string; left: string; poolShared: string; noCapShort: string;
 }> = {
   uk: {
+    minTitle: "Щоб отримати хоч щось", from: "від", kind: { trade: "Торгівля", deposit: "Депозит", stake: "Стейк", hold: "Тримати", buy: "Купівля" },
     published: "опубліковано", noEnd: "Біржа не вказала дату завершення", left: "залишилось", poolShared: "Максимум на людину не вказано · спільний фонд", noCapShort: "Максимум на одну людину біржа не вказала — дивіться умови нижче",
     perUser: "Можна заробити (1 людина)", upTo: "до", noCap: "Біржа не вказує максимум на одну людину — нагорода ділиться між учасниками за правилами акції (див. нижче).",
     title: "Умови та правила", keyTitle: "Головне з правил", keySub: "Ключові рядки з офіційних правил біржі (мовою оригіналу). Повний текст — нижче.",
@@ -51,6 +53,7 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
   },
   en: {
+    minTitle: "To get anything at all", from: "from", kind: { trade: "Trade", deposit: "Deposit", stake: "Stake", hold: "Hold", buy: "Buy" },
     published: "published", noEnd: "The exchange gave no end date", left: "left", poolShared: "No per-person maximum stated · shared pool", noCapShort: "The exchange states no per-person maximum — see the rules below",
     perUser: "One person can get", upTo: "up to", noCap: "The exchange doesn't state a per-person maximum — the reward is split between participants under the rules (see below).",
     title: "Conditions & rules", keyTitle: "Key points", keySub: "Key lines from the exchange's official rules. Full text below.",
@@ -62,6 +65,7 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
   },
   ru: {
+    minTitle: "Чтобы получить хоть что-то", from: "от", kind: { trade: "Торговля", deposit: "Депозит", stake: "Стейк", hold: "Держать", buy: "Покупка" },
     published: "опубликовано", noEnd: "Биржа не указала дату окончания", left: "осталось", poolShared: "Максимум на человека не указан · общий фонд", noCapShort: "Максимум на одного человека биржа не указала — смотрите условия ниже",
     perUser: "Можно заработать (1 человек)", upTo: "до", noCap: "Биржа не указывает максимум на одного человека — награда делится между участниками по правилам акции (см. ниже).",
     title: "Условия и правила", keyTitle: "Главное из правил", keySub: "Ключевые строки из официальных правил биржи (на языке оригинала). Полный текст — ниже.",
@@ -200,7 +204,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* the three things people ask first: when it starts, when it ends, how much one person can get */}
         {p.category !== "farming" && (
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className={`mt-8 grid gap-3 sm:grid-cols-2 ${m.minEntry ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <div className="card p-4 hover:transform-none">
               <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.detail.start}</div>
               <div className="mt-1 font-mono text-sm font-bold text-ink">{p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</div>
@@ -220,6 +224,13 @@ export default async function PromoPage({ params }: { params: Params }) {
                 <div className="mt-1 text-xs leading-snug text-ink-2">{p.reward ? `${R.poolShared} ${p.reward.label}` : R.noCapShort}</div>
               )}
             </div>
+            {m.minEntry && (
+              <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
+                <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString("en-US")}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
+                <div lang="en" className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
+              </div>
+            )}
           </div>
         )}
 

@@ -53,6 +53,7 @@ async function getPromosLive(): Promise<Collected> {
         const rate = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/.test(tm.perUser.unit) ? 1 : px[tm.perUser.unit];
         meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
       }
+      if (tm.minEntry) meta.minEntry = tm.minEntry;
       p.meta = meta;
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended

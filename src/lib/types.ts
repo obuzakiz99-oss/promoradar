@@ -53,6 +53,7 @@ export interface Promo {
     chain?: string;
     symbol?: string;
     perUser?: { amount: number; unit: string; usd?: number; text: string };   // most one person can get (from the rules)
+    minEntry?: { amount: number; unit: string; kind: "trade" | "deposit" | "stake" | "hold" | "buy"; text: string };   // smallest $ threshold that earns anything
     datesFromRules?: boolean;   // start/end were read from the rules text
   };
 }
