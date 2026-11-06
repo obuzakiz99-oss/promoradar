@@ -54,7 +54,7 @@ export function MoneyBlock({ lang, plan, bt, venues }: { lang: Locale; plan: Pla
     });
     if (plan.earn) {
       const e = plan.earn;
-      opts.push({ apr: e.apr, cap: e.cap ?? Infinity, row: (put: number) => ({ key: "earn", venue: venues[e.exchange], text: T.earn(e.coin, venues[e.exchange]?.name ?? e.exchange), put, income: (put * e.apr) / 100 / 12, when: `${e.apr.toFixed(1)}% ${T.perMonth}`, url: e.url }) });
+      opts.push({ apr: e.apr, cap: e.cap ?? Infinity, row: (put: number) => ({ key: "earn", venue: venues[e.exchange], text: T.earn(e.coin, venues[e.exchange]?.name ?? e.exchange), put, income: (put * e.apr) / 100 / 12, when: `${e.apr.toFixed(1)}% · ${T.forDays(30)}`, url: e.url }) });
     }
     let left = amount;
     const out = [];
