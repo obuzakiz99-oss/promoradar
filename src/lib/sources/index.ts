@@ -1,4 +1,5 @@
 import type { Promo } from "../types";
+import type { PromoDetails } from "../details";
 import { classify, cleanTitle, isPromo, parseReward } from "../parse";
 import { CEX, DEX, DEX_FEEDS, SITE, TELEGRAM, VENUES, venueOf } from "@/config/site";
 import { CEX_SOURCES, type Raw } from "./cex";
@@ -6,7 +7,7 @@ import { airdrops, dexBlogs, farming, lighter } from "./defi";
 import { telegram } from "./telegram";
 
 export type SourceStatus = { ok: boolean; count: number; error?: string; name: string; kind: string; via: string };
-export interface Collected { promos: Promo[]; status: Record<string, SourceStatus>; fetchedAt: number }
+export interface Collected { promos: Promo[]; status: Record<string, SourceStatus>; fetchedAt: number; details?: Record<string, PromoDetails> }
 
 function fromRaw(r: Raw): Promo | null {
   const title = cleanTitle(r.title);

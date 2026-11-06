@@ -11,6 +11,7 @@ import { SaveButton } from "@/components/SaveButton";
 import { Share } from "@/components/Share";
 import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
+import type { Block, FactKey } from "@/lib/details";
 
 export const revalidate = 900;
 export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
@@ -33,6 +34,86 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title, description: bits, alternates: { canonical: `/${lang}/p/${slug}` } };
 }
 
+const RULES_TX: Record<Locale, {
+  title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
+  none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
+}> = {
+  uk: {
+    title: "Умови та правила", keyTitle: "Головне з правил", keySub: "Ключові рядки з офіційних правил біржі (мовою оригіналу). Повний текст — нижче.",
+    translate: "Перекласти українською", original: (v) => `Оригінал на ${v}`,
+    note: (v) => `Повний текст умов з офіційного оголошення ${v}, мовою оригіналу. Якщо щось розходиться — діють правила на сайті біржі.`,
+    partial: "Біржа публікує тут лише короткий опис — повні правила за посиланням «Оригінал».",
+    none: (v) => `${v} не дозволяє автоматично завантажувати текст правил, тому повні умови — на сторінці акції: натисніть «Оригінал» або «Перекласти українською» вище.`,
+    more: "Показати всі умови", signup: (v) => `Реєстрація на ${v}`,
+    fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
+  },
+  en: {
+    title: "Conditions & rules", keyTitle: "Key points", keySub: "Key lines from the exchange's official rules. Full text below.",
+    translate: "", original: (v) => `Original on ${v}`,
+    note: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
+    partial: "The exchange only publishes a short summary here — full rules via “Original”.",
+    none: (v) => `${v} doesn't allow its rules to be loaded automatically, so the full conditions are on the promo page — tap “Original” above.`,
+    more: "Show all conditions", signup: (v) => `Sign up on ${v}`,
+    fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
+  },
+  ru: {
+    title: "Условия и правила", keyTitle: "Главное из правил", keySub: "Ключевые строки из официальных правил биржи (на языке оригинала). Полный текст — ниже.",
+    translate: "Перевести на русский", original: (v) => `Оригинал на ${v}`,
+    note: (v) => `Полный текст условий из официального объявления ${v}, на языке оригинала. Если что-то расходится — действуют правила на сайте биржи.`,
+    partial: "Биржа публикует здесь только краткое описание — полные правила по ссылке «Оригинал».",
+    none: (v) => `${v} не позволяет автоматически загружать текст правил, поэтому полные условия — на странице акции: нажмите «Оригинал» или «Перевести на русский» выше.`,
+    more: "Показать все условия", signup: (v) => `Регистрация на ${v}`,
+    fact: { period: "⏱ Период", who: "👤 Кто может участвовать", min: "💵 Минимальные требования", how: "✅ Как участвовать", payout: "🎁 Когда выдадут награды", kyc: "🪪 Верификация (KYC)", region: "🌍 Ограничения по странам" },
+  },
+};
+
+/** Google Translate view of the official page (the page itself is public). */
+function translateUrl(url: string, lang: Locale): string | undefined {
+  if (lang === "en" || url.startsWith("https://t.me/")) return undefined;
+  return `https://translate.google.com/translate?sl=auto&tl=${lang}&u=${encodeURIComponent(url)}`;
+}
+
+function BlockView({ b }: { b: Block }) {
+  if (b.t === "h") return <h3 className="pt-3 text-base font-bold text-ink">{b.x}</h3>;
+  if (b.t === "li") return <p className="flex gap-2 pl-1"><span className="text-lime">•</span><span>{b.x}</span></p>;
+  return <p>{b.x}</p>;
+}
+
+/** Original rules: headings, paragraphs, bullet lines and tables (consecutive rows grouped); long texts fold after the first part. */
+function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
+  const groups: Array<Block | Block[]> = [];
+  for (const b of blocks) {
+    const last = groups[groups.length - 1];
+    if (b.t === "tr" && Array.isArray(last)) last.push(b);
+    else groups.push(b.t === "tr" ? [b] : b);
+  }
+  const render = (g: Block | Block[], i: number) => Array.isArray(g) ? (
+    <div key={i} className="overflow-x-auto rounded-xl border border-line">
+      <table className="w-full text-left text-xs">
+        <tbody>
+          {g.map((r, j) => (
+            <tr key={j} className={j === 0 ? "bg-white/[0.04] font-bold text-ink" : "border-t border-line"}>
+              {(r.cells ?? [r.x]).map((c, k) => <td key={k} className="px-3 py-2 align-top">{c}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : <BlockView key={i} b={g} />;
+  const cut = (() => { let n = 0; for (let i = 0; i < groups.length; i++) { n += Array.isArray(groups[i]) ? 4 : 1; if (n >= 28) return i + 1; } return groups.length; })();
+  return (
+    <div lang="en" className="mt-4 space-y-2 text-sm leading-relaxed text-ink-2">
+      {groups.slice(0, cut).map(render)}
+      {cut < groups.length && (
+        <details className="group">
+          <summary className="cursor-pointer list-none pt-2 text-sm font-bold text-lime group-open:hidden">▾ {more}</summary>
+          <div className="space-y-2">{groups.slice(cut).map((g, i) => render(g, cut + i))}</div>
+        </details>
+      )}
+    </div>
+  );
+}
+
 const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
 
@@ -40,7 +121,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
-  const { promos, fetchedAt } = await getPromos();
+  const { promos, fetchedAt, details } = await getPromos();
   const p = findBySlug(promos, slug);
   if (!p) notFound();
   const now = fetchedAt;
@@ -48,7 +129,12 @@ export default async function PromoPage({ params }: { params: Params }) {
   const st = statusOf(p, now);
   const isAggregator = p.venue.kind === "airdrop";
   const venueCfg = VENUES[p.venue.id];
-  const joinUrl = p.joinUrl || p.url;
+  // straight to this promo on the exchange; a referral (when the owner sets one) is offered separately
+  const joinUrl = p.category === "farming" ? p.joinUrl || p.url : p.url;
+  const refUrl = p.category !== "farming" && venueCfg?.refUrl ? venueCfg.refUrl : undefined;
+  const R = RULES_TX[lang];
+  const det = details?.[p.id];
+  const tr = translateUrl(p.url, lang);
   const related = [
     ...promos.filter((x) => x.id !== p.id && x.venue.id === p.venue.id),
     ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category),
@@ -90,10 +176,27 @@ export default async function PromoPage({ params }: { params: Params }) {
         </header>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <a href={joinUrl} target="_blank" rel={p.joinUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
-          <a href={p.url} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base">{t.card.details} ↗</a>
+          <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
+          {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗</a>}
+          <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
         </div>
+
+        {/* key points pulled from the official rules */}
+        {det && det.facts.length > 0 && (
+          <section className="card mt-8 p-6 hover:transform-none ring-1 ring-lime/15">
+            <h2 className="font-display text-xl font-semibold tracking-tight">📌 {R.keyTitle}</h2>
+            <p className="mt-1 text-xs text-ink-3">{R.keySub}</p>
+            <dl className="mt-4 divide-y divide-line">
+              {det.facts.map((f, i) => (
+                <div key={i} className="grid gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
+                  <dt className="font-semibold text-ink-3">{R.fact[f.k]}</dt>
+                  <dd lang="en" className="text-ink">{f.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
 
         <div className="mt-10 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
           <section className="card p-6 hover:transform-none">
@@ -132,6 +235,25 @@ export default async function PromoPage({ params }: { params: Params }) {
             </div>
           </aside>
         </div>
+
+        {/* full conditions & rules */}
+        <section id="rules" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <h2 className="font-display text-xl font-semibold tracking-tight">📜 {R.title}</h2>
+            <div className="flex flex-wrap gap-3 text-sm font-semibold">
+              {tr && <a href={tr} target="_blank" rel="noopener" className="text-lime hover:underline">{R.translate} ↗</a>}
+              <a href={p.url} target="_blank" rel="noopener" className="text-ink-2 hover:text-ink">{R.original(p.venue.name)} ↗</a>
+            </div>
+          </div>
+          {det && det.blocks.length > 0 ? (
+            <>
+              <p className="mt-1 text-xs text-ink-3">{R.note(p.venue.name)}{det.partial ? ` ${R.partial}` : ""}</p>
+              <Rules blocks={det.blocks} more={R.more} />
+            </>
+          ) : (
+            <p className="mt-3 text-sm leading-relaxed text-ink-2">{R.none(p.venue.name)}</p>
+          )}
+        </section>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />

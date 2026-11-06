@@ -37,11 +37,13 @@ function ReqIcon({ k }: { k: string }) {
 }
 
 const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
+const RULES: Record<Locale, string> = { uk: "Умови", en: "Rules", ru: "Условия" };
 
 export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean }) {
   const cs = CAT_STYLE[p.category];
   const isNew = p.publishedAt > 0 && now - p.publishedAt < 48 * 3600_000;
-  const joinUrl = p.joinUrl || p.url;
+  // "Join" goes straight to this promo's own page on the exchange (a farm pool's own page for farming)
+  const joinUrl = p.category === "farming" ? p.joinUrl || p.url : p.url;
   const left = p.endsAt ? p.endsAt - now : undefined;
   const urgent = left !== undefined && left < 3 * 86400_000;
   const notStarted = p.startsAt && p.startsAt > now;
@@ -157,11 +159,11 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
         </div>
 
         <div className="relative z-10 mt-4 grid grid-cols-[1fr_auto] gap-2">
-          <a href={joinUrl} target="_blank" rel={p.joinUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary">
+          <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary">
             {isFarm ? t.card.open : t.card.join}
             <Arrow className="size-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href={p.url} target="_blank" rel="noopener" className="btn btn-ghost px-3.5">{t.card.details}</a>
+          <a href={href} className="btn btn-ghost px-3.5">{RULES[lang]}</a>
         </div>
         {m.source && (
           <div className="mt-3 text-[11px] font-medium text-ink-3">

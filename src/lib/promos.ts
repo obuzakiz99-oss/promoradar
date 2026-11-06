@@ -3,6 +3,7 @@ import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
+import { getDetails } from "./details";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -34,7 +35,10 @@ async function getPromosLive(): Promise<Collected> {
       publishedAt: now, endsAt: new Date(s.until).getTime(), reward: s.reward ? parseReward(s.reward) : undefined, tags: [], sponsored: true,
     };
   });
-  return { ...data, promos: [...sponsored, ...data.promos] };
+  const promos = [...sponsored, ...data.promos];
+  // full rules from the exchanges' own announcements (cached across builds in data/details.json)
+  const details = await getDetails(promos).catch(() => ({}));
+  return { ...data, promos, details };
 }
 
 /** Sum of prize pools denominated in dollars/stablecoins. */

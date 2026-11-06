@@ -117,7 +117,9 @@ async function mexc(now: number): Promise<PoolProject[]> {
       id: `mexc:${p.id}`, exchange: "mexc", token: p.activityCoin, name: p.activityName, start, end,
       status: p.activityStatus === "FINISHED" ? "ended" : statusOf(start, end, now),
       rewardTotal: pools.reduce((s: number, x: Pool) => s + (x.reward ?? 0), 0) || undefined,
-      url: "https://www.mexc.com/launchpool", rulesUrl: p.noticeUrl || undefined, pools,
+      // the project's own page (MEXC only uses the id; the name part is cosmetic)
+      url: `https://www.mexc.com/launchpool/${String(p.currencyFullName || p.activityCoin || "x").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x"}/${p.id}`,
+      rulesUrl: p.noticeUrl || undefined, pools,
     };
   });
 }
@@ -135,7 +137,7 @@ async function kucoin(now: number): Promise<PoolProject[]> {
     const ann = c.announcementAddress ?? c.pools?.[0]?.jumpLink;
     return {
       id: `kucoin:${c.campaignId}`, exchange: "kucoin", token: c.earnTokenName, name: c.earnTokenName, logo: c.earnTokenLogo, start, end,
-      status: statusOf(start, end, now), rewardTotal: num(c.totalReturns), url: "https://www.kucoin.com/gempool",
+      status: statusOf(start, end, now), rewardTotal: num(c.totalReturns), url: c.campaignCode ? `https://www.kucoin.com/gempool/${encodeURIComponent(c.campaignCode)}` : "https://www.kucoin.com/gempool",
       rulesUrl: ann ? (ann.startsWith("http") ? ann : `https://www.kucoin.com${ann}`) : undefined,
       participants: (c.pools ?? []).reduce((s: number, x: any) => s + (num(x.totalStakingParticipants) ?? 0), 0) || undefined,
       pools: (c.pools ?? []).map((x: any): Pool => ({
