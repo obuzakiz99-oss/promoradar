@@ -14,6 +14,7 @@ import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
 import { EarnCalc } from "@/components/EarnCalc";
+import { getTokens, isStableSym } from "@/lib/tokens";
 
 export const revalidate = 900;
 export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
@@ -39,13 +40,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const RULES_TX: Record<Locale, {
   title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
   none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
-  noteTr: (v: string) => string; keySubTr: string;
+  noteTr: (v: string) => string; keySubTr: string; coinMore: string;
   calTitle: string; calIcs: string; calNote: string; geoTitle: string; geoOnly: (r: string) => string; geoNoUA: string; geoNoEU: string; geoAll: string; forNew: string;
   minTitle: string; from: string; kind: Record<"trade" | "deposit" | "stake" | "hold" | "buy", string>;
   perUser: string; upTo: string; noCap: string; published: string; noEnd: string; left: string; poolShared: string; noCapShort: string;
 }> = {
   uk: {
-    calTitle: "Дедлайн акції", calIcs: "iPhone / Outlook", calNote: "нагадування за день до кінця",
+    coinMore: "усі акції та стейкінг", calTitle: "Дедлайн акції", calIcs: "iPhone / Outlook", calNote: "нагадування за день до кінця",
     geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону ${r}`), geoNoUA: "⚠ В умовах Україна серед обмежених країн", geoNoEU: "⚠ В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "🆕 Лише для нових користувачів",
     noteTr: (v) => `Машинний переклад (DeepL) офіційних умов ${v}. Якщо щось незрозуміло або розходиться — діє оригінал на сайті біржі.`,
     keySubTr: "Ключові рядки з офіційних правил біржі (машинний переклад). Повний текст — нижче.",
@@ -61,7 +62,7 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
   },
   en: {
-    calTitle: "Promo deadline", calIcs: "iPhone / Outlook", calNote: "reminder a day before the end",
+    coinMore: "all promos & staking", calTitle: "Promo deadline", calIcs: "iPhone / Outlook", calNote: "reminder a day before the end",
     geoTitle: "Who it's for", geoOnly: (r) => (r === "region" ? "Selected regions only — check your country in the rules" : `${r} region only`), geoNoUA: "⚠ The rules list Ukraine as restricted", geoNoEU: "⚠ The rules list the EU/EEA as restricted", geoAll: "No restriction for Ukraine found in the rules", forNew: "🆕 New users only",
     noteTr: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
     keySubTr: "Key lines from the exchange's official rules. Full text below.",
@@ -77,7 +78,7 @@ const RULES_TX: Record<Locale, {
     fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
   },
   ru: {
-    calTitle: "Дедлайн акции", calIcs: "iPhone / Outlook", calNote: "напоминание за день до конца",
+    coinMore: "все акции и стейкинг", calTitle: "Дедлайн акции", calIcs: "iPhone / Outlook", calNote: "напоминание за день до конца",
     geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона ${r}`), geoNoUA: "⚠ В условиях Украина среди ограниченных стран", geoNoEU: "⚠ В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "🆕 Только для новых пользователей",
     noteTr: (v) => `Машинный перевод (DeepL) официальных условий ${v}. Если что-то непонятно или расходится — действует оригинал на сайте биржи.`,
     keySubTr: "Ключевые строки из официальных правил биржи (машинный перевод). Полный текст — ниже.",
@@ -162,6 +163,9 @@ export default async function PromoPage({ params }: { params: Params }) {
   const refUrl = p.category !== "farming" && venueCfg?.refUrl ? venueCfg.refUrl : undefined;
   const R = RULES_TX[lang];
   const det = details?.[p.id];
+  // token pages this promo appears on (its reward coin and tickers in the headline)
+  const { tokens } = await getTokens(lang);
+  const coins = [...tokens.values()].filter((x) => !isStableSym(x.sym) && x.promos.some((q) => q.id === p.id)).slice(0, 4);
   const cal: CalEvent | undefined = p.endsAt && p.endsAt > fetchedAt ? {
     uid: p.id.replace(/[^a-z0-9]/gi, "-"), title: `⏳ ${R.calTitle}: ${p.title}`.slice(0, 180), at: deadlineReminder(p.endsAt, fetchedAt),
     description: `${p.venue.name} · ${dateFull(p.endsAt, lang)}`, url: `https://${SITE.domain}/${lang}/p/${slug}/`,
@@ -213,6 +217,16 @@ export default async function PromoPage({ params }: { params: Params }) {
             </div>
             <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{isAggregator ? `${p.title} — Airdrop` : p.title}</h1>
             <p className="mt-2 text-ink-2">{p.venue.name}</p>
+            {coins.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {coins.map((c) => (
+                  <Link key={c.sym} href={`/${lang}/t/${c.sym}`} className="flex h-8 items-center gap-1.5 rounded-lg border border-line bg-white/[0.03] pl-1 pr-2.5 text-xs font-bold text-ink-2 hover:border-line-2 hover:text-ink">
+                    <VenueLogo v={{ name: c.sym, logo: c.logo, color: "#2a3140", ink: "#e8ecf1", monogram: c.sym.slice(0, 3) }} size={20} rounded="rounded-full" />
+                    {c.sym} · {R.coinMore}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </header>
 
