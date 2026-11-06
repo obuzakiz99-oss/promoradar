@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Promo } from "../types";
 import { classify, cleanTitle, isPromo, parseReward } from "../parse";
@@ -10,7 +12,7 @@ const strip = (html: string) =>
 
 /** A post headline must itself announce a campaign (market chatter / memes are skipped). */
 const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
-const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote)\b/i;
+const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update)\b/i;
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
 function headline(text: string): string {
@@ -22,10 +24,60 @@ function headline(text: string): string {
   return h.length > 170 ? `${h.slice(0, 167).replace(/\s+\S*$/, "")}…` : h;
 }
 
-/** Read the public preview page of an official channel (latest ~20 posts). */
+/*
+ * The public preview shows only the latest ~20 posts, and busy channels (KuCoin, Bitget, MEXC) push a still-running
+ * promo out of that window within a day or two. So: on the first run a channel is read back 14 days (?before=…), and every
+ * promo found is kept in data/telegram.json until it ends / gets too old; later builds read just the newest 2 pages.
+ */
+const STORE = () => path.join(process.cwd(), "data", "telegram.json");
+const BACK_MS = 14 * 86400_000;
+type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
+const TG_VER = 2;   // bump when post parsing changes → stored promos are re-read from Telegram
+let STORE_MEM: TgStore | null = null;
+function loadStore(): TgStore {
+  if (STORE_MEM) return STORE_MEM;
+  try { STORE_MEM = JSON.parse(fs.readFileSync(STORE(), "utf8")); } catch { STORE_MEM = { backfilled: {}, promos: {} }; }
+  if (STORE_MEM!.v !== TG_VER) STORE_MEM = { v: TG_VER, backfilled: {}, promos: {} };
+  STORE_MEM!.backfilled ??= {}; STORE_MEM!.promos ??= {};
+  return STORE_MEM!;
+}
+function saveStore() {
+  try { if (STORE_MEM && fs.existsSync(path.dirname(STORE()))) fs.writeFileSync(STORE(), JSON.stringify(STORE_MEM)); } catch { /* read-only */ }
+}
+
+/** Read the public preview of an official channel: newest pages, or 14 days back on the first run. */
 async function channel(venue: string, ch: string): Promise<Promo[]> {
-  const html = await getText(`https://t.me/s/${ch}`, 15_000);
+  const store = loadStore();
+  const deep = !store.backfilled[ch] || Date.now() - store.backfilled[ch] > 7 * 86400_000;   // re-backfill weekly
+  const out: Promo[] = [];
+  let before = "";
+  for (let page = 0; page < (deep ? 12 : 2); page++) {
+    const html = await getText(`https://t.me/s/${ch}${before ? `?before=${before}` : ""}`, 15_000);
+    const { promos, minId, oldest } = parsePage(html, venue, ch);
+    out.push(...promos);
+    if (!minId || oldest < Date.now() - BACK_MS) break;
+    before = String(minId);
+  }
+  if (deep) store.backfilled[ch] = Date.now();
+  // merge with what earlier builds found (a post that scrolled out of the preview is still a running promo)
+  for (const p of out) store.promos[p.id] = p;
+  // a post without an end date is kept 14 days (most exchange campaigns run 1–2 weeks); with an end date — until it ends
+  const cutoff = Date.now() - BACK_MS;
+  const mine = Object.values(store.promos).filter((p) => p.id.toLowerCase().startsWith(`tg:${ch.toLowerCase()}/`));
+  for (const p of mine) if (p.endsAt ? p.endsAt < Date.now() : p.publishedAt < cutoff) delete store.promos[p.id];
+  return Object.values(store.promos).filter((p) => p.id.toLowerCase().startsWith(`tg:${ch.toLowerCase()}/`));
+}
+
+function parsePage(html: string, venue: string, ch: string): { promos: Promo[]; minId: number; oldest: number } {
   const posts = [...html.matchAll(/<div class="tgme_widget_message [^"]*"[^>]*data-post="([^"]+)"[\s\S]*?(?=<div class="tgme_widget_message_wrap|$)/g)];
+  let minId = 0, oldest = Infinity;
+  for (const [block, post] of posts) {
+    const id = Number(post.split("/").pop());
+    if (id && (!minId || id < minId)) minId = id;
+    const d = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
+    if (d && d < oldest) oldest = d;
+  }
+  void ch;
   const out: Promo[] = [];
   const site = VENUES[venue].site;
   for (const [block, post] of posts) {
@@ -46,11 +98,16 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
       meta: { source: `Telegram @${ch}` },
     });
   }
-  return out;
+  return { promos: out, minId, oldest: oldest === Infinity ? 0 : oldest };
 }
 
 export async function telegram(): Promise<{ promos: Promo[]; status: TgStatus }> {
-  const res = await Promise.allSettled(TELEGRAM.map((c) => channel(c.venue, c.channel)));
+  // channels one after another (a few at a time) — the deep first run makes ~10 requests per channel
+  const res: PromiseSettledResult<Promo[]>[] = [];
+  for (let i = 0; i < TELEGRAM.length; i += 4) {
+    res.push(...await Promise.allSettled(TELEGRAM.slice(i, i + 4).map((c) => channel(c.venue, c.channel))));
+  }
+  saveStore();
   const status: TgStatus = {};
   const promos: Promo[] = [];
   res.forEach((r, i) => {

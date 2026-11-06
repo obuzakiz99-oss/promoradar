@@ -6,11 +6,12 @@ export type Raw = {
   startsAt?: number; endsAt?: number; tags?: string[]; hint?: string; trusted?: boolean;
 };
 
-/* Binance — CMS catalogs: 93 Latest Activities, 128 Crypto Airdrop (pageSize must be 20 or 50). */
+/* Binance — CMS catalog 93 "Latest Activities" (pageSize must be 20 or 50; 50 ≈ the last month).
+   Catalog 128 "Crypto Airdrop" was dropped 06.11: nothing new there since 2022. */
 export async function binance(): Promise<Raw[]> {
   const out: Raw[] = [];
-  for (const [cat, hint] of [[93, ""], [128, "airdrop"]] as const) {
-    const j = await getJson(`https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageNo=1&pageSize=20&catalogId=${cat}`);
+  for (const [cat, hint] of [[93, ""]] as const) {
+    const j = await getJson(`https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&pageNo=1&pageSize=50&catalogId=${cat}`);
     for (const a of j?.data?.catalogs?.[0]?.articles ?? [])
       out.push({ venue: "binance", id: a.code, title: a.title, url: `https://www.binance.com/en/support/announcement/detail/${a.code}`, publishedAt: a.releaseDate, hint, trusted: true });
   }

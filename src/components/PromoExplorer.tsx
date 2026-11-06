@@ -103,7 +103,7 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
     const s = q.trim().toLowerCase();
     return byKind.filter((p) =>
       (venues.size === 0 || venues.has(p.venue.id)) &&
-      (!s || `${p.title} ${p.venue.name} ${t.cat[p.category]} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase().includes(s)),
+      (!s || `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase().includes(s)),
     );
   }, [byKind, venues, q, t]);
 

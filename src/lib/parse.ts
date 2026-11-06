@@ -46,6 +46,8 @@ export function parseReward(title: string): Reward | undefined {
   // amounts that are entry conditions ("balance of 100 USDT", "minimum 50 USDT", "at least…") are not prizes
   const t = title.replace(/ /g, " ").replace(/\b(balance of|minimum( of)?|min\.|at least|holding of|deposit of at least)\s*\$?\s?[\d][\d,.]*\+?\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9})?/gi, " ");
   const found: Reward[] = [];
+  const letters = t.replace(/[^A-Za-z]/g, "");
+  const shouty = letters.length > 12 && (letters.match(/[A-Z]/g)?.length ?? 0) / letters.length > 0.7;
 
   // $10M / $1,000,000 / $50K
   for (const m of t.matchAll(/\$\s?([\d][\d,.]*)\s?(k|m|b|million|thousand|billion|mn)?\b/gi)) {
@@ -55,6 +57,8 @@ export function parseReward(title: string): Reward | undefined {
   // 1,670,000 CT / 400,000 USDC / 2.3M RITUAL / 10 USDT
   for (const m of t.matchAll(/\b([\d][\d,.]*)\s?([kKmMbB]|[Mm]illion|[Tt]housand|[Bb]illion|mn)?\+?\s+([A-Z][A-Z0-9]{1,9})\b/g)) {
     const unit = m[3];
+    // in an ALL-CAPS headline every word looks like a ticker ("KUCOIN 5.0 JUST DROPPED") — only dollar stables count there
+    if (shouty && !STABLES.has(unit)) continue;
     if (/^(APR|APY|USERS?|BNB CHAIN|VIP|NFT|AM|PM|UTC|X|DAYS?|MILLION|MILLIONS|BILLION|THOUSAND|HOURS?|WEEKS?|MONTHS?|TIMES|POINTS?|PAIRS?|NEW|ROUND)$/i.test(unit)) continue;
     const v = parseFloat(m[1].replace(/,/g, "")) * (MULT[(m[2] || "").toLowerCase()] ?? 1);
     if (!(v > 0) || /^20\d\d$/.test(m[1])) continue;
