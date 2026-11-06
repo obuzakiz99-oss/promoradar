@@ -27,7 +27,7 @@ export default async function EarnPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <AprTabs t={t} lang={lang} active="earn" />
+        <AprTabs t={t} lang={lang} active="earn" updated={fetchedAt} />
         <header className="mt-8">
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{t.aprHub.earnTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{t.aprHub.earnSub}</p>

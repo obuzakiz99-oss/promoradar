@@ -42,7 +42,7 @@ export default async function Calendar({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="calendar" title={T.calTitle} sub={T.calSub} />
+        <ToolHeader lang={lang} active="calendar" title={T.calTitle} sub={T.calSub} updated={fetchedAt} />
         <CalendarBoard events={events} lang={lang} now={now} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />

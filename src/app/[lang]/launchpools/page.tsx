@@ -70,7 +70,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* hero */}
         <section className="relative mx-auto max-w-7xl px-4 pb-8 pt-10 sm:px-6">
           <div className="pointer-events-none absolute right-0 top-0 -z-10 size-[28rem] rounded-full bg-lime/10 blur-3xl" />
-          <div className="mb-8"><AprTabs t={t} lang={lang} active="lp" /></div>
+          <div className="mb-8"><AprTabs t={t} lang={lang} active="lp" updated={fetchedAt} /></div>
           <span className="inline-flex items-center gap-2 rounded-full border border-lime/25 bg-lime/[0.06] px-3 py-1.5 text-xs font-bold text-lime">
             <span className="relative flex size-2"><span className="absolute inline-flex size-full animate-ping-slow rounded-full bg-lime" /><span className="relative inline-flex size-2 rounded-full bg-lime" /></span>
             {L.kicker}
@@ -151,7 +151,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         </section>
 
         {/* exchange stats */}
-        <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
+        <section className="adv mx-auto max-w-7xl px-4 pt-16 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.statsTitle}</h2>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (
@@ -172,7 +172,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         </section>
 
         {/* archive */}
-        <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
+        <section className="adv mx-auto max-w-7xl px-4 pt-16 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.archive}</h2>
           <p className="mt-1.5 text-sm text-ink-3">{L.archiveSub}</p>
           <div className="mt-6 overflow-x-auto rounded-2xl border border-line">

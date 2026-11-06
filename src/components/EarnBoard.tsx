@@ -1,4 +1,5 @@
 "use client";
+import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
 import { useMemo, useState } from "react";
@@ -13,7 +14,9 @@ const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) 
 
 export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale }) {
   const A = t.aprHub;
-  const [coin, setCoin] = useState("USDT");
+  const [coinPick, setCoin] = useState("USDT");
+  const novice = useNovice();
+  const coin = novice && !/^(USDT|USDC)$/.test(coinPick) ? "USDT" : coinPick;   // beginners: dollar stablecoins only
   const [q, setQ] = useState("");
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
 
@@ -48,10 +51,10 @@ export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: Ear
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <div className="flex flex-wrap gap-1.5">
             {popular.filter((c) => byCoin.has(c)).map((c) => (
-              <button key={c} onClick={() => setCoin(c)} className={`h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
+              <button key={c} onClick={() => setCoin(c)} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
             ))}
           </div>
-          <div className="relative lg:ml-auto lg:w-56">
+          <div className="adv relative lg:ml-auto lg:w-56">
             <input value={q} onChange={(e) => setQ(e.target.value.toUpperCase())} placeholder={A.search}
               className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-semibold text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
             {matches.length > 0 && (

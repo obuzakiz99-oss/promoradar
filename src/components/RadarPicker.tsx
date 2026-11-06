@@ -2,8 +2,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Category, Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
+import { useNovice } from "./NoviceToggle";
 
-export interface RadarItem { id: string; venue: string; title: string; category: Category; usd?: number; label?: string; href: string }
+export interface RadarItem { id: string; venue: string; title: string; category: Category; usd?: number; label?: string; href: string; hard?: boolean }
 
 const CATS: Array<Category | "all"> = ["all", "airdrop", "competition", "bonus", "earn", "listing"];
 const MAX = 12, MAX_PHONE = 9;   // fewer, roomier blips on narrow screens (easier to tap)
@@ -19,11 +20,13 @@ function spots(n: number): Array<[number, number]> {
   return [...ring(inner, 22, -Math.PI / 2.4), ...ring(outer, 39, -Math.PI / 3)];
 }
 
-export function RadarPicker({ items, venues, labels, catLabels, venueBase }: {
+export function RadarPicker({ items: allItems, venues, labels, catLabels, venueBase }: {
   items: RadarItem[]; venues: Record<string, Venue>;
   labels: { all: string; hint: string; promos: string; open: string; allOf: string; cats: Partial<Record<Category, string>> };
   catLabels: Record<Category, string>; venueBase: string;
 }) {
+  const novice = useNovice();
+  const items = useMemo(() => (novice ? allItems.filter((i) => !i.hard) : allItems), [novice, allItems]);   // beginners: no futures / DeFi
   const [cat, setCat] = useState<Category | "all">("all");
   const [sel, setSel] = useState<string | null>(null);
   const [max, setMax] = useState(MAX);

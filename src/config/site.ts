@@ -110,3 +110,7 @@ export function venueOf(id: string): Venue {
   const { site, refUrl, ...v } = VENUES[id];
   return v;
 }
+
+/** Until the owner fills these in, links that would lead nowhere stay hidden (Telegram CTAs, Pro checkout, ads contact). */
+export const HAS_TG = /t\.me\/[A-Za-z0-9_+]{3,}/.test(SITE.telegram);
+export const HAS_PRO = !!PRO.checkoutUrl;

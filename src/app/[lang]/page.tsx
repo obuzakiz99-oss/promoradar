@@ -3,8 +3,9 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos, topVenues, totalUsd } from "@/lib/promos";
 import { Hero } from "@/components/Hero";
 import type { RadarItem } from "@/components/RadarPicker";
-import { VENUES } from "@/config/site";
+import { HAS_PRO, HAS_TG, VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
+import { promoLevel } from "@/lib/level";
 import { withBase } from "@/lib/base";
 import { PromoExplorer } from "@/components/PromoExplorer";
 import { Ticker, TopPools } from "@/components/Featured";
@@ -21,7 +22,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const [{ promos, status, fetchedAt }, pools] = await Promise.all([getPromos(), getPools().catch(() => null)]);
   const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
-    id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`),
+    id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
   }));
   const venueCount = new Set(promos.filter((p) => p.venue.kind !== "airdrop").map((p) => p.venue.id)).size;
 
@@ -37,9 +38,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <PromoExplorer promos={promos} t={t} lang={lang} serverNow={fetchedAt} />
         </section>
         <HowItWorks t={t} />
-        <SourcesSection t={t} status={status} />
-        <ProSection t={t} />
-        <AdsSection t={t} />
+        <div className="adv"><SourcesSection t={t} status={status} /></div>
+        {HAS_PRO && <ProSection t={t} />}
+        {HAS_TG && <div className="adv"><AdsSection t={t} /></div>}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
     </>

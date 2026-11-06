@@ -3,6 +3,7 @@ import type { Dict } from "@/lib/i18n";
 import { compactUsd } from "@/lib/format";
 import { VenueLogo } from "./VenueLogo";
 import { CAT_STYLE } from "./PromoCard";
+import { promoLevel } from "@/lib/level";
 
 /** Infinite marquee of the freshest promos. Pure CSS; pauses on hover. */
 export function Ticker({ promos, t }: { promos: Promo[]; t: Dict }) {
@@ -11,7 +12,7 @@ export function Ticker({ promos, t }: { promos: Promo[]; t: Dict }) {
   const row = (aria: boolean) => (
     <ul className="flex shrink-0 items-center gap-8 pr-8" aria-hidden={aria || undefined}>
       {items.map((p) => (
-        <li key={p.id + aria} className="flex items-center gap-2.5 whitespace-nowrap text-sm">
+        <li key={p.id + aria} className={`${promoLevel(p) === "hard" ? "adv " : ""}flex items-center gap-2.5 whitespace-nowrap text-sm`}>
           <VenueLogo v={p.venue} size={22} rounded="rounded-md" />
           <span className="font-bold text-ink">{p.venue.name}</span>
           <a href={p.url} target="_blank" rel="noopener" tabIndex={aria ? -1 : undefined} className="max-w-[26rem] truncate text-ink-2 hover:text-ink">{p.title}</a>
@@ -39,8 +40,12 @@ export function Ticker({ promos, t }: { promos: Promo[]; t: Dict }) {
 
 /** Top prize pools (USD-denominated) as large tiles. */
 export function TopPools({ promos, t }: { promos: Promo[]; t: Dict }) {
-  const top = promos.filter((p) => (p.reward?.usd ?? 0) >= 1000 && !p.sponsored).sort((a, b) => b.reward!.usd! - a.reward!.usd!).slice(0, 6);
-  if (top.length < 3) return null;
+  const ranked = promos.filter((p) => (p.reward?.usd ?? 0) >= 1000 && !p.sponsored).sort((a, b) => b.reward!.usd! - a.reward!.usd!);
+  // two top-6 lists in one render: everyone's (hard items get .adv) and the beginner one (extra easy items get .nov)
+  const all6 = ranked.slice(0, 6), easy6 = ranked.filter((p) => promoLevel(p) !== "hard").slice(0, 6);
+  const top = ranked.filter((p) => all6.includes(p) || easy6.includes(p));
+  const cls = (p: Promo) => (!easy6.includes(p) ? "adv" : !all6.includes(p) ? "nov" : "");
+  if (all6.length < 3) return null;
   return (
     <section className="mx-auto max-w-7xl px-4 pb-6 pt-14 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -49,19 +54,19 @@ export function TopPools({ promos, t }: { promos: Promo[]; t: Dict }) {
           <p className="mt-1.5 text-sm text-ink-3">{t.feat.topSub}</p>
         </div>
       </div>
-      <div className="scroll-x -mx-4 mt-6 flex snap-x gap-4 px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:px-0">
-        {top.map((p, i) => (
+      <div className="scroll-x -mx-4 mt-6 flex snap-x gap-4 px-4 pb-2 [counter-reset:top] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:px-0">
+        {top.map((p) => (
           <a
             key={p.id}
             href={p.url}
             target="_blank"
             rel="noopener"
-            className="card group relative flex w-[85%] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[46%] lg:w-auto"
+            className={`card group relative flex w-[85%] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[46%] lg:w-auto [counter-increment:top] ${cls(p)}`}
             style={{ ["--tint" as string]: p.venue.color }}
           >
             <span className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full opacity-[0.12] blur-2xl transition-opacity group-hover:opacity-25" style={{ background: p.venue.color }} />
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-bold text-ink-3">#{i + 1}</span>
+              <span className="font-mono text-xs font-bold text-ink-3 before:content-['#'_counter(top)]" />
               <VenueLogo v={p.venue} size={30} rounded="rounded-lg" />
               <span className="text-sm font-bold">{p.venue.name}</span>
               <span className={`ml-auto text-xs font-semibold ${CAT_STYLE[p.category].text}`}>{t.cat[p.category]}</span>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Updated } from "./Updated";
 import type { Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 
@@ -26,12 +27,13 @@ export function ToolsNav({ lang, active }: { lang: Locale; active?: ToolId }) {
 }
 
 /** Page header used by every tool page. */
-export function ToolHeader({ lang, active, title, sub }: { lang: Locale; active: ToolId; title: string; sub: string }) {
+export function ToolHeader({ lang, active, title, sub, updated }: { lang: Locale; active: ToolId; title: string; sub: string; updated?: number }) {
   return (
     <header>
       <ToolsNav lang={lang} active={active} />
       <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
       <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{sub}</p>
+      {updated ? <div className="mt-4"><Updated at={updated} lang={lang} /></div> : null}
     </header>
   );
 }

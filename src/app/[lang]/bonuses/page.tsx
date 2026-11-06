@@ -40,7 +40,7 @@ export default async function Bonuses({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="bonuses" title={T.bonusTitle} sub={T.bonusSub} />
+        <ToolHeader lang={lang} active="bonuses" title={T.bonusTitle} sub={T.bonusSub} updated={fetchedAt} />
         {rows.length === 0 ? <p className="mt-10 text-ink-3">{T.noBonus}</p> : (
           <div className="mt-8 space-y-3">
             {rows.map(({ id, list, best }) => {

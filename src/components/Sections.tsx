@@ -1,6 +1,7 @@
 import type { Dict } from "@/lib/i18n";
 import type { SourceStatus } from "@/lib/sources";
-import { PRO, SITE } from "@/config/site";
+import { HAS_TG, PRO, SITE } from "@/config/site";
+import { LEGAL_NAV } from "@/lib/i18n-legal";
 import { TgIcon } from "./Header";
 import { LogoMark } from "./Logo";
 import { withBase } from "@/lib/base";
@@ -132,12 +133,15 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
           <div className="flex items-center gap-2.5 font-display font-semibold"><LogoMark /> {SITE.name}</div>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-3">{t.footer.disclaimer}</p>
           <p className="mt-4 text-xs text-ink-3">© {new Date(fetchedAt).getFullYear()} {SITE.name}. {t.footer.rights}</p>
+          <nav className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
+            {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="hover:text-ink">{label}</a>)}
+          </nav>
         </div>
         <div className="flex flex-col gap-3 text-sm md:items-end">
           <div className="flex flex-wrap gap-2">
             <a href={withBase(`/rss-${lang}.xml`)} className="btn btn-ghost h-10">RSS</a>
-            <a href={withBase(`/${lang}#advertise`)} className="btn btn-ghost h-10">{t.ads.title}</a>
-            <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-10"><TgIcon /> Telegram</a>
+            {HAS_TG && <a href={withBase(`/${lang}#advertise`)} className="btn btn-ghost h-10">{t.ads.title}</a>}
+            {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-10"><TgIcon /> Telegram</a>}
           </div>
           <p className="font-mono text-xs text-ink-3">
             {t.footer.updated}: {new Date(fetchedAt).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short", timeZone: "UTC" })} UTC

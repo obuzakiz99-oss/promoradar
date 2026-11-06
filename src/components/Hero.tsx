@@ -1,6 +1,6 @@
 import type { Dict } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
-import { SITE } from "@/config/site";
+import { HAS_TG, SITE } from "@/config/site";
 import { compactUsd } from "@/lib/format";
 import { TgIcon } from "./Header";
 import { RadarPicker, type RadarItem } from "./RadarPicker";
@@ -30,7 +30,7 @@ export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBa
             {t.hero.cta}
             <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.4L9 13.6V4a1 1 0 0 1 1-1Z" /></svg>
           </a>
-          <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>
+          {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>}
         </div>
         {learn && <a href={learn.href} className="mt-4 inline-block text-sm font-bold text-lime hover:underline">🌱 {learn.label}</a>}
 
