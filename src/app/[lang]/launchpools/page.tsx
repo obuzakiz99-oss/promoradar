@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPools, LP_ANN, LP_API, LP_RE, type PoolProject } from "@/lib/pools";
 import { getPromos } from "@/lib/promos";
@@ -11,6 +12,7 @@ import { LaunchpoolBoard } from "@/components/LaunchpoolBoard";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { AprTabs } from "@/components/AprTabs";
+import { PROX } from "@/lib/i18n-pro";
 
 export const revalidate = 300; // pools move fast: 5 min
 
@@ -148,6 +150,18 @@ export default async function Launchpools({ params }: { params: Params }) {
               </a>
             ))}
           </div>
+        </section>
+
+        {/* link to the analytics page */}
+        <section className="adv mx-auto max-w-7xl px-4 pt-12 sm:px-6">
+          <Link href={`/${lang}/insights`} className="card flex items-center gap-4 p-5 sm:p-6">
+            <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-lime/10 text-2xl">📊</span>
+            <span className="min-w-0">
+              <span className="block font-bold">{PROX[lang].insTitle}</span>
+              <span className="mt-0.5 block text-sm text-ink-2">{PROX[lang].listSub}</span>
+            </span>
+            <span className="ml-auto text-lime">→</span>
+          </Link>
         </section>
 
         {/* exchange stats */}

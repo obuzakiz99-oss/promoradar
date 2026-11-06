@@ -43,6 +43,8 @@ export function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>): Pro
   return value;
 }
 export async function getBigJson<T = any>(url: string, timeout = 30_000): Promise<T> {
+  const relayed = fromRelay(url);
+  if (relayed) return JSON.parse(relayed) as T;
   // Next skips its data cache for bodies > 2 MB (harmless warning); our in-memory `cached()` covers it.
   // We still pass `revalidate` (not `no-store`) so routes stay ISR instead of turning fully dynamic.
   const r = await fetch(url, { headers: UA, next: { revalidate: 3600 }, signal: AbortSignal.timeout(timeout) });

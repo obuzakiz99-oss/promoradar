@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getDexPools } from "@/lib/dexpools";
 import { compactUsd } from "@/lib/format";
+import { withBase } from "@/lib/base";
 import { AprTabs } from "@/components/AprTabs";
 import { DexBoard } from "@/components/DexBoard";
 import { Footer } from "@/components/Sections";
@@ -41,7 +42,7 @@ export default async function DexPage({ params }: { params: Params }) {
           </dl>
         </header>
         <div className="mt-8">
-          <DexBoard pools={pools} chains={chains} categories={categories} t={t} lang={lang} />
+          <DexBoard pools={pools.slice(0, 300)} fullUrl={withBase("/api/dex")} chains={chains} categories={categories} t={t} lang={lang} />
         </div>
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.dexNote} · DefiLlama</p>
       </main>

@@ -36,7 +36,9 @@ function ReqIcon({ k }: { k: string }) {
   return <svg className="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={p[k] ?? p.kyc} /></svg>;
 }
 
-export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang: Locale; now: number; index: number }) {
+const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
+
+export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean }) {
   const cs = CAT_STYLE[p.category];
   const isNew = p.publishedAt > 0 && now - p.publishedAt < 48 * 3600_000;
   const joinUrl = p.joinUrl || p.url;
@@ -52,7 +54,7 @@ export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang:
 
   return (
     <article
-      className={`card group relative flex flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""}`}
+      className={`card group relative flex flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
       {/* header */}
@@ -71,7 +73,8 @@ export function PromoCard({ p, t, lang, now, index }: { p: Promo; t: Dict; lang:
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {p.sponsored && <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>}
-          {!p.sponsored && isNew && <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>}
+          {fresh && <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>}
+          {!p.sponsored && !fresh && isNew && <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>}
           {st === "upcoming" && <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>}
           {st === "ending" && <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>}
           {isDrop && (m.hot ?? 0) >= 60 && <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>}

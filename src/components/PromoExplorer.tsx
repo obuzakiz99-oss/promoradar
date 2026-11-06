@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Category, Promo, Venue, VenueKind } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
 import { PromoCard, CAT_STYLE } from "./PromoCard";
+import { PROX } from "@/lib/i18n-pro";
 import { VenueLogo } from "./VenueLogo";
 import { useSaved } from "./SaveButton";
 import { statusOf, type Status } from "@/lib/slug";
@@ -35,6 +36,17 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
     return () => clearInterval(id);
   }, []);
   useEffect(() => setLimit(PAGE), [kind, cat, venues, q, sort, status]);
+
+  // "since your last visit": the previous visit time is frozen for this browser session, the new one saved for next time
+  const [since, setSince] = useState<number | null>(null);
+  useEffect(() => {
+    try {
+      let s = sessionStorage.getItem("pr:since");
+      if (s === null) { s = localStorage.getItem("pr:lastVisit") ?? "0"; sessionStorage.setItem("pr:since", s); localStorage.setItem("pr:lastVisit", String(Date.now())); }
+      if (Number(s) > 0) setSince(Number(s));
+    } catch { /* storage blocked */ }
+  }, []);
+  const freshCount = useMemo(() => (since ? promos.filter((p) => p.publishedAt > since).length : 0), [promos, since]);
 
   const kindCounts = useMemo(() => {
     const c: Record<string, number> = { all: promos.length, saved: promos.filter((p) => saved.includes(p.id)).length };
@@ -174,10 +186,13 @@ export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: 
       )}
 
       {/* grid */}
+      {since !== null && (
+        <p className="mt-5 text-sm font-semibold text-ink-2">✦ {PROX[lang].sinceTitle}: <span className={freshCount ? "text-lime" : "text-ink-3"}>{freshCount ? PROX[lang].sinceNew(freshCount) : PROX[lang].sinceNone}</span></p>
+      )}
       {list.length ? (
         <>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i % PAGE} />)}
+            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i % PAGE} fresh={!!since && p.publishedAt > since} />)}
           </div>
           {list.length > limit && (
             <div className="mt-8 flex justify-center">

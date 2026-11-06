@@ -17,7 +17,13 @@ function logo(p: DexPool) {
   return { name: p.project, logo: p.logo, color: `hsl(${h} 65% 60%)`, ink: "#0b0d10", monogram: p.project.slice(0, 2).toUpperCase() };
 }
 
-export function DexBoard({ pools, chains, categories, t, lang }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale }) {
+export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string }) {
+  // the page ships only the top pools (light HTML); the full list (~1500) loads right after from the static JSON
+  const [pools, setPools] = useState(initial);
+  useEffect(() => {
+    if (!fullUrl) return;
+    fetch(fullUrl).then((r) => r.json()).then((j) => Array.isArray(j?.pools) && j.pools.length > initial.length && setPools(j.pools)).catch(() => {});
+  }, [fullUrl, initial.length]);
   const A = t.aprHub;
   const [openId, setOpenId] = useState<string | null>(null);
   const [cat, setCat] = useState("DEX");
