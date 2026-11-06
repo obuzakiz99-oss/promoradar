@@ -15,6 +15,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></> },
     { href: withBase(`/${lang}/drops/`), label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }[lang] },
     { href: withBase(`/${lang}/t/`), label: { uk: "Токени", en: "Tokens", ru: "Токены" }[lang] },
+    { href: withBase(`/${lang}/exchanges/`), label: { uk: "Рейтинг бірж", en: "Exchanges", ru: "Рейтинг бирж" }[lang], wide: "lg:block" },
     { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav },
     { href: withBase(`/${lang}/funding/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block" },
