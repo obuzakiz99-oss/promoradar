@@ -40,7 +40,7 @@ const PRESETS = [100, 1000, 10000];
 const usd = (x: number, d = x < 10 ? 2 : 0) => `$${x.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: 0 })}`;
 const sgn = (x: number) => `${x >= 0 ? "+" : "−"}${usd(Math.abs(x))}`;
 
-export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Locale; plan: PlanData; bt: Backtest; venues: Record<string, Venue>; extras?: Extra[] }) {
+export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Locale; plan: PlanData; bt?: Backtest; venues: Record<string, Venue>; extras?: Extra[] }) {
   const T = TX[lang];
   const [amount, setAmount] = useState(1000);
   const [btAmount, setBtAmount] = useState(1000);
@@ -67,7 +67,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
     return out;
   }, [amount, plan, venues, T]);
   const total = rows.reduce((s, r) => s + r.income, 0);
-  const res = bt.results.find((r) => r.amount === btAmount) ?? bt.results[0];
+  const res = bt ? bt.results.find((r) => r.amount === btAmount) ?? bt.results[0] : undefined;
   // one-time newcomer bonuses on top (new-user Earn pays only on what you put in, up to its cap)
   const bonusAdd = res ? extras.reduce((s, x) => s + (x.kind === "newEarn" && x.cap ? x.usd * Math.min(1, res.amount / x.cap) : x.usd), 0) : 0;
   const btTotal = res ? res.profit + bonusAdd : 0;
@@ -79,7 +79,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
   );
 
   return (
-    <section className="mx-auto grid max-w-7xl gap-4 px-4 pt-6 sm:px-6 lg:grid-cols-2">
+    <section className={`mx-auto grid max-w-7xl gap-4 px-4 pt-6 sm:px-6 ${bt ? "lg:grid-cols-2" : ""}`}>
       {/* today's plan */}
       <div className="card p-5 hover:transform-none sm:p-6" style={{ background: "linear-gradient(135deg, rgb(200 255 61 / 0.07), transparent 55%), var(--color-surface)" }}>
         <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">🎯 {T.planTitle}</h2>
@@ -126,7 +126,8 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
         )}
       </div>
 
-      {/* backtest */}
+      {/* backtest — removed from the home page 06.11 (user: "$50 за 3 місяці це смішно"); kept for possible reuse */}
+      {bt && res && (
       <div className="card p-5 hover:transform-none sm:p-6">
         <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">💰 {T.btTitle}</h2>
         <p className="mt-1 text-sm text-ink-3">{T.btSub(bt.days)}</p>
@@ -192,6 +193,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
           </>
         )}
       </div>
+      )}
     </section>
   );
 }
