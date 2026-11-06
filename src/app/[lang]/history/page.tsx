@@ -4,7 +4,7 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 import { readHistory } from "@/lib/history";
 import { getPools } from "@/lib/pools";
-import { lpStats } from "@/lib/lpstats";
+import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
 import { LineChart, seriesColor, type Series } from "@/components/LineChart";
@@ -20,6 +20,7 @@ const H: Record<Locale, {
   exTitle: string; exCols: [string, string, string, string, string, string];
   drop: string; dropSub: string; dropCols: [string, string, string, string, string]; dropNone: string; launchNote: string;
   list: string; listCols: [string, string, string, string, string, string, string]; earn: string; stable: string; other: string; days: string;
+  curve: string; curveSub: string; after: (h: number) => string; pools: string; collecting: string;
 }> = {
   uk: {
     past: "Launchpool за 3 місяці", pastSub: "Усі пули, що стартували за останні 90 днів на біржах, які ми відстежуємо (з архівів самих бірж).",
@@ -29,6 +30,7 @@ const H: Record<Locale, {
     drop: "Як падає APR зараз", dropSub: "Зміна APR живих пулів у % від першого значення, яке ми побачили (знімок кожні 30 хв). Нижче нуля — APR впав.",
     dropCols: ["Пул", "Перший APR", "Зараз", "Зміна", "Від старту біржі"], dropNone: "Поки замало знімків — графік з'явиться після кількох годин спостереження за пулом.", launchNote: "«Від старту біржі» — порівняння з APR, який біржа оцінила на запуску (є лише в Gate).",
     list: "Усі пули за 3 місяці", listCols: ["Старт", "Біржа", "Токен", "Стейк", "APR на старті", "Фінальний APR", "Зміна"], earn: "Ставки Earn", stable: "стейбл", other: "інші", days: "дн.",
+    curve: "Типова крива падіння", curveSub: "Медіанний APR як частка стартового через N годин після відкриття пулу. ×0.5 = APR упав удвічі. Наповнюється з кожним новим пулом.", after: (h) => (h < 48 ? `через ${h} год` : `через ${h / 24} дн.`), pools: "пулів", collecting: "збираємо дані",
   },
   en: {
     past: "Launchpools over 3 months", pastSub: "Every pool that started in the last 90 days on the exchanges we track (from the exchanges' own archives).",
@@ -38,6 +40,7 @@ const H: Record<Locale, {
     drop: "How APR is falling now", dropSub: "APR change of live pools in % of the first value we saw (a snapshot every 30 min). Below zero — APR dropped.",
     dropCols: ["Pool", "First APR", "Now", "Change", "Since exchange launch"], dropNone: "Not enough snapshots yet — the chart appears after a few hours of tracking a pool.", launchNote: "'Since exchange launch' compares with the APR the exchange estimated at launch (Gate only).",
     list: "All pools over 3 months", listCols: ["Start", "Exchange", "Token", "Stake", "Start APR", "Final APR", "Change"], earn: "Earn rates", stable: "stable", other: "other", days: "d",
+    curve: "Typical decay curve", curveSub: "Median APR as a share of the starting APR N hours after a pool opens. ×0.5 = APR halved. Fills in with every new pool.", after: (h) => (h < 48 ? `after ${h}h` : `after ${h / 24}d`), pools: "pools", collecting: "collecting data",
   },
   ru: {
     past: "Launchpool за 3 месяца", pastSub: "Все пулы, стартовавшие за последние 90 дней на биржах, которые мы отслеживаем (из архивов самих бирж).",
@@ -47,6 +50,7 @@ const H: Record<Locale, {
     drop: "Как падает APR сейчас", dropSub: "Изменение APR живых пулов в % от первого значения, которое мы увидели (снимок каждые 30 мин). Ниже нуля — APR упал.",
     dropCols: ["Пул", "Первый APR", "Сейчас", "Изменение", "От старта биржи"], dropNone: "Пока мало снимков — график появится после нескольких часов наблюдения за пулом.", launchNote: "«От старта биржи» — сравнение с APR, который биржа оценила на запуске (есть только у Gate).",
     list: "Все пулы за 3 месяца", listCols: ["Старт", "Биржа", "Токен", "Стейк", "APR на старте", "Финальный APR", "Изменение"], earn: "Ставки Earn", stable: "стейбл", other: "другие", days: "дн.",
+    curve: "Типичная кривая падения", curveSub: "Медианный APR как доля стартового через N часов после открытия пула. ×0.5 = APR упал вдвое. Наполняется с каждым новым пулом.", after: (h) => (h < 48 ? `через ${h} ч` : `через ${h / 24} дн.`), pools: "пулов", collecting: "собираем данные",
   },
 };
 
@@ -66,6 +70,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
   const snaps = readHistory();
   const pools = await getPools();
   const S = lpStats(pools, snaps);
+  const curve = decayCurve(pools, snaps);
   const locale = lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB";
   const exName = (id: string) => venueOf(id).name;
 
@@ -113,6 +118,21 @@ export default async function HistoryPage({ params }: { params: Params }) {
               <p className="mt-2 text-xs text-ink-3">{X.launchNote}</p>
             </>
           )}
+        </section>
+
+        {/* ---- typical decay curve ---- */}
+        <section className="mt-14">
+          <h2 className="font-display text-2xl font-semibold tracking-tight">⏱ {X.curve}</h2>
+          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.curveSub}</p>
+          <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+            {curve.map((c) => (
+              <div key={c.h} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
+                <div className={`font-display text-2xl font-semibold ${c.ratio === undefined ? "text-ink-3" : c.ratio < 0.7 ? "text-rose" : c.ratio < 0.95 ? "text-amber" : "text-lime"}`}>{c.ratio === undefined ? "…" : `×${c.ratio.toFixed(2)}`}</div>
+                <div className="mt-1 text-xs font-semibold text-ink-2">{X.after(c.h)}</div>
+                <div className="mt-0.5 font-mono text-[10px] text-ink-3">{c.ratio === undefined ? X.collecting : `${c.n} ${X.pools}`}</div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* ---- 3-month statistics ---- */}

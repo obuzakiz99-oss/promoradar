@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPools, LP_ANN, LP_API, LP_RE, type PoolProject } from "@/lib/pools";
+import { readHistory } from "@/lib/history";
 import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
@@ -49,6 +50,14 @@ export default async function Launchpools({ params }: { params: Params }) {
     .sort((a, b) => b.publishedAt - a.publishedAt).slice(0, 24);
   const annVenues = Object.fromEntries(ANN_IDS.map((id) => [id, venueOf(id)]));
   const active = projects.filter((p) => p.status !== "ended");
+  // APR sparklines for live pools: our snapshots of the last 7 days, thinned to ≤ 40 points
+  const snaps = readHistory().filter((s) => now - s.t < 7 * 86400_000);
+  const sparks: Record<string, number[]> = {};
+  for (const p of active) for (const x of p.pools) {
+    const key = `${p.exchange}:${p.id}:${x.stake}`;
+    const pts = snaps.map((s) => s.pools?.[key]?.apr).filter((a): a is number => typeof a === "number" && a > 0);
+    if (pts.length >= 3) sparks[key] = pts.filter((_, i) => i % Math.ceil(pts.length / 40) === 0 || i === pts.length - 1);
+  }
   const ended = projects.filter((p) => p.status === "ended");
   const livePools = active.flatMap((p) => p.pools);
   const bestApr = Math.max(0, ...active.filter((p) => p.status === "live").flatMap((p) => p.pools.map((x) => x.apr ?? 0)));
@@ -100,7 +109,7 @@ export default async function Launchpools({ params }: { params: Params }) {
 
         {/* board */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6">
-          <LaunchpoolBoard projects={active} prices={prices} changes={changes} hedge={hedge} exchanges={exchanges} t={t} lang={lang} serverNow={now} />
+          <LaunchpoolBoard projects={active} prices={prices} changes={changes} hedge={hedge} exchanges={exchanges} t={t} lang={lang} serverNow={now} sparks={sparks} />
           <p className="mt-4 text-xs text-ink-3">{L.disclaimer}</p>
 
           {quiet.length > 0 && (

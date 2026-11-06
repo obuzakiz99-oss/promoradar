@@ -1,4 +1,5 @@
 "use client";
+import { Spark } from "./Spark";
 import { Term } from "./Term";
 import { useNovice } from "./NoviceToggle";
 import { LEVEL_CLS, LEVEL_TXT, plainProfit, poolLevel } from "@/lib/level";
@@ -58,9 +59,9 @@ function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
 const fmtChg = (c: number) => `${c > 0 ? "+" : ""}${Math.abs(c) >= 10 ? c.toFixed(0) : c.toFixed(1)}%`;
 const chgClass = (c: number) => (c <= -10 ? "bg-rose/15 text-rose" : c < 0 ? "bg-amber/10 text-amber" : "bg-lime/10 text-lime");
 
-export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, exchanges, t, lang, serverNow }: {
+export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, exchanges, t, lang, serverNow, sparks = {} }: {
   projects: PoolProject[]; prices: Record<string, number>; changes?: Record<string, number>; hedge?: Record<string, Hedge>;
-  exchanges: Record<string, Venue>; t: Dict; lang: Locale; serverNow: number;
+  exchanges: Record<string, Venue>; t: Dict; lang: Locale; serverNow: number; sparks?: Record<string, number[]>;
 }) {
   const L = t.lp;
   const [now, setNow] = useState(serverNow);
@@ -242,6 +243,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
                 <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
                 {pool.apr !== undefined && <div className="nov text-[11px] font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
+                {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
                 <div className="font-mono text-[11px] text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
                 </div>

@@ -11,6 +11,31 @@ export interface DropRow { key: string; name: string; exchange: string; first: n
 export interface PastRow { id: string; exchange: string; token: string; stake: string; start: number; end: number; aprStart?: number; apr?: number; rewardUsd?: number; stable: boolean }
 export interface ExStat { exchange: string; pools: number; projects: number; medStable?: number; medOther?: number; avgDays: number; rewardUsd: number }
 export interface MonthStat { month: string; t: number; pools: number; byEx: Record<string, number>; medApr?: number }
+/** Typical APR curve: median APR as a share of the starting APR, N hours after the pool opened. */
+export interface CurvePoint { h: number; ratio?: number; n: number }
+export const CURVE_HOURS = [6, 12, 24, 48, 72, 168];
+
+export function decayCurve(data: PoolsData, snaps: Snap[]): CurvePoint[] {
+  const proj = new Map<string, { start: number; aprStart?: number }>();
+  for (const p of data.projects) for (const x of p.pools) proj.set(`${p.exchange}:${p.id}:${x.stake}`, { start: p.start, aprStart: x.aprStart });
+  const per = new Map<number, number[]>(CURVE_HOURS.map((h) => [h, []]));
+  const keys = new Set(snaps.flatMap((s) => Object.keys(s.pools ?? {})));
+  for (const key of keys) {
+    const meta = proj.get(key);
+    if (!meta) continue;
+    const pts = snaps.filter((s) => s.pools?.[key]?.apr).map((s) => [(s.t - meta.start) / 3600_000, s.pools![key].apr] as [number, number]);
+    if (pts.length < 2) continue;
+    // base = the exchange's launch estimate, or our first snapshot if we saw the pool within 2 h of opening
+    const base = meta.aprStart ?? (pts[0][0] <= 2 ? pts[0][1] : undefined);
+    if (!base) continue;
+    for (const h of CURVE_HOURS) {
+      const p = pts.find(([t]) => Math.abs(t - h) <= Math.max(1, h * 0.15));   // a snapshot close to that hour
+      if (p) per.get(h)!.push(p[1] / base);
+    }
+  }
+  return CURVE_HOURS.map((h) => { const xs = per.get(h)!; return { h, n: xs.length, ratio: xs.length >= 2 ? median(xs) : undefined }; });
+}
+
 export interface LpStats {
   drop: DropRow[];
   past: PastRow[]; byEx: ExStat[]; byMonth: MonthStat[];
