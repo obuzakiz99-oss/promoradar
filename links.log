@@ -1,0 +1,10 @@
+﻿INTERNAL: 642 unique links, 0 broken
+
+PROMO → VENUE: 123 promos, 0 point somewhere unexpected
+
+EXTERNAL: 956 unique (326 checked, ≤25/host): 274 ok, 48 blocked by bot protection, 4 broken
+  ✕ 408 https://translate.google.com/translate?sl=auto&tl=ru&u=https%3A%2F%2Fannouncements.bybit.com%2Fen-US%2Farticle%2Fmena-exclusive-new-vips-unlock-a-50-apr-boost-and-earn-up-to-1-000-usdt-extra--artafaf9834204f%2F  (on ru/p/15d2g5-bybit-mena-exclusive-new-vips-unlock-a-50-apr-boost-and-earn-up/index.html)
+  ✕ 408 https://translate.google.com/translate?sl=auto&tl=ru&u=https%3A%2F%2Fannouncements.bybit.com%2Fen-US%2Farticle%2Fwelcome-to-bybit-earn-27-usdt-art8c8354c6faec%2F  (on ru/p/15htx1b-bybit-start-your-bybit-journey-and-earn-up-to-27-usdt/index.html)
+  ✕ 408 https://translate.google.com/translate?sl=auto&tl=ru&u=https%3A%2F%2Fannouncements.bybit.com%2Fen-US%2Farticle%2Fbybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010%2F  (on ru/p/1h300bd-bybit-city-edition-13-transform-your-community-activity-into-big/index.html)
+  ✕ 408 https://translate.google.com/translate?sl=auto&tl=ru&u=https%3A%2F%2Fannouncements.bybit.com%2Fen-US%2Farticle%2Fwsot-2026-squad-or-solo-compete-to-win-up-to-10m--artfc6575ad9be4%2F  (on ru/p/1h8smkw-bybit-wsot-2026-squad-or-solo-compete-to-win-up-to-10m/index.html)
+  blocked hosts: midas.app (1 × 403), defillama.com (22 × 403), xtsupport.zendesk.com (4 × 403), whitebit.com (2 × 403), www.bybit.com (3 × TimeoutError), announcements.bybit.com (11 × TimeoutError), balancer.fi (1 × 429), ekubo.org (1 × 403), loop.sl (1 × 403), justlend.org (1 × 403), translate.google.com (1 × 403)

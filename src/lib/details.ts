@@ -250,6 +250,41 @@ function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
   return undefined;
 }
 
+/**
+ * The total prize pool when the headline doesn't say it: "Total prize pool: 10,000 USDT", "share a 50,000 USDT prize pool",
+ * "1,800,000 KOR to be won", "Prize Pool · 30,000 USDT". Several activities → their pools are added up (same unit only).
+ */
+const POOL_RES: RegExp[] = [
+  new RegExp(`\\b(?:total|overall|grand)?\\s*(?:prize|reward|bonus|airdrop|token) pool(?:s)?(?: of| worth| totaling| totalling)?\\s*[:：·-]?\\s*(?:up to\\s*)?${NUM}${UNIT}`, "i"),
+  new RegExp(`\\b(?:share|split|giveaway of|giving away)\\s+(?:a\\s+|the\\s+)?(?:total of\\s+|up to\\s+)?${NUM}${UNIT}\\s*(?:in\\s+[a-z ]{0,20})?(?:prize|reward|bonus|airdrop)?\\s*(?:pool)?`, "i"),
+  new RegExp(`${NUM}${UNIT}\\s*(?:in\\s+)?(?:prize|reward|bonus|airdrop|token) pool\\b`, "i"),
+];
+export function poolOf(lines: string[]): { amount: number; unit: string } | undefined {
+  for (const re of POOL_RES) {
+    const found: Array<{ amount: number; unit: string }> = [];
+    for (const line of lines) {
+      const m = line.match(re);
+      if (!m) continue;
+      const g = m.slice(1).filter((x) => x !== undefined);
+      const numS = g.find((x) => /^\d[\d,]*(\.\d+)?$/.test(x));
+      const mult = g.find((x) => /^(k|m|million|thousand)$/i.test(x));
+      const unitRaw = g.find((x) => /^[A-Za-z][A-Za-z0-9]{1,9}$/.test(x) && (/^(usdt|usdc|usd|fdusd)$/i.test(x) || /^[a-z]?[A-Z][A-Z0-9]+$/.test(x)) && !/^(K|M|UID|VIP|KYC|APR|APY)$/.test(x));
+      const unit = unitRaw ? (/^usd$/i.test(unitRaw) ? "USD" : /^[a-z][A-Z]/.test(unitRaw) ? unitRaw : unitRaw.toUpperCase()) : /\$/.test(m[0]) ? "USD" : "";
+      const amount = numS ? Number(numS.replace(/,/g, "")) * (mult ? (/^(m|million)$/i.test(mult) ? 1e6 : 1e3) : 1) : 0;
+      if (!unit || !(amount > 0) || amount > 5e10) continue;
+      if (/\b(apr|apy|%)\b/i.test(line.slice(m.index! + m[0].length, m.index! + m[0].length + 6))) continue;
+      if (!found.some((f) => f.amount === amount && f.unit === unit)) found.push({ amount, unit });
+    }
+    if (found.length) {
+      // one headline number, or the sum of each activity's pool when they share a unit
+      const unit = found[0].unit;
+      const same = found.filter((f) => f.unit === unit);
+      return { unit, amount: Math.max(...same.map((f) => f.amount)) };      // the biggest one (adding activities up can double-count)
+    }
+  }
+  return undefined;
+}
+
 /** Start/end of the whole campaign and the most one person can get, read from the rules text (+ title). */
 export function termsOf(d: PromoDetails | undefined, title: string, publishedAt: number, poolAmount?: number): Terms {
   const lines = (d?.blocks ?? []).map((b) => b.x).filter((x) => !BOILER.test(x));

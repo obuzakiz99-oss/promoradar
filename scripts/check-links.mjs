@@ -20,7 +20,7 @@ for (const f of files) {
   const html = fs.readFileSync(f, "utf8");
   for (const m of html.matchAll(/<a\b[^>]*?\shref="([^"]+)"/g)) {
     const h = decode(m[1]);
-    if (h.startsWith("#") || h.startsWith("mailto:") || h.startsWith("javascript:") || h.startsWith("./")) continue;   // ./uk/ = language redirect page
+    if (h.startsWith("#") || h.startsWith("mailto:") || h.startsWith("javascript:") || h.startsWith("data:") || h.startsWith("./")) continue;   // ./uk/ = language redirect page
     const page = path.relative(OUT, f).replace(/\\/g, "/");
     if (h.startsWith("http")) { if (!external.has(h)) external.set(h, page); }
     else if (!internal.has(h)) internal.set(h, page);

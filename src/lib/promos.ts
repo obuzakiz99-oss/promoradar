@@ -3,7 +3,7 @@ import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
-import { geoOf, getDetails, termsOf, type PromoDetails } from "./details";
+import { geoOf, getDetails, poolOf, termsOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
 import type { Promo, Venue } from "./types";
@@ -92,6 +92,11 @@ async function getPromosLive(): Promise<Collected> {
         meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
       }
       if (tm.minEntry) meta.minEntry = tm.minEntry;
+      // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
+      if (!p.reward && p.category !== "farming") {
+        const pool = poolOf([p.title, ...d.blocks.map((b) => b.x)]);
+        if (pool) p.reward = parseReward(pool.unit === "USD" ? `$${pool.amount.toLocaleString("en-US")}` : `${pool.amount.toLocaleString("en-US")} ${pool.unit}`);
+      }
       p.meta = meta;
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
