@@ -6,8 +6,6 @@ import { HAS_PRO, HAS_TG, SITE } from "@/config/site";
 import { withBase } from "@/lib/base";
 import { TOOLS } from "@/lib/i18n-tools";
 import { LEARN } from "@/lib/i18n-learn";
-import { NoviceToggle } from "./NoviceToggle";
-import { NoviceBanner } from "./NoviceBanner";
 import { TRADER_NAV } from "./TraderTabs";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
@@ -33,7 +31,6 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <NoviceToggle label={LEARN[lang].toggle} hint={LEARN[lang].toggleHint} />
           <span className="hidden sm:block"><LangSwitch current={lang} /></span>
           {HAS_TG && (
             <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">
@@ -56,7 +53,6 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           </details>
         </div>
       </div>
-      <NoviceBanner text={LEARN[lang].banner} link={withBase(`/${lang}/learn/start/`)} linkLabel={LEARN[lang].bannerLink} off={LEARN[lang].bannerOff} />
     </header>
   );
 }

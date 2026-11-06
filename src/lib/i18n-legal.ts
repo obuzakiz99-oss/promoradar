@@ -20,7 +20,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть через GitHub: ${ISSUES}`],
     ] },
     privacy: { title: "Конфіденційність", sub: "Коротко: ми не збираємо ваших персональних даних і не маємо акаунтів.", blocks: [
-      ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, режим новачка і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
+      ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, вибрана країна і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
       ["Хостинг", "Сайт розміщено на GitHub Pages. GitHub як хостинг може технічно обробляти IP-адреси відвідувачів для безпеки й роботи сервісу — див. GitHub Privacy Statement."],
       ["Файли cookie та аналітика", "Зараз ми не використовуємо cookie, аналітику чи рекламні трекери. Якщо вони з'являться, ми оновимо цю сторінку і, де потрібно, попросимо вашої згоди."],
       ["Зовнішні сайти", "Посилання ведуть на сайти бірж і протоколів — у них свої правила конфіденційності."],
@@ -43,7 +43,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Contact", `Bugs, ideas, new promo sources — write via GitHub: ${ISSUES}`],
     ] },
     privacy: { title: "Privacy", sub: "In short: we collect no personal data and have no accounts.", blocks: [
-      ["What we store", "Nothing on our servers. Saved promos (★), your tracker, beginner mode and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
+      ["What we store", "Nothing on our servers. Saved promos (★), your tracker, chosen country and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
       ["Hosting", "The site is hosted on GitHub Pages. As the host, GitHub may technically process visitors' IP addresses for security and operation — see the GitHub Privacy Statement."],
       ["Cookies and analytics", "We currently use no cookies, analytics or ad trackers. If that changes we'll update this page and ask for consent where required."],
       ["External sites", "Links lead to exchange and protocol sites, which have their own privacy policies."],
@@ -66,7 +66,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Связь", `Ошибки, предложения, новые источники акций — пишите через GitHub: ${ISSUES}`],
     ] },
     privacy: { title: "Конфиденциальность", sub: "Коротко: мы не собираем ваших персональных данных и не имеем аккаунтов.", blocks: [
-      ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, режим новичка и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],
+      ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, выбранная страна и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],
       ["Хостинг", "Сайт размещён на GitHub Pages. GitHub как хостинг может технически обрабатывать IP-адреса посетителей для безопасности и работы сервиса — см. GitHub Privacy Statement."],
       ["Cookie и аналитика", "Сейчас мы не используем cookie, аналитику или рекламные трекеры. Если они появятся, мы обновим эту страницу и, где нужно, попросим вашего согласия."],
       ["Внешние сайты", "Ссылки ведут на сайты бирж и протоколов — у них свои правила конфиденциальности."],

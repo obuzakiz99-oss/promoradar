@@ -1,2 +1,2 @@
-﻿/** Inline <head> script: applies the saved novice mode before first paint (no flash). Kept outside "use client" files. */
-export const NOVICE_BOOT = "try{if(localStorage.getItem('pr:novice')==='1')document.documentElement.dataset.novice='1'}catch(e){}";
+﻿/** Beginner mode (header switch) was removed on 06.11 at the owner's request: turn it off for anyone who had it on. */
+export const NOVICE_BOOT = "try{localStorage.removeItem('pr:novice');delete document.documentElement.dataset.novice}catch(e){}";

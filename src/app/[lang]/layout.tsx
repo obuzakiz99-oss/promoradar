@@ -10,8 +10,6 @@ import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
-import { LEARN } from "@/lib/i18n-learn";
-import { FirstVisit } from "@/components/FirstVisit";
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -42,15 +40,13 @@ export default async function LangLayout({ children, params }: { children: React
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
-        {/* novice mode is applied before first paint so hidden blocks don't flash */}
+        {/* beginner mode was removed 06.11 — this clears it for visitors who had switched it on */}
         <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
       </head>
       <body className="min-h-dvh">
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
         {children}
-        {/* outside the header: its backdrop-filter would trap position:fixed */}
-        <FirstVisit text={LEARN[lang].prompt} yes={LEARN[lang].promptYes} no={LEARN[lang].promptNo} />
       </body>
     </html>
   );
