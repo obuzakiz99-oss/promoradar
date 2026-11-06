@@ -26,19 +26,23 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
     id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
   }));
+  // first screen of the feed (newest, as the feed sorts by default); the rest is loaded from /api/promos.json
+  const firstCards = [...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt).slice(0, 24);
+  const newDay = promos.filter((p) => p.publishedAt > fetchedAt - 86400_000).length;
   const venueCount = new Set(promos.filter((p) => p.venue.kind !== "airdrop").map((p) => p.venue.id)).size;
 
   return (
     <>
       <main>
         <Hero t={t} active={promos.length} poolsUsd={totalUsd(promos)} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
+          live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
         <TodayTop promos={promos} lang={lang} now={fetchedAt} siteUrl={`https://${SITE.domain}`} />
         <Ticker promos={promos} t={t} />
         <TopPools promos={promos} t={t} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}
         <section id="promos" className="mx-auto max-w-7xl scroll-mt-16 px-4 pt-10 sm:px-6">
-          <PromoExplorer promos={promos} t={t} lang={lang} serverNow={fetchedAt} />
+          <PromoExplorer promos={firstCards} t={t} lang={lang} serverNow={fetchedAt} src={withBase("/api/promos.json")} />
         </section>
         <HowItWorks t={t} />
         <div className="adv"><SourcesSection t={t} status={status} /></div>

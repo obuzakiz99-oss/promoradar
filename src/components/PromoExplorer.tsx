@@ -41,7 +41,20 @@ const VENUE_CHIPS = 9;
 const entry = (p: Promo) => (p.meta?.noDeposit ? 0 : p.meta?.minEntry?.amount ?? Infinity);
 const value = (p: Promo) => p.reward?.usd ?? (p.meta?.apr !== undefined ? p.meta.apr * 100 : -1);
 
-export function PromoExplorer({ promos, t, lang, serverNow, showKinds = true }: { promos: Promo[]; t: Dict; lang: Locale; serverNow: number; showKinds?: boolean }) {
+export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds = true, src }: { promos: Promo[]; t: Dict; lang: Locale; serverNow: number; showKinds?: boolean; src?: string }) {
+  // the home page ships only the first cards in its HTML; the full list (for filters and "show more") comes from the
+  // cached JSON feed right after the page appears — the page is several times lighter on phones
+  const [promos, setPromos] = useState(initial);
+  useEffect(() => {
+    if (!src) return;
+    let alive = true;
+    fetch(src).then((r) => r.json()).then((j: { promos: Promo[]; titles?: Record<string, Record<string, string>> }) => {
+      if (!alive || !Array.isArray(j.promos)) return;
+      const tr = j.titles?.[lang] ?? {};
+      setPromos(j.promos.map((p) => (tr[p.id] ? { ...p, title: tr[p.id], titleOrig: p.title } : p)));
+    }).catch(() => { /* keep the first cards */ });
+    return () => { alive = false; };
+  }, [src, lang]);
   const [now, setNow] = useState(serverNow);
   const saved = useSaved();
   const [kind, setKind] = useState<Kind>("all");

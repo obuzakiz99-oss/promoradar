@@ -10,6 +10,7 @@ import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
+import { InstallApp } from "@/components/InstallApp";
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -27,7 +28,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     alternates: { canonical: `/${lang}`, languages: { uk: "/uk", en: "/en", ru: "/ru", "x-default": "/en" } },
     openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website" },
     twitter: { card: "summary_large_image", title, description: t.hero.sub },
-    icons: { icon: withBase("/icon.svg") },
+    icons: { icon: withBase("/icon.svg"), apple: withBase("/apple-touch-icon.png") },
+    manifest: withBase("/manifest.webmanifest"),
+    appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "black-translucent" },
   };
 }
 
@@ -47,6 +50,8 @@ export default async function LangLayout({ children, params }: { children: React
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
         {children}
+        {/* outside the header: its backdrop-filter would trap position:fixed */}
+        <InstallApp lang={lang} base={withBase("")} />
       </body>
     </html>
   );

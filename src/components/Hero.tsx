@@ -1,13 +1,14 @@
-import type { Dict } from "@/lib/i18n";
+import type { Dict, Locale } from "@/lib/i18n";
+import { LiveLine } from "./LiveLine";
 import type { Venue } from "@/lib/types";
 import { HAS_TG, SITE } from "@/config/site";
 import { compactUsd } from "@/lib/format";
 import { TgIcon } from "./Header";
 import { RadarPicker, type RadarItem } from "./RadarPicker";
 
-export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBase, learn }: {
+export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBase, learn, live }: {
   t: Dict; active: number; poolsUsd: number; sources: number; radar: RadarItem[]; radarVenues: Record<string, Venue>; venueBase: string;
-  learn?: { href: string; label: string };
+  learn?: { href: string; label: string }; live?: { at: number; newDay: number; lang: Locale };
 }) {
   return (
     <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-10 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-14">
@@ -47,6 +48,7 @@ export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBa
             </div>
           ))}
         </dl>
+        {live && <LiveLine at={live.at} newDay={live.newDay} lang={live.lang} />}
       </div>
 
       <div className="animate-fade-up">
