@@ -52,6 +52,8 @@ jobs:
           NEXT_PUBLIC_SITE_DOMAIN: ${{ github.repository_owner }}.github.io/promoradar
           NEXT_TELEMETRY_DISABLED: "1"
           DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}   # promo texts → uk/ru (DeepL API Free); empty = originals shown
+          AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}         # second free translator (Azure F0, 2M chars/month)
+          AZURE_TRANSLATOR_REGION: ${{ secrets.AZURE_TRANSLATOR_REGION }}   # e.g. westeurope (the resource's region)
 
       - name: Record APR snapshot
         run: node scripts/snapshot.mjs
