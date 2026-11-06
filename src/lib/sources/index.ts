@@ -32,9 +32,15 @@ export async function collectAll(): Promise<Collected> {
   const status: Record<string, SourceStatus> = {};
   const promos: Promo[] = [];
   const seen = new Set<string>();
+  // the same campaign from the API and from Telegram often has a different headline but the same exchange + prize pool
+  const pools = new Map<string, number>();
+  const poolSig = (p: Promo) => (p.reward && p.reward.amount >= 100 ? `${p.venue.id}|${p.reward.amount}|${p.reward.unit}` : "");
   const keep = (p: Promo) => {
     const s = sig(p);
     if (seen.has(p.id) || seen.has(s)) return false;
+    const ps = poolSig(p);
+    if (ps && pools.has(ps) && Math.abs(pools.get(ps)! - p.publishedAt) < 5 * 86400_000) return false;
+    if (ps) pools.set(ps, p.publishedAt);
     if (p.endsAt && p.endsAt < now) return false;
     if (!p.evergreen && !p.endsAt && p.publishedAt && now - p.publishedAt > SITE.freshDays * 86400_000) return false;
     seen.add(p.id); seen.add(s); promos.push(p); return true;
