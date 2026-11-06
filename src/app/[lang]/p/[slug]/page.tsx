@@ -95,7 +95,8 @@ const RULES_TX: Record<Locale, {
 
 /** Google Translate view of the official page (the page itself is public). */
 function translateUrl(url: string, lang: Locale): string | undefined {
-  if (lang === "en" || url.startsWith("https://t.me/")) return undefined;
+  // OKX sends the translator (and EU visitors) to its OKX Europe home page instead of the campaign → no translate link
+  if (lang === "en" || url.startsWith("https://t.me/") || /(^|\.)okx\.com$/.test(new URL(url).hostname)) return undefined;
   return `https://translate.google.com/translate?sl=auto&tl=${lang}&u=${encodeURIComponent(url)}`;
 }
 

@@ -43,7 +43,7 @@ for (const [h, page, why] of missing.slice(0, 40)) console.log(`  ✕ ${h}  (${w
 const SITES = { binance: "binance.com", bybit: "bybit.com", okx: "okx.com", bitget: "bitget.com", kucoin: "kucoin.com", gate: "gate.com", mexc: "mexc.com",
   htx: "htx.com", bingx: "bingx.com", xt: "xt.com", bitunix: "bitunix.com", weex: "weex.com", whitebit: "whitebit.com", coinex: "coinex.com", bitrue: "bitrue.com",
   kraken: "kraken.com", lbank: "lbank.com", phemex: "phemex.com", bitmart: "bitmart.com", hyperliquid: "hyperliquid", lighter: "lighter", aster: "aster",
-  pancakeswap: "pancakeswap", raydium: "raydium", gmx: "gmx", meteora: "meteora", bluefin: "bluefin", edgex: "edgex", aerodrome: "aerodrome", pendle: "pendle" };
+  pancakeswap: "pancakeswap", raydium: "raydium", gmx: "gmx", meteora: "meteora", bluefin: "bluefin", edgex: "edgex", aerodrome: "aerodrome", pendle: "pendle", pumpfun: "pump.fun" };
 const OK_HOSTS = ["t.me", "medium.com", "defillama.com", "airdrops.io", "x.com", "twitter.com", "zendesk.com"];   // zendesk = exchanges' own help centres
 let promos = [];
 try { promos = JSON.parse(fs.readFileSync(path.join(OUT, "api", "promos"), "utf8")).promos; } catch { console.log("(no out/api/promos)"); }
@@ -60,7 +60,7 @@ for (const [v, t, u, why] of wrong) console.log(`  ? ${v}: ${t.slice(0, 70)} →
 
 /* 2) external */
 if (!noExternal) {
-  const PER_HOST = 25;
+  const PER_HOST = Number(process.env.PER_HOST || 25);
   const byHost = new Map();
   const todo = [];
   for (const [u, page] of external) {
@@ -69,13 +69,25 @@ if (!noExternal) {
     if (n >= PER_HOST) continue;
     byHost.set(h, n + 1); todo.push([u, page]);
   }
-  const res = { ok: 0, blocked: [], broken: [] };
+  const res = { ok: 0, blocked: [], broken: [], soft: [] };
   const check = async ([u, page]) => {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const r = await fetch(u, { headers: UA, redirect: "follow", signal: AbortSignal.timeout(20_000) });
+        if (r.ok) {
+          // soft 404: a deep link that lands on the site's home page, or a page that says "not found"
+          const want = new URL(u), got = new URL(r.url);
+          const deep = want.pathname.replace(/\/(en|en-us|en_us|uk|ru)?\/?$/i, "").length > 1;
+          const home = got.pathname.replace(/\/(en|en-us|en_us|uk|ru)?\/?$/i, "") === "";
+          const ct = r.headers.get("content-type") ?? "";
+          const head = ct.includes("html") ? (await r.text()).slice(0, 60_000) : (r.body?.cancel?.(), "");
+          const title = (head.match(/<title[^>]*>([^<]*)/i)?.[1] ?? "").trim();
+          if (deep && home && got.hostname.replace(/^www\./, "") === want.hostname.replace(/^www\./, "")) res.soft.push([u, `→ home ${r.url}`, page]);
+          else if (/\b(404|not found|page not found|doesn.t exist|no longer available)\b/i.test(title)) res.soft.push([u, `title "${title.slice(0, 60)}"`, page]);
+          else res.ok++;
+          return;
+        }
         r.body?.cancel?.();
-        if (r.ok) { res.ok++; return; }
         if ([401, 403, 405, 429, 503, 520, 521, 522, 523].includes(r.status)) { res.blocked.push([u, r.status, page]); return; }
         if (attempt === 1) res.broken.push([u, r.status, page]);
       } catch (e) {
