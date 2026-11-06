@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { collectAll, type Collected } from "./sources";
-import { VENUES, SPONSORED, venueOf } from "@/config/site";
+import { VENUES, SPONSORED, MANUAL, venueOf } from "@/config/site";
 import { parseReward } from "./parse";
-import { geoOf, getDetails, poolOf, termsOf, type PromoDetails } from "./details";
+import { factsOf, geoOf, getDetails, poolOf, termsOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
 import type { Promo, Venue } from "./types";
@@ -74,9 +74,21 @@ async function getPromosLive(): Promise<Collected> {
       publishedAt: now, endsAt: new Date(s.until).getTime(), reward: s.reward ? parseReward(s.reward) : undefined, tags: [], sponsored: true,
     };
   });
-  const all = [...sponsored, ...data.promos];
+  // hand-added promos (platforms without a readable feed, e.g. Pump.fun) — with their rules as the page text
+  const manualDetails: Record<string, PromoDetails> = {};
+  const manual: Promo[] = MANUAL.filter((s) => new Date(s.until).getTime() > now).map((s) => {
+    const blocks = (s.rules ?? []).map((x) => ({ t: "p" as const, x }));
+    if (blocks.length) manualDetails[s.id] = { blocks, facts: factsOf(blocks), at: now, partial: true };
+    return {
+      id: s.id, venue: venueOf(s.venue), title: s.title, url: s.url, category: s.category,
+      publishedAt: s.from ? new Date(s.from).getTime() : now, startsAt: s.from ? new Date(s.from).getTime() : undefined, endsAt: new Date(s.until).getTime(),
+      reward: s.reward ? parseReward(s.reward) : undefined, tags: [],
+      meta: { source: `${venueOf(s.venue).name} · ${s.checked}`, ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
+    } satisfies Promo;
+  });
+  const all = [...sponsored, ...manual, ...data.promos];
   // full rules from the exchanges' own announcements (cached across builds in data/details.json)
-  const details: Record<string, PromoDetails> = await getDetails(all).catch(() => ({}));
+  const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
   for (const p of all) {

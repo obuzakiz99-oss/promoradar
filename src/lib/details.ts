@@ -112,7 +112,7 @@ const FACT_RE: Array<[FactKey, RegExp]> = [
   ["kyc", /\b(KYC|identity verification|verified (users|accounts)|complete (the )?verification)\b/i],
 ];
 
-function factsOf(blocks: Block[]): Fact[] {
+export function factsOf(blocks: Block[]): Fact[] {
   const out: Fact[] = [];
   const count: Partial<Record<FactKey, number>> = {};
   for (const b of blocks) {

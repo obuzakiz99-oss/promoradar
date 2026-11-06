@@ -47,6 +47,7 @@ export const CEX: Record<string, V> = {
 export const DEX: Record<string, V> = {
   hyperliquid: dex("hyperliquid", "Hyperliquid", "dex",  "#97FCE4", "#04140F", "HL", "hyperliquid",  "https://app.hyperliquid.xyz"),
   lighter:     dex("lighter",     "Lighter",     "dex",  "#E8ECF1", "#0B0D10", "Li", "lighter",      "https://app.lighter.xyz"),
+  pumpfun:     dex("pumpfun",     "Pump.fun",    "dex",  "#86EFAC", "#05140A", "Pf", "pump.fun",     "https://pump.fun"),
   aster:       dex("aster",       "Aster",       "dex",  "#F2C67C", "#15110A", "As", "aster",        "https://www.asterdex.com"),
   pancakeswap: dex("pancakeswap", "PancakeSwap", "dex",  "#1FC7D4", "#04141A", "Ca", "pancakeswap",  "https://pancakeswap.finance"),
   raydium:     dex("raydium",     "Raydium",     "dex",  "#C200FB", "#FFFFFF", "Ra", "raydium",      "https://raydium.io"),
@@ -100,6 +101,31 @@ export const BLOCKLIST: string[] = [];
  * { id: "sp:1", venue: "bybit", title: "…", url: "https://…", category: "bonus", until: "2026-12-01", reward: "1,000 USDT" }
  */
 export const SPONSORED: Array<{ id: string; venue: string; title: string; url: string; category: Category; until: string; reward?: string }> = [];
+
+/**
+ * Promos added by hand — for platforms that publish campaigns only where we can't read them automatically
+ * (Pump.fun: X/Twitter + a Cloudflare-protected site; its Telegram channel isn't confirmed as official).
+ * Only from the platform's own page; each entry disappears by itself after `until`.
+ */
+export const MANUAL: Array<{
+  id: string; venue: string; title: string; url: string; category: Category; from?: string; until: string; reward?: string;
+  perUser?: { amount: number; unit: string }; rules?: string[]; checked: string;
+}> = [
+  {
+    id: "pumpfun:creator-competition-2026-11", venue: "pumpfun", category: "competition",
+    title: "Pump.fun Creator Competition — $100,000 prize pool (1st place $50,000)",
+    url: "https://pump.fun/creators", from: "2026-11-02T00:00:00Z", until: "2026-11-16T23:59:00Z", reward: "$100,000",
+    perUser: { amount: 50_000, unit: "USD" },
+    rules: [
+      "Creator competition on Pump.fun: launch and grow your coin on the platform.",
+      "Prize pool: $100,000. 1st place — $50,000; 5th place — $10,000.",
+      "Period: November 2 – November 16, 2026.",
+      "Participation is subject to the official competition rules and the Creator Competition Terms on pump.fun.",
+      "Rewards are not trading profits and are not guaranteed. Programs are announced only on official pump.fun channels.",
+    ],
+    checked: "2026-11-06",
+  },
+];
 
 export const PRO = {
   priceMonthUsd: 9,
