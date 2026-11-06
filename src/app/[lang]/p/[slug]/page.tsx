@@ -43,7 +43,7 @@ const RULES_TX: Record<Locale, {
     translate: "Перекласти українською", original: (v) => `Оригінал на ${v}`,
     note: (v) => `Повний текст умов з офіційного оголошення ${v}, мовою оригіналу. Якщо щось розходиться — діють правила на сайті біржі.`,
     partial: "Біржа публікує тут лише короткий опис — повні правила за посиланням «Оригінал».",
-    none: (v) => `${v} не дозволяє автоматично завантажувати текст правил, тому повні умови — на сторінці акції: натисніть «Оригінал» або «Перекласти українською» вище.`,
+    none: (v) => `Повний текст умов цієї акції опубліковано лише на сторінці ${v} — натисніть «Оригінал» або «Перекласти українською» вище.`,
     more: "Показати всі умови", signup: (v) => `Реєстрація на ${v}`,
     fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
   },
@@ -52,7 +52,7 @@ const RULES_TX: Record<Locale, {
     translate: "", original: (v) => `Original on ${v}`,
     note: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
     partial: "The exchange only publishes a short summary here — full rules via “Original”.",
-    none: (v) => `${v} doesn't allow its rules to be loaded automatically, so the full conditions are on the promo page — tap “Original” above.`,
+    none: (v) => `The full conditions of this promo are published only on ${v}'s page — tap “Original” above.`,
     more: "Show all conditions", signup: (v) => `Sign up on ${v}`,
     fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
   },
@@ -61,7 +61,7 @@ const RULES_TX: Record<Locale, {
     translate: "Перевести на русский", original: (v) => `Оригинал на ${v}`,
     note: (v) => `Полный текст условий из официального объявления ${v}, на языке оригинала. Если что-то расходится — действуют правила на сайте биржи.`,
     partial: "Биржа публикует здесь только краткое описание — полные правила по ссылке «Оригинал».",
-    none: (v) => `${v} не позволяет автоматически загружать текст правил, поэтому полные условия — на странице акции: нажмите «Оригинал» или «Перевести на русский» выше.`,
+    none: (v) => `Полный текст условий этой акции опубликован только на странице ${v} — нажмите «Оригинал» или «Перевести на русский» выше.`,
     more: "Показать все условия", signup: (v) => `Регистрация на ${v}`,
     fact: { period: "⏱ Период", who: "👤 Кто может участвовать", min: "💵 Минимальные требования", how: "✅ Как участвовать", payout: "🎁 Когда выдадут награды", kyc: "🪪 Верификация (KYC)", region: "🌍 Ограничения по странам" },
   },
@@ -178,7 +178,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
           {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗</a>}
-          <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>
+          {p.category !== "farming" && <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
         </div>
 
@@ -237,7 +237,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         </div>
 
         {/* full conditions & rules */}
-        <section id="rules" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
+        {p.category !== "farming" && <section id="rules" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h2 className="font-display text-xl font-semibold tracking-tight">📜 {R.title}</h2>
             <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -253,7 +253,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           ) : (
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{R.none(p.venue.name)}</p>
           )}
-        </section>
+        </section>}
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
