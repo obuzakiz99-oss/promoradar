@@ -181,7 +181,7 @@ const NUM = "\\$?\\s?([\\d][\\d,]*(?:\\.\\d+)?)\\s*(k|m|million|thousand)?\\s*";
 const UNIT = "(usdt|usdc|usd|fdusd|[A-Z][A-Z0-9]{1,9})?";
 const PER_USER: RegExp[] = [
   // "maximum cap of 33,300 KOR per user", "up to 500 USDT per user", "capped at $200 per participant"
-  new RegExp(`\\b(?:up to|maximum(?: of)?|max(?:imum)? (?:reward|cap|bonus|prize)s?(?: of| is)?|capped at|cap of)\\s*${NUM}${UNIT}[^.;]{0,50}?\\b(?:per|for each|each) (?:user|person|participant|account|uid|winner|eligible user)`, "i"),
+  new RegExp(`\\b(?:up to|maximum(?: of)?|max(?:imum)? (?:reward|cap|bonus|prize)s?(?: of| is)?|capped at|cap of)\\s*${NUM}${UNIT}[^.;]{0,50}?\\b(?:per|for each|each) (?:user|pers(?:on)?|participant|account|uid|winner|eligible user)`, "i"),
   // "each eligible user will receive 10 USDT", "every participant can earn up to 50 USDT"
   new RegExp(`\\b(?:each|every) (?:eligible |qualified |new )?(?:user|participant|winner)[^.;]{0,40}?\\b(?:receive|get|earn|win|claim|share|be rewarded)s?(?: with)?\\s*(?:up to\\s*)?${NUM}${UNIT}`, "i"),
   // "10 USDT per user", "$50 per person"
@@ -209,7 +209,8 @@ function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
       const before = line.slice(0, m.index!).split(/[,.;:!?]/).pop() ?? "";        // same clause only
       const around = before.slice(-45) + m[0];
       if (/\b(stak\w*|deposit\w*|subscri\w*|invest\w*|lock\w*|position|volume|limit|quota|hold(ing)?s?|borrow\w*|loan|margin|principal)\b/i.test(around)) continue;
-      if (poolAmount && amount >= poolAmount * 0.999) continue;            // that's the whole prize pool, not one person's share
+      // equal to the headline prize pool → that's the whole pool, unless the line itself says "per person"
+      if (poolAmount && amount >= poolAmount * 0.999 && re !== PER_USER[0] && re !== PER_USER[2]) continue;
       // headline style "earn up to 600%" / "earn 10 USDT APR…" isn't a per-person amount
       if (re === PER_USER[3] && /^\s*(%|apr|apy)/i.test(line.slice(m.index! + m[0].length, m.index! + m[0].length + 8))) continue;
       amount = Math.round(amount * 100) / 100;
