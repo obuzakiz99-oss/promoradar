@@ -75,6 +75,8 @@ export const TELEGRAM: Array<{ venue: string; channel: string }> = [
   // fallbacks for exchanges whose APIs refuse GitHub's US build servers (duplicates with the API are merged)
   { venue: "bybit",       channel: "Bybit_Announcements" },
   { venue: "okx",         channel: "OKXAnnouncements" },
+  { venue: "binance",     channel: "binance_announcements" },
+  { venue: "kucoin",      channel: "kucoin_news" },
   { venue: "bitget",      channel: "bitget_announcements" },
   { venue: "mexc",        channel: "MEXCofficialNews" },
   { venue: "htx",         channel: "HTXGlobalAnnouncementChannel" },

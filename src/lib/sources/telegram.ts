@@ -9,7 +9,7 @@ const strip = (html: string) =>
   decodeEntities(html.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").trim();
 
 /** A post headline must itself announce a campaign (market chatter / memes are skipped). */
-const STRONG = /\b(airdrops?|candybomb|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
+const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
 const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote)\b/i;
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
@@ -34,7 +34,7 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
     if (!body || !date) continue;
     const text = strip(body);
     const title = cleanTitle(headline(text));
-    if (!title || CHATTER.test(title) || !isPromo(title) || !STRONG.test(title)) continue;
+    if (!title || (CHATTER.test(title) && !/kickstarter/i.test(title)) || !isPromo(title) || !STRONG.test(title)) continue;
     // link to the exchange's own article when the post has one; otherwise to the post itself
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)
     const own = new URL(site).hostname.replace(/^(www|app)\./, "");

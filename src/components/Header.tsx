@@ -15,6 +15,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   const items: Array<{ href: string; label: React.ReactNode; wide?: string; adv?: boolean }> = [
     { href: withBase(`/${lang}/#promos`), label: t.nav.promos },
     { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></> },
+    { href: withBase(`/${lang}/drops/`), label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }[lang] },
     { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav },
     { href: withBase(`/${lang}/funding/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block" },

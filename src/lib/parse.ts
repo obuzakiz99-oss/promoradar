@@ -6,7 +6,7 @@ const has = (t: string, words: RegExp) => words.test(t);
 const NOISE = /(maintenance|delist|removal of|suspension|suspend|resumption|resume|dividend|adjustment|upgrade of|\bapi\b|system update|notice of|will list .* perpetual|margin tier|tick size|leverage|funding rate|settlement|wallet maintenance|important updates? on|risk warning|monitoring tag|deposits? and withdrawals?|opening .* deposits|network upgrade|token swap|rebrand|contract (swap|migration)|announcement on)/i;
 
 /** Signals that the item is something users can earn from (word boundaries: "withdrawal" is not a "draw"). */
-const PROMO = /\b(airdrops?|launchpool|launchpad|megadrop|hodler|jumpstart|candybomb|giveaways?|competition|tournament|challenge|trade[- ]to[- ](earn|share)|share|win|wins|winners?|prizes?|rewards?|bonus(es)?|earn|staking|apr|apy|cashback|vouchers?|coupons?|referral|invite|campaign|carnival|festival|lucky|draw|up to|points|incentives?|treasure|mystery box)\b/i;
+const PROMO = /\b(airdrops?|launchpool|launchpad|launchx|megadrop|hodler|jumpstart|candybomb|candydrop|tokensplash|kickstarter|spotlight|startup|token sale|ieo|tge|booster|puzzle hunt|learn (&|and) earn|quiz|quests?|galxe|giveaways?|competition|tournament|challenge|trade[- ]to[- ](earn|share)|share|win|wins|winners?|prizes?|rewards?|bonus(es)?|earn|staking|apr|apy|cashback|vouchers?|coupons?|referral|invite|campaign|carnival|festival|lucky|draw|up to|points|incentives?|treasure|mystery box)\b/i;
 
 export function isPromo(title: string): boolean {
   return !has(title, NOISE) && has(title, PROMO);
@@ -15,7 +15,7 @@ export function isPromo(title: string): boolean {
 export function classify(title: string, hint?: string): Category {
   const t = `${title} ${hint ?? ""}`;
   if (has(t, /(referral|invite friends|affiliate|refer )/i)) return "referral";
-  if (has(t, /(launchpool|launchpad|airdrop|hodler|jumpstart|megadrop|candybomb|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
+  if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn))/i)) return "bonus";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
