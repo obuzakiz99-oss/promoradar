@@ -206,7 +206,8 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
   return best;
 }
 
-const NUM = "\\$?\\s?([\\d][\\d,]*(?:\\.\\d+)?)\\s*(k|m|million|thousand)?\\s*";
+// a K/M multiplier must stand alone ("10K USDT"), not be the first letter of a ticker ("33,300 KOR")
+const NUM = "\\$?\\s?([\\d][\\d,]*(?:\\.\\d+)?)\\s*(?:(k|m|million|thousand)(?![a-z]))?\\s*";
 const UNIT = "(usdt|usdc|usd|fdusd|[A-Z][A-Z0-9]{1,9})?";
 const PER_USER: RegExp[] = [
   // "maximum cap of 33,300 KOR per user", "up to 500 USDT per user", "capped at $200 per participant"
