@@ -3,7 +3,7 @@ import type { Category, Reward } from "./types";
 const has = (t: string, words: RegExp) => words.test(t);
 
 /** Not promotions: maintenance, delistings, dividends, contract tweaks… */
-const NOISE = /(maintenance|delist|removal of|suspension|suspend|resumption|resume|dividend|adjustment|upgrade of|\bapi\b|system update|notice of|will list .* perpetual|margin tier|tick size|leverage|funding rate|settlement|wallet maintenance|important updates? on|risk warning|monitoring tag|deposits? and withdrawals?|opening .* deposits|network upgrade|token swap|rebrand|contract (swap|migration)|announcement on)/i;
+const NOISE = /(maintenance|delist|removal of|suspension|suspend|resumption|resume|dividend|adjustment|upgrade of|\bapi\b|system update|notice of|will list .* perpetual|margin tier|tick size|leverage|funding rate|settlement|wallet maintenance|important updates? on|risk warning|monitoring tag|deposits? and withdrawals?|opening .* deposits|network upgrade|token swap|rebrand|contract (swap|migration)|announcement on|\b(wins|won|named|recognized|recognised) .{0,40}\b(awards?|of the year|best)\b|\bawards? 20\d\d\b)/i;
 
 /** Signals that the item is something users can earn from (word boundaries: "withdrawal" is not a "draw"). */
 const PROMO = /\b(airdrops?|launchpool|launchpad|launchx|megadrop|hodler|jumpstart|candybomb|candydrop|tokensplash|kickstarter|spotlight|startup|token sale|ieo|tge|booster|puzzle hunt|learn (&|and) earn|quiz|quests?|galxe|giveaways?|competition|tournament|challenge|trade[- ]to[- ](earn|share)|share|win|wins|winners?|prizes?|rewards?|bonus(es)?|earn|staking|apr|apy|cashback|vouchers?|coupons?|referral|invite|campaign|carnival|festival|lucky|draw|up to|points|incentives?|treasure|mystery box)\b/i;

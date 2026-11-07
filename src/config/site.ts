@@ -204,6 +204,18 @@ export const MANUAL: Array<{
     checked: "2026-11-07",
   },
   {
+    id: "kraken:stablecoin-rewards", venue: "kraken", category: "earn",
+    title: "Kraken stablecoin rewards: up to 4.25% APY on USDe, 2.25% on USDG — no lock-up, paid weekly",
+    url: "https://support.kraken.com/articles/stablecoin-rewards", from: "2026-11-05T00:00:00Z", until: "2026-11-30T23:59:00Z",
+    rules: [
+      "Hold eligible stablecoins in a verified Kraken account and earn rewards automatically. Rewards are paid weekly; there is no lock-up, no minimum holding period and no reward fee — the coins stay tradable and withdrawable.",
+      "Rates for non-subscribers (Kraken+ subscribers get about double): USDe up to 4.25% (Kraken+ 5.75%), APXUSD and AUSD up to 3% (6%), USDG up to 2.25% (4.5%), tGBP up to 2% (4%), USDC up to 2% (4%, only US/Canada/Australia/UK), RLUSD up to 1.75% (US/UK).",
+      "USDG: worldwide except the EEA and prohibited regions. USDe and APXUSD: rest of world except Brazil, Argentina, UAE and prohibited regions. USDe rewards apply to balances up to 25,000 USDe per client.",
+      "Rates may change; Kraken can change or end the programme at any time. Rewards are funded by Kraken and are not bank deposits (no FDIC/FSCS cover). Geographic restrictions apply.",
+    ],
+    checked: "2026-11-08",
+  },
+  {
     id: "gemini:referral-50", venue: "gemini", category: "referral",
     title: "Gemini referral: $50 in crypto for you and your friend",
     url: "https://www.gemini.com/referrals", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",

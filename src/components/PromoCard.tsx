@@ -64,18 +64,18 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
 
   return (
     <article
-      className={`card group relative flex flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
+      className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
       {/* header */}
       <div className="flex items-center gap-3">
         <VenueLogo v={p.venue} />
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-sm font-bold">{p.venue.name}</span>
             <span className="rounded border border-line px-1 py-px font-mono text-[9px] font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
           </div>
-          <div className={`mt-0.5 inline-flex items-center gap-1.5 text-xs font-semibold ${cs.text}`}>
+          <div className={`mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs font-semibold ${cs.text}`}>
             <span className="size-1.5 rounded-full" style={{ background: cs.dot }} />
             {t.cat[p.category]}
             <span className={`nov ml-1 rounded px-1.5 py-px text-[10px] font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
