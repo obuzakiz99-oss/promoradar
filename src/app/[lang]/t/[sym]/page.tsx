@@ -1,14 +1,16 @@
+import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getTokens, isStableSym } from "@/lib/tokens";
 import { venueOf } from "@/config/site";
-import { duration } from "@/lib/format";
+import { compactUsd, duration } from "@/lib/format";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
+import { getUnlocks } from "@/lib/unlocks";
 
 export const revalidate = 900;
 export const dynamicParams = false;
@@ -51,6 +53,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title: T.title(sym), description: T.desc(sym), alternates: { canonical: `/${lang}/t/${sym}` } };
 }
 
+const UNLOCK_TX: Record<Locale, (d: string, left: string) => string> = { uk: (d, l) => `Наступний розлок: ${d} (через ${l})`, en: (d, l) => `Next unlock: ${d} (in ${l})`, ru: (d, l) => `Следующий разлок: ${d} (через ${l})` };
+const UNLOCK_CAP: Record<Locale, string> = { uk: "капіталізації", en: "of market cap", ru: "капитализации" };
 const fmtPrice = (x: number) => (x >= 1000 ? `$${x.toLocaleString("en-US", { maximumFractionDigits: 0 })}` : x >= 1 ? `$${x.toFixed(2)}` : `$${x.toPrecision(3)}`);
 
 export default async function TokenPage({ params }: { params: Params }) {
@@ -63,6 +67,7 @@ export default async function TokenPage({ params }: { params: Params }) {
   const now = fetchedAt;
   const coinV = { name: sym, logo: tk.logo, color: "#2a3140", ink: "#e8ecf1", monogram: sym.slice(0, 3) };
   const stable = isStableSym(sym);
+  const unlock = stable ? undefined : (await getUnlocks()).rows.find((u) => u.sym === sym && u.date > now);
   const related = [...tokens.values()].filter((x) => x.sym !== sym).sort((a, b) => (b.promos.length + b.lpReward.length) - (a.promos.length + a.lpReward.length)).slice(0, 24);
 
   const Section = ({ title, children, n }: { title: string; children: React.ReactNode; n: number }) => (
@@ -90,6 +95,13 @@ export default async function TokenPage({ params }: { params: Params }) {
             </div>
           )}
         </header>
+        {unlock && (
+          <a href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
+            <span className="font-bold text-amber">🔓 {UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
+            <span className="font-mono text-ink-2">{compactUsd(unlock.usd)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
+            <span className="text-ink-3">{unlock.sale}</span>
+          </a>
+        )}
 
         {!stable && (
           <Section title={T.promos(sym)} n={tk.promos.length}>
@@ -102,7 +114,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         <Section title={T.lpReward(sym)} n={tk.lpReward.length}>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {tk.lpReward.map((p) => (
-              <a key={p.id} href={withBase(`/${lang}/launchpools/#lp-${p.id}-${p.pools[0]?.stake}`)} className="card flex items-center gap-3 p-4">
+              <a key={p.id} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{venueOf(p.exchange).name} · {p.name}</div>
@@ -119,7 +131,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         <Section title={T.lpStake(sym)} n={tk.lpStake.length}>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {tk.lpStake.sort((a, b) => (b.pool.apr ?? 0) - (a.pool.apr ?? 0)).map(({ project: p, pool }) => (
-              <a key={`${p.id}:${pool.stake}`} href={withBase(`/${lang}/launchpools/#lp-${p.id}-${pool.stake}`)} className="card flex items-center gap-3 p-4">
+              <a key={`${p.id}:${pool.stake}`} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>

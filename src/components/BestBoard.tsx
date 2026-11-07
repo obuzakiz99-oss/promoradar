@@ -6,6 +6,8 @@ import type { Hedge, PoolProject } from "@/lib/pools";
 import { TOOLS } from "@/lib/i18n-tools";
 import { hedgeCalc } from "@/lib/proscons";
 import { VenueLogo } from "./VenueLogo";
+import { withBase } from "@/lib/base";
+import { lpSlug } from "@/lib/lpslug";
 
 export interface SafeItem { key: string; venue: Venue; title: string; sub: string; apr: number; aprMax?: number; capUsd?: number; url: string }
 export interface PromoItem { key: string; venue: Venue; title: string; usd: number; label: string; href: string }
@@ -72,7 +74,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
 
       <Section title={`⚖ ${T.hedged}`} sub={T.hedgedSub}>
         {hedged.length ? hedged.map((h) => (
-          <Row key={h.key} v={exchanges[h.p.exchange]} title={`${h.p.name}: ${h.stake} → ${h.p.token}`} sub={`APR ${pct(h.apr)} · short ${h.stake} @ ${h.venue} · ${T.est}`} href={h.p.url}
+          <Row key={h.key} v={exchanges[h.p.exchange]} title={`${h.p.name}: ${h.stake} → ${h.p.token}`} sub={`APR ${pct(h.apr)} · short ${h.stake} @ ${h.venue} · ${T.est}`} href={withBase(`/${lang}/lp/${lpSlug(h.p)}/`)}
             right={`≈${pct(h.hedged)}`} rightSub={`${usd(month(h.hedged, h.capUsd))} ${T.perMonth}`} />
         )) : <p className="text-ink-3">{T.none}</p>}
       </Section>

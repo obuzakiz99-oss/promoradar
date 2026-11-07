@@ -9,6 +9,14 @@ import { dexPC } from "@/lib/proscons";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
+const EXPLAIN: Record<Locale, string> = { uk: "Умови й ризики", en: "Terms & risks", ru: "Условия и риски" };
+const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
+const STATS: Record<Locale, string> = { uk: "Історія APY (DefiLlama)", en: "APY history (DefiLlama)", ru: "История APY (DefiLlama)" };
+const WHAT: Record<Locale, (pr: string, s: string, ch: string) => string> = {
+  uk: (pr, s, ch) => `Пул ${s} у протоколі ${pr} (мережа ${ch}). Ви вносите монети зі свого гаманця і отримуєте частку комісій та/або нагород протоколу. Дохідність змінюється щодня — нижче плюси, мінуси та ризики.`,
+  en: (pr, s, ch) => `The ${s} pool on ${pr} (${ch}). You deposit coins from your own wallet and earn a share of fees and/or protocol rewards. The yield changes daily — pros, cons and risks below.`,
+  ru: (pr, s, ch) => `Пул ${s} в протоколе ${pr} (сеть ${ch}). Вы вносите монеты со своего кошелька и получаете долю комиссий и/или наград протокола. Доходность меняется ежедневно — ниже плюсы, минусы и риски.`,
+};
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
@@ -132,14 +140,20 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                     >
                       <span className="text-lime">✓{pc.pros.length}</span><span className="text-rose">✕{pc.cons.length}</span>
                     </button>
-                    {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-8 px-3 text-xs">{A.open} ↗</a>}
-                    <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-8 px-2.5 text-xs">i</a>
+                    <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className="btn btn-primary h-8 px-3 text-xs">{EXPLAIN[lang]}</button>
                   </div>
                 </td>
               </tr>
               {open && (
                 <tr className="bg-white/[0.025]">
-                  <td colSpan={7} className="px-4 pb-4 pt-1"><ProsCons pc={pc} max={10} /></td>
+                  <td colSpan={7} className="px-4 pb-4 pt-1">
+                    <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
+                    <ProsCons pc={pc} max={10} />
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
+                      <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
+                    </div>
+                  </td>
                 </tr>
               )}
               </Fragment>

@@ -1,3 +1,4 @@
+import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -49,7 +50,7 @@ export default async function Best({ params }: { params: Params }) {
   }
   const lpSafe: SafeItem[] = pools.projects.filter((p) => p.status === "live").flatMap((p) => p.pools.filter((x) => SAFE.test(x.stake) && (x.apr ?? 0) > 0).map((x) => ({
     key: `lp:${p.id}:${x.stake}`, venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`,
-    sub: `${venueOf(p.exchange).name}${x.minStake ? ` · min ${x.minStake} ${x.stake}` : ""}${x.newUsers ? " · *" : ""}`, apr: x.apr!, capUsd: x.maxStake, url: p.url,
+    sub: `${venueOf(p.exchange).name}${x.minStake ? ` · min ${x.minStake} ${x.stake}` : ""}${x.newUsers ? " · *" : ""}`, apr: x.apr!, capUsd: x.maxStake, url: withBase(`/${lang}/lp/${lpSlug(p)}/`),
   })));
   const dexSafe: SafeItem[] = dex.pools.filter((p) => p.stable && !p.il && p.tvl >= 50e6 && p.apy <= 30 && p.symbol.split(/[-/ ]+/).every((s) => SAFE.test(s))).sort((a, b) => Math.min(b.apy, b.apy30d ?? b.apy) - Math.min(a.apy, a.apy30d ?? a.apy)).slice(0, 4).map((p) => ({
     key: `dex:${p.id}`, venue: dexVenue(p.project, p.slug, p.logo), title: `${p.symbol} · ${p.project}`, sub: `${p.chain} · TVL $${Math.round(p.tvl / 1e6)}M`, apr: p.apy, url: p.url ?? `https://defillama.com/yields/pool/${p.id}`,

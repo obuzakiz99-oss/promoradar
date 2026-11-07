@@ -254,7 +254,27 @@ async function hedges(coins: string[]): Promise<Record<string, Hedge>> {
   return Object.fromEntries(uniq.map((c, i) => [c, res[i]]));
 }
 
+export { lpSlug } from "./lpslug";
+/** Pools that get their own page: everything live/upcoming + ended in the last 14 days (shared links keep working). */
+export const lpPaged = (d: PoolsData) => d.projects.filter((p) => p.status !== "ended" || d.fetchedAt - p.end < 14 * 86400_000);
+
+/**
+ * In the static GitHub build every page and worker must see the SAME pool list (the board links to /lp/<slug>/ pages
+ * generated from it), so the first collection of a build is kept in .next/cache/pools-build.json for 20 minutes.
+ */
 export async function getPools(): Promise<PoolsData> {
+  if (process.env.GITHUB_PAGES !== "1") return getPoolsLive();
+  const fs = await import("node:fs"), path = await import("node:path");
+  const file = path.join(process.cwd(), ".next", "cache", "pools-build.json");
+  try {
+    if (Date.now() - fs.statSync(file).mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")) as PoolsData;
+  } catch { /* first call of this build */ }
+  const fresh = await getPoolsLive();
+  try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only fs */ }
+  return fresh;
+}
+
+async function getPoolsLive(): Promise<PoolsData> {
   const now = Date.now();
   const src = { gate, binance, mexc, kucoin, bitget, lbank } as const;
   const keys = Object.keys(src) as (keyof typeof src)[];

@@ -8,13 +8,16 @@ import type { Dict, Locale } from "@/lib/i18n";
 import type { Hedge, Pool, PoolProject } from "@/lib/pools";
 import type { Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
+import { withBase } from "@/lib/base";
+import { lpSlug } from "@/lib/lpslug";
 import { ProsCons } from "./ProsCons";
 import { compactUsd, duration } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
 const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
-const MORE: Record<Locale, string> = { uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
+const OPEN: Record<Locale, string> = { uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
+const MORE: Record<Locale, string> ={ uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
 const PRESETS = [100, 1000, 10000];
 
 function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | "color" | "ink" | "monogram"> {
@@ -285,8 +288,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* actions */}
               <div className="flex gap-2 lg:flex-col">
-                <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 flex-1 px-4 text-sm">{L.go} ↗</a>
-                {p.rulesUrl && <a href={p.rulesUrl} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-3 text-sm">{L.rules}</a>}
+                <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-primary h-10 flex-1 px-4 text-sm">{OPEN[lang]}</a>
               </div>
 
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}

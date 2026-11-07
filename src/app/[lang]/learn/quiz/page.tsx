@@ -1,3 +1,4 @@
+import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -50,7 +51,7 @@ export default async function LearnQuiz({ params }: { params: Params }) {
     .filter((r) => r.lvl !== "hard").sort((a, b) => (b.x.apr ?? 0) - (a.x.apr ?? 0));
   for (const { p, x, lvl } of lp) {
     const px = isStable(x.stake) ? 1 : pools.prices[x.stake];
-    items.push({ key: `lp:${p.id}:${x.stake}`, kind: lvl === "easy" ? "lp" : "lpMajor", venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`, apr: x.apr, capUsd: x.maxStake && px ? x.maxStake * px : undefined, url: p.url, external: true });
+    items.push({ key: `lp:${p.id}:${x.stake}`, kind: lvl === "easy" ? "lp" : "lpMajor", venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`, apr: x.apr, capUsd: x.maxStake && px ? x.maxStake * px : undefined, url: withBase(`/${lang}/lp/${lpSlug(p)}/`), external: false });
   }
   // new-user bonuses from the promo feed (biggest first)
   for (const p of promos.filter((p) => p.category === "bonus" && p.venue.kind === "cex" && WELCOME.test(p.title) && !DEFI.test(p.title) && (!p.endsAt || p.endsAt > fetchedAt)).sort((a, b) => (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0)))
