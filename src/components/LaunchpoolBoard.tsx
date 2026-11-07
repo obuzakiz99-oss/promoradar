@@ -13,6 +13,7 @@ import { compactUsd, duration } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
+const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
 const MORE: Record<Locale, string> = { uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
 const PRESETS = [100, 1000, 10000];
 
@@ -260,8 +261,15 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{L.yourProfit}</div>
                 {r.profit !== undefined ? (
                   <>
-                    <div className={`font-mono text-xl font-bold ${r.belowMin ? "text-ink-3 line-through" : "text-ink"}`}>{fmtUsd(r.profit)}</div>
-                    <div className="font-mono text-[11px] text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}{r.belowMin ? ` · < ${L.min}` : ""}</div>
+                    {r.belowMin ? (
+                      // below the pool's minimum stake there is nothing to earn — say so instead of a crossed-out $0.00
+                      <div className="text-sm font-bold text-amber">{BELOW[lang](`${fmtNum(pool.minStake ?? 0)} ${pool.stake}`)}</div>
+                    ) : (
+                      <>
+                        <div className="font-mono text-xl font-bold text-ink">{fmtUsd(r.profit)}</div>
+                        <div className="font-mono text-[11px] text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
+                      </>
+                    )}
                     {r.adjusted !== undefined && pool.stake !== "USDT" && Math.abs((r.chgReward ?? 0)) + Math.abs(r.chgStake ?? 0) >= 1 && (
                       <div className="mt-1 text-[11px] font-semibold text-ink-3" title={L.ifPriceNote}>
                         {L.ifPrice}: <span className="font-mono font-bold">{r.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(r.adjusted))}</span>

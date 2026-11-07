@@ -14,7 +14,7 @@ export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "
 export interface Fact { k: FactKey; text: string }
 export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number }
 
-const VER = 2;               // bump when the parser changes → cached promos are re-read
+const VER = 4;               // bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
 const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
@@ -42,7 +42,8 @@ function htmlToBlocks(html: string): Block[] {
     return cells.length ? `\n§R§${cells.join("§C§")}\n` : "\n";
   });
   h = h.replace(/<br\s*\/?>/gi, "\n").replace(/<\/?(p|div|section|article|ul|ol|table|tbody|thead|blockquote)[^>]*>/gi, "\n").replace(/<[^>]+>/g, "");
-  const clean = (s: string) => decodeEntities(named(s)).replace(/[​ \t ]+/g, " ").replace(/^[•·▪◦]\s*/, "").trim();
+  // some sources escape twice ("&amp;amp;") — decode twice
+  const clean = (s: string) => decodeEntities(named(decodeEntities(named(s)))).replace(/[​ \t ]+/g, " ").replace(/^[•·▪◦]\s*/, "").trim();
   const out: Block[] = [];
   for (const raw of h.split("\n")) {
     const line = raw.trim();
@@ -58,6 +59,9 @@ function htmlToBlocks(html: string): Block[] {
     // a short line ending with a colon reads as a heading too
     out.push({ t: t === "p" && x.length < 60 && /:$/.test(x) ? "h" : t, x: x.replace(/:$/, t === "h" ? "" : ":") });
   }
+  // a "rules" text that is mostly code is not the rules: reject it; otherwise drop stray code lines
+  if (out.length && out.filter((b) => CODE_LINE.test(b.x)).length / out.length > 0.1) return [];
+  for (let i = out.length - 1; i >= 0; i--) if (CODE_LINE.test(out[i].x)) out.splice(i, 1);
   // drop repeats and cap the size of a page
   const seen = new Set<string>();
   const res: Block[] = [];
@@ -81,6 +85,14 @@ function binanceTree(n: any): string {
   return n.node === "element" && /^[a-z0-9]+$/i.test(n.tag ?? "") ? `<${n.tag}>${inner}</${n.tag}>` : inner;
 }
 
+/** Script / CSS text that sometimes sits in a page's embedded state next to the article (never show it as "rules"). */
+const CODE_LINE = /function\s*\(|=>\s*[{(]|\bvar\s+\w+\s*=|\breturn\s+typeof\b|\/\*[\s\S]*?\*\/|window\.|document\.|\bconst\s+\w+\s*=|^\s*[{}]\s*$|[;{]\s*[a-z$_][\w$]*\s*[=(.]|@media|!important/;
+export function looksLikeCode(s: string): boolean {
+  const lines = s.split(/\n|<\/?(?:p|div|br)[^>]*>/).map((l) => l.trim()).filter((l) => l.length > 3);
+  if (!lines.length) return false;
+  return lines.filter((l) => CODE_LINE.test(l)).length / lines.length > 0.15 || /Build time:|webpackChunk|__NEXT_DATA__|sourceMappingURL/.test(s);
+}
+
 /** Longest HTML-looking string inside the JSON state embedded in a page (Next.js / React Query pages). */
 function htmlFromPage(page: string): string {
   let best = "";
@@ -92,7 +104,7 @@ function htmlFromPage(page: string): string {
     let j: unknown;
     try { j = JSON.parse(s.slice(i).replace(/;\s*$/, "")); } catch { continue; }
     const walk = (v: unknown, depth: number) => {
-      if (typeof v === "string") { if (v.length > best.length && score(v) > 2) best = v; }
+      if (typeof v === "string") { if (v.length > best.length && score(v) > 2 && !looksLikeCode(v)) best = v; }
       else if (v && typeof v === "object" && depth < 14) for (const x of Object.values(v)) walk(x, depth + 1);
     };
     walk(j, 0);
