@@ -402,7 +402,7 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
 }
 
 /* ------------------------------------------------------------------ per-source fetchers */
-const ZENDESK: Record<string, string> = { xt: "xtsupport.zendesk.com", bitunix: "support.bitunix.com", weex: "weexsupport.zendesk.com" };
+const ZENDESK: Record<string, string> = { xt: "xtsupport.zendesk.com", bitunix: "support.bitunix.com", weex: "weexsupport.zendesk.com", bitbase: "bitbase-support.zendesk.com" };
 
 async function feedMap(): Promise<Map<string, string>> {
   const feeds = ["https://blog.kraken.com/feed", ...DEX_FEEDS.map((f) => f.feed)];
