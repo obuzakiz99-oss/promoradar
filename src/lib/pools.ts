@@ -220,25 +220,38 @@ export interface Hedge { perps: Array<{ ex: string; fundingApr: number }>; spotD
 
 const yearly = (rate: number, intervalH: number) => rate * (24 / intervalH) * 365 * 100;
 
+/**
+ * Binance & Bybit don't answer GitHub's US build servers, so their ALL-symbol lists are used — the EU relay on the
+ * owner's laptop mirrors exactly these URLs (same as the funding data), and locally they're fetched live.
+ */
+const bnAll = () => cached("bn-premium-all", 5 * 60_000, async () => {
+  const [pi, info] = await Promise.all([
+    getJson<any[]>("https://fapi.binance.com/fapi/v1/premiumIndex", 20_000).catch(() => [] as any[]),
+    getJson<any[]>("https://fapi.binance.com/fapi/v1/fundingInfo", 20_000).catch(() => [] as any[]),
+  ]);
+  const iv = new Map((Array.isArray(info) ? info : []).map((x: any) => [x.symbol, Number(x.fundingIntervalHours) || 8]));
+  return new Map((Array.isArray(pi) ? pi : []).map((x: any) => [x.symbol as string, yearly(Number(x.lastFundingRate), iv.get(x.symbol) ?? 8)]));
+});
+const byAll = () => cached("by-linear-all", 5 * 60_000, async () => {
+  const j = await getJson<any>("https://api.bybit.com/v5/market/tickers?category=linear", 20_000).catch(() => null);
+  return new Map(((j?.result?.list ?? []) as any[]).filter((x) => x.fundingRate !== "").map((x) => [x.symbol as string, yearly(Number(x.fundingRate), Number(x.fundingIntervalHour) || 8)]));
+});
+
 async function hedgeFor(c: string): Promise<Hedge> {
   const get = (u: string) => getJson(u, 8_000).catch(() => null);
-  const [g, b, y, m, ob] = await Promise.all([
+  const [g, m, ob, bn, by] = await Promise.all([
     get(`https://api.gateio.ws/api/v4/futures/usdt/contracts/${c}_USDT`),
-    get(`https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${c}USDT`),
-    get(`https://api.bybit.com/v5/market/tickers?category=linear&symbol=${c}USDT`),
     get(`https://contract.mexc.com/api/v1/contract/funding_rate/${c}_USDT`),
     get(`https://api.gateio.ws/api/v4/spot/order_book?currency_pair=${c}_USDT&limit=20`),
+    bnAll().catch(() => new Map<string, number>()),
+    byAll().catch(() => new Map<string, number>()),
   ]);
   const perps: Hedge["perps"] = [];
   if (g?.name && !g.in_delisting) perps.push({ ex: "Gate", fundingApr: yearly(Number(g.funding_rate), Number(g.funding_interval) / 3600 || 8) });
-  if (b?.symbol) {
-    // Binance funding interval differs per symbol (4h/8h) — read it from fundingInfo, default 8h
-    const info = await cached("binance-funding-info", 60 * 60_000, () => getJson<any[]>("https://fapi.binance.com/fapi/v1/fundingInfo", 8_000)).catch(() => [] as any[]);
-    const iv = Number(info.find((x: any) => x.symbol === `${c}USDT`)?.fundingIntervalHours) || 8;
-    perps.push({ ex: "Binance", fundingApr: yearly(Number(b.lastFundingRate), iv) });
-  }
-  const yt = y?.result?.list?.[0];
-  if (yt?.symbol) perps.push({ ex: "Bybit", fundingApr: yearly(Number(yt.fundingRate), Number(yt.fundingIntervalHour) || 8) });
+  const b = bn.get(`${c}USDT`);
+  if (b !== undefined && Number.isFinite(b)) perps.push({ ex: "Binance", fundingApr: b });
+  const y = by.get(`${c}USDT`);
+  if (y !== undefined && Number.isFinite(y)) perps.push({ ex: "Bybit", fundingApr: y });
   if (m?.success && m.data) perps.push({ ex: "MEXC", fundingApr: yearly(Number(m.data.fundingRate), Number(m.data.collectCycle) || 8) });
   let spotDepthUsd: number | undefined;
   if (ob?.bids && ob?.asks) {
