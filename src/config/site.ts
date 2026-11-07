@@ -154,7 +154,7 @@ export const MANUAL: Array<{
     rules: [
       "Bitget Rewards Center for new users (seen on the official page on November 7, 2026).",
       "Welcome pack: 200 USD as a BTC USDT-M futures position voucher; a three-day check-in task is part of it.",
-      "Deposit & trade challenge, first tier — 50 USDT for completing all three tasks: net deposit of at least 1,000 USDT, spot trading volume of at least 100 USDT and futures trading volume of at least 300,000 USDT.",
+      "Deposit & trade challenge, first tier — 50 USDT for completing all three tasks: net deposit of at least 1,000 USDT, plus 100 USDT or more of spot trading volume and 300,000 USDT or more of futures trading volume.",
       "Higher tiers pay 400 USDT and 6,000 USDT for larger deposits and volumes (the exact requirements are shown after logging in).",
       "New Earn users: 120% APR for 3 days, first investment from 1 USDT.",
       "Rewards from this promotion cannot be combined with the trial VIP pass benefits.",
