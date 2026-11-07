@@ -126,3 +126,6 @@ html[data-novice="1"] .adv { display: none !important; }
 /* glossary tooltips */
 .term { text-decoration: underline dotted rgb(200 255 61 / 0.55); text-underline-offset: 3px; cursor: help; }
 html[data-novice="1"] .nov-1col { grid-template-columns: minmax(0, 1fr) !important; }
+
+/* long words / links / Telegram handles inside promo texts must wrap instead of pushing cards off the screen */
+main :where(p, li, dd, blockquote) { overflow-wrap: anywhere; }

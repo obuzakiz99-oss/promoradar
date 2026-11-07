@@ -309,21 +309,21 @@ export default async function PromoPage({ params }: { params: Params }) {
               {det.facts.map((f, i) => (
                 <div key={i} className="grid gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
                   <dt className="font-semibold text-ink-3">{R.fact[f.k]}</dt>
-                  <dd className="text-ink">{f.text}</dd>
+                  <dd className="min-w-0 text-ink [overflow-wrap:anywhere]">{f.text}</dd>
                 </div>
               ))}
             </dl>
           </section>
         )}
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+        <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] [&>*]:min-w-0">
           <section className="card p-6 hover:transform-none">
             <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.facts}</h2>
             <dl className="mt-4 divide-y divide-line">
               {facts.map(([k, v]) => (
-                <div key={k} className="grid grid-cols-[9rem_1fr] gap-4 py-3 text-sm">
+                <div key={k} className="grid grid-cols-[minmax(0,8rem)_minmax(0,1fr)] gap-3 py-3 text-sm sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4">
                   <dt className="font-semibold text-ink-3">{k}</dt>
-                  <dd className="font-semibold text-ink">{v}</dd>
+                  <dd className="min-w-0 font-semibold text-ink [overflow-wrap:anywhere]">{v}</dd>
                 </div>
               ))}
             </dl>

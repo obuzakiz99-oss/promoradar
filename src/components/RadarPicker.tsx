@@ -1,4 +1,5 @@
 "use client";
+import { langOf, plural } from "@/lib/format";
 import { useEffect, useMemo, useState } from "react";
 import type { Category, Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
@@ -72,7 +73,7 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
           const on = cur?.[0] === id;
           return (
             <button key={id} type="button" onClick={() => setSel(id)} title={`${v.name} · ${list.length}`}
-              aria-pressed={on} aria-label={`${v.name}: ${list.length} ${labels.promos}`}
+              aria-pressed={on} aria-label={`${v.name}: ${list.length} ${plural(list.length, langOf(labels.promos), "promo")}`}
               className="group absolute -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 focus:outline-none" style={{ left: `${x}%`, top: `${y}%` }}>
               <span className="absolute inset-0 animate-ping-slow rounded-full" style={{ background: v.color, animationDelay: `${(i * 0.7) % 6}s`, opacity: 0.3 }} />
               <span className={`relative block rounded-full ring-4 transition ${on ? "ring-lime" : "ring-bg group-hover:ring-line-2"}`}><VenueLogo v={v} size={i < 5 ? 44 : 36} rounded="rounded-full" /></span>
@@ -90,7 +91,7 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
             <div className="flex items-center gap-2.5">
               <VenueLogo v={venues[cur[0]]} size={28} rounded="rounded-lg" />
               <span className="font-bold">{venues[cur[0]].name}</span>
-              <span className="text-xs text-ink-3">{cur[1].length} {labels.promos}</span>
+              <span className="text-xs text-ink-3">{cur[1].length} {plural(cur[1].length, langOf(labels.promos), "promo")}</span>
               <a href={`${venueBase}${cur[0]}/`} className="ml-auto text-xs font-bold text-lime hover:underline">{labels.allOf} →</a>
             </div>
             <ul className="mt-3 space-y-1.5">

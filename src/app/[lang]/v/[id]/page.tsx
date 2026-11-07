@@ -1,3 +1,4 @@
+import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -44,7 +45,7 @@ export default async function VenuePage({ params }: { params: Params }) {
             <div className="flex-1">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.kinds[v.kind]}</div>
               <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{v.name}</h1>
-              <p className="mt-2 font-mono text-sm text-ink-2">{mine.length} {t.venue.count}</p>
+              <p className="mt-2 font-mono text-sm text-ink-2">{mine.length} {plural(mine.length, lang, "promo")} {t.venue.count.split(" ").slice(1).join(" ")}</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <a href={cfg.refUrl || cfg.site} target="_blank" rel={cfg.refUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6">{t.venue.join} ↗</a>

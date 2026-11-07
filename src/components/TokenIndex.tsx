@@ -1,4 +1,5 @@
 "use client";
+import { langOf, plural } from "@/lib/format";
 import { useState } from "react";
 import { VenueLogo } from "./VenueLogo";
 
@@ -21,7 +22,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
               <div className="min-w-0">
                 <div className="break-all font-bold">{r.sym}</div>
                 <div className="font-mono text-[10px] text-ink-3">
-                  {[r.promos ? `${r.promos} ${labels.promos}` : "", r.lp ? `${r.lp} ${labels.lp}` : "", r.earnMax ? `${labels.earn} ${r.earnMax.toFixed(1)}%` : ""].filter(Boolean).join(" · ")}
+                  {[r.promos ? `${r.promos} ${plural(r.promos, langOf(labels.promos), "promo")}` : "", r.lp ? `${r.lp} ${labels.lp}` : "", r.earnMax ? `${labels.earn} ${r.earnMax.toFixed(1)}%` : ""].filter(Boolean).join(" · ")}
                 </div>
               </div>
             </a>

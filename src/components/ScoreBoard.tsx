@@ -1,4 +1,5 @@
 "use client";
+import { plural } from "@/lib/format";
 import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Country, ScoreRow } from "@/lib/scorecards";
@@ -13,7 +14,7 @@ const TX: Record<Locale, {
   uk: {
     country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС",
     cols: { score: "Бал", promos: "Акцій", poolUsd: "Фонди", perUserMedian: "На 1 людину (медіана)", entryMedian: "Поріг (медіана)", noDepositPct: "Без вкладень", launchpools: "Launchpool", usdtEarn: "USDT Earn" },
-    kyc: "KYC у правилах", newUsers: "лише для нових", hidden: (n) => `${n} акцій не для цієї країни`, none: "—", promos: "акцій", open: "Акції біржі →",
+    kyc: "KYC у правилах", newUsers: "лише для нових", hidden: (n) => `${n} ${plural(n, "uk", "promo")} не для цієї країни`, none: "—", promos: "акцій", open: "Акції біржі →",
     how: "Бал 0–100: кількість акцій (35%), скільки можна отримати одній людині (30%), наскільки низький поріг (20%), частка акцій без вкладень (10%), Launchpool і ставка USDT Earn (5%). Рахується автоматично з поточних акцій — без платних місць.",
   },
   en: {
@@ -25,7 +26,7 @@ const TX: Record<Locale, {
   ru: {
     country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС",
     cols: { score: "Балл", promos: "Акций", poolUsd: "Фонды", perUserMedian: "На 1 человека (медиана)", entryMedian: "Порог (медиана)", noDepositPct: "Без вложений", launchpools: "Launchpool", usdtEarn: "USDT Earn" },
-    kyc: "KYC в правилах", newUsers: "только для новых", hidden: (n) => `${n} акций не для этой страны`, none: "—", promos: "акций", open: "Акции биржи →",
+    kyc: "KYC в правилах", newUsers: "только для новых", hidden: (n) => `${n} ${plural(n, "ru", "promo")} не для этой страны`, none: "—", promos: "акций", open: "Акции биржи →",
     how: "Балл 0–100: количество акций (35%), сколько может получить один человек (30%), насколько низкий порог (20%), доля акций без вложений (10%), Launchpool и ставка USDT Earn (5%). Считается автоматически по текущим акциям — без платных мест.",
   },
 };

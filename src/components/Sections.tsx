@@ -1,3 +1,4 @@
+import { langOf, plural } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
 import type { SourceStatus } from "@/lib/sources";
 import { HAS_TG, PRO, SITE } from "@/config/site";
@@ -45,7 +46,7 @@ export function SourcesSection({ t, status }: { t: Dict; status: Record<string, 
                     <span className={`size-2 rounded-full ${s.ok ? "bg-lime shadow-[0_0_8px] shadow-lime/60" : "bg-rose"}`} title={s.ok ? t.sources.ok : `${t.sources.fail}: ${s.error ?? ""}`} />
                     <span className="font-semibold text-ink">{s.name}</span>
                     <span className="rounded border border-line px-1 font-mono text-[9px] font-bold uppercase tracking-wider text-ink-3">{s.via}</span>
-                    <span className="ml-auto font-mono text-xs text-ink-3">{s.ok ? `${s.count} ${t.sources.items}` : t.sources.fail}</span>
+                    <span className="ml-auto font-mono text-xs text-ink-3">{s.ok ? `${s.count} ${plural(s.count, langOf(t.sources.items), "promo")}` : t.sources.fail}</span>
                   </li>
                 ))}
               </ul>

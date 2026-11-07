@@ -1,3 +1,4 @@
+import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -208,7 +209,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div><dt className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
                     <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
                   <div><dt className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
-                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${t.lp.participants}` : ""}</dd></div>
+                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
                 </dl>
                 {x.newUsers && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{T.newUsers}</p>}
                 {x.stake === p.token && <p className="mt-3 rounded-lg bg-rose/10 px-3 py-2 text-xs font-semibold text-rose">{T.priceRisk}</p>}
