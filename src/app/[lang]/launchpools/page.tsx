@@ -136,7 +136,7 @@ export default async function Launchpools({ params }: { params: Params }) {
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.annTitle}</h2>
           <p className="mt-1.5 text-sm text-ink-3">{L.annSub}</p>
           {ann.length > 0 && (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {ann.map((p) => (
                 <a key={p.id} href={withBase(`/${lang}/p/${slugOf(p)}/`)} className="card flex gap-3 p-4">
                   <VenueLogo v={p.venue} size={34} rounded="rounded-lg" />
@@ -176,7 +176,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* exchange stats */}
         <section className="adv mx-auto max-w-7xl px-4 pt-16 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.statsTitle}</h2>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (
               <div key={s.id} className="card p-5 hover:transform-none" style={{ ["--tint" as string]: exchanges[s.id].color }}>
                 <div className="flex items-center gap-3">
@@ -231,7 +231,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* how it works */}
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.howTitle}</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
             {L.how.map(([h, b], i) => (
               <div key={h} className="card p-6 hover:transform-none">
                 <span className={`grid size-10 place-items-center rounded-xl font-mono text-sm font-bold ${i === 2 ? "bg-rose/10 text-rose" : "bg-lime/10 text-lime"}`}>{i === 2 ? "!" : i + 1}</span>

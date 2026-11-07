@@ -222,7 +222,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
         {earnCharts.length > 0 && (
           <section className="mt-16">
             <h2 className="font-display text-2xl font-semibold tracking-tight">🏦 {X.earn}</h2>
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
               {earnCharts.map((c) => (
                 <div key={c.coin} className="card p-5 hover:transform-none">
                   <div className="mb-3 font-display text-lg font-semibold">{c.coin}</div>

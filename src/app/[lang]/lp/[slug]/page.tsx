@@ -191,7 +191,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         <section className="mt-12">
           <h2 className="font-display text-2xl font-semibold tracking-tight">{T.poolsTitle}</h2>
           <p className="mt-1 text-sm text-ink-3">{T.poolsSub}</p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {p.pools.map((x) => (
               <div key={x.stake} className="card p-5 hover:transform-none">
                 <div className="flex items-center gap-3">
@@ -288,7 +288,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {/* how launchpools work */}
         <section className="mt-12">
           <h2 className="font-display text-2xl font-semibold tracking-tight">{t.lp.howTitle}</h2>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
             {t.lp.how.map(([h, b]) => (
               <div key={h} className="card p-5 hover:transform-none"><h3 className="font-bold">{h}</h3><p className="mt-2 text-sm leading-relaxed text-ink-2">{b}</p></div>
             ))}

@@ -105,14 +105,14 @@ export default async function TokenPage({ params }: { params: Params }) {
 
         {!stable && (
           <Section title={T.promos(sym)} n={tk.promos.length}>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {tk.promos.slice(0, 30).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i} />)}
             </div>
           </Section>
         )}
 
         <Section title={T.lpReward(sym)} n={tk.lpReward.length}>
-          <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
             {tk.lpReward.map((p) => (
               <a key={p.id} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
@@ -129,7 +129,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         </Section>
 
         <Section title={T.lpStake(sym)} n={tk.lpStake.length}>
-          <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
             {tk.lpStake.sort((a, b) => (b.pool.apr ?? 0) - (a.pool.apr ?? 0)).map(({ project: p, pool }) => (
               <a key={`${p.id}:${pool.stake}`} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />

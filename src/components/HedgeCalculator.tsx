@@ -46,7 +46,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
   );
 
   return (
-    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+    <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.1fr]">
       <div className="card p-5 hover:transform-none sm:p-6">
         <label className="block">
           <span className="text-xs font-semibold text-ink-3">{T.pickPool}</span>

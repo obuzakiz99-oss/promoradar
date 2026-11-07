@@ -128,7 +128,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 2h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1 3v3h8V5H6Zm0 5v2h2v-2H6Zm3 0v2h2v-2H9Zm3 0v5h2v-5h-2Zm-6 3v2h2v-2H6Zm3 0v2h2v-2H9Z" /></svg>
           {L.calc}
         </div>
-        <div className="mt-5 grid gap-5 lg:grid-cols-[1.2fr_1fr] lg:items-end">
+        <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1.2fr_1fr] lg:items-end">
           <div>
             <label htmlFor="lp-amount" className="text-sm font-semibold text-ink-2">{L.amount}</label>
             <div className="mt-2 flex items-center gap-2">
@@ -296,7 +296,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
                   <span className="transition-transform group-open:rotate-90">▸</span>{MORE[lang]}
                 </summary>
-                <div className="nov-1col mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
+                <div className="nov-1col mt-3 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
                   <div className="adv"><HedgeBox r={r} L={L} /></div>
                   <ProsCons pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
                 </div>

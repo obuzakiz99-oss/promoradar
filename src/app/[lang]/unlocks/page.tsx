@@ -80,7 +80,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
           <section className="mt-10">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.big}</h2>
             <p className="mt-1 text-sm text-ink-3">{T.bigSub}</p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {big.map((u) => {
                 const href = tokenHref(u) ?? dropstabCoin(u.slug);
                 return (

@@ -11,7 +11,7 @@ export function HowItWorks({ t }: { t: Dict }) {
   return (
     <section id="how" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-20 sm:px-6">
       <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{t.how.title}</h2>
-      <ol className="mt-10 grid gap-4 md:grid-cols-3">
+      <ol className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
         {t.how.steps.map(([title, body], i) => (
           <li key={title} className="card relative overflow-hidden p-6">
             <span className="pointer-events-none absolute -top-3 right-4 font-display text-8xl font-bold text-white/[0.035]" aria-hidden="true">0{i + 1}</span>
@@ -33,7 +33,7 @@ export function SourcesSection({ t, status }: { t: Dict; status: Record<string, 
     <section id="sources" className="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
       <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{t.sources.title}</h2>
       <p className="mt-3 max-w-2xl text-ink-2">{t.sources.sub}</p>
-      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {KIND_ORDER.map((k) => {
           const items = rows.filter(([, s]) => s.kind === k).sort((a, b) => b[1].count - a[1].count);
           if (!items.length) return null;
@@ -61,13 +61,13 @@ export function SourcesSection({ t, status }: { t: Dict; status: Record<string, 
 export function AdsSection({ t }: { t: Dict }) {
   return (
     <section id="advertise" className="mx-auto max-w-7xl scroll-mt-20 px-4 pb-20 sm:px-6">
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
           <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{t.ads.title}</h2>
           <p className="mt-3 max-w-md text-ink-2">{t.ads.sub}</p>
           <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-primary mt-6 h-12 px-6"><TgIcon /> {t.ads.cta}</a>
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {t.ads.plans.map(([name, desc, price]) => (
             <div key={name} className="card flex flex-col p-5 hover:transform-none">
               <div className="font-bold">{name}</div>
@@ -96,7 +96,7 @@ export function ProSection({ t }: { t: Dict }) {
           <h2 className="mt-5 font-display text-3xl font-semibold tracking-tight sm:text-4xl">{t.pro.title}</h2>
           <p className="mt-3 text-lg text-ink-2">{t.pro.sub}</p>
         </div>
-        <div className="relative mx-auto mt-12 grid max-w-4xl gap-4 md:grid-cols-2">
+        <div className="relative mx-auto mt-12 grid grid-cols-1 max-w-4xl gap-4 md:grid-cols-2">
           <div className="card p-7 hover:transform-none">
             <div className="text-sm font-bold text-ink-2">Free</div>
             <div className="mt-2 font-display text-4xl font-semibold">{t.pro.free}</div>

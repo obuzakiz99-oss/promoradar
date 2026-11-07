@@ -56,7 +56,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
   if (!rows.length) return <div className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{T.emptyMy}</div>;
   return (
     <div className="mt-8">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">${total.toLocaleString("en-US", { maximumFractionDigits: 2 })}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold">{activeN}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.status.joined} · {T.active}</div></div>
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>

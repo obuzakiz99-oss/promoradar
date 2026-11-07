@@ -23,7 +23,7 @@ export default async function ToolsHub({ params }: { params: Params }) {
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6">
         <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.hubTitle}</h1>
         <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.hubSub}</p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TOOL_IDS.map((id) => (
             <Link key={id} href={`/${lang}/${id}`} className={`card group flex flex-col p-6 ${id === "hedge" ? "adv" : ""}`}>
               <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-2xl">{TOOL_ICON[id]}</span>

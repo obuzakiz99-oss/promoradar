@@ -307,7 +307,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0 ? R.keySubTr : R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">
               {det.facts.map((f, i) => (
-                <div key={i} className="grid gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
+                <div key={i} className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
                   <dt className="font-semibold text-ink-3">{R.fact[f.k]}</dt>
                   <dd className="min-w-0 text-ink [overflow-wrap:anywhere]">{f.text}</dd>
                 </div>
@@ -316,7 +316,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           </section>
         )}
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] [&>*]:min-w-0">
+        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] [&>*]:min-w-0">
           <section className="card p-6 hover:transform-none">
             <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.facts}</h2>
             <dl className="mt-4 divide-y divide-line">
@@ -381,7 +381,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         {related.length > 0 && (
           <section className="mt-14">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{t.detail.related}</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((r, i) => <PromoCard key={r.id} p={r} t={t} lang={lang} now={now} index={i} />)}
             </div>
           </section>

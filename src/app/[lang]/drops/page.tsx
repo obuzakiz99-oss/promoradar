@@ -60,7 +60,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
-              <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1.2fr]">
+              <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
                 <div className="card p-5 hover:transform-none">
                   <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
                   <ol className="mt-3 space-y-2.5 text-sm">
@@ -100,7 +100,7 @@ export default async function DropsPage({ params }: { params: Params }) {
             <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS.hard}`}>{LEVEL_TXT[lang].hard[0]}</span>
           </div>
           <p className="mt-2 max-w-3xl text-ink-2">{P.pmSub}</p>
-          <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1.2fr]">
+          <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
             <div className="card p-5 hover:transform-none">
               <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
               <ol className="mt-3 space-y-2.5 text-sm">

@@ -23,7 +23,7 @@ export default async function LearnHub({ params }: { params: Params }) {
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6">
         <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">🌱 {L.hubTitle}</h1>
         <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{L.hubSub}</p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LEARN_IDS.map((id, i) => (
             <Link key={id} href={`/${lang}/learn/${id}`} className={`card group flex flex-col p-6 ${i === 0 ? "ring-1 ring-lime/40" : ""}`}>
               <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-2xl">{LEARN_ICON[id]}</span>

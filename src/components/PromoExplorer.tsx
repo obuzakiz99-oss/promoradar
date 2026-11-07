@@ -288,7 +288,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       )}
       {list.length ? (
         <>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i % PAGE} fresh={!!since && p.publishedAt > since} />)}
           </div>
           {list.length > limit && (

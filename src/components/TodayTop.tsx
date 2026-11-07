@@ -32,7 +32,7 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
     <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6">
       <h2 className="font-display text-2xl font-semibold tracking-tight">{T.title}</h2>
       <p className="mt-1 text-sm text-ink-3">{T.sub}</p>
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
         {cards.map(([label, p, tone]) => {
           const href = withBase(`/${lang}/p/${slugOf(p!)}/`);
           const pu = p!.meta?.perUser;

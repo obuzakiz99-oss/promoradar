@@ -11,7 +11,7 @@ export function Hero({ t, active, poolsUsd, sources, radar, radarVenues, venueBa
   learn?: { href: string; label: string }; live?: { at: number; newDay: number; lang: Locale };
 }) {
   return (
-    <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-10 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-14">
+    <section className="relative mx-auto grid grid-cols-1 max-w-7xl items-center gap-12 px-4 pb-10 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-14">
       <div className="animate-fade-up">
         <span className="inline-flex items-center gap-2 rounded-full border border-lime/25 bg-lime/[0.06] px-3 py-1.5 text-xs font-bold text-lime">
           <span className="relative flex size-2">

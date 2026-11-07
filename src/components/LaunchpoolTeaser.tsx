@@ -14,7 +14,7 @@ export function LaunchpoolTeaser({ t, lang, data }: { t: Dict; lang: Locale; dat
     <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
       <Link
         href={`/${lang}/launchpools`}
-        className="card group relative grid gap-6 overflow-hidden p-6 sm:p-8 lg:grid-cols-[1fr_1.2fr] lg:items-center"
+        className="card group relative grid grid-cols-1 gap-6 overflow-hidden p-6 sm:p-8 lg:grid-cols-[1fr_1.2fr] lg:items-center"
         style={{ background: "radial-gradient(40rem 20rem at 0% 0%, rgb(200 255 61 / 0.10), transparent 60%), var(--color-surface)" }}
       >
         <div>

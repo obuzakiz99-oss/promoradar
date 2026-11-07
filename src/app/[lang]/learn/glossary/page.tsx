@@ -23,7 +23,7 @@ export default async function LearnGlossary({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-4xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="glossary" title={G.title} sub={G.sub} />
-        <dl className="mt-8 grid gap-3 sm:grid-cols-2">
+        <dl className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {terms.map(([k, [name, def]]) => (
             <div key={k} id={k} className="card scroll-mt-20 p-5 hover:transform-none">
               <dt className="font-display text-lg font-semibold">{name}</dt>

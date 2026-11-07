@@ -47,7 +47,7 @@ export default async function Bonuses({ params }: { params: Params }) {
               const cfg = VENUES[id];
               const v = list[0].venue;
               return (
-                <section key={id} className="card grid gap-4 p-5 hover:transform-none lg:grid-cols-[1fr_1.6fr_auto] lg:items-start" style={{ ["--tint" as string]: v.color }}>
+                <section key={id} className="card grid grid-cols-1 gap-4 p-5 hover:transform-none lg:grid-cols-[1fr_1.6fr_auto] lg:items-start" style={{ ["--tint" as string]: v.color }}>
                   <div className="flex items-center gap-3">
                     <VenueLogo v={v} size={44} />
                     <div>
