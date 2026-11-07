@@ -43,7 +43,7 @@ for (const [h, page, why] of missing.slice(0, 40)) console.log(`  ✕ ${h}  (${w
 const SITES = { binance: "binance.com", bybit: "bybit.com", okx: "okx.com", bitget: "bitget.com", kucoin: "kucoin.com", gate: "gate.com", mexc: "mexc.com",
   htx: "htx.com", bingx: "bingx.com", xt: "xt.com", bitunix: "bitunix.com", weex: "weex.com", whitebit: "whitebit.com", coinex: "coinex.com", bitrue: "bitrue.com",
   kraken: "kraken.com", lbank: "lbank.com", phemex: "phemex.com", bitmart: "bitmart.com", hyperliquid: "hyperliquid", lighter: "lighter", aster: "aster",
-  pancakeswap: "pancakeswap", raydium: "raydium", gmx: "gmx", meteora: "meteora", bluefin: "bluefin", edgex: "edgex", aerodrome: "aerodrome", pendle: "pendle", pumpfun: "pump.fun", ondoperps: "ondoperps" };
+  pancakeswap: "pancakeswap", raydium: "raydium", gmx: "gmx", meteora: "meteora", bluefin: "bluefin", edgex: "edgex", aerodrome: "aerodrome", pendle: "pendle", pumpfun: "pump.fun", ondoperps: "ondoperps", cryptocom: "crypto.com", gemini: "gemini.com" };
 const OK_HOSTS = ["t.me", "medium.com", "defillama.com", "airdrops.io", "x.com", "twitter.com", "zendesk.com"];   // zendesk = exchanges' own help centres
 let promos = [];
 try { promos = JSON.parse(fs.readFileSync(path.join(OUT, "api", "promos"), "utf8")).promos; } catch { console.log("(no out/api/promos)"); }
