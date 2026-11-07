@@ -126,6 +126,22 @@ export const MANUAL: Array<{
     ],
     checked: "2026-11-06",
   },
+  {
+    // official: x.com/Pumpfun/status/2111167411647099077 (16.10.2026) + the in-app referral terms; no end date announced
+    id: "pumpfun:referral-50-match", venue: "pumpfun", category: "referral",
+    title: "Pump.fun app referral: your friend's first purchase matched up to $50 — for both of you",
+    url: "https://x.com/Pumpfun/status/2111167411647099077", from: "2026-10-16T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",
+    perUser: { amount: 50, unit: "USD" },
+    rules: [
+      "Invite a friend to the Pump.fun app with your referral link or code.",
+      "The friend makes a first fiat purchase (deposit) in the app — the reward equals that first purchase, up to $50, for the friend and for you.",
+      "The reward is paid in installments only if the friend trades on 5 separate days within 10 days after the deposit is confirmed: 1/6 on each of the first four trading days and 2/6 on the fifth.",
+      "If the friend does not reach 5 trading days within the 10-day window, the remaining installments are forfeited.",
+      "Referred users also get about 10% lower trading fees. Referrers earn a share of their friends' fees (the temporary 4x referrer boost ended on November 2, 2026; referrers now get 1.5x — 37.5% of referred users' fees).",
+      "Installments are credited after review. Pump.fun has not announced an end date — check the in-app Rewards section before inviting.",
+    ],
+    checked: "2026-11-07",
+  },
 ];
 
 export const PRO = {

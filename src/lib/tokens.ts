@@ -84,5 +84,20 @@ export async function getTokens(lang?: string): Promise<{ tokens: Map<string, To
   const [{ promos, fetchedAt }, pools, earn, pr] = await Promise.all([
     getPromos(lang), getPools().catch(() => null), getEarn().catch(() => null), prices().catch(() => ({ px: {}, chg: {} })),
   ]);
-  return { tokens: buildTokens(promos, pools?.projects ?? [], earn?.offers ?? [], pr.px, pr.chg, fetchedAt), fetchedAt };
+  const tokens = buildTokens(promos, pools?.projects ?? [], earn?.offers ?? [], pr.px, pr.chg, fetchedAt);
+  // every build worker and language must agree on WHICH token pages exist (Earn/pool data can differ a little between
+  // workers) — the first set computed in a build is stored and reused, like the promo list
+  const keys = await buildKeys([...tokens.keys()]);
+  const out = new Map<string, TokenInfo>();
+  for (const k of keys) out.set(k, tokens.get(k) ?? { sym: k, promos: [], lpReward: [], lpStake: [], earn: [], logo: `https://bin.bnbstatic.com/static/assets/logos/${k}.png` });
+  return { tokens: out, fetchedAt };
+}
+
+async function buildKeys(fresh: string[]): Promise<string[]> {
+  if (process.env.GITHUB_PAGES !== "1") return fresh;
+  const fs = await import("node:fs"), path = await import("node:path");
+  const file = path.join(process.cwd(), ".next", "cache", "tokens-build.json");
+  try { const st = fs.statSync(file); if (Date.now() - st.mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")); } catch { /* first call */ }
+  try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only */ }
+  return fresh;
 }
