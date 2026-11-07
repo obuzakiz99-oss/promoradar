@@ -198,7 +198,9 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
       if (!(amount >= 1) || amount > 1e7) continue;
       const clause = line.slice(Math.max(0, m.index! - 70), m.index! + m[0].length + 40).split(/[.;]/).find((c) => c.includes(m[0])) ?? line;
       if (/\b(reward|prize|bonus|voucher|airdrop|pool|cap(ped)?|up to|max(imum)? (reward|payout))\b/i.test(clause.slice(0, clause.indexOf(m[0]))) && !/\b(volume|deposit|trade|stake|hold)\b/i.test(clause)) continue;
-      const kind = KIND_RE.find(([, re]) => re.test(clause))?.[0];
+      // the word right before the amount decides the kind ("net deposit of at least 1,000 USDT, plus … trading volume")
+      const near = line.slice(Math.max(0, m.index! - 40), m.index!);
+      const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
       if (!kind) continue;
       if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line.length > 220 ? `${line.slice(0, 217).replace(/\s+\S*$/, "")}…` : line };
     }
