@@ -46,7 +46,7 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
                 <span className="text-sm font-bold">{p!.venue.name}</span>
                 {hours !== undefined && <span className={`ml-auto font-mono text-[11px] font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>⏳ {T.left(hours)}</span>}
               </div>
-              <h3 className="mt-2 line-clamp-2 text-[0.98rem] font-bold leading-snug">
+              <h3 className="mt-2 text-[0.98rem] font-bold leading-snug">
                 <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem]">{p!.title}</a>
               </h3>
               <div className={`mt-3 font-display text-3xl font-semibold ${tone}`}>{main}</div>

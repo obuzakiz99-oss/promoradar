@@ -82,7 +82,7 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
         })}
       </div>
 
-      <div className="mx-auto mt-4 h-[12.5rem] max-w-[400px]">
+      <div className="mx-auto mt-4 min-h-[12.5rem] max-w-[400px]">
         {!cur ? (
           <p className="pt-6 text-center text-sm text-ink-3">{labels.hint}</p>
         ) : (
@@ -97,7 +97,7 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
               {top.map((it) => (
                 <li key={it.id}>
                   <a href={it.href} className="flex items-baseline gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-white/[0.04]">
-                    <span className="line-clamp-1 flex-1 text-ink-2">{it.title}</span>
+                    <span className="flex-1 break-words text-ink-2">{it.title}</span>
                     {it.usd ? <span className="shrink-0 font-mono text-xs font-bold text-lime">{usdFmt(it.usd)}</span> : it.label ? <span className="shrink-0 font-mono text-xs font-bold text-lime">{it.label}</span> : null}
                   </a>
                 </li>

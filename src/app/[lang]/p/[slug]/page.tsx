@@ -276,7 +276,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
                 <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
                 <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString("en-US")}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
-                <div className="mt-1 line-clamp-2 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
+                <div className="mt-1 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
               </div>
             )}
           </div>

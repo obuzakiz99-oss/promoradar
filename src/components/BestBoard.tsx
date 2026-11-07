@@ -44,7 +44,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
   const Row = ({ v, title, sub, right, rightSub, href }: { v: Venue; title: string; sub: string; right: string; rightSub?: string; href: string }) => (
     <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" className="card grid grid-cols-[auto_1fr_auto] items-center gap-4 p-4" style={{ ["--tint" as string]: v.color }}>
       <VenueLogo v={v} size={40} />
-      <div className="min-w-0"><div className="truncate font-bold">{title}</div><div className="truncate text-xs font-semibold text-ink-3">{sub}</div></div>
+      <div className="min-w-0"><div className="break-words font-bold">{title}</div><div className="break-words text-xs font-semibold text-ink-3">{sub}</div></div>
       <div className="text-right"><div className="font-mono text-xl font-bold text-ink">{right}</div>{rightSub && <div className="font-mono text-[11px] font-bold text-lime">{rightSub}</div>}</div>
     </a>
   );

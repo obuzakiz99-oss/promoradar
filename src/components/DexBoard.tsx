@@ -111,7 +111,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                         {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-[10px] text-teal">{A.stableTag}</span>}
                         {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-[10px] text-amber">{A.il}</span>}
                       </div>
-                      <div className="truncate text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${p.meta}` : ""}</div>
+                      <div className="break-words text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${p.meta}` : ""}</div>
                     </div>
                   </div>
                 </td>

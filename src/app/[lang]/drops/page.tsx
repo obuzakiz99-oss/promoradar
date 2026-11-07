@@ -79,7 +79,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                             <VenueLogo v={p.venue} size={32} rounded="rounded-lg" />
                             <span className="min-w-0 flex-1">
                               <span className="block text-xs font-bold text-ink-3">{p.venue.name}</span>
-                              <span className="block truncate text-sm font-semibold">{p.title}</span>
+                              <span className="block break-words text-sm font-semibold">{p.title}</span>
                             </span>
                             {p.reward?.label && <span className="shrink-0 font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
                           </a>
@@ -115,7 +115,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                   <tbody className="divide-y divide-line">
                     {pm.rows.slice(0, 15).map((r) => (
                       <tr key={r.slug} className="hover:bg-white/[0.02]">
-                        <td className="px-4 py-2.5"><a href={`https://polymarket.com/market/${r.slug}`} target="_blank" rel="noopener" className="line-clamp-1 font-semibold hover:text-lime">{r.question}</a></td>
+                        <td className="px-4 py-2.5"><a href={`https://polymarket.com/market/${r.slug}`} target="_blank" rel="noopener" className="font-semibold hover:text-lime">{r.question}</a></td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold text-lime">${r.daily.toLocaleString("en-US", { maximumFractionDigits: 0 })}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.maxSpread !== undefined ? `±${r.maxSpread}¢` : "—"}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.minSize ?? "—"}</td>

@@ -119,7 +119,7 @@ export default async function Launchpools({ params }: { params: Params }) {
                 {quiet.map((id) => {
                   const s = stats.find((x) => x.id === id)!;
                   return (
-                    <a key={id} href={projects.find((p) => p.exchange === id)?.url} target="_blank" rel="noopener" className="flex h-11 items-center gap-2.5 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3.5 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
+                    <a key={id} href={withBase(`/${lang}/v/${id}/`)} className="flex h-11 items-center gap-2.5 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3.5 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
                       <VenueLogo v={exchanges[id]} size={30} rounded="rounded-lg" />
                       {exchanges[id].name}
                       {s.last ? <span className="font-mono text-[11px] font-medium text-ink-3">{L.lastAgo}: {shortDate(s.last, lang)}</span> : null}
@@ -142,7 +142,7 @@ export default async function Launchpools({ params }: { params: Params }) {
                   <VenueLogo v={p.venue} size={34} rounded="rounded-lg" />
                   <span className="min-w-0">
                     <span className="block text-xs font-bold text-ink-3">{p.venue.name}{p.publishedAt ? ` · ${shortDate(p.publishedAt, lang)}` : ""}</span>
-                    <span className="mt-0.5 line-clamp-2 block text-sm font-semibold leading-snug">{p.title}</span>
+                    <span className="mt-0.5 block break-words text-sm font-semibold leading-snug">{p.title}</span>
                     {p.reward?.label && <span className="mt-1 block font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
                   </span>
                 </a>

@@ -71,7 +71,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
               <div className="flex min-w-0 items-center gap-3">
                 {p && <VenueLogo v={p.venue} size={34} />}
                 <div className="min-w-0">
-                  {p ? <a href={p.href} className="line-clamp-2 text-sm font-bold hover:text-lime">{p.title}</a> : <span className="text-sm font-bold text-ink-3">{tr.title ?? id}</span>}
+                  {p ? <a href={p.href} className="break-words text-sm font-bold hover:text-lime">{p.title}</a> : <span className="text-sm font-bold text-ink-3">{tr.title ?? id}</span>}
                   <div className="mt-0.5 text-xs font-semibold text-ink-3">
                     {p ? p.venue.name : `${tr.venue ?? ""} · ${T.gone}`}
                     {left !== undefined && left > 0 && <span className={soon ? " text-amber" : ""}> · {t.card.endsIn} {duration(left, t.time)}{soon ? ` · ${T.deadlineSoon}` : ""}</span>}

@@ -5,6 +5,7 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getTokens, isStableSym } from "@/lib/tokens";
 import { venueOf } from "@/config/site";
 import { duration } from "@/lib/format";
+import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
@@ -101,7 +102,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         <Section title={T.lpReward(sym)} n={tk.lpReward.length}>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {tk.lpReward.map((p) => (
-              <a key={p.id} href={p.url} target="_blank" rel="noopener" className="card flex items-center gap-3 p-4">
+              <a key={p.id} href={withBase(`/${lang}/launchpools/#lp-${p.id}-${p.pools[0]?.stake}`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{venueOf(p.exchange).name} · {p.name}</div>
@@ -118,7 +119,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         <Section title={T.lpStake(sym)} n={tk.lpStake.length}>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {tk.lpStake.sort((a, b) => (b.pool.apr ?? 0) - (a.pool.apr ?? 0)).map(({ project: p, pool }) => (
-              <a key={`${p.id}:${pool.stake}`} href={p.url} target="_blank" rel="noopener" className="card flex items-center gap-3 p-4">
+              <a key={`${p.id}:${pool.stake}`} href={withBase(`/${lang}/launchpools/#lp-${p.id}-${pool.stake}`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>

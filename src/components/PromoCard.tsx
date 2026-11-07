@@ -37,7 +37,7 @@ function ReqIcon({ k }: { k: string }) {
 }
 
 const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
-const RULES: Record<Locale, string> = { uk: "Умови", en: "Rules", ru: "Условия" };
+const MORE: Record<Locale, string> = { uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
 const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 1 людину`, en: (v) => `up to ${v} per person`, ru: (v) => `до ${v} на 1 человека` };
 const GEO_ONLY: Record<Locale, (r: string) => string> = {
   uk: (r) => (r === "region" ? "Лише для окремих регіонів" : `Лише ${r}`), en: (r) => (r === "region" ? "Selected regions only" : `${r} only`), ru: (r) => (r === "region" ? "Только для отдельных регионов" : `Только ${r}`),
@@ -52,7 +52,6 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
   const cs = CAT_STYLE[p.category];
   const isNew = p.publishedAt > 0 && now - p.publishedAt < 48 * 3600_000;
   // "Join" goes straight to this promo's own page on the exchange (a farm pool's own page for farming)
-  const joinUrl = p.category === "farming" ? p.joinUrl || p.url : p.url;
   const left = p.endsAt ? p.endsAt - now : undefined;
   const urgent = left !== undefined && left < 3 * 86400_000;
   const notStarted = p.startsAt && p.startsAt > now;
@@ -73,7 +72,7 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
         <VenueLogo v={p.venue} />
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-sm font-bold">{p.venue.name}</span>
+            <span className="text-sm font-bold">{p.venue.name}</span>
             <span className="rounded border border-line px-1 py-px font-mono text-[9px] font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
           </div>
           <div className={`mt-0.5 inline-flex items-center gap-1.5 text-xs font-semibold ${cs.text}`}>
@@ -98,7 +97,7 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
       {/* body */}
       {isFarm ? (
         <div className="mt-4">
-          <h3 className="line-clamp-2 font-mono text-[0.98rem] font-bold leading-snug text-ink">
+          <h3 className="break-words font-mono text-[0.98rem] font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">{p.title}</a>
           </h3>
           <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold text-ink-3">
@@ -108,13 +107,13 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
         </div>
       ) : (
         <>
-          <h3 className="mt-4 line-clamp-3 text-[1.02rem] font-bold leading-snug text-ink">
+          <h3 className="mt-4 break-words text-[1.02rem] font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">
               {isDrop ? `${p.title} — Airdrop` : p.title}
             </a>
           </h3>
           {isDrop && m.actions && (
-            <p className="mt-2 line-clamp-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
+            <p className="mt-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}
         </>
       )}
@@ -186,12 +185,12 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
           </div>
         </div>
 
-        <div className="relative z-10 mt-4 grid grid-cols-[1fr_auto] gap-2">
-          <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary">
-            {isFarm ? t.card.open : t.card.join}
+        {/* 07.11 user: every link first leads to the short explanation page; the exchange link lives there */}
+        <div className="relative z-10 mt-4 grid">
+          <a href={href} className="btn btn-primary">
+            {MORE[lang]}
             <Arrow className="size-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href={href} className="btn btn-ghost px-3.5">{RULES[lang]}</a>
         </div>
         {m.source && (
           <div className="mt-3 text-[11px] font-medium text-ink-3">

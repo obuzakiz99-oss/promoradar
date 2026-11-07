@@ -194,7 +194,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           return (
             <article
               key={`${p.id}:${pool.stake}`}
-              className={`card grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
+              id={`lp-${p.id}-${pool.stake}`}
+              className={`card scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
               style={{ ["--tint" as string]: ex?.color, animationDelay: `${Math.min(i, 10) * 30}ms` }}
             >
               {/* project */}
@@ -205,7 +206,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="truncate font-bold">{p.name}</span>
+                    <span className="break-words font-bold">{p.name}</span>
                     {r.chgReward !== undefined && (
                       <span className={`rounded-md px-1.5 py-0.5 font-mono text-[10px] font-bold ${chgClass(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
                         {p.token} {fmtChg(r.chgReward)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>

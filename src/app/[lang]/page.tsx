@@ -38,8 +38,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
         <TodayTop promos={promos} lang={lang} now={fetchedAt} siteUrl={`https://${SITE.domain}`} />
-        <Ticker promos={promos} t={t} />
-        <TopPools promos={promos} t={t} />
+        <Ticker promos={promos} t={t} lang={lang} />
+        <TopPools promos={promos} t={t} lang={lang} />
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}
         <section id="promos" className="mx-auto max-w-7xl scroll-mt-16 px-4 pt-10 sm:px-6">
           <PromoExplorer promos={firstCards} t={t} lang={lang} serverNow={fetchedAt} src={withBase("/api/promos.json")} />

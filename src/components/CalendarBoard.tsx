@@ -54,7 +54,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                   <span suppressHydrationWarning className="w-14 shrink-0 font-mono text-sm font-bold text-ink-2">{new Date(e.at).toLocaleTimeString(locTag(lang), { hour: "2-digit", minute: "2-digit" })}</span>
                   <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${e.kind === "start" ? "bg-sky/15 text-sky" : "bg-amber/15 text-amber"}`}>{label}</span>
                   <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
-                  <a href={e.href} className="min-w-0 flex-1 truncate text-sm font-semibold hover:text-lime">{e.venue.name}: {e.title}</a>
+                  <a href={e.href} className="min-w-0 flex-1 break-words text-sm font-semibold hover:text-lime">{e.venue.name}: {e.title}</a>
                   <div className="flex shrink-0 gap-1.5">
                     <a href={gcal(e, label)} target="_blank" rel="noopener" className="btn btn-ghost h-8 px-2.5 text-xs">+ {T.addGoogle}</a>
                     <button type="button" onClick={() => downloadIcs(e, label)} className="btn btn-ghost h-8 px-2.5 text-xs">{T.addIcs}</button>

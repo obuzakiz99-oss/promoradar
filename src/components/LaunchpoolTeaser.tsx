@@ -28,7 +28,7 @@ export function LaunchpoolTeaser({ t, lang, data }: { t: Dict; lang: Locale; dat
             <div key={`${p.id}${x.stake}`} className="flex items-center gap-3 rounded-2xl border border-line bg-bg/40 px-4 py-3">
               <VenueLogo v={venueOf(p.exchange)} size={30} rounded="rounded-lg" />
               <div className="min-w-0 flex-1">
-                <div className="truncate text-sm font-bold">{p.name}</div>
+                <div className="break-words text-sm font-bold">{p.name}</div>
                 <div className="text-xs text-ink-3">{t.lp.stake} {x.stake} → {p.token}</div>
               </div>
               <div className="font-mono text-lg font-bold text-lime">{x.apr! >= 100 ? Math.round(x.apr!) : x.apr!.toFixed(1)}%</div>
