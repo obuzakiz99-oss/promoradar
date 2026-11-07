@@ -48,6 +48,7 @@ export const DEX: Record<string, V> = {
   hyperliquid: dex("hyperliquid", "Hyperliquid", "dex",  "#97FCE4", "#04140F", "HL", "hyperliquid",  "https://app.hyperliquid.xyz"),
   lighter:     dex("lighter",     "Lighter",     "dex",  "#E8ECF1", "#0B0D10", "Li", "lighter",      "https://app.lighter.xyz"),
   pumpfun:     dex("pumpfun",     "Pump.fun",    "dex",  "#86EFAC", "#05140A", "Pf", "pump.fun",     "https://pump.fun"),
+  ondoperps:   dex("ondoperps",   "Ondo Perps",  "dex",  "#3B82F6", "#FFFFFF", "On", "ondo-finance", "https://app.ondoperps.xyz"),
   aster:       dex("aster",       "Aster",       "dex",  "#F2C67C", "#15110A", "As", "aster",        "https://www.asterdex.com"),
   pancakeswap: dex("pancakeswap", "PancakeSwap", "dex",  "#1FC7D4", "#04141A", "Ca", "pancakeswap",  "https://pancakeswap.finance"),
   raydium:     dex("raydium",     "Raydium",     "dex",  "#C200FB", "#FFFFFF", "Ra", "raydium",      "https://raydium.io"),

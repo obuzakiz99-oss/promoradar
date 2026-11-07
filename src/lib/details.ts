@@ -447,7 +447,7 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
   if (v === "lighter") { const d = (await lighterMap()).get(p.id); return d ? { html: d, partial: true } : null; }
   const fromFeed = (await feeds()).get(p.url.split("?")[0]);
   if (fromFeed) return { html: fromFeed };
-  if (["kucoin", "bitget", "gate"].includes(v)) { const h = await fromUrl(p.url); return h ? { html: h } : null; }
+  if (["kucoin", "bitget", "gate", "ondoperps"].includes(v)) { const h = await fromUrl(p.url); return h ? { html: h } : null; }
   return null;
 }
 

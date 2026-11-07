@@ -54,6 +54,31 @@ export async function lighter(): Promise<Promo[]> {
     });
 }
 
+/* ---------- Ondo Perps: official announcements page (campaigns carry exact start/end) ---------- */
+export async function ondoPerps(): Promise<Promo[]> {
+  const html = await getText("https://app.ondoperps.xyz/announcements", 15_000);
+  const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) throw new Error("ondoperps: page data not found");
+  const list: Array<{ slug: string; title: string; previewText?: string | null; announcementType?: string; publishedAt?: string; campaignStartsAt?: string | null; campaignEndsAt?: string | null }> =
+    JSON.parse(m[1])?.props?.pageProps?.announcements ?? [];
+  const now = Date.now();
+  const venue = venueOf("ondoperps");
+  return list
+    .filter((a) => a.announcementType === "campaigns" && /reward|referral|boost|points|rebate|bonus|earn|win|prize|\$\d/i.test(a.title) && !/now show|transfers$/i.test(a.title))
+    .map((a) => {
+      const start = a.campaignStartsAt ? Date.parse(a.campaignStartsAt) : undefined;
+      const end = a.campaignEndsAt ? Date.parse(a.campaignEndsAt) : undefined;
+      const title = cleanTitle(a.title);
+      return {
+        id: `ondoperps:${a.slug}`, venue, title, url: `https://app.ondoperps.xyz/announcements/${a.slug}`,
+        joinUrl: DEX.ondoperps.refUrl || undefined, category: classify(`${title} ${a.previewText ?? ""}`),
+        publishedAt: Date.parse(a.publishedAt ?? "") || now, startsAt: start, endsAt: end,
+        reward: parseReward(title), tags: [], meta: { source: "Ondo Perps · announcements" },
+      } satisfies Promo;
+    })
+    .filter((p) => (p.endsAt ? p.endsAt > now : now - p.publishedAt < 30 * 86400_000));
+}
+
 /* ---------- DefiLlama: pools that pay incentive rewards (liquidity mining / lending incentives) ---------- */
 const FARM_CATEGORIES = new Set(["Dexs", "Lending", "Yield", "Derivatives", "Liquid Staking", "CDP", "Yield Aggregator", "Liquidity manager", "Restaking", "Basis Trading", "RWA"]);
 

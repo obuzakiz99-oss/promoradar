@@ -3,7 +3,7 @@ import type { PromoDetails } from "../details";
 import { classify, cleanTitle, isPromo, parseReward } from "../parse";
 import { CEX, DEX, DEX_FEEDS, SITE, TELEGRAM, VENUES, venueOf } from "@/config/site";
 import { CEX_SOURCES, type Raw } from "./cex";
-import { airdrops, dexBlogs, farming, lighter } from "./defi";
+import { airdrops, dexBlogs, farming, lighter, ondoPerps } from "./defi";
 import { telegram } from "./telegram";
 
 export type SourceStatus = { ok: boolean; count: number; error?: string; name: string; kind: string; via: string };
@@ -48,13 +48,14 @@ export async function collectAll(): Promise<Collected> {
   const settle = <T,>(pr: Promise<T>) => pr.then((v) => ({ ok: true as const, v }), (e) => ({ ok: false as const, e }));
 
   const cexIds = Object.keys(CEX_SOURCES);
-  const [cexRes, dex, farm, drops, lit, tg] = await Promise.all([
+  const [cexRes, dex, farm, drops, lit, tg, ondo] = await Promise.all([
     Promise.allSettled(cexIds.map((id) => CEX_SOURCES[id]!())),
     dexBlogs(),
     settle(farming()),
     settle(airdrops()),
     settle(lighter()),
     telegram(),
+    settle(ondoPerps()),
   ]);
 
   // 1) direct exchange APIs (most precise: dates, ids) go first so they win de-duplication
@@ -67,6 +68,7 @@ export async function collectAll(): Promise<Collected> {
   });
   // 2) official APIs of DEXes
   status["api:lighter"] = { ok: lit.ok, count: lit.ok ? lit.v.filter(keep).length : 0, error: lit.ok ? undefined : String(lit.e).slice(0, 160), name: "Lighter", kind: "dex", via: "API" };
+  status["web:ondoperps"] = { ok: ondo.ok, count: ondo.ok ? ondo.v.filter(keep).length : 0, error: ondo.ok ? undefined : String(ondo.e).slice(0, 160), name: "Ondo Perps", kind: "dex", via: "Web" };
   // 3) official Telegram channels
   for (const c of TELEGRAM) {
     const key = `tg:${c.channel}`;

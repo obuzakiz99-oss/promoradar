@@ -118,6 +118,9 @@ async function getPromosLive(): Promise<Collected> {
       p.meta = meta;
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
+    // closed early: exchanges put an "UPDATE: this campaign has ended early" line at the top of the rules
+    const ENDED = /\b(has ended( early)?|ended early|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
+    if (d && d.blocks.slice(0, 8).some((b) => b.x.split(/(?<=[.!])\s+/).some((s) => ENDED.test(s) && !/\b(will|if|once|after)\b/i.test(s)))) continue;
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
     const geo = geoOf(p.title, d);
