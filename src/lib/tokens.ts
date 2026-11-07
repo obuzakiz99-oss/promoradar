@@ -1,3 +1,4 @@
+import { buildShared } from "./sources/util";
 import type { Promo } from "./types";
 import type { PoolProject, Pool } from "./pools";
 import type { EarnOffer } from "./earn";
@@ -93,11 +94,6 @@ export async function getTokens(lang?: string): Promise<{ tokens: Map<string, To
   return { tokens: out, fetchedAt };
 }
 
-async function buildKeys(fresh: string[]): Promise<string[]> {
-  if (process.env.GITHUB_PAGES !== "1") return fresh;
-  const fs = await import("node:fs"), path = await import("node:path");
-  const file = path.join(process.cwd(), ".next", "cache", "tokens-build.json");
-  try { const st = fs.statSync(file); if (Date.now() - st.mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")); } catch { /* first call */ }
-  try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only */ }
-  return fresh;
+function buildKeys(fresh: string[]): Promise<string[]> {
+  return buildShared("tokens", async () => fresh);
 }

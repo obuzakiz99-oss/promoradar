@@ -130,7 +130,7 @@ export function factsOf(blocks: Block[]): Fact[] {
   for (const b of blocks) {
     if (b.x.length < 25 || b.t === "tr") continue;                       // "Join Now" buttons, table rows
     if (b.t === "h" && !FACT_RE[0][1].test(b.x)) continue;                // headings only count as a period line
-    const text = b.x.length > 260 ? `${b.x.slice(0, 257).replace(/\s+\S*$/, "")}…` : b.x;
+    const text = b.x;   // full line — never cut (user: text must be readable to the end)
     for (const [k, re] of FACT_RE) {
       if ((count[k] ?? 0) >= 2 || !re.test(b.x)) continue;
       if (out.some((f) => f.text === text)) continue;
@@ -214,7 +214,7 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
       const near = line.slice(Math.max(0, m.index! - 40), m.index!);
       const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
       if (!kind) continue;
-      if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line.length > 220 ? `${line.slice(0, 217).replace(/\s+\S*$/, "")}…` : line };
+      if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line };
     }
   }
   return best;
@@ -258,7 +258,7 @@ function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
       // headline style "earn up to 600%" / "earn 10 USDT APR…" isn't a per-person amount
       if (re === PER_USER[3] && /^\s*(%|apr|apy)/i.test(line.slice(m.index! + m[0].length, m.index! + m[0].length + 8))) continue;
       amount = Math.round(amount * 100) / 100;
-      return { amount, unit, text: line.length > 220 ? `${line.slice(0, 217).replace(/\s+\S*$/, "")}…` : line };
+      return { amount, unit, text: line };
     }
   }
   return undefined;
@@ -398,7 +398,6 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
     if (/\bUkraine\b/i.test(x)) { g.noUA = true; g.text ??= b.x; }
     if (/\b(EEA|European Economic Area|European Union|EU member states?|EU (users|residents)|users (in|from) (the )?(EU|Europe))\b/i.test(x)) { g.noEU = true; g.text ??= b.x; }
   }
-  if (g.text && g.text.length > 260) g.text = `${g.text.slice(0, 257).replace(/\s+\S*$/, "")}…`;
   return g;
 }
 
@@ -503,6 +502,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   for (const [id, d] of Object.entries(store)) if (!live.has(id) && now - d.at > KEEP_MS) delete store[id];
   try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
   const out: Record<string, PromoDetails> = {};
-  for (const p of promos) if (store[p.id]) out[p.id] = store[p.id];
+  // facts are re-derived from the stored text so parser changes apply without re-fetching
+  for (const p of promos) if (store[p.id]) out[p.id] = { ...store[p.id], facts: factsOf(store[p.id].blocks) };
   return out;
 }

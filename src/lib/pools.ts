@@ -1,4 +1,4 @@
-import { cached, getBigJson, getJson, getText } from "./sources/util";
+import { buildShared, cached, getBigJson, getJson, getText } from "./sources/util";
 
 /** One staking pool inside a Launchpool project (stake X → earn Y). */
 export interface Pool {
@@ -262,16 +262,8 @@ export const lpPaged = (d: PoolsData) => d.projects.filter((p) => p.status !== "
  * In the static GitHub build every page and worker must see the SAME pool list (the board links to /lp/<slug>/ pages
  * generated from it), so the first collection of a build is kept in .next/cache/pools-build.json for 20 minutes.
  */
-export async function getPools(): Promise<PoolsData> {
-  if (process.env.GITHUB_PAGES !== "1") return getPoolsLive();
-  const fs = await import("node:fs"), path = await import("node:path");
-  const file = path.join(process.cwd(), ".next", "cache", "pools-build.json");
-  try {
-    if (Date.now() - fs.statSync(file).mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")) as PoolsData;
-  } catch { /* first call of this build */ }
-  const fresh = await getPoolsLive();
-  try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only fs */ }
-  return fresh;
+export function getPools(): Promise<PoolsData> {
+  return buildShared("pools", getPoolsLive);
 }
 
 async function getPoolsLive(): Promise<PoolsData> {

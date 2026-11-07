@@ -39,6 +39,40 @@ export async function getText(url: string, timeout = 12_000): Promise<string> {
   return r.text();
 }
 
+/**
+ * One value per static build, shared by all Next worker processes: the first caller takes a lock file, computes and
+ * writes `.next/cache/<name>-build.json`; the others wait for that file instead of collecting their own (slightly
+ * different) copy — otherwise pages of one language link to promo pages another worker never built.
+ */
+export async function buildShared<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  if (process.env.GITHUB_PAGES !== "1") return fn();
+  const dir = path.join(process.cwd(), ".next", "cache");
+  const file = path.join(dir, `${name}-build.json`), lock = path.join(dir, `${name}-build.lock`);
+  const fresh = (f: string, ms: number) => { try { return Date.now() - fs.statSync(f).mtimeMs < ms; } catch { return false; } };
+  const read = (): T | undefined => { try { return fresh(file, 30 * 60_000) ? (JSON.parse(fs.readFileSync(file, "utf8")) as T) : undefined; } catch { return undefined; } };
+  const hit = read();
+  if (hit !== undefined) return hit;
+  try { fs.mkdirSync(dir, { recursive: true }); } catch { /* exists */ }
+  let mine = false;
+  try { if (!fresh(lock, 10 * 60_000)) { try { fs.unlinkSync(lock); } catch { /* none */ } } fs.writeFileSync(lock, String(process.pid), { flag: "wx" }); mine = true; } catch { /* someone else collects */ }
+  if (!mine) {
+    for (let i = 0; i < 600; i++) {           // up to 10 min
+      await new Promise((r) => setTimeout(r, 1000));
+      const v = read();
+      if (v !== undefined) return v;
+      if (!fs.existsSync(lock)) break;         // the collector died — collect ourselves
+    }
+    return fn();
+  }
+  try {
+    const v = await fn();
+    const tmp = `${file}.${process.pid}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(v));
+    fs.renameSync(tmp, file);
+    return v;
+  } finally { try { fs.unlinkSync(lock); } catch { /* gone */ } }
+}
+
 /** Big responses (> 2 MB can't go into Next's fetch cache): keep the processed result in memory. */
 const memo = new Map<string, { at: number; value: Promise<unknown> }>();
 export function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T> {

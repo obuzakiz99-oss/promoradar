@@ -1,3 +1,4 @@
+import { buildShared } from "./sources/util";
 import fs from "node:fs";
 import path from "node:path";
 import { collectAll, type Collected } from "./sources";
@@ -51,18 +52,8 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
   return { ...c, promos, details };
 }
 
-async function getPromosShared(): Promise<Collected> {
-  if (process.env.GITHUB_PAGES === "1") {
-    const file = path.join(process.cwd(), ".next", "cache", "promos-build.json");
-    try {
-      const st = fs.statSync(file);
-      if (Date.now() - st.mtimeMs < 20 * 60_000) return JSON.parse(fs.readFileSync(file, "utf8")) as Collected;
-    } catch { /* first call of this build */ }
-    const fresh = await getPromosLive();
-    try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(fresh)); } catch { /* read-only fs: fine */ }
-    return fresh;
-  }
-  return getPromosLive();
+function getPromosShared(): Promise<Collected> {
+  return buildShared("promos", getPromosLive);
 }
 
 async function getPromosLive(): Promise<Collected> {
