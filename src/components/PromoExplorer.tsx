@@ -37,6 +37,18 @@ const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
 const PAGE = 24;
 const VENUE_CHIPS = 9;
 
+/** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
+const SYN: Array<[RegExp, string[]]> = [
+  [/^(а[іий]рдроп|ейрдроп|аирдроп|airdrop)/, ["airdrop", "айрдроп", "аірдроп", "аирдроп", "роздач", "раздач"]],
+  [/^(розіграш|розыгрыш|giveaway|lucky)/, ["giveaway", "lucky draw", "розіграш", "розыгрыш", "лотере"]],
+  [/^(бонус|bonus)/, ["bonus", "бонус", "voucher", "ваучер"]],
+  [/^(стейк|staking|stake)/, ["stak", "стейк", "earn", "launchpool"]],
+  [/^(реферал|referral|запро|пригла)/, ["referral", "реферал", "invite", "запро", "пригла"]],
+  [/^(змаган|соревн|competition|турнір|турнир)/, ["competition", "tournament", "challenge", "змаган", "турнір", "челендж", "соревн"]],
+  [/^(лістинг|листинг|listing)/, ["listing", "лістинг", "листинг"]],
+  [/^(новач|новичк|new user)/, ["new user", "newcomer", "новач", "нових користувач", "новых пользоват"]],
+];
+
 /** Smallest known money needed: 0 for no-deposit promos, unknown last. */
 const entry = (p: Promo) => (p.meta?.noDeposit ? 0 : p.meta?.minEntry?.amount ?? Infinity);
 const value = (p: Promo) => p.reward?.usd ?? (p.meta?.apr !== undefined ? p.meta.apr * 100 : -1);
@@ -90,11 +102,17 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   }, []);
   const freshCount = useMemo(() => (since ? promos.filter((p) => p.publishedAt > since).length : 0), [promos, since]);
 
+  // tab counts follow the country / quick filters, so the numbers match the cards shown
+  const quickOk = (p: Promo) => (!quick.has("noDeposit") || !!p.meta?.noDeposit)
+    && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
+    && (!quick.has("forNew") || !!p.meta?.forNew);
   const kindCounts = useMemo(() => {
-    const c: Record<string, number> = { all: promos.length, saved: promos.filter((p) => saved.includes(p.id)).length };
-    promos.forEach((p) => (c[p.venue.kind] = (c[p.venue.kind] ?? 0) + 1));
+    const vis = promos.filter((p) => geoAllowed(p, country) && quickOk(p));
+    const c: Record<string, number> = { all: vis.length, saved: vis.filter((p) => saved.includes(p.id)).length };
+    vis.forEach((p) => (c[p.venue.kind] = (c[p.venue.kind] ?? 0) + 1));
     return c;
-  }, [promos, saved]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [promos, saved, country, quick]);
 
   const geoOk = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
   const geoHidden = promos.length - geoOk.length;
@@ -114,10 +132,14 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   const base = useMemo(() => {
     const s = q.trim().toLowerCase();
-    return byKind.filter((p) =>
-      (venues.size === 0 || venues.has(p.venue.id)) &&
-      (!s || `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase().includes(s)),
-    );
+    // the same word in Ukrainian / Russian / English spellings ("аірдроп" finds "айрдроп" and "airdrop")
+    const alts = s ? [s, ...SYN.filter(([re]) => re.test(s)).flatMap(([, words]) => words)] : [];
+    return byKind.filter((p) => {
+      if (venues.size && !venues.has(p.venue.id)) return false;
+      if (!s) return true;
+      const hay = `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.category} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase();
+      return alts.some((a) => hay.includes(a));
+    });
   }, [byKind, venues, q, t]);
 
   const counts = useMemo(() => {
