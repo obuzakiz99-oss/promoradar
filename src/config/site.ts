@@ -14,7 +14,7 @@ export const SITE = {
 const LOGO = (slug: string) => `https://icons.llamao.fi/icons/protocols/${slug}?w=64&h=64`;
 type V = Venue & { site: string; refUrl: string };
 const cex = (id: string, name: string, color: string, ink: string, monogram: string, logo: string | undefined, site: string): V =>
-  ({ id, name, kind: "cex", color, ink, monogram, logo: logo ? LOGO(logo) : undefined, site, refUrl: "" });
+  ({ id, name, kind: "cex", color, ink, monogram, logo: logo ? (logo.startsWith("http") ? logo : LOGO(logo)) : undefined, site, refUrl: "" });
 const dex = (id: string, name: string, kind: "dex" | "defi", color: string, ink: string, monogram: string, logo: string | undefined, site: string): V =>
   ({ id, name, kind, color, ink, monogram, logo: logo ? LOGO(logo) : undefined, site, refUrl: "" });
 
@@ -35,6 +35,20 @@ export const CEX: Record<string, V> = {
   bitunix:  cex("bitunix",  "Bitunix",  "#B9F641", "#0E1404", "Bu", "bitunix",     "https://www.bitunix.com"),
   weex:     cex("weex",     "WEEX",     "#E6E9EE", "#0B0D10", "W",  "weex",        "https://www.weex.com"),
   bitbase:  cex("bitbase",  "Bitbase",  "#3D7BFF", "#FFFFFF", "Bb", undefined,     "https://www.bitbase.com"),
+  // 08.11 "all exchanges": CoinGecko-listed (trust ≥ 6) with an honest official source; logos from CoinGecko
+  biconomy: cex("biconomy", "Biconomy.com", "#1E6BFF", "#FFFFFF", "Bi", "https://coin-images.coingecko.com/markets/images/633/small/logo_B._200x200.png?1723787144", "https://www.biconomy.com/en"),
+  hibt:     cex("hibt",     "Hibt",     "#F5B300", "#141005", "Hb", "https://coin-images.coingecko.com/markets/images/11765/small/1000125652.jpg?1732085736", "https://hibt.com"),
+  bitvavo:  cex("bitvavo",  "Bitvavo",  "#0051FF", "#FFFFFF", "Bv", "https://coin-images.coingecko.com/markets/images/714/small/bitvavo-mark-square-black.png?1706864670", "https://bitvavo.com/en"),
+  zoomex:   cex("zoomex",   "Zoomex",   "#FF7A00", "#140A00", "Zx", "https://coin-images.coingecko.com/markets/images/11948/small/zoomex.png?1747987100", "https://www.zoomex.com/en-US/"),
+  websea:   cex("websea",   "Websea",   "#14C08B", "#04140F", "Ws", "https://coin-images.coingecko.com/markets/images/1365/small/websea-logo-png.png?1706865385", "https://www.websea.com/en"),
+  toobit:   cex("toobit",   "Toobit",   "#F0B90B", "#141005", "Tb", "https://coin-images.coingecko.com/markets/images/1139/small/Toobit_logo400X400.png?1706865157", "https://www.toobit.com"),
+  coinstore: cex("coinstore", "Coinstore", "#FF3DA1", "#FFFFFF", "Cs", "https://coin-images.coingecko.com/markets/images/747/small/CS_New_Logo_Pink.png?1751613895", "https://www.coinstore.com"),
+  btse:     cex("btse",     "BTSE",     "#2F6BFF", "#FFFFFF", "BT", "https://coin-images.coingecko.com/markets/images/464/small/BTSE.jpg?1706864449", "https://www.btse.com"),
+  ourbit:   cex("ourbit",   "Ourbit",   "#00C2FF", "#04121A", "Ob", "https://coin-images.coingecko.com/markets/images/11731/small/logo_200_200_2.png?1755659673", "https://www.ourbit.com"),
+  kcex:     cex("kcex",     "KCEX",     "#00D395", "#04140F", "KC", "https://coin-images.coingecko.com/markets/images/11953/small/photo_2025-05-27_02-31-22.jpg?1748284326", "https://kcex.com"),
+  cexio:    cex("cexio",    "CEX.IO",   "#2CA8E0", "#FFFFFF", "CX", "https://coin-images.coingecko.com/markets/images/56/small/main-icon.png?1706864277", "https://cex.io"),
+  poloniex: cex("poloniex", "Poloniex", "#00A28A", "#FFFFFF", "Po", "https://coin-images.coingecko.com/markets/images/37/small/poloniex.png?1706864269", "https://poloniex.com"),
+  bitfinex: cex("bitfinex", "Bitfinex", "#16B157", "#FFFFFF", "Bf", "https://coin-images.coingecko.com/markets/images/4/small/BItfinex.png?1706864245", "https://www.bitfinex.com"),
   whitebit: cex("whitebit", "WhiteBIT", "#E9EDF2", "#0B0D10", "WB", "whitebit",    "https://whitebit.com"),
   coinex:   cex("coinex",   "CoinEx",   "#28C8B4", "#04140F", "CX", "coinex",      "https://www.coinex.com"),
   bitrue:   cex("bitrue",   "Bitrue",   "#F5B915", "#15120A", "Bt", "bitrue",      "https://www.bitrue.com"),
@@ -96,6 +110,14 @@ export const TELEGRAM: Array<{ venue: string; channel: string }> = [
   { venue: "gmx",         channel: "GMX_Announcements" },
   { venue: "lighter",     channel: "lighter_announcements" },
   { venue: "pendle",      channel: "Pendle" },
+  // 08.11 official announcement channels (active, posts link to the exchange's own domain)
+  { venue: "toobit",      channel: "toobit_announcements" },
+  { venue: "coinstore",   channel: "coinstore_global" },
+  { venue: "btse",        channel: "btsenews" },
+  { venue: "ourbit",      channel: "ourbitofficial" },
+  { venue: "kcex",        channel: "kcex_announcements" },
+  { venue: "cexio",       channel: "CEXIO_Announcements" },
+  { venue: "poloniex",    channel: "poloniexannouncements" },
 ];
 
 /** Venues we never show. Matched against ids/slugs/names, lower-case. */

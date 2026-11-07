@@ -73,6 +73,16 @@ export const xt = zendesk("xt", "xtsupport.zendesk.com");
 export const bitunix = zendesk("bitunix", "support.bitunix.com");
 export const weex = zendesk("weex", "weexsupport.zendesk.com");
 export const bitbase = zendesk("bitbase", "bitbase-support.zendesk.com");   // 08.11 official help-centre announcements
+export const biconomy = zendesk("biconomy", "biconomy.zendesk.com");
+export const hibt = zendesk("hibt", "support.hibt.com");
+export const bitvavo = zendesk("bitvavo", "support.bitvavo.com");
+export const zoomex = zendesk("zoomex", "zoomex.zendesk.com");
+export const websea = zendesk("websea", "webseahelp.zendesk.com");
+/* Bitfinex — official blog RSS, filtered to promos like Kraken. */
+export async function bitfinex(): Promise<Raw[]> {
+  const items = parseRss(await getText("https://blog.bitfinex.com/feed/", 15_000));
+  return items.map((i) => ({ venue: "bitfinex", id: i.link, title: i.title, url: i.link, publishedAt: i.date }));
+}
 
 /* Kraken — official blog RSS, filtered to promos. */
 export async function kraken(): Promise<Raw[]> {
@@ -81,4 +91,4 @@ export async function kraken(): Promise<Raw[]> {
 }
 
 /** Direct exchange APIs/pages. Exchanges not listed here are covered via their official Telegram channel. */
-export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, kraken };
+export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, biconomy, hibt, bitvavo, zoomex, websea, bitfinex, kraken };
