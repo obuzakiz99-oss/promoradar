@@ -9,6 +9,11 @@ import type { Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
 import { HedgeVenues } from "./HedgeVenues";
 import type { Hedge } from "@/lib/pools";
+const HEDGED: Record<Locale, { title: string; how: (earn: string, f: string, ex: string) => string }> = {
+  uk: { title: "APR з хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорту ${f} на ${ex} · у доларах, без ризику ціни (комісії входу/виходу ~0.2% окремо)` },
+  en: { title: "APR with hedge", how: (e, f, ex) => `Earn ${e} + short funding ${f} on ${ex} · in dollars, no price risk (entry/exit fees ~0.2% extra)` },
+  ru: { title: "APR с хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорта ${f} на ${ex} · в долларах, без риска цены (комиссии входа/выхода ~0.2% отдельно)` },
+};
 import { ProsCons } from "./ProsCons";
 import { earnPC } from "@/lib/proscons";
 
@@ -82,6 +87,21 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
         </div>
       </div>
       {hedge[coin] && <HedgeVenues coin={coin} hedge={hedge[coin]} lang={lang} className="mt-2 text-xs" />}
+      {(() => {
+        // Earn in the coin + a short of the same size = income in dollars without the price risk
+        const perps = hedge[coin]?.perps ?? [];
+        const best = list.filter((o) => !o.newUsers).reduce((m, o) => Math.max(m, o.apr), 0);
+        if (!perps.length || !best) return null;
+        const f = perps.reduce((m, x) => (x.fundingApr > m.fundingApr ? x : m), perps[0]);
+        const total = best + f.fundingApr;
+        return (
+          <div className={`mt-2 inline-flex flex-wrap items-baseline gap-x-2 rounded-lg border px-3 py-1.5 text-xs font-semibold ${total > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`}>
+            <span>🛡 {HEDGED[lang].title}:</span>
+            <span className="font-mono text-base font-bold">≈ {pct(total)}</span>
+            <span className="opacity-80">{HEDGED[lang].how(pct(best), `${f.fundingApr >= 0 ? "+" : "−"}${pct(Math.abs(f.fundingApr))}`, f.ex)}</span>
+          </div>
+        );
+      })()}
       <div className="mt-3 space-y-2">
         {list.length === 0 && <div className="rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{A.none}</div>}
         {list.map((o, i) => {

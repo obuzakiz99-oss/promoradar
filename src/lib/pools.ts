@@ -237,14 +237,29 @@ const byAll = () => cached("by-linear-all", 5 * 60_000, async () => {
   return new Map(((j?.result?.list ?? []) as any[]).filter((x) => x.fundingRate !== "").map((x) => [x.symbol as string, yearly(Number(x.fundingRate), Number(x.fundingIntervalHour) || 8)]));
 });
 
+const okAll = () => cached("okx-funding-all", 5 * 60_000, async () => {
+  const j = await getJson<any>("https://www.okx.com/api/v5/public/funding-rate?instId=ANY", 20_000).catch(() => null);
+  return new Map(((j?.data ?? []) as any[]).filter((x) => /-USDT-SWAP$/.test(x.instId)).map((x) => {
+    const h = (Number(x.nextFundingTime) - Number(x.fundingTime)) / 3600_000;
+    return [String(x.instId).replace("-USDT-SWAP", ""), yearly(Number(x.fundingRate), h > 0 && h <= 24 ? h : 8)];
+  }));
+});
+const bgAll = () => cached("bitget-funding-all", 5 * 60_000, async () => {
+  const j = await getJson<any>("https://api.bitget.com/api/v2/mix/market/current-fund-rate?productType=USDT-FUTURES", 20_000).catch(() => null);
+  return new Map(((j?.data ?? []) as any[]).map((x) => [String(x.symbol), yearly(Number(x.fundingRate), Number(x.fundingRateInterval) || 8)]));
+});
+
 async function hedgeFor(c: string): Promise<Hedge> {
   const get = (u: string) => getJson(u, 8_000).catch(() => null);
-  const [g, m, ob, bn, by] = await Promise.all([
+  const none = () => new Map<string, number>();
+  const [g, m, ob, bn, by, ok, bg] = await Promise.all([
     get(`https://api.gateio.ws/api/v4/futures/usdt/contracts/${c}_USDT`),
     get(`https://contract.mexc.com/api/v1/contract/funding_rate/${c}_USDT`),
     get(`https://api.gateio.ws/api/v4/spot/order_book?currency_pair=${c}_USDT&limit=20`),
-    bnAll().catch(() => new Map<string, number>()),
-    byAll().catch(() => new Map<string, number>()),
+    bnAll().catch(none),
+    byAll().catch(none),
+    okAll().catch(none),
+    bgAll().catch(none),
   ]);
   const perps: Hedge["perps"] = [];
   if (g?.name && !g.in_delisting) perps.push({ ex: "Gate", fundingApr: yearly(Number(g.funding_rate), Number(g.funding_interval) / 3600 || 8) });
@@ -252,6 +267,10 @@ async function hedgeFor(c: string): Promise<Hedge> {
   if (b !== undefined && Number.isFinite(b)) perps.push({ ex: "Binance", fundingApr: b });
   const y = by.get(`${c}USDT`);
   if (y !== undefined && Number.isFinite(y)) perps.push({ ex: "Bybit", fundingApr: y });
+  const o = ok.get(c);
+  if (o !== undefined && Number.isFinite(o)) perps.push({ ex: "OKX", fundingApr: o });
+  const t = bg.get(`${c}USDT`);
+  if (t !== undefined && Number.isFinite(t)) perps.push({ ex: "Bitget", fundingApr: t });
   if (m?.success && m.data) perps.push({ ex: "MEXC", fundingApr: yearly(Number(m.data.fundingRate), Number(m.data.collectCycle) || 8) });
   let spotDepthUsd: number | undefined;
   if (ob?.bids && ob?.asks) {

@@ -7,6 +7,8 @@ const FUT: Record<string, (c: string) => string> = {
   Bybit: (c) => `https://www.bybit.com/trade/usdt/${c}USDT`,
   Gate: (c) => `https://www.gate.com/futures/USDT/${c}_USDT`,
   MEXC: (c) => `https://futures.mexc.com/exchange/${c}_USDT`,
+  OKX: (c) => `https://www.okx.com/trade-swap/${c.toLowerCase()}-usdt-swap`,
+  Bitget: (c) => `https://www.bitget.com/futures/usdt/${c}USDT`,
 };
 const TX: Record<Locale, { hedge: (c: string) => string; none: (c: string) => string; tip: string; recv: string; pay: string }> = {
   uk: { hedge: (c) => `Хедж ${c} ф'ючерсом:`, none: (c) => `Ф'ючерса на ${c} немає — захиститись від падіння ціни не вийде`, tip: "Шорт на ту ж суму знімає ризик ціни. Число — фандинг за рік для шорту.", recv: "шорт отримує фандинг", pay: "шорт платить фандинг" },

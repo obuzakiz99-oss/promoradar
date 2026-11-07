@@ -8,7 +8,7 @@ import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { venueOf } from "@/config/site";
 import { compactUsd, duration, shortDate } from "@/lib/format";
-import { poolPC } from "@/lib/proscons";
+import { hedgeCalc, poolPC } from "@/lib/proscons";
 import { GUIDES } from "@/lib/guides";
 import { VenueLogo } from "@/components/VenueLogo";
 import { ProsCons } from "@/components/ProsCons";
@@ -204,6 +204,15 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div className="ml-auto text-right">
                     <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr)}</div>
                     <div className="text-[11px] text-ink-3">{ended ? "APR" : T.apr}{x.aprStart ? ` · ${T.aprStart} ${fmtApr(x.aprStart)}` : ""}</div>
+                    {!ended && (() => {
+                      const hc = hedgeCalc(x, p, data.hedge, 1000, now);
+                      if (!hc.needed) return null;
+                      return (
+                        <div className={`mt-1 font-mono text-sm font-bold ${hc.possible && (hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={t.lp.hedgeNote}>
+                          🛡 {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-[10px] font-semibold">{t.lp.hedgeApr}</span>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">

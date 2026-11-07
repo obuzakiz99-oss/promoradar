@@ -17,7 +17,8 @@ import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
 const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
-const OPEN: Record<Locale, string> = { uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
+const HEDGE_VIA: Record<Locale, (c: string, ex: string) => string> = { uk: (c, ex) => `шорт ${c} на ${ex}`, en: (c, ex) => `short ${c} on ${ex}`, ru: (c, ex) => `шорт ${c} на ${ex}` };
+const OPEN: Record<Locale, string> ={ uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
 const MORE: Record<Locale, string> ={ uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
 const PRESETS = [100, 1000, 10000];
 
@@ -255,8 +256,10 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                   {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
                 </div>
                 {r.hc.needed && (
-                  <div className={`adv mt-1 text-[11px] font-bold ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={L.hedgeNote}>
-                    {L.hedgeApr}: <span className="font-mono">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</span>
+                  <div className={`mt-1.5 rounded-lg border px-2 py-1 ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`} title={L.hedgeNote}>
+                    <div className="text-[10px] font-bold uppercase tracking-wider opacity-80">🛡 {L.hedgeApr}</div>
+                    <div className="font-mono text-lg font-bold leading-tight">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</div>
+                    {r.hc.possible && r.hc.venue && <div className="text-[10px] font-semibold opacity-80">{HEDGE_VIA[lang](pool.stake, r.hc.venue)}</div>}
                   </div>
                 )}
               </div>
