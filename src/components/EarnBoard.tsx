@@ -7,12 +7,14 @@ import type { Dict, Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
 import type { Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
+import { HedgeVenues } from "./HedgeVenues";
+import type { Hedge } from "@/lib/pools";
 import { ProsCons } from "./ProsCons";
 import { earnPC } from "@/lib/proscons";
 
 const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
 
-export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale }) {
+export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge> }) {
   const A = t.aprHub;
   const [coinPick, setCoin] = useState("USDT");
   const novice = useNovice();
@@ -79,6 +81,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang }: { offers: Ear
           ))}
         </div>
       </div>
+      {hedge[coin] && <HedgeVenues coin={coin} hedge={hedge[coin]} lang={lang} className="mt-2 text-xs" />}
       <div className="mt-3 space-y-2">
         {list.length === 0 && <div className="rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{A.none}</div>}
         {list.map((o, i) => {

@@ -12,6 +12,7 @@ import { poolPC } from "@/lib/proscons";
 import { GUIDES } from "@/lib/guides";
 import { VenueLogo } from "@/components/VenueLogo";
 import { ProsCons } from "@/components/ProsCons";
+import { HedgeVenues } from "@/components/HedgeVenues";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
@@ -211,6 +212,12 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div><dt className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
                     <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
                 </dl>
+                {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
+                  <div className="mt-3 flex flex-col gap-1.5">
+                    <HedgeVenues coin={x.stake} hedge={data.hedge[x.stake]} lang={lang} />
+                    {x.stake !== p.token && <HedgeVenues coin={p.token} hedge={data.hedge[p.token]} lang={lang} />}
+                  </div>
+                )}
                 {x.newUsers && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{T.newUsers}</p>}
                 {x.stake === p.token && <p className="mt-3 rounded-lg bg-rose/10 px-3 py-2 text-xs font-semibold text-rose">{T.priceRisk}</p>}
               </div>

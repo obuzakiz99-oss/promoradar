@@ -248,6 +248,8 @@ async function hedgeFor(c: string): Promise<Hedge> {
   return { perps, spotDepthUsd };
 }
 
+/** Futures venues + funding for any coins (stablecoins skipped), up to 40 coins, cached 5 min. */
+export const getHedges = (coins: string[]) => hedges(coins).catch(() => ({}) as Record<string, Hedge>);
 async function hedges(coins: string[]): Promise<Record<string, Hedge>> {
   const uniq = [...new Set(coins)].filter((c) => !STABLE.has(c)).slice(0, 40);
   const res = await Promise.all(uniq.map((c) => cached(`hedge:${c}`, 5 * 60_000, () => hedgeFor(c)).catch(() => ({ perps: [] }) as Hedge)));

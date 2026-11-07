@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getEarn, POPULAR } from "@/lib/earn";
+import { getHedges } from "@/lib/pools";
 import { venueOf } from "@/config/site";
 import { AprTabs } from "@/components/AprTabs";
 import { EarnBoard } from "@/components/EarnBoard";
@@ -22,6 +23,11 @@ export default async function EarnPage({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   const { offers, status, fetchedAt } = await getEarn();
+  // where each coin can be hedged with futures: popular coins first, then the coins with the most offers (≤ 40)
+  const byCount = new Map<string, number>();
+  for (const o of offers) byCount.set(o.coin, (byCount.get(o.coin) ?? 0) + 1);
+  const coins = [...new Set([...POPULAR, ...[...byCount.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c)])];
+  const hedge = await getHedges(coins);
   const ids = ["binance", "bybit", "okx", "gate", "mexc"] as const;
   const exchanges = Object.fromEntries(ids.map((id) => [id, venueOf(id)]));
   return (
@@ -41,7 +47,7 @@ export default async function EarnPage({ params }: { params: Params }) {
           </div>
         </header>
         <div className="mt-8">
-          <EarnBoard offers={offers} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} />
+          <EarnBoard offers={offers} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} hedge={hedge} />
         </div>
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.note}</p>
       </main>

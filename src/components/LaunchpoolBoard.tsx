@@ -10,6 +10,7 @@ import type { Venue } from "@/lib/types";
 import { VenueLogo } from "./VenueLogo";
 import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
+import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
 import { compactUsd, duration } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
@@ -290,6 +291,14 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               <div className="flex gap-2 lg:flex-col">
                 <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-primary h-10 flex-1 px-4 text-sm">{OPEN[lang]}</a>
               </div>
+
+              {/* where the price risk can be hedged with futures — visible right away */}
+              {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (
+                <div className="flex flex-col gap-1.5 lg:col-span-5">
+                  <HedgeVenues coin={pool.stake} hedge={hedge[pool.stake]} lang={lang} />
+                  {pool.stake !== p.token && <HedgeVenues coin={p.token} hedge={hedge[p.token]} lang={lang} />}
+                </div>
+              )}
 
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}
               <details className="group border-t border-line pt-3 lg:col-span-5">
