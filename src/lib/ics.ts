@@ -26,7 +26,9 @@ export function icsFile(events: CalEvent[]): string {
   return lines.join("\r\n");
 }
 
-export const icsHref = (events: CalEvent[]) => `data:text/calendar;charset=utf-8,${encodeURIComponent(icsFile(events))}`;
+/** Drops half-cut emoji (lone surrogates) — encodeURIComponent throws "URI malformed" on them. */
+export const wellFormed = (s: string) => s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "");
+export const icsHref = (events: CalEvent[]) => `data:text/calendar;charset=utf-8,${encodeURIComponent(wellFormed(icsFile(events)))}`;
 
 export function googleCalUrl(e: CalEvent): string {
   const q = new URLSearchParams({ action: "TEMPLATE", text: e.title, dates: `${stamp(e.at)}/${stamp(e.at + (e.minutes ?? 30) * 60_000)}`, details: `${e.description}\n${e.url}` });

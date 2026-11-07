@@ -173,7 +173,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const { tokens } = await getTokens(lang);
   const coins = [...tokens.values()].filter((x) => !isStableSym(x.sym) && x.promos.some((q) => q.id === p.id)).slice(0, 4);
   const cal: CalEvent | undefined = p.endsAt && p.endsAt > fetchedAt ? {
-    uid: p.id.replace(/[^a-z0-9]/gi, "-"), title: `⏳ ${R.calTitle}: ${p.title}`.slice(0, 180), at: deadlineReminder(p.endsAt, fetchedAt),
+    uid: p.id.replace(/[^a-z0-9]/gi, "-"), title: Array.from(`⏳ ${R.calTitle}: ${p.title}`).slice(0, 180).join(""), at: deadlineReminder(p.endsAt, fetchedAt),
     description: `${p.venue.name} · ${dateFull(p.endsAt, lang)}`, url: `https://${SITE.domain}/${lang}/p/${slug}/`,
   } : undefined;
   const tr = translateUrl(p.url, lang);

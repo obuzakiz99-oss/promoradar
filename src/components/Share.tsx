@@ -5,7 +5,7 @@ export function Share({ title, label, copyLabel, copiedLabel }: { title: string;
   const [copied, setCopied] = useState(false);
   const [url, setUrl] = useState("");
   useEffect(() => setUrl(window.location.href), []);
-  const enc = encodeURIComponent;
+  const enc = (s: string) => encodeURIComponent(s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, ""));
   const btn = "flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.02] px-3.5 text-sm font-bold text-ink-2 transition-colors hover:border-line-2 hover:text-ink";
   return (
     <div className="flex flex-wrap items-center gap-2">

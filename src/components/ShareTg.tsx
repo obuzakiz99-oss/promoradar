@@ -2,7 +2,7 @@
 
 /** Share one link: the phone's own share sheet when there is one, otherwise Telegram. */
 export function ShareTg({ url, text, label }: { url: string; text: string; label: string }) {
-  const tg = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+  const tg = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, ""))}`;
   return (
     <a
       href={tg}

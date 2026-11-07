@@ -124,7 +124,8 @@ export async function telegram(): Promise<{ promos: Promo[]; status: TgStatus }>
     const key = `tg:${TELEGRAM[i].channel}`;
     if (r.status === "rejected") { status[key] = { ok: false, count: 0, error: String(r.reason).slice(0, 120) }; return; }
     status[key] = { ok: true, count: 0 };
-    promos.push(...r.value);
+    // stored posts are re-checked against the current filter (it gets stricter over time, e.g. hack/breach news)
+    promos.push(...r.value.filter((p) => isPromo(p.title)));
   });
   return { promos, status };
 }

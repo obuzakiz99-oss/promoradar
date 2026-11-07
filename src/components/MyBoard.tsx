@@ -45,7 +45,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
   const withEnd = rows.filter((r) => r.p?.endsAt && r.p.endsAt > now && r.tr.status !== "skipped" && r.tr.status !== "done");
   const exportIcs = () => {
     const ev = withEnd.map(({ p }) => ({
-      uid: p!.id.replace(/[^a-z0-9]/gi, "-"), title: `⏳ ${CAL_T[lang]}: ${p!.title}`.slice(0, 180), at: deadlineReminder(p!.endsAt!, Date.now()),
+      uid: p!.id.replace(/[^a-z0-9]/gi, "-"), title: Array.from(`⏳ ${CAL_T[lang]}: ${p!.title}`).slice(0, 180).join(""), at: deadlineReminder(p!.endsAt!, Date.now()),
       description: `${p!.venue.name} · ${new Date(p!.endsAt!).toUTCString()}`, url: location.origin + p!.href,
     }));
     const a = document.createElement("a");
