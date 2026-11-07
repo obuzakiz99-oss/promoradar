@@ -34,7 +34,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const t = getDict(lang);
   const bits = [p.venue.name, t.cat[p.category], p.reward?.label, p.meta?.apr ? `+${p.meta.apr}% APR` : ""].filter(Boolean).join(" · ");
   const title = p.venue.kind === "airdrop" ? `${p.title} Airdrop` : `${p.title} — ${p.venue.name}`;
-  return { title, description: bits, alternates: { canonical: `/${lang}/p/${slug}` } };
+  // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
+  const image = `https://${SITE.domain}/og/${slug}.png`;
+  return {
+    title, description: bits, alternates: { canonical: `/${lang}/p/${slug}` },
+    openGraph: { title, description: bits, images: [{ url: image, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title, description: bits, images: [image] },
+  };
 }
 
 const RULES_TX: Record<Locale, {

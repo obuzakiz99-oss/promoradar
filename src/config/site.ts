@@ -147,6 +147,35 @@ export const MANUAL: Array<{
   /* ---- standing referral programmes (official help pages, checked 07.11.2026); they have no end date, so each entry
          is re-checked monthly: `until` = end of the month, then the entry is renewed or removed by hand ---- */
   {
+    id: "bitget:rewards-center-new-user", venue: "bitget", category: "bonus",
+    title: "Bitget new-user Rewards Center: welcome pack + deposit & trade challenge (50 / 400 / 6,000 USDT)",
+    url: "https://www.bitget.com/events/rewards", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "6,000 USDT",
+    perUser: { amount: 6000, unit: "USDT" },
+    rules: [
+      "Bitget Rewards Center for new users (seen on the official page on November 7, 2026).",
+      "Welcome pack: 200 USD as a BTC USDT-M futures position voucher; a three-day check-in task is part of it.",
+      "Deposit & trade challenge, first tier — 50 USDT for completing all three tasks: net deposit of at least 1,000 USDT, spot trading volume of at least 100 USDT and futures trading volume of at least 300,000 USDT.",
+      "Higher tiers pay 400 USDT and 6,000 USDT for larger deposits and volumes (the exact requirements are shown after logging in).",
+      "New Earn users: 120% APR for 3 days, first investment from 1 USDT.",
+      "Rewards from this promotion cannot be combined with the trial VIP pass benefits.",
+    ],
+    checked: "2026-11-07",
+  },
+  {
+    id: "mexc:rewards-hub-new-user", venue: "mexc", category: "bonus",
+    title: "MEXC Rewards Hub: 10 USDT futures voucher for signing up + 10 USDT for the app — no deposit needed",
+    url: "https://www.mexc.com/rewards-hub", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "20 USDT",
+    perUser: { amount: 20, unit: "USDT" },
+    rules: [
+      "MEXC Rewards Hub for new users (seen on the official page on November 7, 2026; the page advertises perks of up to 10,000 USDT in total).",
+      "Sign up for a new account — 10 USDT voucher. First login in the MEXC App or Lite App — another 10 USDT voucher.",
+      "Next steps (KYC, deposit, trade) unlock more rewards; their amounts are shown after logging in. Daily tasks add small futures bonuses (example: 1 USDT bonus for a day with 3,000 USDT of futures volume).",
+      "Vouchers are 'Position Airdrops': when claimed, the system opens a futures position of the same value at the last price (isolated margin). You keep only the profit when closing; the remaining bonus is revoked; the maximum loss is capped at the airdrop amount.",
+      "A voucher cannot be claimed if you already have an open position or pending order in that trading pair.",
+    ],
+    checked: "2026-11-07",
+  },
+  {
     id: "cryptocom:app-referral", venue: "cryptocom", category: "referral",
     title: "Crypto.com app referral: up to $50 in CRO for you and your friend",
     url: "https://help.crypto.com/en/articles/3124990-app-referral-programme", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",
