@@ -25,6 +25,7 @@ export function impactOf(u: Unlock): { level: Level; who: Who } {
   let lv = u.pctCap >= 5 ? 3 : u.pctCap >= 1 ? 2 : u.pctCap >= 0.3 ? 1 : 0;
   lv += WHO_W[who];
   if (u.type === "linear") lv -= 1;          // spread over days / weeks → absorbed gradually
+  if (u.pctCap >= 10) lv = Math.max(lv, 2);  // a tenth of the market cap or more is never minor, whoever receives it
   return { level: Math.max(0, Math.min(3, lv)) as Level, who };
 }
 
