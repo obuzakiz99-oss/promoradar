@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { officialList } from "@/app/[lang]/check/official";
+import { TOOLS } from "@/lib/i18n-tools";
+import { LinkCheck } from "@/components/LinkCheck";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
@@ -34,6 +37,11 @@ export default async function LearnSafety({ params }: { params: Params }) {
             </div>
           ))}
         </div>
+        <section className="mt-12">
+          <h2 className="font-display text-2xl font-semibold tracking-tight">{TOOLS[lang].tools.check[0]}</h2>
+          <p className="mt-2 max-w-2xl text-ink-2">{TOOLS[lang].tools.check[1]}</p>
+          <LinkCheck lang={lang} official={officialList()} />
+        </section>
       </main>
       <Footer t={t} fetchedAt={Date.now()} lang={lang} />
     </>

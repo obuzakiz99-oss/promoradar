@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getTokens } from "@/lib/tokens";
@@ -33,7 +34,8 @@ export default async function Tokens({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
+        <PromoTabs lang={lang} active="tokens" />
+        <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-2 max-w-2xl text-ink-2">{T.sub}</p>
         <TokenIndex rows={rows} labels={{ search: T.search, promos: T.promos, lp: T.lp, earn: T.earn, empty: T.empty }} />
       </main>

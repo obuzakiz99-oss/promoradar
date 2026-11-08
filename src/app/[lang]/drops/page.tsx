@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
@@ -39,12 +40,13 @@ export default async function DropsPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
-        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">🪂 {P.title}</h1>
+        <PromoTabs lang={lang} active="drops" />
+        <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{P.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.sub}</p>
         <div className="mt-4"><Updated at={fetchedAt} lang={lang} /></div>
         {/* jump links */}
         <nav className="mt-6 flex flex-wrap gap-2">
-          {sections.map((s) => (
+          {sections.filter((s) => s.list.length).map((s) => (
             <a key={s.id} href={`#${s.id}`} className={`${s.level === "hard" ? "adv " : ""}flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink`}>
               {s.icon} {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>
             </a>
@@ -52,7 +54,8 @@ export default async function DropsPage({ params }: { params: Params }) {
           <a href="#polymarket" className="adv flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink">🎯 Polymarket</a>
         </nav>
 
-        {sections.map(({ id: k, icon, text: T, level: lvl, list }) => {
+        {/* empty sub-sections are hidden until they have promos (audit 08.11) */}
+        {sections.filter((s) => s.list.length).map(({ id: k, icon, text: T, level: lvl, list }) => {
           return (
             <section key={k} id={k} className={`mt-14 scroll-mt-20 ${lvl === "hard" ? "adv" : ""}`}>
               <div className="flex flex-wrap items-center gap-3">

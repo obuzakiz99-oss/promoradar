@@ -7,6 +7,7 @@ import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
+import { titleOf } from "@/lib/titletpl";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -62,6 +63,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
   const href = withBase(`/${lang}/p/${slugOf(p)}/`);
   const st = statusOf(p, now);
   const lvl = promoLevel(p);
+  const own = titleOf(p, lang);
 
   return (
     <article
@@ -109,11 +111,13 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         </div>
       ) : (
         <>
+          {/* our own short title from the parsed facts; the exchange's headline stays below in small type (audit 08.11) */}
           <h3 className="mt-4 break-words text-[1.02rem] font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">
-              {isDrop ? `${p.title} — Airdrop` : p.title}
+              {own ?? (isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
           </h3>
+          {own && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{p.title}</p>}
           {isDrop && m.actions && (
             <p className="mt-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}

@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { DexPool } from "@/lib/dexpools";
 import { VenueLogo } from "./VenueLogo";
+import { Term } from "./Term";
 import { ProsCons } from "./ProsCons";
 import { compactUsd } from "@/lib/format";
 import { dexPC } from "@/lib/proscons";
@@ -115,8 +116,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
         <table className="w-full min-w-[940px] text-left text-sm">
           <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
             <tr>
-              <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right">{A.colTvl}</th>
-              <th className="px-4 py-3 text-right">{A.colApy}</th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
+              <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right"><Term k="tvl" lang={lang} align="right">{A.colTvl}</Term></th>
+              <th className="px-4 py-3 text-right"><Term k="apy" lang={lang} align="right">{A.colApy}</Term></th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -133,7 +134,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                       <div className="flex flex-wrap items-center gap-1.5 font-mono text-[13px] font-bold">
                         {p.symbol}
                         {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-[10px] text-teal">{A.stableTag}</span>}
-                        {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-[10px] text-amber">{A.il}</span>}
+                        {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-[10px] text-amber"><Term k="il" lang={lang}>{A.il}</Term></span>}
                       </div>
                       <div className="break-words text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${p.meta}` : ""}</div>
                     </div>

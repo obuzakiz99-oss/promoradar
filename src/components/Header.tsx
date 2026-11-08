@@ -4,22 +4,19 @@ import { LangSwitch } from "./LangSwitch";
 import type { Dict, Locale } from "@/lib/i18n";
 import { HAS_PRO, HAS_TG, SITE } from "@/config/site";
 import { withBase } from "@/lib/base";
-import { TOOLS } from "@/lib/i18n-tools";
 import { LEARN } from "@/lib/i18n-learn";
-import { TRADER_NAV } from "./TraderTabs";
 import { NavLinks, type NavItem } from "./NavLinks";
+import { MyStar } from "./MyStar";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   // one list for desktop and the phone menu; `wide` = only on big screens in the desktop bar
   // `match` = first path segment(s) after the language that belong to this item (highlighted as the current page)
+  // audit 08.11: one item per user question; the old pages are tabs inside these sections (components/SectionTabs.tsx)
   const items: NavItem[] = [
-    { href: withBase(`/${lang}/#promos`), label: t.nav.promos, match: ["", "p", "v"] },
-    { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></>, match: ["launchpools", "earn", "dex", "lp"] },
-    { href: withBase(`/${lang}/drops/`), label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }[lang], match: ["drops"] },
-    { href: withBase(`/${lang}/t/`), label: { uk: "Токени", en: "Tokens", ru: "Токены" }[lang], match: ["t"] },
-    { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav, match: ["tools", "best", "calendar", "my", "hedge", "bonuses", "history", "check"] },
-    { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn"] },
-    { href: withBase(`/${lang}/unlocks/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block", match: ["unlocks", "fixed", "insights"] },
+    { href: withBase(`/${lang}/#promos`), label: t.nav.promos, match: ["", "p", "v", "drops", "t", "bonuses"] },
+    { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
+    { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], match: ["calendar", "unlocks"] },
+    { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn", "best", "check"] },
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block", match: ["pro"] }] : []),
   ];
   return (
@@ -30,6 +27,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           <NavLinks items={items} />
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <MyStar href={withBase(`/${lang}/my/`)} label={({ uk: "Мої акції", en: "My promos", ru: "Мои акции" } as const)[lang]} />
           <span className="hidden sm:block"><LangSwitch current={lang} /></span>
           {HAS_TG && (
             <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">

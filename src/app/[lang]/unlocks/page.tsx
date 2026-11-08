@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { dropstabCoin, getUnlocks, isBig, UNLOCK_SRC, type Unlock } from "@/lib/unlocks";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
 import { compactUsd, duration } from "@/lib/format";
-import { TraderTabs } from "@/components/TraderTabs";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { impactOf, impactText, LEVEL_CLS, LEVEL_TXT } from "@/lib/unlock-impact";
@@ -73,11 +73,14 @@ export default async function UnlocksPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <TraderTabs lang={lang} active="unlocks" updated={fetchedAt} />
+        <CalendarTabs lang={lang} active="unlocks" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">🔓 {T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
-        <p className="mt-2 max-w-3xl text-sm text-ink-3">{T.how}</p>
-        <p className="mt-2 max-w-3xl text-sm text-ink-3">{T.impactNote}</p>
+        <details className="mt-2 max-w-3xl text-sm text-ink-3">
+          <summary className="cursor-pointer font-semibold text-ink-2 hover:text-ink">{({ uk: "Як читати таблицю", en: "How to read the table", ru: "Как читать таблицу" } as const)[lang]}</summary>
+          <p className="mt-2">{T.how}</p>
+          <p className="mt-2">{T.impactNote}</p>
+        </details>
 
         {!ok && <p className="mt-8 rounded-2xl border border-dashed border-line-2 p-5 text-ink-2">{T.none}</p>}
 
@@ -98,10 +101,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                       </span>
                       <span className="mt-1 block text-sm text-ink-2">{day(u.date, lang)} · {T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)} · <span className="font-mono">{compactUsd(u.usd)}</span></span>
                       <span className="mt-0.5 block break-words text-xs text-ink-3">{u.sale} · {T.type[u.type]}</span>
-                      <span className="mt-2 block text-xs leading-relaxed text-ink-2">
-                        <span className={`mr-1.5 rounded-md px-1.5 py-0.5 font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
-                        {impactText(u, lang)}
-                      </span>
+                      <span className="mt-2 block text-xs"><span title={impactText(u, lang)} className={`cursor-help rounded-md px-1.5 py-0.5 font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span></span>
                     </span>
                   </a>
                 );
@@ -114,7 +114,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.all}</h2>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
-              <table className="w-full min-w-[1040px] text-left text-sm">
+              <table className="w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
                 </thead>
@@ -137,9 +137,8 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
                         <td className="px-4 py-3 text-ink-2">{u.sale || "—"}</td>
                         <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
-                        <td className="w-[300px] px-4 py-3">
-                          <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
-                          <div className="mt-1 text-xs leading-relaxed text-ink-3">{impactText(u, lang)}</div>
+                        <td className="px-4 py-3">
+                          <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
                         </td>
                       </tr>
                     );

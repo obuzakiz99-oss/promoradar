@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
@@ -8,7 +9,6 @@ import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
 import { LineChart, seriesColor, type Series } from "@/components/LineChart";
-import { ToolHeader } from "@/components/ToolsNav";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 
@@ -90,7 +90,11 @@ export default async function HistoryPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="history" title={T.histTitle} sub={T.histSub} updated={pools.fetchedAt} />
+        <header>
+          <YieldTabs lang={lang} active="history" updated={pools.fetchedAt} />
+          <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.histTitle}</h1>
+          <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.histSub}</p>
+        </header>
 
         {/* ---- how APR is falling now ---- */}
         <section className="mt-12">
@@ -120,8 +124,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
           )}
         </section>
 
-        {/* ---- typical decay curve ---- */}
-        <section className="mt-14">
+        {/* ---- typical decay curve: shown only once ≥ 10 pools back it (audit 08.11: ×1.25 / ×0.09 on 3 pools misled) ---- */}
+        {Math.max(0, ...curve.map((c) => c.n ?? 0)) >= 10 && <section className="mt-14">
           <h2 className="font-display text-2xl font-semibold tracking-tight">⏱ {X.curve}</h2>
           <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.curveSub}</p>
           <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
@@ -133,7 +137,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
               </div>
             ))}
           </div>
-        </section>
+        </section>}
 
         {/* ---- 3-month statistics ---- */}
         <section className="mt-16">

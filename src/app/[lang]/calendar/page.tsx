@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
@@ -8,7 +9,6 @@ import { venueOf } from "@/config/site";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { CalendarBoard, type CalEvent } from "@/components/CalendarBoard";
-import { ToolHeader } from "@/components/ToolsNav";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
@@ -42,7 +42,11 @@ export default async function Calendar({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="calendar" title={T.calTitle} sub={T.calSub} updated={fetchedAt} />
+        <header>
+          <CalendarTabs lang={lang} active="calendar" updated={fetchedAt} />
+          <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.calTitle}</h1>
+          <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.calSub}</p>
+        </header>
         <CalendarBoard events={events} lang={lang} now={now} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />

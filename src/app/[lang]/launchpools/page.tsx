@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -12,7 +13,6 @@ import { compactUsd, shortDate } from "@/lib/format";
 import { LaunchpoolBoard } from "@/components/LaunchpoolBoard";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
-import { AprTabs } from "@/components/AprTabs";
 import { PROX } from "@/lib/i18n-pro";
 
 export const revalidate = 300; // pools move fast: 5 min
@@ -84,7 +84,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* hero */}
         <section className="relative mx-auto max-w-7xl px-4 pb-8 pt-10 sm:px-6">
           <div className="pointer-events-none absolute right-0 top-0 -z-10 size-[28rem] rounded-full bg-lime/10 blur-3xl" />
-          <div className="mb-8"><AprTabs t={t} lang={lang} active="lp" updated={fetchedAt} /></div>
+          <div className="mb-8"><YieldTabs lang={lang} active="lp" updated={fetchedAt} /></div>
           <span className="inline-flex items-center gap-2 rounded-full border border-lime/25 bg-lime/[0.06] px-3 py-1.5 text-xs font-bold text-lime">
             <span className="relative flex size-2"><span className="absolute inline-flex size-full animate-ping-slow rounded-full bg-lime" /><span className="relative inline-flex size-2 rounded-full bg-lime" /></span>
             {L.kicker}
