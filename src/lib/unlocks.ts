@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { cached, getText } from "./sources/util";
 
 /**
@@ -72,14 +74,27 @@ export function parseVesting(html: string, now = Date.now()): Unlock[] {
   return rows.sort((a, b) => a.date - b.date);
 }
 
+// last good result, kept on the `data` branch: DropsTab sometimes refuses GitHub's US runners for a build or two
+const LAST = () => path.join(process.cwd(), "data", "unlocks.json");
+const LAST_MAX_MS = 3 * 86400_000;
+
 export function getUnlocks(): Promise<Unlocks> {
   return cached("unlocks", 3600_000, async () => {
+    const now = Date.now();
     try {
       const rows = parseVesting(await getText(UNLOCK_SRC, 25_000));
-      return { rows, fetchedAt: Date.now(), ok: rows.length > 0 };
-    } catch {
-      return { rows: [], fetchedAt: Date.now(), ok: false };
-    }
+      if (rows.length) {
+        const res = { rows, fetchedAt: now, ok: true };
+        try { if (fs.existsSync(path.dirname(LAST()))) fs.writeFileSync(LAST(), JSON.stringify(res)); } catch { /* read-only */ }
+        return res;
+      }
+    } catch { /* fall back below */ }
+    try {
+      const last = JSON.parse(fs.readFileSync(LAST(), "utf8")) as Unlocks;
+      // drop unlocks that already happened; the page shows the time of the last successful read
+      if (now - last.fetchedAt < LAST_MAX_MS) return { ...last, rows: last.rows.filter((u) => u.date > now - 86400_000), ok: true };
+    } catch { /* none yet */ }
+    return { rows: [], fetchedAt: now, ok: false };
   });
 }
 
