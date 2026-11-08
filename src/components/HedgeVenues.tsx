@@ -22,15 +22,15 @@ export function HedgeVenues({ coin, hedge, lang, className = "" }: { coin: strin
   const T = TX[lang];
   if (!hedge) return null;
   const perps = [...hedge.perps].sort((a, b) => b.fundingApr - a.fundingApr);
-  if (!perps.length) return <div className={`text-xs font-semibold text-ink-3 ${className}`}>⚠ {T.none(coin)}</div>;
+  if (!perps.length) return <div className={`text-xs font-semibold text-ink-3 ${className}`}><svg className="inline size-3.5 align-[-2px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 4 2.5 20h19L12 4ZM12 10v4.5M12 17.5h.01" /></svg> {T.none(coin)}</div>;
   return (
     <div className={`flex flex-wrap items-center gap-1 text-xs font-semibold ${className}`} title={T.tip}>
-      <span className="text-ink-3">🛡 {T.hedge(coin)}</span>
+      <span className="text-ink-3"><svg className="inline size-3.5 align-[-2px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z" /></svg> {T.hedge(coin)}</span>
       {perps.map((x) => (
         <a key={x.ex} href={FUT[x.ex]?.(coin) ?? "#"} target="_blank" rel="noopener"
-          className="inline-flex items-center gap-1 rounded-md border border-line bg-white/[0.03] px-1.5 py-0.5 text-ink-2 hover:border-line-2 hover:text-ink"
+          className="inline-flex min-h-8 items-center gap-1 rounded-md border border-line bg-white/[0.03] px-2 text-ink-2 hover:border-line-2 hover:text-ink"
           title={`${x.ex}: ${x.fundingApr >= 0 ? T.recv : T.pay} ${fmt(x.fundingApr)}`}>
-          {x.ex} <span className={`font-mono ${x.fundingApr >= 0 ? "text-lime" : "text-rose"}`}>{fmt(x.fundingApr)}</span>
+          {x.ex} <span className={`font-mono ${x.fundingApr >= 0 ? "text-success" : "text-rose"}`}>{fmt(x.fundingApr)}</span>
         </a>
       ))}
     </div>

@@ -27,6 +27,8 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
   return { name, logo, color: `hsl(${h} 70% 62%)`, ink: "#0b0d10", monogram: name.slice(0, 3) };
 }
 const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(n < 1 ? 4 : 2)}`);
+const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
+const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
 const fmtUsd = (n: number) => (n >= 1000 ? compactUsd(n) : `$${n.toFixed(n < 10 ? 2 : 0)}`);
 
 interface Row {
@@ -48,7 +50,7 @@ function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
   return (
     <div className={`rounded-xl border px-3.5 py-3 ${good ? "border-teal/25 bg-teal/[0.06]" : "border-line bg-white/[0.03]"}`} title={L.hedgeNote}>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-ink-3">🛡 {L.hedgeApr}</span>
+        <span className="text-xs font-semibold text-ink-3">🛡 {L.hedgeApr}</span>
         <span className={`font-mono text-lg font-bold ${good ? "text-teal" : "text-ink-3"}`}>≈{fmtPct(hc.hedgedApr ?? 0)}</span>
       </div>
       <ul className="mt-1.5 space-y-0.5 text-xs text-ink-2">
@@ -64,7 +66,6 @@ function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
 }
 
 const fmtChg = (c: number) => `${c > 0 ? "+" : ""}${Math.abs(c) >= 10 ? c.toFixed(0) : c.toFixed(1)}%`;
-const chgClass = (c: number) => (c <= -10 ? "bg-rose/15 text-rose" : c < 0 ? "bg-amber/10 text-amber" : "bg-lime/10 text-lime");
 
 /** Launchpool-type campaigns known only from an exchange's official announcement (OKX, HTX, Bybit…): no API numbers. */
 export interface AnnPool { id: string; href: string; venue: Venue; title: string; date?: number; reward?: string; endsAt?: number }
@@ -203,7 +204,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             <article
               key={`${p.id}:${pool.stake}`}
               id={`lp-${p.id}-${pool.stake}`}
-              className={`card scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
+              className={`card relative scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
               style={{ ["--tint" as string]: ex?.color, animationDelay: `${Math.min(i, 10) * 30}ms` }}
             >
               {/* project */}
@@ -214,21 +215,22 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="break-words font-bold">{p.name}</span>
+                    <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="break-words font-bold after:absolute after:inset-0 after:rounded-2xl after:content-['']">{p.name}</a>
                     {r.chgReward !== undefined && (
-                      <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${chgClass(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
+                      <span className={`font-mono text-xs font-bold ${chgText(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
                         {p.token} {fmtChg(r.chgReward)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>
                       </span>
                     )}
-                    {isBest && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">Best</span>}
+                    {isBest && <span className="rounded-md border border-lime/40 px-1.5 py-0.5 text-xs font-semibold text-lime">{BEST[lang]}</span>}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs font-semibold text-ink-3">
                     <span>{ex?.name}</span>
                     <span>·</span>
                     <span className={live ? "text-lime" : "text-sky"}>{live ? L.live : L.upcoming}</span>
                     <span className={`nov rounded px-1.5 ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
-                    {pool.newUsers && <span className="rounded bg-amber/10 px-1.5 text-amber">{L.newUsers}</span>}
-                    {pool.stake === p.token && <span className="rounded bg-rose/10 px-1.5 text-rose" title={L.priceRiskNote}>{L.priceRisk}</span>}
+                    {/* at most two badges per row: best (above) + one of these */}
+                    {pool.stake === p.token ? <span className="rounded-md border border-rose/30 px-1.5 text-rose" title={L.priceRiskNote}>{L.priceRisk}</span>
+                      : pool.newUsers && !isBest ? <span className="rounded-md border border-amber/30 px-1.5 text-amber">{L.newUsers}</span> : null}
                   </div>
                   <div className="mt-2 h-1.5 w-full max-w-[14rem] overflow-hidden rounded-full bg-white/5" title={`${pct.toFixed(0)}%`}>
                     <div className="h-full rounded-full bg-gradient-to-r from-lime to-teal" style={{ width: `${pct}%` }} />
@@ -239,19 +241,19 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               {/* stake → earn */}
               <div className="flex items-center gap-2 text-sm">
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3"><Term k="stake" lang={lang}>{L.stake}</Term></div>
+                  <div className="text-xs font-semibold text-ink-3"><Term k="stake" lang={lang}>{L.stake}</Term></div>
                   <div className="mt-0.5 flex items-center gap-1.5 font-bold"><VenueLogo v={tokenVenue(pool.stake, pool.stakeLogo)} size={20} rounded="rounded-full" />{pool.stake}</div>
                 </div>
                 <span className="mt-4 text-ink-3">→</span>
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{L.earn}</div>
+                  <div className="text-xs font-semibold text-ink-3">{L.earn}</div>
                   <div className="mt-0.5 font-bold">{p.token}</div>
                 </div>
               </div>
 
               {/* apr + limits */}
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
+                <div className="text-xs font-semibold text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
                 <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
                 {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                 {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
@@ -260,7 +262,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 </div>
                 {r.hc.needed && (
                   <div className={`mt-1.5 rounded-lg border px-2 py-1 ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`} title={L.hedgeNote}>
-                    <div className="text-xs font-bold uppercase tracking-wider opacity-80">🛡 {L.hedgeApr}</div>
+                    <div className="flex items-center gap-1 text-xs font-semibold opacity-80"><svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z" /></svg>{L.hedgeApr}</div>
                     <div className="font-mono text-lg font-bold leading-tight">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</div>
                     {r.hc.possible && r.hc.venue && <div className="text-xs font-semibold opacity-80">{HEDGE_VIA[lang](pool.stake, r.hc.venue)}</div>}
                   </div>
@@ -269,7 +271,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* profit */}
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{L.yourProfit}</div>
+                <div className="text-xs font-semibold text-ink-3">{L.yourProfit}</div>
                 {r.profit !== undefined ? (
                   <>
                     {r.belowMin ? (
@@ -295,19 +297,19 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* actions */}
               <div className="flex gap-2 lg:flex-col">
-                <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-primary h-10 flex-1 px-4 text-sm">{OPEN[lang]}</a>
+                <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-ghost relative z-10 h-11 flex-1 px-4 text-sm">{OPEN[lang]}</a>
               </div>
 
               {/* where the price risk can be hedged with futures — visible right away */}
               {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (
-                <div className="flex flex-col gap-1.5 lg:col-span-5">
+                <div className="relative z-10 flex flex-col gap-1.5 lg:col-span-5">
                   <HedgeVenues coin={pool.stake} hedge={hedge[pool.stake]} lang={lang} />
                   {pool.stake !== p.token && <HedgeVenues coin={p.token} hedge={hedge[p.token]} lang={lang} />}
                 </div>
               )}
 
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}
-              <details className="group border-t border-line pt-3 lg:col-span-5">
+              <details className="group relative z-10 border-t border-line pt-3 lg:col-span-5">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
                   <span className="transition-transform group-open:rotate-90">▸</span>{MORE[lang]}
                 </summary>

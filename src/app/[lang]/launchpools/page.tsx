@@ -85,25 +85,21 @@ export default async function Launchpools({ params }: { params: Params }) {
         <section className="relative mx-auto max-w-7xl px-4 pb-8 pt-10 sm:px-6">
           <div className="pointer-events-none absolute right-0 top-0 -z-10 size-[28rem] rounded-full bg-lime/10 blur-3xl" />
           <div className="mb-8"><YieldTabs lang={lang} active="lp" updated={fetchedAt} /></div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-lime/25 bg-lime/[0.06] px-3 py-1.5 text-xs font-bold text-lime">
-            <span className="relative flex size-2"><span className="absolute inline-flex size-full animate-ping-slow rounded-full bg-lime" /><span className="relative inline-flex size-2 rounded-full bg-lime" /></span>
-            {L.kicker}
-          </span>
           <h1 className="mt-5 max-w-3xl font-display text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
             <span className="text-gradient">Launchpool</span> Radar
             <span className="mt-2 block text-[0.55em] font-medium leading-tight text-ink-2">{L.title}</span>
           </h1>
           <p className="mt-5 max-w-2xl text-ink-2 sm:text-lg">{L.sub}</p>
-          <dl className="mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+          <dl className="mt-6 grid max-w-3xl grid-cols-4 gap-2 sm:gap-3">
             {[
               [String(livePools.length), L.statLive],
               [rewardsUsd ? compactUsd(rewardsUsd) : "—", L.statRewards],
               [bestApr ? `${bestApr >= 100 ? Math.round(bestApr) : bestApr.toFixed(1)}%` : "—", L.statBest],
               [String(EX_IDS.length + ANN_IDS.length), L.statEx],
             ].map(([v, l]) => (
-              <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
+              <div key={l} className="min-w-0 rounded-2xl border border-line bg-white/[0.02] px-2.5 py-2.5 sm:px-4 sm:py-3.5">
                 <dt className="sr-only">{l}</dt>
-                <dd className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{v}</dd>
+                <dd className="font-display text-lg font-semibold tracking-tight sm:text-3xl">{v}</dd>
                 <dd className="mt-1 text-xs font-semibold text-ink-3 sm:text-sm">{l}</dd>
               </div>
             ))}
