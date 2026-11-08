@@ -8,13 +8,14 @@ import { compactUsd, duration } from "@/lib/format";
 import { TraderTabs } from "@/components/TraderTabs";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
+import { impactOf, impactText, LEVEL_CLS, LEVEL_TXT } from "@/lib/unlock-impact";
 
 export const revalidate = 3600;
 type Params = Promise<{ lang: string }>;
 
 const X: Record<Locale, {
   title: string; sub: string; how: string; big: string; bigSub: string; all: string; none: string;
-  date: string; token: string; amount: string; pressure: string; who: string; kind: string;
+  date: string; token: string; amount: string; pressure: string; who: string; kind: string; impact: string; impactNote: string;
   type: Record<Unlock["type"], string>; ofCap: string; ofSupply: string; already: string; src: string; note: string; down: string;
 }> = {
   uk: {
@@ -22,7 +23,8 @@ const X: Record<Locale, {
     sub: "Коли команда, інвестори чи фонд отримують доступ до заблокованих токенів. Великий розлок = багато нових монет на ринку, і ціна часто слабшає ще до дати.",
     how: "Головна колонка — «Тиск»: вартість розлоку у відсотках від капіталізації. Від 1% — помітно, від 5% — дуже багато. «Лінійний» розлок розтягнутий у часі й тисне менше, ніж разовий.",
     big: "Великі розлоки", bigSub: "≥ 1% капіталізації або ≥ $10M", all: "Усі найближчі", none: "Немає даних про розлоки — джерело не відповіло. Спробуйте пізніше.",
-    date: "Дата", token: "Токен", amount: "Скільки", pressure: "Тиск", who: "Кому", kind: "Тип",
+    date: "Дата", token: "Токен", amount: "Скільки", pressure: "Тиск", who: "Кому", kind: "Тип", impact: "Як вплине на ціну",
+    impactNote: "«Як вплине на ціну» — наша груба оцінка з трьох речей: розмір розлоку відносно капіталізації, хто отримує токени (інвестори й отримувачі аірдропів продають частіше, ніж казна) і чи розлок разовий. Це не прогноз: ринок часто враховує розлок у ціні заздалегідь.",
     type: { cliff: "Разовий", linear: "Лінійний", tge: "TGE" }, ofCap: "капіталізації", ofSupply: "емісії", already: "вже розблоковано",
     src: "Дані: DropsTab", note: "Показуємо ~50 найближчих розлоків. Суми в доларах — за поточною ціною. Не є фінансовою порадою.", down: "через",
   },
@@ -31,7 +33,8 @@ const X: Record<Locale, {
     sub: "When the team, investors or the foundation get access to locked tokens. A big unlock = lots of new coins on the market, and the price often weakens before the date.",
     how: "The key column is “Pressure”: the unlock's value as a % of market cap. From 1% it's noticeable, from 5% it's a lot. A “linear” unlock is spread over time and weighs less than a one-off.",
     big: "Big unlocks", bigSub: "≥ 1% of market cap or ≥ $10M", all: "All upcoming", none: "No unlock data — the source didn't respond. Try again later.",
-    date: "Date", token: "Token", amount: "Amount", pressure: "Pressure", who: "To whom", kind: "Type",
+    date: "Date", token: "Token", amount: "Amount", pressure: "Pressure", who: "To whom", kind: "Type", impact: "Likely price impact",
+    impactNote: "“Likely price impact” is our rough estimate from three things: the unlock's size vs market cap, who receives the tokens (investors and airdrop recipients sell more often than a treasury) and whether it's a one-off. Not a forecast: markets often price an unlock in ahead of time.",
     type: { cliff: "One-off", linear: "Linear", tge: "TGE" }, ofCap: "of market cap", ofSupply: "of supply", already: "already unlocked",
     src: "Data: DropsTab", note: "We show the ~50 nearest unlocks. USD amounts at the current price. Not financial advice.", down: "in",
   },
@@ -40,7 +43,8 @@ const X: Record<Locale, {
     sub: "Когда команда, инвесторы или фонд получают доступ к заблокированным токенам. Большой разлок = много новых монет на рынке, и цена часто слабеет ещё до даты.",
     how: "Главная колонка — «Давление»: стоимость разлока в процентах от капитализации. От 1% — заметно, от 5% — очень много. «Линейный» разлок растянут во времени и давит меньше, чем разовый.",
     big: "Большие разлоки", bigSub: "≥ 1% капитализации или ≥ $10M", all: "Все ближайшие", none: "Нет данных о разлоках — источник не ответил. Попробуйте позже.",
-    date: "Дата", token: "Токен", amount: "Сколько", pressure: "Давление", who: "Кому", kind: "Тип",
+    date: "Дата", token: "Токен", amount: "Сколько", pressure: "Давление", who: "Кому", kind: "Тип", impact: "Как повлияет на цену",
+    impactNote: "«Как повлияет на цену» — наша грубая оценка из трёх вещей: размер разлока относительно капитализации, кто получает токены (инвесторы и получатели аирдропов продают чаще, чем казна) и разовый ли разлок. Это не прогноз: рынок часто учитывает разлок в цене заранее.",
     type: { cliff: "Разовый", linear: "Линейный", tge: "TGE" }, ofCap: "капитализации", ofSupply: "эмиссии", already: "уже разблокировано",
     src: "Данные: DropsTab", note: "Показываем ~50 ближайших разлоков. Суммы в долларах — по текущей цене. Не является финансовым советом.", down: "через",
   },
@@ -73,6 +77,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">🔓 {T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
         <p className="mt-2 max-w-3xl text-sm text-ink-3">{T.how}</p>
+        <p className="mt-2 max-w-3xl text-sm text-ink-3">{T.impactNote}</p>
 
         {!ok && <p className="mt-8 rounded-2xl border border-dashed border-line-2 p-5 text-ink-2">{T.none}</p>}
 
@@ -93,6 +98,10 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                       </span>
                       <span className="mt-1 block text-sm text-ink-2">{day(u.date, lang)} · {T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)} · <span className="font-mono">{compactUsd(u.usd)}</span></span>
                       <span className="mt-0.5 block break-words text-xs text-ink-3">{u.sale} · {T.type[u.type]}</span>
+                      <span className="mt-2 block text-xs leading-relaxed text-ink-2">
+                        <span className={`mr-1.5 rounded-md px-1.5 py-0.5 font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
+                        {impactText(u, lang)}
+                      </span>
                     </span>
                   </a>
                 );
@@ -105,9 +114,9 @@ export default async function UnlocksPage({ params }: { params: Params }) {
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.all}</h2>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
-              <table className="w-full min-w-[760px] text-left text-sm">
+              <table className="w-full min-w-[1040px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
-                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
+                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {rows.map((u) => {
@@ -128,6 +137,10 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
                         <td className="px-4 py-3 text-ink-2">{u.sale || "—"}</td>
                         <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
+                        <td className="w-[300px] px-4 py-3">
+                          <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
+                          <div className="mt-1 text-xs leading-relaxed text-ink-3">{impactText(u, lang)}</div>
+                        </td>
                       </tr>
                     );
                   })}
