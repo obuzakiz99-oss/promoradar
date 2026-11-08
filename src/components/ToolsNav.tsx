@@ -3,9 +3,9 @@ import { Updated } from "./Updated";
 import type { Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 
-export const TOOL_IDS = ["best", "calendar", "my", "hedge", "bonuses", "history"] as const;
+export const TOOL_IDS = ["best", "calendar", "my", "hedge", "bonuses", "history", "check"] as const;
 export type ToolId = (typeof TOOL_IDS)[number];
-export const TOOL_ICON: Record<ToolId, string> = { best: "🎯", calendar: "📅", my: "⭐", hedge: "🛡", bonuses: "🎁", history: "📈" };
+export const TOOL_ICON: Record<ToolId, string> = { best: "🎯", calendar: "📅", my: "⭐", hedge: "🛡", bonuses: "🎁", history: "📈", check: "🔍" };
 
 /** Horizontal switcher between tool pages. */
 export function ToolsNav({ lang, active }: { lang: Locale; active?: ToolId }) {

@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const out: MetadataRoute.Sitemap = [];
   for (const l of LOCALES) {
     out.push({ url: `${base}/${l}`, changeFrequency: "hourly", priority: l === "uk" ? 1 : 0.9 });
-    for (const s of ["launchpools", "earn", "dex", "tools", "best", "calendar", "bonuses", "history", "hedge", "learn", "learn/start", "learn/how", "learn/safety", "learn/rewards", "learn/quiz", "learn/glossary", "fixed", "insights", "drops", "unlocks", "about", "privacy", "terms", "api"])
+    for (const s of ["launchpools", "earn", "dex", "tools", "best", "calendar", "bonuses", "history", "hedge", "learn", "learn/start", "learn/how", "learn/safety", "learn/rewards", "check", "learn/quiz", "learn/glossary", "fixed", "insights", "drops", "unlocks", "about", "privacy", "terms", "api"])
       out.push({ url: `${base}/${l}/${s}`, changeFrequency: s.startsWith("learn") ? "weekly" : "hourly", priority: s.startsWith("learn") ? 0.6 : 0.8 });
     for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, changeFrequency: "hourly", priority: 0.7 });
     out.push({ url: `${base}/${l}/t`, changeFrequency: "hourly", priority: 0.8 });

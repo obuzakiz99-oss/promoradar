@@ -10,6 +10,7 @@ const uk = {
     hedge: ["Калькулятор хеджу", "Покроковий план дельта-нейтральної стратегії під Launchpool"],
     bonuses: ["Бонуси новачкам", "Що дають біржі за реєстрацію і перший депозит — зараз"],
     history: ["Історія APR", "Як змінюються ставки Earn і APR пулів з часом"],
+    check: ["Це справжня біржа?", "Вставте посилання з чату чи реклами — перевіримо, чи це офіційний сайт або канал біржі, чи підробка"],
   } as Record<string, [string, string]>,
   open: "Відкрити",
   // best
@@ -55,6 +56,7 @@ const en: T = {
     hedge: ["Hedge calculator", "Step-by-step delta-neutral plan for a Launchpool"],
     bonuses: ["New-user bonuses", "What exchanges give for sign-up and first deposit — right now"],
     history: ["APR history", "How Earn rates and pool APRs change over time"],
+    check: ["Is it the real exchange?", "Paste a link from a chat or an ad — we check whether it's the exchange's official site or channel, or a fake"],
   },
   open: "Open",
   bestTitle: "Best picks now", bestSub: "Ready-made options for the amount you enter. Refreshes with the site.",
@@ -93,6 +95,7 @@ const ru: T = {
     hedge: ["Калькулятор хеджа", "Пошаговый план дельта-нейтральной стратегии под Launchpool"],
     bonuses: ["Бонусы новичкам", "Что дают биржи за регистрацию и первый депозит — сейчас"],
     history: ["История APR", "Как меняются ставки Earn и APR пулов со временем"],
+    check: ["Это настоящая биржа?", "Вставьте ссылку из чата или рекламы — проверим, официальный ли это сайт или канал биржи, или подделка"],
   },
   open: "Открыть",
   bestTitle: "Лучший выбор сейчас", bestSub: "Готовые варианты для суммы, которую вы вводите. Обновляется вместе с сайтом.",
