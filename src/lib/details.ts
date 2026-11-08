@@ -440,6 +440,13 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
     if (!body) return null;
     // the channel's own linked article usually holds the full rules
     if (p.url && !p.url.startsWith("https://t.me/")) {
+      // Binance announcement linked from a post: read it through Binance's own CMS API (its pages block servers)
+      const bn = p.url.match(/binance\.com\/[a-z-]+\/support\/announcement\/(?:detail\/)?([0-9a-f]{32})/i)?.[1];
+      if (bn) {
+        const j = await getJson<any>(`https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=${bn}`, 10_000).catch(() => null);
+        const body = j?.data?.body;
+        if (body) return { html: binanceTree(typeof body === "string" ? JSON.parse(body) : body) };
+      }
       const art = await fromUrl(p.url).catch(() => "");
       if (art) return { html: art };
     }
@@ -488,7 +495,7 @@ function load(): Record<string, PromoDetails> {
 export async function getDetails(promos: Promo[]): Promise<Record<string, PromoDetails>> {
   const now = Date.now();
   const store = load();
-  const want = promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen && store[p.id]?.v !== VER).slice(0, MAX_NEW);
+  const want = promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen && (store[p.id]?.v !== VER || (store[p.id]?.partial && /binance\.com\/[a-z-]+\/support\/announcement/.test(p.url)))).slice(0, MAX_NEW);
   let feedP: Promise<Map<string, string>> | null = null;
   const feeds = () => (feedP ??= feedMap());
   const queue = [...want];
