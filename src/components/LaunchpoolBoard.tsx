@@ -27,6 +27,11 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
   return { name, logo, color: `hsl(${h} 70% 62%)`, ink: "#0b0d10", monogram: name.slice(0, 3) };
 }
 const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(n < 1 ? 4 : 2)}`);
+const UNIT: Record<Locale, { label: string; hint: string }> = {
+  uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку праворуч — і суму можна буде ввести в ній (наприклад, 0.05 BTC)." },
+  en: { label: "Amount unit", hint: "Pick a stake coin on the right — then you can enter the amount in it (e.g. 0.05 BTC)." },
+  ru: { label: "Единица суммы", hint: "Выберите монету для стейка справа — и сумму можно будет ввести в ней (например, 0.05 BTC)." },
+};
 const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
 const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
 const fmtUsd = (n: number) => (n >= 1000 ? compactUsd(n) : `$${n.toFixed(n < 10 ? 2 : 0)}`);
@@ -77,9 +82,27 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const L = t.lp;
   const [now, setNow] = useState(serverNow);
   const [text, setText] = useState("1000");
-  const amount = Math.min(1e9, Number(text.replace(/[^\d.]/g, "")) || 0);
-  const setAmount = (v: number) => setText(String(v));
-  const [coin, setCoin] = useState("all");
+  const [coin, setCoinS] = useState("all");
+  // the amount can be typed in dollars or in the chosen stake coin (0.05 BTC, 500 KOR); everything below works in dollars
+  const [unit, setUnit] = useState<"usd" | "coin">("usd");
+  const typed = Math.min(1e12, Number(text.replace(/[^\d.]/g, "")) || 0);
+  const coinPrice = coin !== "all" ? prices[coin] : undefined;
+  const inCoin = unit === "coin" && !!coinPrice;
+  const amount = Math.min(1e9, inCoin ? typed * coinPrice! : typed);
+  const setAmount = (v: number) => { setUnit("usd"); setText(String(v)); };
+  const setCoin = (c: string) => {
+    // keep the same money when switching coins: re-express a coin amount in the new coin (or in dollars)
+    if (inCoin) {
+      const p = c !== "all" ? prices[c] : undefined;
+      if (p) setText(String(+(amount / p).toPrecision(6))); else { setUnit("usd"); setText(String(Math.round(amount))); }
+    }
+    setCoinS(c);
+  };
+  const toggleUnit = (u: "usd" | "coin") => {
+    if (u === unit || !coinPrice) return;
+    setText(String(u === "coin" ? +(amount / coinPrice).toPrecision(6) : Math.round(amount)));
+    setUnit(u);
+  };
   const [sort, setSort] = useState<Sort>("profit");
   const novice = useNovice();
   useEffect(() => { setNow(Date.now()); const i = setInterval(() => setNow(Date.now()), 30_000); return () => clearInterval(i); }, []);
@@ -139,7 +162,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             <label htmlFor="lp-amount" className="text-sm font-semibold text-ink-2">{L.amount}</label>
             <div className="mt-2 flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-display text-2xl text-ink-3">$</span>
+                {inCoin
+                  ? <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-display text-xl text-ink-3">{coin}</span>
+                  : <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-display text-2xl text-ink-3">$</span>}
                 <input
                   id="lp-amount"
                   inputMode="decimal"
@@ -147,10 +172,24 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                   value={text}
                   onChange={(e) => setText(e.target.value.replace(/[^\d.\s]/g, "").slice(0, 13))}
                   onWheel={(e) => (e.target as HTMLInputElement).blur()}
-                  className="h-16 w-full rounded-2xl border border-line-2 bg-bg/60 pl-10 pr-4 font-display text-3xl font-semibold tracking-tight text-ink focus:border-lime/60 focus:outline-none"
+                  className={`h-16 w-full rounded-2xl border border-line-2 bg-bg/60 font-display text-3xl font-semibold tracking-tight text-ink focus:border-lime/60 focus:outline-none ${inCoin ? "pl-4 pr-24" : "pl-10 pr-4"}`}
                 />
               </div>
+              {/* $ ⇄ coin: shown once a stake coin is picked */}
+              {coinPrice ? (
+                <div className="flex h-16 shrink-0 flex-col justify-center gap-1 rounded-2xl border border-line-2 bg-bg/60 p-1" role="group" aria-label={UNIT[lang].label}>
+                  {(["usd", "coin"] as const).map((u) => (
+                    <button key={u} type="button" onClick={() => toggleUnit(u)} aria-pressed={unit === u}
+                      className={`h-7 rounded-lg px-3 text-xs font-bold ${unit === u ? "bg-white/15 text-ink" : "text-ink-3 hover:text-ink"}`}>{u === "usd" ? "USD" : coin}</button>
+                  ))}
+                </div>
+              ) : null}
             </div>
+            {coinPrice ? (
+              <div className="mt-1.5 font-mono text-xs text-ink-3">
+                {inCoin ? `≈ ${fmtUsd(amount)}` : `≈ ${fmtNum(amount / coinPrice)} ${coin}`} · 1 {coin} = {fmtUsd(coinPrice)}
+              </div>
+            ) : coin === "all" ? <div className="mt-1.5 text-xs text-ink-3">{UNIT[lang].hint}</div> : null}
             <div className="mt-2 flex gap-2">
               {PRESETS.map((v) => (
                 <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString("en-US")}</button>
@@ -170,6 +209,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-lime/25 bg-lime/[0.06] px-4 py-3 text-sm">
             <span className="font-bold text-lime">★ {L.yourProfit}:</span>
             <span className="font-mono text-lg font-bold text-ink">{fmtUsd(best.profit)}</span>
+            {prices[best.p.token] ? <span className="font-mono text-sm font-bold text-lime">≈ {fmtNum(best.profit / prices[best.p.token])} {best.p.token}</span> : null}
             <span className="text-ink-2">{L.total} · {best.p.name} · {L.stake} {best.pool.stake} · {exchanges[best.p.exchange]?.name}</span>
             {best.adjusted !== undefined && best.danger && (
               <span className="basis-full text-[12px] font-semibold text-ink-3">{L.ifPrice}: {best.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(best.adjusted))}</span>
@@ -280,6 +320,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     ) : (
                       <>
                         <div className="font-mono text-xl font-bold text-ink">{fmtUsd(r.profit)}</div>
+                        {/* the same income in the reward token — what actually lands in the account */}
+                        {prices[p.token] ? <div className="font-mono text-xs font-semibold text-lime">≈ {fmtNum(r.profit / prices[p.token])} {p.token}</div> : null}
                         <div className="font-mono text-xs text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
                       </>
                     )}

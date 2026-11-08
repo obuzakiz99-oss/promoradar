@@ -20,11 +20,27 @@ import { earnPC } from "@/lib/proscons";
 const EX_ALL: Record<Locale, string> = { uk: "Усі біржі", en: "All exchanges", ru: "Все биржи" };
 const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
 
-export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge> }) {
+const CALC: Record<Locale, { amount: string; mo: string; yr: string; note: string }> = {
+  uk: { amount: "Сума", mo: "/міс", yr: "/рік", note: "Дохід рахується в тій самій монеті, яку ви вкладаєте; у доларах — за поточною ціною." },
+  en: { amount: "Amount", mo: "/mo", yr: "/yr", note: "Income is paid in the same coin you deposit; dollar figures use the current price." },
+  ru: { amount: "Сумма", mo: "/мес", yr: "/год", note: "Доход считается в той же монете, которую вы вкладываете; в долларах — по текущей цене." },
+};
+const STABLE = /^(USDT|USDC|FDUSD|USD1|DAI|USDS|USDE|PYUSD|TUSD)$/;
+const fmtCoin = (n: number) => (n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
+const fmtUsd = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
+
+export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, prices = {} }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge>; prices?: Record<string, number> }) {
   const A = t.aprHub;
   const [coinPick, setCoin] = useState("USDT");
   const novice = useNovice();
   const coin = novice && !/^(USDT|USDC)$/.test(coinPick) ? "USDT" : coinPick;   // beginners: dollar stablecoins only
+  // calculator: the amount is typed in the coin itself or in dollars; APR is applied to the coin amount
+  const price = STABLE.test(coin) ? 1 : prices[coin];
+  const [amtText, setAmt] = useState("1000");
+  const [unit, setUnit] = useState<"coin" | "usd">("usd");
+  const typed = Number(amtText.replace(/[^0-9.]/g, "")) || 0;
+  const qty = unit === "usd" ? (price ? typed / price : 0) : typed;
+  const C = CALC[lang];
   const [q, setQ] = useState("");
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
   const [exPick, setEx] = useState("all");   // exchange filter (chips + clickable exchange names)
@@ -102,6 +118,25 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
           ))}
         </div>
       )}
+      {/* calculator: amount in the coin or in dollars → income per offer in the coin (+ dollars) */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <label className="flex h-11 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
+          {C.amount}
+          <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(/[^0-9.]/g, "").slice(0, 12))} inputMode="decimal"
+            className="h-9 w-28 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
+        </label>
+        {!STABLE.test(coin) && (
+          <div className="flex h-11 items-center rounded-xl border border-line bg-white/[0.02] p-1" role="group">
+            {(["coin", "usd"] as const).map((u) => (
+              <button key={u} type="button" disabled={u === "usd" && !price} aria-pressed={unit === u}
+                onClick={() => { if (u === unit) return; if (price) setAmt(String(u === "coin" ? +(typed / price).toPrecision(6) : Math.round(typed * price))); setUnit(u); }}
+                className={`h-full rounded-lg px-3 text-xs font-bold ${unit === u ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>{u === "coin" ? coin : "USD"}</button>
+            ))}
+          </div>
+        )}
+        {!STABLE.test(coin) && price ? <span className="font-mono text-xs text-ink-3">{unit === "usd" ? `≈ ${fmtCoin(qty)} ${coin}` : `≈ ${fmtUsd(qty * price)}`} · 1 {coin} = {fmtUsd(price)}</span> : null}
+        <span className="basis-full text-xs text-ink-3">{C.note}</span>
+      </div>
       {hedge[coin] && <HedgeVenues coin={coin} hedge={hedge[coin]} lang={lang} className="mt-2 text-xs" />}
       {(() => {
         // Earn in the coin + a short of the same size = income in dollars without the price risk
@@ -141,6 +176,17 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
                   <div className="font-mono text-2xl font-bold tracking-tight text-ink">{pct(o.apr)}</div>
                   {o.aprMax ? <div className="font-mono text-xs font-bold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : <div className="text-xs text-ink-3">{A.base}</div>}
                   {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
+                  {o.apr > 0 && qty > 0 && (() => {
+                    // capped offers (max amount) earn only on the part up to the cap
+                    const base = o.maxAmount ? Math.min(qty, o.maxAmount) : qty;
+                    const yr = (base * o.apr) / 100;
+                    return (
+                      <div className="mt-1 font-mono text-xs font-semibold text-lime">
+                        +{fmtCoin(yr / 12)} {o.coin}{C.mo}
+                        <span className="text-ink-3"> · {fmtCoin(yr)} {o.coin}{C.yr}{price && !STABLE.test(o.coin) ? ` ≈ ${fmtUsd(yr * price)}` : ""}</span>
+                      </div>
+                    );
+                  })()}
                 </div>
                 <a href={o.url} target="_blank" rel="noopener" className="btn btn-ghost hidden h-10 px-4 text-sm sm:inline-flex">{A.open} ↗</a>
               </div>

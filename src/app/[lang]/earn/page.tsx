@@ -3,7 +3,7 @@ import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getEarn, POPULAR } from "@/lib/earn";
-import { getHedges } from "@/lib/pools";
+import { getHedges, prices as getPrices } from "@/lib/pools";
 import { venueOf } from "@/config/site";
 import { EarnBoard } from "@/components/EarnBoard";
 import { Footer } from "@/components/Sections";
@@ -28,6 +28,9 @@ export default async function EarnPage({ params }: { params: Params }) {
   for (const o of offers) byCount.set(o.coin, (byCount.get(o.coin) ?? 0) + 1);
   const coins = [...new Set([...POPULAR, ...[...byCount.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c)])];
   const hedge = await getHedges(coins);
+  // coin prices (Gate spot tickers) for the calculator: income in the coin and in dollars
+  const px = await getPrices().then((x) => x.px).catch(() => ({} as Record<string, number>));
+  const usedPx = Object.fromEntries(Object.entries(px).filter(([k]) => offers.some((o) => o.coin === k)));
   const ids = ["binance", "bybit", "okx", "gate", "mexc"] as const;
   const exchanges = Object.fromEntries(ids.map((id) => [id, venueOf(id)]));
   return (
@@ -47,7 +50,7 @@ export default async function EarnPage({ params }: { params: Params }) {
           </div>
         </header>
         <div className="mt-8">
-          <EarnBoard offers={offers} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} hedge={hedge} />
+          <EarnBoard offers={offers} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} hedge={hedge} prices={usedPx} />
         </div>
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.note}</p>
       </main>
