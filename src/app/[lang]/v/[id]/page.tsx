@@ -4,7 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
-import { VENUES, venueOf } from "@/config/site";
+import { PROMO_PAGES, VENUES, venueOf } from "@/config/site";
+import type { Locale } from "@/lib/i18n";
+
+const NOAUTO: Record<Locale, { browser: (v: string) => string; manual: (v: string) => string; open: (v: string) => string }> = {
+  uk: { browser: (v) => `${v} не дозволяє автоматично читати свої акції, тому ми перевіряємо їхню сторінку акцій у браузері кожні 2 години. Нові акції можуть з'явитися тут із невеликою затримкою.`, manual: (v) => `${v} не дозволяє автоматично читати свої акції — актуальний список завжди на офіційній сторінці біржі.`, open: (v) => `Акції ${v}` },
+  en: { browser: (v) => `${v} doesn't allow its promos to be read automatically, so we check its promo page in a browser every 2 hours. New promos may appear here with a short delay.`, manual: (v) => `${v} doesn't allow its promos to be read automatically — the current list is always on the exchange's official page.`, open: (v) => `${v} promos` },
+  ru: { browser: (v) => `${v} не позволяет автоматически читать свои акции, поэтому мы проверяем их страницу акций в браузере каждые 2 часа. Новые акции могут появиться здесь с небольшой задержкой.`, manual: (v) => `${v} не позволяет автоматически читать свои акции — актуальный список всегда на официальной странице биржи.`, open: (v) => `Акции ${v}` },
+};
 import { GUIDES } from "@/lib/guides";
 import { LEARN } from "@/lib/i18n-learn";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -54,6 +61,13 @@ export default async function VenuePage({ params }: { params: Params }) {
             </div>
           </div>
         </header>
+
+        {PROMO_PAGES[id] && (
+          <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber/30 bg-amber/[0.06] p-5 sm:flex-row sm:items-center">
+            <p className="flex-1 text-sm text-ink-2">{(id === "blofin" ? NOAUTO[lang].browser : NOAUTO[lang].manual)(v.name)}</p>
+            <a href={PROMO_PAGES[id]} target="_blank" rel="noopener" className="btn btn-primary h-11 shrink-0 px-5 text-sm">{NOAUTO[lang].open(v.name)} ↗</a>
+          </div>
+        )}
 
         <section className="mt-10">
           <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>

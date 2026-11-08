@@ -1,5 +1,6 @@
 import { CEX } from "@/config/site";
 import { getJson, getText, parseRss } from "./util";
+import BROWSER from "@/config/browser-promos.json";
 
 export type Raw = {
   venue: string; id: string; title: string; url: string; publishedAt: number;
@@ -78,6 +79,21 @@ export const hibt = zendesk("hibt", "support.hibt.com");
 export const bitvavo = zendesk("bitvavo", "support.bitvavo.com");
 export const zoomex = zendesk("zoomex", "zoomex.zendesk.com");
 export const websea = zendesk("websea", "webseahelp.zendesk.com");
+/**
+ * Exchanges that refuse automated requests (403): their public promo list is read in a real browser every 2 h and
+ * committed as src/config/browser-promos.json. An item disappears 26 h after it was last seen on the exchange page.
+ */
+type BrowserItem = { venue: string; id: string; title: string; url: string; desc?: string; startsAt?: number; endsAt?: number; firstSeen: number; lastSeen: number };
+function browserChecked(venue: string) {
+  return async (): Promise<Raw[]> => {
+    const now = Date.now();
+    return ((BROWSER as { items: BrowserItem[] }).items ?? [])
+      .filter((i) => i.venue === venue && now - i.lastSeen < 26 * 3600_000)
+      .map((i) => ({ venue, id: i.id, title: i.title, url: i.url, publishedAt: Math.min(i.firstSeen, i.startsAt ?? i.firstSeen), startsAt: i.startsAt, endsAt: i.endsAt, hint: i.desc, trusted: true }));
+  };
+}
+export const blofin = browserChecked("blofin");
+
 /* Bitfinex — official blog RSS, filtered to promos like Kraken. */
 export async function bitfinex(): Promise<Raw[]> {
   const items = parseRss(await getText("https://blog.bitfinex.com/feed/", 15_000));
@@ -91,4 +107,4 @@ export async function kraken(): Promise<Raw[]> {
 }
 
 /** Direct exchange APIs/pages. Exchanges not listed here are covered via their official Telegram channel. */
-export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, biconomy, hibt, bitvavo, zoomex, websea, bitfinex, kraken };
+export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, biconomy, hibt, bitvavo, zoomex, websea, bitfinex, blofin, kraken };

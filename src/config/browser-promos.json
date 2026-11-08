@@ -1,0 +1,94 @@
+{
+ "note": "Promos read in a real browser (Claude in Chrome) every 2 h from exchanges that refuse automated requests. Written by scripts/browser-merge.mjs.",
+ "checkedAt": 1794140575246,
+ "items": [
+  {
+   "venue": "blofin",
+   "id": "3602",
+   "title": "BloFin Weekend Gifts: Spin to Win iPhone 18 Pro",
+   "url": "https://blofin.com/activity/spin/3602",
+   "desc": "Spin & win this weekend.",
+   "startsAt": 1793980800000,
+   "endsAt": 1794182400000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3599",
+   "title": "Convert Rush: Earn up to 25 USDT and a 50% APR Booster",
+   "url": "https://blofin.com/activity/regular/3599",
+   "desc": "Swap, trade, and get rewarded.",
+   "startsAt": 1793959200000,
+   "endsAt": 1795082400000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3598",
+   "title": "DEOD Listing Celebration: 277,470 DEOD in Rewards",
+   "url": "https://blofin.com/activity/regular/3598",
+   "desc": "Deposit & Trade to Share 277,470 DEOD on BloFin",
+   "startsAt": 1793962800000,
+   "endsAt": 1794567600000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3562",
+   "title": "Copy Trade Your Way to 440 USDT",
+   "url": "https://blofin.com/activity/airdrop/3562",
+   "desc": "Copy trades stack. Each tier pays. Climb all 5 tiers to earn up to 440 USDT.",
+   "startsAt": 1793703600000,
+   "endsAt": 1795518000000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3550",
+   "title": "HISS Listing Celebration: 6,000 USDT in Rewards",
+   "url": "https://blofin.com/activity/regular/3550",
+   "desc": "Deposit & Trade to Share 6,000 USDT on BloFin",
+   "startsAt": 1793700000000,
+   "endsAt": 1794304800000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3547",
+   "title": "Lead Trading: Rewards up to 450 USDT",
+   "url": "https://blofin.com/activity/airdrop/3547",
+   "desc": "Hit volume milestones and stack your rewards",
+   "startsAt": 1793361600000,
+   "endsAt": 1794571200000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3517",
+   "title": "Run Futures Grid: Earn up to 1,000 USDT",
+   "url": "https://blofin.com/activity/regular/3517",
+   "desc": "Up to 1,000 USDT per user, plus up to 200 USDT for new users.",
+   "startsAt": 1792749600000,
+   "endsAt": 1795428000000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  },
+  {
+   "venue": "blofin",
+   "id": "3250",
+   "title": "Lead the Market. Earn 500 USDT Every Month.",
+   "url": "https://blofin.com/activity/regular/3250",
+   "desc": "Hit the targets. Claim 500 USDT + a 7-day homepage spotlight",
+   "startsAt": 1791734400000,
+   "endsAt": 1794412800000,
+   "firstSeen": 1794140575246,
+   "lastSeen": 1794140575246
+  }
+ ]
+}

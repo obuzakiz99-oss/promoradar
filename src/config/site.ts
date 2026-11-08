@@ -49,6 +49,17 @@ export const CEX: Record<string, V> = {
   cexio:    cex("cexio",    "CEX.IO",   "#2CA8E0", "#FFFFFF", "CX", "https://coin-images.coingecko.com/markets/images/56/small/main-icon.png?1706864277", "https://cex.io"),
   poloniex: cex("poloniex", "Poloniex", "#00A28A", "#FFFFFF", "Po", "https://coin-images.coingecko.com/markets/images/37/small/poloniex.png?1706864269", "https://poloniex.com"),
   bitfinex: cex("bitfinex", "Bitfinex", "#16B157", "#FFFFFF", "Bf", "https://coin-images.coingecko.com/markets/images/4/small/BItfinex.png?1706864245", "https://www.bitfinex.com"),
+  // 08.11 exchanges that refuse automated requests: BloFin is read in a real browser every 2 h (browser-promos.json);
+  // the rest are listed with a link to their official promo page (PROMO_PAGES)
+  blofin:   cex("blofin",   "BloFin",   "#FF8A00", "#140A00", "BF", "https://coin-images.coingecko.com/markets/images/1645/small/blofin_logo.jpeg?1718852326", "https://blofin.com"),
+  coinw:    cex("coinw",    "CoinW",    "#1A6BFF", "#FFFFFF", "CW", "https://coin-images.coingecko.com/markets/images/1172/small/coinw_new_logo.png?1713879109", "https://www.coinw.com"),
+  pionex:   cex("pionex",   "Pionex",   "#FF6A00", "#140A00", "Pi", "https://coin-images.coingecko.com/markets/images/1026/small/pionex.png?1706865056", "https://www.pionex.com"),
+  deepcoin: cex("deepcoin", "Deepcoin", "#6C5CE7", "#FFFFFF", "Dc", "https://coin-images.coingecko.com/markets/images/1005/small/deepcoin.jpeg?1706864992", "https://www.deepcoin.com"),
+  hotcoin:  cex("hotcoin",  "Hotcoin",  "#FF3B30", "#FFFFFF", "Hc", "https://coin-images.coingecko.com/markets/images/1345/small/hotcoin.png?1756783952", "https://www.hotcoin.com"),
+  bydfi:    cex("bydfi",    "BYDFi",    "#F7C600", "#141005", "BY", "https://coin-images.coingecko.com/markets/images/1186/small/ce9bee68-163f-485c-bf30-e564bee117c9.jpeg?1752056235", "https://www.bydfi.com/en"),
+  bullish:  cex("bullish",  "Bullish",  "#00C2A8", "#04140F", "Bu", "https://coin-images.coingecko.com/markets/images/905/small/bullish_com.png?1706864904", "https://bullish.com"),
+  hashkey:  cex("hashkey",  "HashKey",  "#2B5BFF", "#FFFFFF", "HK", "https://coin-images.coingecko.com/markets/images/22385/small/HashKey_logo.png?1792487793", "https://exchange.hashkey.com/en-US/"),
+  bitstamp: cex("bitstamp", "Bitstamp", "#2BB24C", "#FFFFFF", "Bs", "https://coin-images.coingecko.com/markets/images/9/small/bitstamp.jpg?1706864251", "https://www.bitstamp.net"),
   whitebit: cex("whitebit", "WhiteBIT", "#E9EDF2", "#0B0D10", "WB", "whitebit",    "https://whitebit.com"),
   coinex:   cex("coinex",   "CoinEx",   "#28C8B4", "#04140F", "CX", "coinex",      "https://www.coinex.com"),
   bitrue:   cex("bitrue",   "Bitrue",   "#F5B915", "#15120A", "Bt", "bitrue",      "https://www.bitrue.com"),
@@ -79,6 +90,19 @@ export const DEX: Record<string, V> = {
 };
 
 export const VENUES: Record<string, V> = { ...CEX, ...DEX };
+
+/** Official promo / rewards pages of exchanges whose promos we can't read automatically (shown on their venue page). */
+export const PROMO_PAGES: Record<string, string> = {
+  blofin: "https://blofin.com/en/activity/",
+  coinw: "https://www.coinw.com/en_US/events-calendar/active",
+  pionex: "https://www.pionex.com/en/activity-center",
+  deepcoin: "https://www.deepcoin.com/ps/en/welfare/home",
+  hotcoin: "https://www.hotcoin.com/en_US/support/notice/",
+  bydfi: "https://www.bydfi.com/en",
+  bullish: "https://bullish.com",
+  hashkey: "https://exchange.hashkey.com/en-US/",
+  bitstamp: "https://www.bitstamp.net",
+};
 
 /** Official blogs (Medium RSS). */
 export const DEX_FEEDS: Array<{ venue: keyof typeof DEX; feed: string }> = [
