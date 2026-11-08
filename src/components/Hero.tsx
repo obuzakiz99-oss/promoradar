@@ -26,14 +26,14 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
           <span className="text-gradient">{t.hero.title2}</span>
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-2 sm:text-lg">{t.hero.sub}</p>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-6 hidden flex-wrap gap-3 md:flex">
           <a href="#promos" className="btn btn-primary h-12 px-6 text-base">
             {t.hero.cta}
             <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.4L9 13.6V4a1 1 0 0 1 1-1Z" /></svg>
           </a>
           {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>}
         </div>
-        {learn && <a href={learn.href} className="mt-4 inline-block text-sm font-bold text-lime hover:underline">🌱 {learn.label}</a>}
+        {learn && <a href={learn.href} className="mt-4 hidden text-sm font-bold text-lime hover:underline md:inline-block">🌱 {learn.label}</a>}
 
         <dl className="mt-8 grid max-w-xl grid-cols-3 gap-3">
           {[
@@ -51,7 +51,7 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
         {live && <LiveLine at={live.at} newDay={live.newDay} lang={live.lang} />}
       </div>
 
-      <div className="animate-fade-up">
+      <div className="hidden animate-fade-up md:block">
         <RadarPicker items={radar} venues={radarVenues} labels={t.hero.radar} catLabels={t.cat} venueBase={venueBase} />
       </div>
     </section>

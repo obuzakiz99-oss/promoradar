@@ -1,3 +1,4 @@
+import { TOOLS } from "@/lib/i18n-tools";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,7 +22,7 @@ export default async function LearnHub({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6">
-        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">🌱 {L.hubTitle}</h1>
+        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{L.hubTitle}</h1>
         <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{L.hubSub}</p>
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LEARN_IDS.map((id, i) => (
@@ -32,6 +33,13 @@ export default async function LearnHub({ params }: { params: Params }) {
               <span className="mt-5 text-sm font-bold text-lime group-hover:underline">{L.open} →</span>
             </Link>
           ))}
+          {/* the link checker gets its own entry next to Safety (audit 08.11) */}
+          <Link href={`/${lang}/check`} className="card group flex flex-col p-6">
+            <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-2xl">🔍</span>
+            <h2 className="mt-5 text-lg font-bold">{TOOLS[lang].tools.check[0]}</h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-2">{TOOLS[lang].tools.check[1]}</p>
+            <span className="mt-5 text-sm font-bold text-lime group-hover:underline">{L.open} →</span>
+          </Link>
         </div>
       </main>
       <Footer t={t} fetchedAt={Date.now()} lang={lang} />

@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
 import { InstallApp } from "@/components/InstallApp";
+import { MobileTabBar } from "@/components/MobileTabBar";
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -46,12 +47,13 @@ export default async function LangLayout({ children, params }: { children: React
         {/* beginner mode was removed 06.11 — this clears it for visitors who had switched it on */}
         <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
       </head>
-      <body className="min-h-dvh">
+      <body className="min-h-dvh pb-16 md:pb-0">
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
         {children}
         {/* outside the header: its backdrop-filter would trap position:fixed */}
         <InstallApp lang={lang} base={withBase("")} />
+        <MobileTabBar lang={lang} base={withBase("")} />
       </body>
     </html>
   );

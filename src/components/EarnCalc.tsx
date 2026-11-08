@@ -119,7 +119,7 @@ export function EarnCalc({ lang, m, endsAt, now }: { lang: Locale; m: M; endsAt?
         </label>
         <div className="flex gap-1.5">
           {[...new Set([start, start * 2, start * 10].map((x) => Math.round(x)))].filter((x) => x > 0).map((x) => (
-            <button key={x} type="button" onClick={() => setV(x)} className={`h-8 rounded-lg px-2.5 font-mono text-xs font-bold ${v === x ? "bg-sky text-[#04121a]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{usd(x)}</button>
+            <button key={x} type="button" onClick={() => setV(x)} className={`h-8 rounded-lg px-2.5 font-mono text-xs font-bold ${v === x ? "bg-sky text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{usd(x)}</button>
           ))}
         </div>
         {big && <span className="ml-auto font-display text-2xl font-semibold text-lime">{big}</span>}

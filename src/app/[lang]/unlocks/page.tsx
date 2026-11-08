@@ -74,7 +74,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <CalendarTabs lang={lang} active="unlocks" updated={fetchedAt} />
-        <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">🔓 {T.title}</h1>
+        <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
         <details className="mt-2 max-w-3xl text-sm text-ink-3">
           <summary className="cursor-pointer font-semibold text-ink-2 hover:text-ink">{({ uk: "Як читати таблицю", en: "How to read the table", ru: "Как читать таблицу" } as const)[lang]}</summary>

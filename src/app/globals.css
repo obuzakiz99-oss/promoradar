@@ -76,10 +76,12 @@ body {
   border-radius: 1.25rem;
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
 }
-.card:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--tint, #c8ff3d) 35%, transparent);
-  box-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.8), 0 0 40px -18px color-mix(in srgb, var(--tint, #c8ff3d) 55%, transparent);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tint, #c8ff3d) 35%, transparent);
+    box-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.8), 0 0 40px -18px color-mix(in srgb, var(--tint, #c8ff3d) 55%, transparent);
+  }
 }
 
 .chip {
@@ -111,6 +113,7 @@ body {
 
 .scroll-x { overflow-x: auto; scrollbar-width: none; }
 .scroll-x::-webkit-scrollbar { display: none; }
+@media (max-width: 767px) { .scroll-x { mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); } }
 }
 
 html, body { overflow-x: clip; }

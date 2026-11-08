@@ -27,7 +27,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           <NavLinks items={items} />
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <MyStar href={withBase(`/${lang}/my/`)} label={({ uk: "Мої акції", en: "My promos", ru: "Мои акции" } as const)[lang]} />
+          <span className="hidden md:inline-flex"><MyStar href={withBase(`/${lang}/my/`)} label={({ uk: "Мої акції", en: "My promos", ru: "Мои акции" } as const)[lang]} /></span>
           <span className="hidden sm:block"><LangSwitch current={lang} /></span>
           {HAS_TG && (
             <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">
