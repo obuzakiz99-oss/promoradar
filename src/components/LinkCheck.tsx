@@ -53,7 +53,7 @@ function Result({ v, lang }: { v: Verdict; lang: L }) {
   switch (v.kind) {
     case "official": return box("border-lime/40 bg-lime/[0.06]", T.official(v.venue, v.domain), v.http && T.http);
     case "officialTg": return box("border-lime/40 bg-lime/[0.06]", T.officialTg(v.venue, v.channel));
-    case "lookalike": return box("border-rose/50 bg-rose/[0.08]", T.look(v.venue === "?" ? "" : v.venue, v.domain).replace(/^🚨 \S+ ,/, "🚨"), T.why[v.why], T.lookNote);
+    case "lookalike": return box("border-rose/50 bg-rose/[0.08]", (v.venue === "?" ? ({ uk: "🚨 Підозріла адреса — схожа на підробку", en: "🚨 Suspicious address — looks like a fake", ru: "🚨 Подозрительный адрес — похоже на подделку" } as const)[lang] : T.look(v.venue, v.domain)), T.why[v.why], T.lookNote);
     case "unknownTg": return box("border-amber/40 bg-amber/[0.06]", T.unknownTg(v.channel), v.like && T.likeTg(v.like), T.unknownNote);
     case "unknown": return box("border-amber/40 bg-amber/[0.06]", T.unknown(v.host), T.unknownNote, v.http && T.http);
     default: return box("border-line bg-white/[0.02]", T.invalid);
