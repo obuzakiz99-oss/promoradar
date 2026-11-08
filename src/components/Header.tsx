@@ -7,28 +7,27 @@ import { withBase } from "@/lib/base";
 import { TOOLS } from "@/lib/i18n-tools";
 import { LEARN } from "@/lib/i18n-learn";
 import { TRADER_NAV } from "./TraderTabs";
+import { NavLinks, type NavItem } from "./NavLinks";
 
 export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   // one list for desktop and the phone menu; `wide` = only on big screens in the desktop bar
-  const items: Array<{ href: string; label: React.ReactNode; wide?: string; adv?: boolean }> = [
-    { href: withBase(`/${lang}/#promos`), label: t.nav.promos },
-    { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></> },
-    { href: withBase(`/${lang}/drops/`), label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }[lang] },
-    { href: withBase(`/${lang}/t/`), label: { uk: "Токени", en: "Tokens", ru: "Токены" }[lang] },
-    { href: withBase(`/${lang}/exchanges/`), label: { uk: "Рейтинг бірж", en: "Exchanges", ru: "Рейтинг бирж" }[lang], wide: "lg:block" },
-    { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav },
-    { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav },
-    { href: withBase(`/${lang}/unlocks/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block" },
-    ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block" }] : []),
+  // `match` = first path segment(s) after the language that belong to this item (highlighted as the current page)
+  const items: NavItem[] = [
+    { href: withBase(`/${lang}/#promos`), label: t.nav.promos, match: ["", "p", "v"] },
+    { href: withBase(`/${lang}/launchpools/`), label: <>{t.aprHub.nav} <span className="ml-1 rounded-md bg-lime/15 px-1.5 py-0.5 text-[10px] font-extrabold text-lime">NEW</span></>, match: ["launchpools", "earn", "dex", "lp"] },
+    { href: withBase(`/${lang}/drops/`), label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }[lang], match: ["drops"] },
+    { href: withBase(`/${lang}/t/`), label: { uk: "Токени", en: "Tokens", ru: "Токены" }[lang], match: ["t"] },
+    { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav, match: ["tools", "best", "calendar", "my", "hedge", "bonuses", "history", "check"] },
+    { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn"] },
+    { href: withBase(`/${lang}/unlocks/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block", match: ["unlocks", "fixed", "insights"] },
+    ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block", match: ["pro"] }] : []),
   ];
   return (
     <header className="sticky top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 md:gap-6">
         <Link href={`/${lang}`} aria-label={SITE.name}><Logo name={SITE.name} /></Link>
         <nav className="hidden items-center gap-0.5 whitespace-nowrap text-sm font-semibold text-ink-2 md:flex">
-          {items.map((it, i) => (
-            <a key={i} href={it.href} className={`${it.wide ? `hidden ${it.wide}` : ""} ${it.adv ? "adv" : ""} rounded-lg px-3 py-2 hover:text-ink`}>{it.label}</a>
-          ))}
+          <NavLinks items={items} />
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <span className="hidden sm:block"><LangSwitch current={lang} /></span>
@@ -44,9 +43,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
               <svg className="hidden size-5 group-open:block" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="m5.1 4 4.9 4.9L14.9 4 16 5.1 11.1 10l4.9 4.9-1.1 1.1-4.9-4.9L5.1 16 4 14.9 8.9 10 4 5.1 5.1 4Z" /></svg>
             </summary>
             <nav className="absolute right-0 top-12 w-64 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl">
-              {items.map((it, i) => (
-                <a key={i} href={it.href} className={`${it.adv ? "adv " : ""}flex h-11 items-center rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink`}>{it.label}</a>
-              ))}
+              <NavLinks items={items} phone />
               {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink"><TgIcon /> {t.nav.telegram}</a>}
               <div className="mt-1 border-t border-line px-2 pt-3 pb-1"><LangSwitch current={lang} /></div>
             </nav>

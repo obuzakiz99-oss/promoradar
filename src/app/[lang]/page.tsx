@@ -12,7 +12,7 @@ import { PromoExplorer } from "@/components/PromoExplorer";
 import { Ticker, TopPools } from "@/components/Featured";
 import { LaunchpoolTeaser } from "@/components/LaunchpoolTeaser";
 import { getPools } from "@/lib/pools";
-import { HowItWorks, ProSection, SourcesSection, AdsSection, Footer } from "@/components/Sections";
+import { HowItWorks, ProSection, AdsSection, Footer } from "@/components/Sections";
 
 export const revalidate = 900; // 15 min, same as SITE.revalidateSeconds
 
@@ -21,7 +21,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
   // "your plan for today" and the 90-day backtest (MoneyBlock) were removed from the home page 06.11 at the user's request
-  const [{ promos, status, fetchedAt }, pools] = await Promise.all([getPromos(lang), getPools().catch(() => null)]);
+  const [{ promos, fetchedAt }, pools] = await Promise.all([getPromos(lang), getPools().catch(() => null)]);
   const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
     id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
@@ -45,7 +45,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <PromoExplorer promos={firstCards} t={t} lang={lang} serverNow={fetchedAt} src={withBase("/api/promos.json")} />
         </section>
         <HowItWorks t={t} />
-        <div className="adv"><SourcesSection t={t} status={status} /></div>
         {HAS_PRO && <ProSection t={t} />}
         {HAS_TG && <div className="adv"><AdsSection t={t} /></div>}
       </main>

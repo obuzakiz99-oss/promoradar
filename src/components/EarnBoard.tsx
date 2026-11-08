@@ -17,6 +17,7 @@ const HEDGED: Record<Locale, { title: string; how: (earn: string, f: string, ex:
 import { ProsCons } from "./ProsCons";
 import { earnPC } from "@/lib/proscons";
 
+const EX_ALL: Record<Locale, string> = { uk: "Усі біржі", en: "All exchanges", ru: "Все биржи" };
 const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
 
 export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge> }) {
@@ -26,6 +27,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
   const coin = novice && !/^(USDT|USDC)$/.test(coinPick) ? "USDT" : coinPick;   // beginners: dollar stablecoins only
   const [q, setQ] = useState("");
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
+  const [exPick, setEx] = useState("all");   // exchange filter (chips + clickable exchange names)
 
   const byCoin = useMemo(() => {
     const m = new Map<string, EarnOffer[]>();
@@ -36,8 +38,10 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
   const matches = q ? coins.filter((c) => c.toLowerCase().startsWith(q.toLowerCase())).slice(0, 12) : [];
 
   // regular offers ranked by base APR; new-user promos listed after them (they're capped and not for everyone)
-  const list = useMemo(() => (byCoin.get(coin) ?? []).filter((o) => type === "all" || o.type === type)
-    .sort((a, b) => Number(!!a.newUsers) - Number(!!b.newUsers) || b.apr - a.apr || (b.aprMax ?? 0) - (a.aprMax ?? 0)), [byCoin, coin, type]);
+  const coinExchanges = useMemo(() => [...new Set((byCoin.get(coin) ?? []).map((o) => o.exchange))].filter((id) => exchanges[id]), [byCoin, coin, exchanges]);
+  const ex: string = (coinExchanges as string[]).includes(exPick) ? exPick : "all";
+  const list = useMemo(() => (byCoin.get(coin) ?? []).filter((o) => (type === "all" || o.type === type) && (ex === "all" || o.exchange === ex))
+    .sort((a, b) => Number(!!a.newUsers) - Number(!!b.newUsers) || b.apr - a.apr || (b.aprMax ?? 0) - (a.aprMax ?? 0)), [byCoin, coin, type, ex]);
 
   const avg = useMemo(() => {
     const regular = (byCoin.get(coin) ?? []).filter((o) => !o.newUsers);
@@ -86,6 +90,18 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
           ))}
         </div>
       </div>
+      {/* exchange chips — tap to see only that exchange */}
+      {coinExchanges.length > 1 && (
+        <div className="scroll-x mt-3 flex gap-1.5">
+          <button onClick={() => setEx("all")} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
+          {coinExchanges.map((id) => (
+            <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
+              className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>
+              <VenueLogo v={exchanges[id]} size={24} rounded="rounded-md" />{exchanges[id].name}
+            </button>
+          ))}
+        </div>
+      )}
       {hedge[coin] && <HedgeVenues coin={coin} hedge={hedge[coin]} lang={lang} className="mt-2 text-xs" />}
       {(() => {
         // Earn in the coin + a short of the same size = income in dollars without the price risk
@@ -105,14 +121,14 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
       <div className="mt-3 space-y-2">
         {list.length === 0 && <div className="rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{A.none}</div>}
         {list.map((o, i) => {
-          const ex = exchanges[o.exchange];
+          const v = exchanges[o.exchange];
           const top = i === 0 && !o.newUsers;
           return (
-            <div key={`${o.exchange}${o.type}${o.days}${i}`} className={`card grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3 p-4 ${top ? "ring-1 ring-lime/50" : ""}`} style={{ ["--tint" as string]: ex.color }}>
-              <VenueLogo v={ex} size={40} />
+            <div key={`${o.exchange}${o.type}${o.days}${i}`} className={`card grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3 p-4 ${top ? "ring-1 ring-lime/50" : ""}`} style={{ ["--tint" as string]: v.color }}>
+              <button type="button" onClick={() => setEx(o.exchange)} title={v.name}><VenueLogo v={v} size={40} /></button>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-bold">{ex.name}</span>
+                  <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
                   {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-[#0b0f05]">{A.best}</span>}
                   {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
                 </div>

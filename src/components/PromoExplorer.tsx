@@ -34,7 +34,8 @@ type Kind = VenueKind | "all" | "saved";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];
 const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
-const PAGE = 24;
+const FIRST = 9;   // cards shown before "show more" (user: keep the overview short)
+const PAGE = 24;  // cards added per "show more"
 const VENUE_CHIPS = 9;
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
@@ -78,7 +79,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const [allVenues, setAllVenues] = useState(false);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
-  const [limit, setLimit] = useState(PAGE);
+  const [limit, setLimit] = useState(FIRST);
   const G = GX[lang];
   const [country, setCountryS] = useState<Country>(lang === "uk" ? "ua" : "any");
   const [quick, setQuick] = useState<Set<Quick>>(new Set());
@@ -91,7 +92,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
-  useEffect(() => setLimit(PAGE), [kind, cat, venues, q, sort, status, country, quick]);
+  useEffect(() => setLimit(FIRST), [kind, cat, venues, q, sort, status, country, quick]);
 
   // "since your last visit": the previous visit time is frozen for this browser session, the new one saved for next time
   const [since, setSince] = useState<number | null>(null);

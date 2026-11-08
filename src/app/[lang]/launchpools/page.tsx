@@ -37,6 +37,9 @@ function period(p: PoolProject, lang: Locale) {
   return `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`;
 }
 
+const MORE_TX = { uk: "Глянути більше", en: "Show more", ru: "Показать больше" } as const;
+const LESS_TX = { uk: "Згорнути", en: "Show less", ru: "Свернуть" } as const;
+
 export default async function Launchpools({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -109,7 +112,8 @@ export default async function Launchpools({ params }: { params: Params }) {
 
         {/* board */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6">
-          <LaunchpoolBoard projects={active} prices={prices} changes={changes} hedge={hedge} exchanges={exchanges} t={t} lang={lang} serverNow={now} sparks={sparks} />
+          <LaunchpoolBoard projects={active} prices={prices} changes={changes} hedge={hedge} exchanges={exchanges} t={t} lang={lang} serverNow={now} sparks={sparks}
+            extra={ann.map((p) => ({ id: p.id, href: withBase(`/${lang}/p/${slugOf(p)}/`), venue: p.venue, title: p.title, date: p.publishedAt || undefined, reward: p.reward?.label, endsAt: p.endsAt }))} />
           <p className="mt-4 text-xs text-ink-3">{L.disclaimer}</p>
 
           {quiet.length > 0 && (
@@ -131,25 +135,9 @@ export default async function Launchpools({ params }: { params: Params }) {
           )}
         </section>
 
-        {/* exchanges without an API: official announcements */}
-        <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
-          <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.annTitle}</h2>
-          <p className="mt-1.5 text-sm text-ink-3">{L.annSub}</p>
-          {ann.length > 0 && (
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {ann.map((p) => (
-                <a key={p.id} href={withBase(`/${lang}/p/${slugOf(p)}/`)} className="card flex gap-3 p-4">
-                  <VenueLogo v={p.venue} size={34} rounded="rounded-lg" />
-                  <span className="min-w-0">
-                    <span className="block text-xs font-bold text-ink-3">{p.venue.name}{p.publishedAt ? ` · ${shortDate(p.publishedAt, lang)}` : ""}</span>
-                    <span className="mt-0.5 block break-words text-sm font-semibold leading-snug">{p.title}</span>
-                    {p.reward?.label && <span className="mt-1 block font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
-                  </span>
-                </a>
-              ))}
-            </div>
-          )}
-          <p className="mt-5 text-sm text-ink-2">{ann.length ? "" : L.annNone}</p>
+        {/* exchanges without an API: their cards are mixed into the board above; here — links to their official pages */}
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+          <p className="text-sm text-ink-3">{L.annSub}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {ANN_IDS.map((id) => (
               <a key={id} href={LP_ANN[id]} target="_blank" rel="noopener" className="flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
@@ -198,34 +186,51 @@ export default async function Launchpools({ params }: { params: Params }) {
         <section className="adv mx-auto max-w-7xl px-4 pt-16 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.archive}</h2>
           <p className="mt-1.5 text-sm text-ink-3">{L.archiveSub}</p>
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
-            <table className="w-full min-w-[760px] text-left text-sm">
-              <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
-                <tr>{[L.colToken, L.colEx, L.colDate, L.colStake, L.colApr, L.colReward, L.colUsers].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
-              </thead>
-              <tbody className="divide-y divide-line">
-                {archive.map((p) => {
-                  const aprs = p.pools.map((x) => x.apr).filter((x): x is number => x !== undefined && x > 0);
-                  return (
-                    <tr key={p.id} className="hover:bg-white/[0.02]">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2.5">
-                          <VenueLogo v={{ name: p.token, logo: p.logo, color: "#2a313b", ink: "#eef2f6", monogram: p.token.slice(0, 3) }} size={28} rounded="rounded-lg" />
-                          <span className="font-bold">{p.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3"><span className="flex items-center gap-2 font-semibold text-ink-2"><VenueLogo v={exchanges[p.exchange]} size={20} rounded="rounded-md" />{exchanges[p.exchange].name}</span></td>
-                      <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-ink-2">{period(p, lang)}</td>
-                      <td className="px-4 py-3 text-ink-2">{[...new Set(p.pools.map((x) => x.stake))].join(", ")}</td>
-                      <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{aprs.length ? aprRange(Math.min(...aprs), Math.max(...aprs)) : "—"}</td>
-                      <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd) : `${fmtNum(p.rewardTotal)} ${p.token}`}</td>
-                      <td className="px-4 py-3 font-mono text-ink-2">{fmtNum(p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined))}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {(() => {
+            const tableOf = (rows: typeof archive) => (
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                  <tr>{[L.colToken, L.colEx, L.colDate, L.colStake, L.colApr, L.colReward, L.colUsers].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
+                </thead>
+                  <tbody className="divide-y divide-line">
+                  {rows.map((p) => {
+                    const aprs = p.pools.map((x) => x.apr).filter((x): x is number => x !== undefined && x > 0);
+                    return (
+                      <tr key={p.id} className="hover:bg-white/[0.02]">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2.5">
+                            <VenueLogo v={{ name: p.token, logo: p.logo, color: "#2a313b", ink: "#eef2f6", monogram: p.token.slice(0, 3) }} size={28} rounded="rounded-lg" />
+                            <span className="font-bold">{p.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3"><span className="flex items-center gap-2 font-semibold text-ink-2"><VenueLogo v={exchanges[p.exchange]} size={20} rounded="rounded-md" />{exchanges[p.exchange].name}</span></td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-ink-2">{period(p, lang)}</td>
+                        <td className="px-4 py-3 text-ink-2">{[...new Set(p.pools.map((x) => x.stake))].join(", ")}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{aprs.length ? aprRange(Math.min(...aprs), Math.max(...aprs)) : "—"}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd) : `${fmtNum(p.rewardTotal)} ${p.token}`}</td>
+                        <td className="px-4 py-3 font-mono text-ink-2">{fmtNum(p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined))}</td>
+                      </tr>
+                    );
+                  })}
+                  </tbody>
+              </table>
+            </div>
+            );
+            return (
+              <>
+                {tableOf(archive.slice(0, 10))}
+                {archive.length > 10 && (
+                  <details className="group mt-3">
+                    <summary className="btn btn-ghost mx-auto flex h-11 w-fit cursor-pointer list-none px-5 text-sm [&::-webkit-details-marker]:hidden">
+                      <span className="group-open:hidden">{MORE_TX[lang]} · {archive.length - 10}</span><span className="hidden group-open:inline">{LESS_TX[lang]}</span>
+                    </summary>
+                    {tableOf(archive.slice(10))}
+                  </details>
+                )}
+              </>
+            );
+          })()}
         </section>
 
         {/* how it works */}

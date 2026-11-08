@@ -66,9 +66,12 @@ function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
 const fmtChg = (c: number) => `${c > 0 ? "+" : ""}${Math.abs(c) >= 10 ? c.toFixed(0) : c.toFixed(1)}%`;
 const chgClass = (c: number) => (c <= -10 ? "bg-rose/15 text-rose" : c < 0 ? "bg-amber/10 text-amber" : "bg-lime/10 text-lime");
 
-export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, exchanges, t, lang, serverNow, sparks = {} }: {
+/** Launchpool-type campaigns known only from an exchange's official announcement (OKX, HTX, Bybit…): no API numbers. */
+export interface AnnPool { id: string; href: string; venue: Venue; title: string; date?: number; reward?: string; endsAt?: number }
+
+export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, exchanges, t, lang, serverNow, sparks = {}, extra = [] }: {
   projects: PoolProject[]; prices: Record<string, number>; changes?: Record<string, number>; hedge?: Record<string, Hedge>;
-  exchanges: Record<string, Venue>; t: Dict; lang: Locale; serverNow: number; sparks?: Record<string, number[]>;
+  exchanges: Record<string, Venue>; t: Dict; lang: Locale; serverNow: number; sparks?: Record<string, number[]>; extra?: AnnPool[];
 }) {
   const L = t.lp;
   const [now, setNow] = useState(serverNow);
@@ -316,6 +319,23 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             </article>
           );
         })}
+        {/* the same list continues with exchanges that publish Launchpools only as announcements (OKX, HTX, Bybit…) */}
+        {coin === "all" && extra.map((a) => (
+          <a key={a.id} href={a.href} className="card grid gap-3 p-4 sm:p-5 lg:grid-cols-[1.4fr_1fr_auto] lg:items-center">
+            <span className="flex min-w-0 items-center gap-3">
+              <VenueLogo v={a.venue} size={40} rounded="rounded-xl" />
+              <span className="min-w-0">
+                <span className="flex flex-wrap items-center gap-2 text-xs font-bold text-ink-3">{a.venue.name}<span className="rounded-md bg-white/5 px-1.5 py-0.5 font-semibold">{L.annNews}</span></span>
+                <span className="mt-0.5 block break-words font-semibold leading-snug">{a.title}</span>
+              </span>
+            </span>
+            <span className="text-sm text-ink-2">
+              {a.reward && <span className="block font-mono font-bold text-lime">{a.reward}</span>}
+              {a.endsAt ? <span className="block text-xs text-ink-3">⏳ {duration(Math.max(0, a.endsAt - now), t.time)}</span> : a.date ? <span className="block text-xs text-ink-3">{new Date(a.date).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}</span> : null}
+            </span>
+            <span className="btn btn-ghost h-10 px-4 text-sm">{t.card.details} →</span>
+          </a>
+        ))}
       </div>
     </div>
   );

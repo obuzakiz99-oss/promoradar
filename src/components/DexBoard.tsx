@@ -17,6 +17,13 @@ const WHAT: Record<Locale, (pr: string, s: string, ch: string) => string> = {
   en: (pr, s, ch) => `The ${s} pool on ${pr} (${ch}). You deposit coins from your own wallet and earn a share of fees and/or protocol rewards. The yield changes daily — pros, cons and risks below.`,
   ru: (pr, s, ch) => `Пул ${s} в протоколе ${pr} (сеть ${ch}). Вы вносите монеты со своего кошелька и получаете долю комиссий и/или наград протокола. Доходность меняется ежедневно — ниже плюсы, минусы и риски.`,
 };
+// built-in earnings calculator: one amount for the whole table, income shown next to every pool
+const CALC: Record<Locale, { amount: string; col: (a: string) => string; mo: string; yr: string; d: string; w: string; title: (a: string, apy: string) => string; note: string; il: string }> = {
+  uk: { amount: "Сума, $", col: (a) => `Дохід з ${a}`, mo: "/міс", yr: "/рік", d: "день", w: "тиждень", title: (a, apy) => `Якщо вкласти ${a} під ${apy} річних`, note: "Розрахунок за поточним APY — він змінюється щодня. Без урахування комісій мережі.", il: "Пул з двох різних монет: якщо ціни розійдуться, можлива непостійна втрата (IL) — дохід може бути меншим." },
+  en: { amount: "Amount, $", col: (a) => `Income on ${a}`, mo: "/mo", yr: "/yr", d: "day", w: "week", title: (a, apy) => `If you put in ${a} at ${apy} a year`, note: "Based on the current APY, which changes daily. Network fees not included.", il: "Two different coins in the pool: if their prices diverge, impermanent loss (IL) can eat into the income." },
+  ru: { amount: "Сумма, $", col: (a) => `Доход с ${a}`, mo: "/мес", yr: "/год", d: "день", w: "неделя", title: (a, apy) => `Если вложить ${a} под ${apy} годовых`, note: "Расчёт по текущему APY — он меняется ежедневно. Без учёта комиссий сети.", il: "Пул из двух разных монет: если цены разойдутся, возможна непостоянная потеря (IL) — доход может быть меньше." },
+};
+const money = (x: number) => (x >= 1000 ? `${Math.round(x).toLocaleString("en-US")}` : x >= 10 ? `${x.toFixed(0)}` : `${x.toFixed(2)}`);
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
@@ -42,6 +49,9 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<Sort>("apy");
   const [limit, setLimit] = useState(PAGE);
+  const [amtText, setAmt] = useState("1000");
+  const amount = Math.min(1e9, Number(amtText.replace(/[^d.]/g, "")) || 0);
+  const C = CALC[lang];
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
 
   const list = useMemo(() => {
@@ -83,6 +93,11 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
             {TVLS.map((v) => <option key={v} value={v}>{A.minTvl} {compactUsd(v)}</option>)}
           </select>
         </label>
+        <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
+          🧮 {C.amount}
+          <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(/[^d.]/g, "").slice(0, 10))} inputMode="decimal"
+            className="h-8 w-24 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
+        </label>
         <button className={toggle(stable)} onClick={() => setStable((x) => !x)} aria-pressed={stable}>{A.stable}</button>
         <button className={toggle(noIl)} onClick={() => setNoIl((x) => !x)} aria-pressed={noIl}>{A.noIl}</button>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1 sm:ml-auto">
@@ -96,11 +111,11 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
 
       {/* table */}
       <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
-        <table className="w-full min-w-[820px] text-left text-sm">
+        <table className="w-full min-w-[940px] text-left text-sm">
           <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
             <tr>
               <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right">{A.colTvl}</th>
-              <th className="px-4 py-3 text-right">{A.colApy}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
+              <th className="px-4 py-3 text-right">{A.colApy}</th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -126,6 +141,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                 <td className="px-4 py-3 text-ink-2">{p.chain}</td>
                 <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl)}</td>
                 <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</td>
+                <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
+                  <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-[11px] font-semibold text-ink-3">{C.mo}</span></div>
+                  <div className="text-[11px] text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
+                </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">
                   {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-[#7ee787]">{pct(p.apyReward ?? 0)}</span></>}
                 </td>
@@ -146,8 +165,18 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
               </tr>
               {open && (
                 <tr className="bg-white/[0.025]">
-                  <td colSpan={7} className="px-4 pb-4 pt-1">
+                  <td colSpan={8} className="px-4 pb-4 pt-1">
                     <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
+                    {/* the calculator, in detail */}
+                    <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
+                      <div className="text-sm font-bold">🧮 {C.title(money(amount), pct(p.apy))}</div>
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
+                          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
+                        ))}
+                      </div>
+                      <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
+                    </div>
                     <ProsCons pc={pc} max={10} />
                     <div className="mt-4 flex flex-wrap gap-2">
                       {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
