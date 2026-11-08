@@ -64,6 +64,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
   const st = statusOf(p, now);
   const lvl = promoLevel(p);
   const own = titleOf(p, lang);
+  // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
+  const calm = (s: string) => { const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
   return (
     <article
@@ -114,10 +116,10 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
           {/* our own short title from the parsed facts; the exchange's headline stays below in small type (audit 08.11) */}
           <h3 className="mt-4 break-words text-[1.02rem] font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">
-              {own ?? (isDrop ? `${p.title} — Airdrop` : p.title)}
+              {own ?? calm(isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
           </h3>
-          {own && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{p.title}</p>}
+          {own && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{calm(p.title)}</p>}
           {isDrop && m.actions && (
             <p className="mt-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}

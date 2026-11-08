@@ -16,9 +16,9 @@ const DO: Record<L, Record<"trade" | "deposit" | "stake" | "hold" | "buy", (x: s
   ru: { trade: (x) => `Торгуйте от ${x}`, deposit: (x) => `Внесите от ${x}`, stake: (x) => `Застейкайте от ${x}`, hold: (x) => `Держите от ${x}`, buy: (x) => `Купите от ${x}` },
 };
 const DEF: Record<L, Partial<Record<Promo["category"], string>> & { free: string }> = {
-  uk: { free: "Без вкладень", referral: "Запросіть друзів", competition: "Змагайтеся за обсягом", earn: "Вкладіть під відсоток", airdrop: "Виконайте завдання", listing: "Торгуйте новим токеном", bonus: "Виконайте умови бонусу" },
-  en: { free: "No deposit", referral: "Invite friends", competition: "Compete on volume", earn: "Deposit for interest", airdrop: "Complete the tasks", listing: "Trade the new token", bonus: "Meet the bonus terms" },
-  ru: { free: "Без вложений", referral: "Пригласите друзей", competition: "Соревнуйтесь по объёму", earn: "Вложите под процент", airdrop: "Выполните задания", listing: "Торгуйте новым токеном", bonus: "Выполните условия бонуса" },
+  uk: { free: "Без вкладень", referral: "Запросіть друзів", competition: "Змагання", earn: "Вкладіть під відсоток", airdrop: "Виконайте завдання", listing: "Торгуйте новим токеном", bonus: "Виконайте умови бонусу" },
+  en: { free: "No deposit", referral: "Invite friends", competition: "Competition", earn: "Deposit for interest", airdrop: "Complete the tasks", listing: "Trade the new token", bonus: "Meet the bonus terms" },
+  ru: { free: "Без вложений", referral: "Пригласите друзей", competition: "Соревнование", earn: "Вложите под процент", airdrop: "Выполните задания", listing: "Торгуйте новым токеном", bonus: "Выполните условия бонуса" },
 };
 const PER: Record<L, (x: string) => string> = { uk: (x) => `до ${x} на 1 людину`, en: (x) => `up to ${x} per person`, ru: (x) => `до ${x} на 1 человека` };
 const POOL: Record<L, (x: string) => string> = { uk: (x) => `фонд ${x}`, en: (x) => `pool ${x}`, ru: (x) => `фонд ${x}` };
