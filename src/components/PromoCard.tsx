@@ -49,7 +49,7 @@ const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No 
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };
 const PER_T: Record<Locale, string> = { uk: "До на 1 людину", en: "Per person, up to", ru: "До на 1 человека" };
 
-export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean }) {
+export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string } }) {
   const cs = CAT_STYLE[p.category];
   const isNew = p.publishedAt > 0 && now - p.publishedAt < 48 * 3600_000;
   // "Join" goes straight to this promo's own page on the exchange (a farm pool's own page for farming)
@@ -68,6 +68,7 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
+      {pin && <span className={`absolute -top-2.5 left-4 z-10 rounded-md px-2 py-0.5 text-[11px] font-extrabold ${pin.cls}`}>{pin.tag}</span>}
       {/* header */}
       <div className="flex items-center gap-3">
         <VenueLogo v={p.venue} />
@@ -139,6 +140,13 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
               <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
               <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-[#7ee787]">+{m.apr}%</div>
               {m.baseApr ? <div className="font-mono text-[11px] text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
+            </div>
+          ) : m.perUser && p.reward ? (
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
+              <div className="mt-0.5 font-mono text-[11px] text-ink-3">{t.card.pool}: {p.reward.label}</div>
+              {m.minEntry && <div className="mt-0.5 font-mono text-[11px] font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
             </div>
           ) : p.reward ? (
             <div>

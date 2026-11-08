@@ -15,6 +15,20 @@ const TX: Record<Locale, {
 };
 
 /** Three hand-picked-by-rule cards above the feed. Region-only, restricted, teaser and not-yet-started promos are skipped. */
+/** Today's top 3 (most per person · no deposit · ending soon) as pins for the promo list. */
+export function todayPins(promos: Promo[], lang: Locale, now: number): Array<{ id: string; tag: string; cls: string }> {
+  const T = TX[lang];
+  const ok = promos.filter((p) => p.category !== "farming" && !p.meta?.thin && !p.meta?.geo?.only && !p.meta?.geo?.noUA && !(p.startsAt && p.startsAt > now) && !(p.endsAt && p.endsAt < now));
+  const val = (p: Promo) => p.meta?.perUser?.usd ?? 0;
+  const used = new Set<string>();
+  const pick = (xs: Promo[]) => { const p = xs.find((x) => !used.has(x.id)); if (p) used.add(p.id); return p; };
+  const best = pick([...ok].filter((p) => val(p) >= 10).sort((a, b) => val(b) - val(a)));
+  const free = pick([...ok].filter((p) => p.meta?.noDeposit).sort((a, b) => val(b) - val(a) || (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0) || b.publishedAt - a.publishedAt));
+  const ending = pick([...ok].filter((p) => p.endsAt && p.endsAt - now < 72 * 3600_000).sort((a, b) => (val(b) || (b.reward?.usd ?? 0) / 1000) - (val(a) || (a.reward?.usd ?? 0) / 1000)));
+  return ([[best, `🔥 ${T.best}`, "bg-lime text-[#0b0f05]"], [free, `🆓 ${T.free}`, "bg-teal text-[#04140f]"], [ending, `⏳ ${T.ending}`, "bg-rose text-[#1a0508]"]] as const)
+    .filter(([p]) => p).map(([p, tag, cls]) => ({ id: p!.id, tag, cls }));
+}
+
 export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang: Locale; now: number; siteUrl: string }) {
   const T = TX[lang];
   const ok = promos.filter((p) => p.category !== "farming" && !p.meta?.thin && !p.meta?.geo?.only && !p.meta?.geo?.noUA && !(p.startsAt && p.startsAt > now) && !(p.endsAt && p.endsAt < now));

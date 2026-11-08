@@ -37,6 +37,7 @@ const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
 const FIRST = 9;   // cards shown before "show more" (user: keep the overview short)
 const PAGE = 24;  // cards added per "show more"
 const VENUE_CHIPS = 9;
+const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
 const SYN: Array<[RegExp, string[]]> = [
@@ -56,7 +57,7 @@ const isCash = (p: Promo) => p.meta?.payout?.form === "cash" || p.meta?.payout?.
 const entry = (p: Promo) => (p.meta?.noDeposit ? 0 : p.meta?.minEntry?.amount ?? Infinity);
 const value = (p: Promo) => p.reward?.usd ?? (p.meta?.apr !== undefined ? p.meta.apr * 100 : -1);
 
-export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds = true, src }: { promos: Promo[]; t: Dict; lang: Locale; serverNow: number; showKinds?: boolean; src?: string }) {
+export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds = true, src, pinned = [] }: { promos: Promo[]; t: Dict; lang: Locale; serverNow: number; showKinds?: boolean; src?: string; pinned?: Array<{ id: string; tag: string; cls: string }> }) {
   // the home page ships only the first cards in its HTML; the full list (for filters and "show more") comes from the
   // cached JSON feed right after the page appears — the page is several times lighter on phones
   const [promos, setPromos] = useState(initial);
@@ -85,6 +86,8 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const [quick, setQuick] = useState<Set<Quick>>(new Set());
   useEffect(() => { try { const c = localStorage.getItem("pr:country"); if (c === "any" || c === "ua" || c === "eu") setCountryS(c); } catch { /* blocked */ } }, []);
   const setCountry = (c: Country) => { setCountryS(c); try { localStorage.setItem("pr:country", c); } catch { /* blocked */ } };
+  const [panel, setPanel] = useState(false);
+  const activeN = Number(kind !== "all") + Number(status !== "all") + Number(venues.size > 0) + quick.size;
   const toggleQuick = (k: Quick) => setQuick((s) => { const n = new Set(s); n.has(k) ? n.delete(k) : n.add(k); return n; });
 
   useEffect(() => {
@@ -164,8 +167,16 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     if (sort === "minEntry") rest.sort((a, b) => entry(a) - entry(b) || b.publishedAt - a.publishedAt);
     // teaser-like posts (no amount, no dates, no rules yet) go after everything else
     const full = rest.filter((p) => !p.meta?.thin), thin = rest.filter((p) => p.meta?.thin);
-    return [...sponsored, ...full, ...thin];
-  }, [base, cat, sort]);
+    const out = [...sponsored, ...full, ...thin];
+    // today's top 3 lead the untouched list (no search, filters or other sort)
+    if (pinned.length && sort === "newest" && cat === "all" && !q && !venues.size && kind === "all" && status === "all" && !quick.size) {
+      const ids = new Set(pinned.map((x) => x.id));
+      const top = pinned.map((x) => out.find((p) => p.id === x.id)).filter((p): p is Promo => !!p);
+      return [...top, ...out.filter((p) => !ids.has(p.id))];
+    }
+    return out;
+  }, [base, cat, sort, pinned, q, venues, kind, status, quick]);
+  const pinOf = useMemo(() => new Map(pinned.map((x) => [x.id, x])), [pinned]);
 
   const toggleVenue = (id: string) => setVenues((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const dirty = kind !== "all" || cat !== "all" || venues.size > 0 || q !== "" || sort !== "newest" || status !== "all" || quick.size > 0;
@@ -173,35 +184,6 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   return (
     <div>
-      {/* kind tabs */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="tablist" aria-label="Type">
-          {[...(showKinds ? KINDS.filter((k) => k === "all" || kindCounts[k]) : (["all"] as Kind[])), "saved" as Kind].map((k) => (
-            <button
-              key={k}
-              role="tab"
-              aria-selected={kind === k}
-              onClick={() => { setKind(k); setVenues(new Set()); setCat("all"); }}
-              className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-[#151005]" : "bg-lime text-[#0b0f05]") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
-            >
-              {k === "saved" ? <>★ {t.saved.tab}</> : t.kinds[k as Exclude<Kind, "saved">]}
-              <span className={`font-mono text-[11px] ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
-            </button>
-          ))}
-        </div>
-        <label className="relative sm:ml-auto">
-          <span className="sr-only">{t.status.all}</span>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as Status | "all")}
-            className="h-12 w-full appearance-none rounded-2xl border border-line bg-surface pl-4 pr-10 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none sm:w-auto"
-          >
-            {STATUSES.map((s) => <option key={s} value={s}>{s === "all" ? t.status.all : t.status[s]}</option>)}
-          </select>
-          <svg className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.2 7.6a.75.75 0 0 1 1.06 0L10 11.3l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.66a.75.75 0 0 1 0-1.06Z" /></svg>
-        </label>
-      </div>
-
       {/* toolbar */}
       <div className="sticky top-16 z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
@@ -226,6 +208,10 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             </select>
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
           </label>
+          <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
+            className={`h-11 shrink-0 self-start rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
+            ⚙ {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
+          </button>
         </div>
 
         <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1" role="tablist" aria-label="Category">
@@ -246,8 +232,38 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
         </div>
       </div>
 
-      {/* venues dropdown · country · quick filters */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      {/* everything else folds under "Filters (N)" — two rows stay visible (audit 08.11) */}
+      {panel && <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] p-3">
+        {/* kind tabs */}
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="tablist" aria-label="Type">
+            {(showKinds ? KINDS.filter((k) => k === "all" || kindCounts[k]) : (["all"] as Kind[])).map((k) => (
+              <button
+                key={k}
+                role="tab"
+                aria-selected={kind === k}
+                onClick={() => { setKind(k); setVenues(new Set()); setCat("all"); }}
+                className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-[#151005]" : "bg-lime text-[#0b0f05]") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
+              >
+                {k === "saved" ? <>★ {t.saved.tab}</> : t.kinds[k as Exclude<Kind, "saved">]}
+                <span className={`font-mono text-[11px] ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
+              </button>
+            ))}
+          </div>
+          <label className="relative sm:ml-auto">
+            <span className="sr-only">{t.status.all}</span>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as Status | "all")}
+              className="h-10 w-full appearance-none rounded-xl border border-line bg-surface pl-4 pr-10 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none sm:w-auto"
+            >
+              {STATUSES.map((s) => <option key={s} value={s}>{s === "all" ? t.status.all : t.status[s]}</option>)}
+            </select>
+            <svg className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.2 7.6a.75.75 0 0 1 1.06 0L10 11.3l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.66a.75.75 0 0 1 0-1.06Z" /></svg>
+          </label>
+        </div>
+  
+  
       {venueList.length > 1 && (
         <details className="group relative w-fit">
           <summary className={`flex h-9 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
@@ -282,7 +298,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             {G.quick[k]}
           </button>
         ))}
-      </div>
+      </div>}
       {geoHidden > 0 && (
         <p className="mt-2 text-xs text-ink-3">{G.hidden(geoHidden)} · <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setCountry("any")}>{G.any}</button></p>
       )}
@@ -294,7 +310,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       {list.length ? (
         <>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i % PAGE} fresh={!!since && p.publishedAt > since} />)}
+            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i % PAGE} fresh={!!since && p.publishedAt > since} pin={i < 3 ? pinOf.get(p.id) : undefined} />)}
           </div>
           {list.length > limit && (
             <div className="mt-8 flex justify-center">
