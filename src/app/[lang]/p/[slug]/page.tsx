@@ -14,6 +14,8 @@ import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
 import { EarnCalc } from "@/components/EarnCalc";
+import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
+import { withBase } from "@/lib/base";
 import { getTokens, isStableSym } from "@/lib/tokens";
 
 export const revalidate = 900;
@@ -151,6 +153,12 @@ function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
 
 const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
+
+const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string }> = {
+  uk: { title: "Що ви реально отримаєте", unknown: "❓ Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →" },
+  en: { title: "What you actually get", unknown: "❓ Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →" },
+  ru: { title: "Что вы реально получите", unknown: "❓ Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →" },
+};
 
 const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: string; claim: string; watch: string; title: string; note: (venue: string) => string }> = {
   uk: { how: "Як це працює — простими словами", steps: "Що зробити", when: "Коли прийде нагорода", form: "У якій формі", claim: "Як отримати", watch: "На що звернути увагу", title: "Часті питання",
@@ -298,6 +306,34 @@ export default async function PromoPage({ params }: { params: Params }) {
         {p.category !== "farming" && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
+
+        {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}
+        {p.category !== "farming" && det && (() => {
+          const po = m.payout;
+          const chips = po ? timingChips(po, lang) : [];
+          const PT = PAY_TX[lang];
+          return (
+            <section id="payout" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
+              <h2 className="font-display text-xl font-semibold tracking-tight">💰 {PT.title}</h2>
+              <div className="mt-3 flex flex-wrap gap-2 text-sm font-bold">
+                {po?.form
+                  ? <span className={`rounded-md px-2 py-1 ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span>
+                  : <span className="rounded-md bg-white/5 px-2 py-1 text-ink-2">{PT.unknown}</span>}
+                {chips.map((c) => <span key={c} className="rounded-md bg-white/5 px-2 py-1 text-ink-2">{c}</span>)}
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-ink-2">{FORM_TEXT[lang][po?.form ?? "unknown"]}</p>
+              {po && po.quotes.length > 0 && (
+                <div className="mt-4 rounded-xl border border-line bg-white/[0.02] p-4">
+                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PT.quote}</div>
+                  <ul className="mt-2 space-y-1.5 text-sm text-ink-2">
+                    {po.quotes.map((q, i) => <li key={i} className="[overflow-wrap:anywhere]">“{q}”</li>)}
+                  </ul>
+                </div>
+              )}
+              <a href={withBase(`/${lang}/learn/rewards/`)} className="mt-4 inline-block text-sm font-semibold text-lime hover:underline">{PT.more}</a>
+            </section>
+          );
+        })()}
 
         {/* who can join: region-exclusive / restricted countries / new users only */}
         {p.category !== "farming" && (m.geo || m.forNew || det) && (

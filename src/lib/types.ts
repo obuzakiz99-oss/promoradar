@@ -62,6 +62,7 @@ export interface Promo {
     aprPct?: number;           // advertised APR of an interest-type promo
     futures?: boolean;         // the trading requirement is on futures (lower fees than spot)
     noDeposit?: boolean;       // quiz / register-to-claim / check-in style: no money needed
+    payout?: import("./payout").Payout;   // what the reward really is & how it is paid (read from the rules)
     thin?: boolean;            // no amount, no dates, no rules yet (teaser-like) — shown last   // start/end were read from the rules text
   };
 }

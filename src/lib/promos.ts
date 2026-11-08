@@ -8,6 +8,7 @@ import { aprOf, factsOf, geoOf, getDetails, poolOf, termsOf, tiersOf, type Promo
 import { prices } from "./pools";
 import { translateAll } from "./translate";
 import { getFaqs } from "./faq";
+import { payoutOf } from "./payout";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -37,6 +38,7 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
         perUser: m.perUser && { ...m.perUser, text: tr(m.perUser.text) },
         minEntry: m.minEntry && { ...m.minEntry, text: tr(m.minEntry.text) },
         geo: m.geo && { ...m.geo, text: m.geo.text && tr(m.geo.text) },
+        payout: m.payout && { ...m.payout, quotes: m.payout.quotes.map(tr) },
       },
     };
   });
@@ -101,6 +103,9 @@ async function getPromosLive(): Promise<Collected> {
       if (tiers.length) meta.tiers = tiers;
       const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
       if (apr !== undefined && meta.apr === undefined) meta.aprPct = apr;
+      // what is actually paid (cash / voucher / points), claim window, review & payout days — with the quoted sentences
+      const po = payoutOf(d.blocks.map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x)));
+      if (po) meta.payout = po;
       if (/\b(futures|perps?|perpetual|contract|CFD)\b/i.test(`${p.title} ${tm.minEntry?.text ?? ""}`)) meta.futures = true;
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
       if (!p.reward && p.category !== "farming") {
@@ -136,6 +141,7 @@ async function getPromosLive(): Promise<Collected> {
     if (p.meta?.minEntry) texts.push(p.meta.minEntry.text);
     if (p.meta?.actions) texts.push(p.meta.actions);
     if (p.meta?.geo?.text) texts.push(p.meta.geo.text);
+    if (p.meta?.payout) texts.push(...p.meta.payout.quotes);
     if (d) texts.push(...d.facts.map((f) => f.text));
   }
   // Full rules are long (≈3k chars each): Ukrainian first, most valuable promos first (open to Ukraine, then by what one

@@ -10,15 +10,15 @@ import { statusOf, type Status } from "@/lib/slug";
 
 type Sort = "newest" | "ending" | "biggest" | "perUser" | "minEntry";
 type Country = "any" | "ua" | "eu";
-type Quick = "noDeposit" | "low" | "forNew";
+type Quick = "noDeposit" | "low" | "forNew" | "cash";
 
 const GX: Record<Locale, {
   country: string; any: string; ua: string; eu: string; hidden: (n: number) => string;
   quick: Record<Quick, string>; perUser: string; minEntry: string;
 }> = {
-  uk: { country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "🆓 Без вкладень", low: "💵 Поріг до $100", forNew: "🆕 Для нових" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
-  en: { country: "Country", any: "🌍 Any", ua: "🇺🇦 Ukraine", eu: "🇪🇺 EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "🆓 No deposit", low: "💵 Entry ≤ $100", forNew: "🆕 New users" }, perUser: "Most per person", minEntry: "Lowest entry" },
-  ru: { country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "🆓 Без вложений", low: "💵 Порог до $100", forNew: "🆕 Для новых" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
+  uk: { country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "🆓 Без вкладень", low: "💵 Поріг до $100", forNew: "🆕 Для нових", cash: "💰 Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
+  en: { country: "Country", any: "🌍 Any", ua: "🇺🇦 Ukraine", eu: "🇪🇺 EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "🆓 No deposit", low: "💵 Entry ≤ $100", forNew: "🆕 New users", cash: "💰 Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
+  ru: { country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "🆓 Без вложений", low: "💵 Порог до $100", forNew: "🆕 Для новых", cash: "💰 Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
 };
 
 /** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
@@ -50,6 +50,8 @@ const SYN: Array<[RegExp, string[]]> = [
 ];
 
 /** Smallest known money needed: 0 for no-deposit promos, unknown last. */
+// rules say the reward is withdrawable coins (fully or partly); APR / farming interest is paid in the coin itself
+const isCash = (p: Promo) => p.meta?.payout?.form === "cash" || p.meta?.payout?.form === "mixed";
 const entry = (p: Promo) => (p.meta?.noDeposit ? 0 : p.meta?.minEntry?.amount ?? Infinity);
 const value = (p: Promo) => p.reward?.usd ?? (p.meta?.apr !== undefined ? p.meta.apr * 100 : -1);
 
@@ -105,7 +107,8 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   // tab counts follow the country / quick filters, so the numbers match the cards shown
   const quickOk = (p: Promo) => (!quick.has("noDeposit") || !!p.meta?.noDeposit)
     && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
-    && (!quick.has("forNew") || !!p.meta?.forNew);
+    && (!quick.has("forNew") || !!p.meta?.forNew)
+    && (!quick.has("cash") || isCash(p));
   const kindCounts = useMemo(() => {
     const vis = promos.filter((p) => geoAllowed(p, country) && quickOk(p));
     const c: Record<string, number> = { all: vis.length, saved: vis.filter((p) => saved.includes(p.id)).length };
@@ -120,7 +123,8 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
       && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
       && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
-      && (!quick.has("forNew") || !!p.meta?.forNew)),
+      && (!quick.has("forNew") || !!p.meta?.forNew)
+      && (!quick.has("cash") || isCash(p))),
     [geoOk, kind, saved, status, now, quick],
   );
 
@@ -271,7 +275,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </select>
           <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
         </label>
-        {(["noDeposit", "low", "forNew"] as Quick[]).map((k) => (
+        {(["noDeposit", "low", "forNew", "cash"] as Quick[]).map((k) => (
           <button key={k} type="button" onClick={() => toggleQuick(k)} aria-pressed={quick.has(k)}
             className={`h-9 rounded-xl border px-3 text-[13px] font-bold transition-colors ${quick.has(k) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {G.quick[k]}

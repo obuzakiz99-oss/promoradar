@@ -6,6 +6,7 @@ import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
+import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -119,12 +120,14 @@ export function PromoCard({ p, t, lang, now, index, fresh }: { p: Promo; t: Dict
       )}
 
       {/* who it is for */}
-      {(m.geo?.only || m.geo?.noUA || m.forNew || m.noDeposit) && (
+      {(m.geo?.only || m.geo?.noUA || m.forNew || m.noDeposit || m.payout?.form) && (
         <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px] font-bold">
           {m.geo?.only && <span className="rounded-md bg-amber/10 px-1.5 py-0.5 text-amber">🌍 {GEO_ONLY[lang](m.geo.only)}</span>}
           {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-1.5 py-0.5 text-rose">{NO_UA[lang]}</span>}
           {m.forNew && <span className="rounded-md bg-sky/10 px-1.5 py-0.5 text-sky">🆕 {FOR_NEW[lang]}</span>}
           {m.noDeposit && <span className="rounded-md bg-lime/10 px-1.5 py-0.5 text-lime">🆓 {NO_DEP[lang]}</span>}
+          {/* what the reward really is — read from the official rules */}
+          {m.payout?.form && <span className={`rounded-md px-1.5 py-0.5 ${FORM_CLS[m.payout.form]}`}>{FORM_BADGE[lang][m.payout.form]}</span>}
         </div>
       )}
 

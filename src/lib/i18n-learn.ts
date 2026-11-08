@@ -5,7 +5,7 @@ export interface LearnDict {
   nav: string; toggle: string; toggleHint: string; prompt: string; promptYes: string; promptNo: string; guides: string;
   banner: string; bannerLink: string; bannerOff: string;
   hubTitle: string; hubSub: string;
-  cards: Record<"start" | "how" | "safety" | "quiz" | "glossary", [string, string]>;
+  cards: Record<"start" | "how" | "rewards" | "safety" | "quiz" | "glossary", [string, string]>;
   open: string; back: string;
   start: { title: string; sub: string; steps: Steps; tip: string; next: string };
   how: { title: string; sub: string; sections: Array<{ id: string; title: string; level: string; steps: Steps; watch: string }>; links: string };
@@ -28,6 +28,7 @@ const uk: LearnDict = {
     safety: ["Безпека", "10 правил, щоб не втратити гроші через шахраїв"],
     quiz: ["Що мені підходить?", "4 питання — і 3 конкретні варіанти саме для вас"],
     glossary: ["Словник", "APR, стейк, KYC та інші слова простою мовою"],
+    rewards: ["Типи нагород", "Гроші, ваучер чи бонус: що реально дають і як не втратити нагороду"],
   },
   open: "Відкрити", back: "← Новачкам",
   start: {
@@ -102,6 +103,7 @@ const en: LearnDict = {
     safety: ["Safety", "10 rules so scammers don't get your money"],
     quiz: ["What suits me?", "4 questions — 3 concrete options just for you"],
     glossary: ["Glossary", "APR, stake, KYC and other words in plain language"],
+    rewards: ["Reward types", "Cash, voucher or bonus: what you really get and how not to lose it"],
   },
   open: "Open", back: "← Beginners",
   start: {
@@ -176,6 +178,7 @@ const ru: LearnDict = {
     safety: ["Безопасность", "10 правил, чтобы не потерять деньги из-за мошенников"],
     quiz: ["Что мне подходит?", "4 вопроса — и 3 конкретных варианта именно для вас"],
     glossary: ["Словарь", "APR, стейк, KYC и другие слова простым языком"],
+    rewards: ["Типы наград", "Деньги, ваучер или бонус: что реально дают и как не потерять награду"],
   },
   open: "Открыть", back: "← Новичкам",
   start: {
