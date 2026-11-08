@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DEX_FEEDS } from "@/config/site";
+import BROWSER_RULES from "@/config/browser-rules.json";
 import type { Promo } from "./types";
 import { decodeEntities, getJson, getText } from "./sources/util";
 
@@ -470,6 +471,11 @@ async function fromUrl(url: string): Promise<string> {
   return htmlFromPage(await getText(url, 12_000));
 }
 
+/** Key of a page in browser-rules.json: origin + path, no query / trailing slash. */
+export function browserKey(url: string): string {
+  try { const u = new URL(url.replace(/&amp;/g, "&")); return (u.origin + u.pathname).replace(/\/$/, ""); } catch { return url; }
+}
+
 /* ------------------------------------------------------------------ cache + public API */
 let MEM: Record<string, PromoDetails> | null = null;   // also keeps dev-server renders from refetching
 function load(): Record<string, PromoDetails> {
@@ -497,6 +503,19 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
     }
   };
   await Promise.all(Array.from({ length: 4 }, worker));
+  // full rules read in headless Chrome on the owner's laptop (scripts/rules-merge.mjs) for pages that block servers
+  // (OKX, Bybit, MEXC, Bitget campaign pages…) — used when they hold more than what the build could fetch itself
+  const BR = BROWSER_RULES as Record<string, { at: number; html: string }>;
+  const len = (d?: PromoDetails) => (d ? d.blocks.reduce((n, b) => n + b.x.length, 0) : 0);
+  for (const p of promos) {
+    const r = BR[browserKey(p.url)];
+    if (!r?.html) continue;
+    const blocks = htmlToBlocks(r.html);
+    const cur = store[p.id];
+    if (blocks.length && (!cur || cur.partial || len(cur) < blocks.reduce((n, b) => n + b.x.length, 0) * 0.6)) {
+      store[p.id] = { blocks, facts: factsOf(blocks), at: now, v: VER };
+    }
+  }
   // keep current promos + anything seen recently; save for the next build (the workflow commits the data folder)
   const live = new Set(promos.map((p) => p.id));
   for (const [id, d] of Object.entries(store)) if (!live.has(id) && now - d.at > KEEP_MS) delete store[id];
