@@ -32,6 +32,11 @@ const UNIT: Record<Locale, { label: string; hint: string }> = {
   en: { label: "Amount unit", hint: "Pick a stake coin on the right — then you can enter the amount in it (e.g. 0.05 BTC)." },
   ru: { label: "Единица суммы", hint: "Выберите монету для стейка справа — и сумму можно будет ввести в ней (например, 0.05 BTC)." },
 };
+const PICK: Record<Locale, { off: string; on: string; mine: string }> = {
+  uk: { off: "Рахувати для цього пулу", on: "Обрано", mine: "обраний пул" },
+  en: { off: "Calculate for this pool", on: "Selected", mine: "selected pool" },
+  ru: { off: "Считать для этого пула", on: "Выбрано", mine: "выбранный пул" },
+};
 const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
 const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
 const fmtUsd = (n: number) => (n >= 1000 ? compactUsd(n) : `$${n.toFixed(n < 10 ? 2 : 0)}`);
@@ -109,7 +114,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
   const coins = useMemo(() => [...new Set(projects.flatMap((p) => p.pools.map((x) => x.stake)))].sort(), [projects]);
 
-  const rows = useMemo(() => {
+  const rowsRaw = useMemo(() => {
     const out: Row[] = [];
     for (const p of projects) for (const pool of p.pools) {
       if (coin !== "all" && pool.stake !== coin) continue;
@@ -138,16 +143,34 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
       row.danger = (chgStake ?? 0) <= -20 || (chgReward ?? 0) <= -30 || (row.adjusted !== undefined && row.profit !== undefined && row.adjusted < 0 && row.profit > 0);
       out.push(row);
     }
+    return out;
+  }, [projects, prices, changes, hedge, amount, coin, now, novice]);
+
+  // The order must not jump while the amount is being typed (profit depends on the amount through pool caps):
+  // it is recomputed ~1 s after typing stops, and a pool the visitor picked stays on top.
+  const rowKey = (r: Row) => `${r.p.exchange}:${r.p.id}:${r.pool.stake}`;
+  const [orderAmount, setOrderAmount] = useState(amount);
+  useEffect(() => { const id = setTimeout(() => setOrderAmount(amount), 900); return () => clearTimeout(id); }, [amount]);
+  const [picked, setPicked] = useState<string | null>(null);
+  const rank = useMemo(() => {
+    const out = [...rowsRaw];
     if (sort === "profit") out.sort((a, b) => (b.profit ?? -1) - (a.profit ?? -1));
     if (sort === "apr") out.sort((a, b) => (b.pool.apr ?? -1) - (a.pool.apr ?? -1));
     // "hedged": real dollar yield — stable stakes use plain APR, volatile ones their hedged APR (or −∞ if not hedgeable)
     const realApr = (r: Row) => (!r.hc.needed ? r.pool.apr ?? -1 : r.hc.possible ? r.hc.hedgedApr ?? -1 : -1e9);
     if (sort === "hedged") out.sort((a, b) => realApr(b) - realApr(a));
     if (sort === "end") out.sort((a, b) => a.p.end - b.p.end);
-    return out;
-  }, [projects, prices, changes, hedge, amount, coin, sort, now, novice]);
+    return new Map(out.map((r, i) => [rowKey(r), i]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderAmount, sort, coin, projects, novice]);
+  const rows = useMemo(() => {
+    const at = (r: Row) => (rowKey(r) === picked ? -1 : rank.get(rowKey(r)) ?? 1e6);
+    return [...rowsRaw].sort((a, b) => at(a) - at(b));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowsRaw, rank, picked]);
 
-  const best = rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
+  const pickedRow = picked ? rows.find((r) => rowKey(r) === picked) : undefined;
+  const best = pickedRow ?? rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
 
   return (
     <div>
@@ -207,12 +230,12 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
         </div>
         {best?.profit ? (
           <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-lime/25 bg-lime/[0.06] px-4 py-3 text-sm">
-            <span className="font-bold text-lime">★ {L.yourProfit}:</span>
+            <span className="font-bold text-lime">★ {L.yourProfit}{pickedRow ? ` · ${PICK[lang].mine}` : ""}:</span>
             <span className="font-mono text-lg font-bold text-ink">{fmtUsd(best.profit)}</span>
             {prices[best.p.token] ? <span className="font-mono text-sm font-bold text-lime">≈ {fmtNum(best.profit / prices[best.p.token])} {best.p.token}</span> : null}
             <span className="text-ink-2">{L.total} · {best.p.name} · {L.stake} {best.pool.stake} · {exchanges[best.p.exchange]?.name}</span>
             {best.adjusted !== undefined && best.danger && (
-              <span className="basis-full text-[12px] font-semibold text-ink-3">{L.ifPrice}: {best.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(best.adjusted))}</span>
+              <span className="basis-full text-xs font-semibold text-ink-3">{L.ifPrice}: {best.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(best.adjusted))}</span>
             )}
           </div>
         ) : null}
@@ -239,12 +262,13 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           const span = p.end - p.start;
           const pct = live ? Math.min(100, Math.max(0, ((now - p.start) / span) * 100)) : 0;
           const isBest = r === best;
+          const isPicked = rowKey(r) === picked;
           const lvl = poolLevel(pool.stake, p.token);
           return (
             <article
               key={`${p.id}:${pool.stake}`}
               id={`lp-${p.id}-${pool.stake}`}
-              className={`card relative scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
+              className={`card relative scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isPicked ? "ring-2 ring-lime" : isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
               style={{ ["--tint" as string]: ex?.color, animationDelay: `${Math.min(i, 10) * 30}ms` }}
             >
               {/* project */}
@@ -339,6 +363,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* actions */}
               <div className="flex gap-2 lg:flex-col">
+                {/* pick this pool: the summary above follows it and it stays on top while the amount changes */}
+                <button type="button" onClick={() => setPicked(isPicked ? null : rowKey(r))} aria-pressed={isPicked}
+                  className={`btn relative z-10 h-11 flex-1 px-4 text-sm ${isPicked ? "border border-lime/60 bg-lime/10 text-lime" : "btn-ghost"}`}>{isPicked ? `✓ ${PICK[lang].on}` : PICK[lang].off}</button>
                 <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-ghost relative z-10 h-11 flex-1 px-4 text-sm">{OPEN[lang]}</a>
               </div>
 
