@@ -23,7 +23,8 @@ const CALC: Record<Locale, { amount: string; col: (a: string) => string; mo: str
   en: { amount: "Amount, $", col: (a) => `Income on ${a}`, mo: "/mo", yr: "/yr", d: "day", w: "week", title: (a, apy) => `If you put in ${a} at ${apy} a year`, note: "Based on the current APY, which changes daily. Network fees not included.", il: "Two different coins in the pool: if their prices diverge, impermanent loss (IL) can eat into the income." },
   ru: { amount: "Сумма, $", col: (a) => `Доход с ${a}`, mo: "/мес", yr: "/год", d: "день", w: "неделя", title: (a, apy) => `Если вложить ${a} под ${apy} годовых`, note: "Расчёт по текущему APY — он меняется ежедневно. Без учёта комиссий сети.", il: "Пул из двух разных монет: если цены разойдутся, возможна непостоянная потеря (IL) — доход может быть меньше." },
 };
-const money = (x: number) => (x >= 1000 ? `${Math.round(x).toLocaleString("en-US")}` : x >= 10 ? `${x.toFixed(0)}` : `${x.toFixed(2)}`);
+const money = (x: number) => "$" + (x >= 1000 ? Math.round(x).toLocaleString("en-US") : x >= 10 ? x.toFixed(0) : x.toFixed(2));
+const digits = (s: string) => s.replace(/[^0-9.]/g, "");
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
@@ -50,7 +51,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
   const [sort, setSort] = useState<Sort>("apy");
   const [limit, setLimit] = useState(PAGE);
   const [amtText, setAmt] = useState("1000");
-  const amount = Math.min(1e9, Number(amtText.replace(/[^d.]/g, "")) || 0);
+  const amount = Math.min(1e9, Number(digits(amtText)) || 0);
   const C = CALC[lang];
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
 
@@ -95,7 +96,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
         </label>
         <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           🧮 {C.amount}
-          <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(/[^d.]/g, "").slice(0, 10))} inputMode="decimal"
+          <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal"
             className="h-8 w-24 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
         </label>
         <button className={toggle(stable)} onClick={() => setStable((x) => !x)} aria-pressed={stable}>{A.stable}</button>
