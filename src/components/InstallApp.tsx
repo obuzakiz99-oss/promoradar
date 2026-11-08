@@ -40,7 +40,7 @@ export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
   if (!show) return null;
   const T = TX[lang];
   return (
-    <div role="dialog" className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 sm:bottom-4 animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
+    <div role="dialog" className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 md:bottom-4 animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
       <p className="text-sm font-semibold text-ink">{T.text}</p>
       {ios && <p className="mt-1 text-xs text-ink-2">{T.ios}</p>}
       <div className="mt-3 flex gap-2">
