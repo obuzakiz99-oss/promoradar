@@ -10,6 +10,7 @@ export type SourceStatus = { ok: boolean; count: number; error?: string; name: s
 export interface Collected {
   promos: Promo[]; status: Record<string, SourceStatus>; fetchedAt: number; details?: Record<string, PromoDetails>;
   i18n?: Record<"uk" | "ru", Record<string, string>>;   // original text → translation
+  faq?: Record<string, import("../faq").Faq>;   // promo id → AI-written explainer (faq.ts)
 }
 
 function fromRaw(r: Raw): Promo | null {

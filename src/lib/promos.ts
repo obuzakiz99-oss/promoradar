@@ -7,6 +7,7 @@ import { parseReward } from "./parse";
 import { aprOf, factsOf, geoOf, getDetails, poolOf, termsOf, tiersOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
+import { getFaqs } from "./faq";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -146,7 +147,9 @@ async function getPromosLive(): Promise<Collected> {
     if (d) for (const b of d.blocks) { if (b.t === "tr") rules.push(...(b.cells ?? [])); else rules.push(b.x); }
   }
   const i18n = await translateAll({ uk: [...texts, ...rules], ru: [...texts, ...rules] }).catch(() => undefined);
-  return { ...data, promos, details, i18n };
+  // "Часті питання" written by Claude from the original rules (cached in data/faq.json), most valuable promos first
+  const faq = await getFaqs([...promos].sort((a, b) => worth(b) - worth(a)), details).catch(() => undefined);
+  return { ...data, promos, details, i18n, faq };
 }
 
 /** The public API shape: promos + source status, plus translated titles (id → title) — without the bulky rules texts. */

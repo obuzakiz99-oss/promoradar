@@ -152,11 +152,20 @@ function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
 const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
 
+const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: string; claim: string; watch: string; title: string; note: (venue: string) => string }> = {
+  uk: { how: "Як це працює — простими словами", steps: "Що зробити", when: "Коли прийде нагорода", form: "У якій формі", claim: "Як отримати", watch: "На що звернути увагу", title: "Часті питання",
+    note: (v) => `Пояснення склав AI тільки за офіційними правилами ${v}. Він може помилитися — перед участю звірте важливе з умовами нижче.` },
+  en: { how: "How it works — in plain words", steps: "What to do", when: "When the reward arrives", form: "In what form", claim: "How to get it", watch: "Watch out for", title: "Common questions",
+    note: (v) => `Explained by AI strictly from ${v}'s official rules. It can make mistakes — check anything important against the terms below.` },
+  ru: { how: "Как это работает — простыми словами", steps: "Что сделать", when: "Когда придёт награда", form: "В какой форме", claim: "Как получить", watch: "На что обратить внимание", title: "Частые вопросы",
+    note: (v) => `Пояснение составил AI только по официальным правилам ${v}. Он может ошибаться — перед участием сверьте важное с условиями ниже.` },
+};
+
 export default async function PromoPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang);
-  const { promos, fetchedAt, details } = await getPromos(lang);
+  const { promos, fetchedAt, details, faq: faqs } = await getPromos(lang);
   const p = findBySlug(promos, slug);
   if (!p) notFound();
   const now = fetchedAt;
@@ -169,6 +178,9 @@ export default async function PromoPage({ params }: { params: Params }) {
   const refUrl = p.category !== "farming" && venueCfg?.refUrl ? venueCfg.refUrl : undefined;
   const R = RULES_TX[lang];
   const det = details?.[p.id];
+  const ex = faqs?.[p.id]?.[lang];
+  const faq = ex?.faq ?? [];
+  const FQ = FAQ_TX[lang];
   // token pages this promo appears on (its reward coin and tickers in the headline)
   const { tokens } = await getTokens(lang);
   const coins = [...tokens.values()].filter((x) => !isStableSym(x.sym) && x.promos.some((q) => q.id === p.id)).slice(0, 4);
@@ -300,6 +312,37 @@ export default async function PromoPage({ params }: { params: Params }) {
           </div>
         )}
 
+        {/* plain-language explainer — written by AI strictly from the official rules (src/lib/faq.ts) */}
+        {ex && (
+          <section id="how" className="card mt-4 scroll-mt-20 p-6 hover:transform-none ring-1 ring-sky/20">
+            <h2 className="font-display text-xl font-semibold tracking-tight">💡 {FQ.how}</h2>
+            <p className="mt-1 text-xs text-ink-3">{FQ.note(p.venue.name)}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-ink [overflow-wrap:anywhere]">{ex.summary}</p>
+            <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3">{FQ.steps}</h3>
+            <ol className="mt-3 space-y-3 text-sm text-ink-2">
+              {ex.steps.map((x, i) => (
+                <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>
+              ))}
+            </ol>
+            <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 [&>*]:min-w-0">
+              {([["⏱", FQ.when, ex.payout.when], ["🎁", FQ.form, ex.payout.form], ["📥", FQ.claim, ex.payout.how]] as const).map(([ic, k, v]) => (
+                <div key={k} className="rounded-xl border border-line bg-white/[0.02] p-4">
+                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{ic} {k}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-ink [overflow-wrap:anywhere]">{v}</p>
+                </div>
+              ))}
+            </div>
+            {ex.watch.length > 0 && (
+              <>
+                <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3">⚠ {FQ.watch}</h3>
+                <ul className="mt-3 space-y-2 text-sm text-ink-2">
+                  {ex.watch.map((x, i) => <li key={i} className="flex gap-2"><span className="text-amber">•</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>)}
+                </ul>
+              </>
+            )}
+          </section>
+        )}
+
         {/* key points pulled from the official rules */}
         {det && det.facts.length > 0 && (
           <section className="card mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
@@ -315,6 +358,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             </dl>
           </section>
         )}
+
 
         <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] [&>*]:min-w-0">
           <section className="card p-6 hover:transform-none">
@@ -372,6 +416,27 @@ export default async function PromoPage({ params }: { params: Params }) {
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{R.none(p.venue.name)}</p>
           )}
         </section>}
+
+        {/* more questions — same AI explainer */}
+        {faq.length > 0 && (
+          <section id="faq" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
+            <h2 className="font-display text-xl font-semibold tracking-tight">❓ {FQ.title}</h2>
+            <div className="mt-4 divide-y divide-line">
+              {faq.map((x, i) => (
+                <details key={i} className="group py-3" open={i === 0}>
+                  <summary className="cursor-pointer list-none text-sm font-semibold text-ink [overflow-wrap:anywhere] marker:hidden">
+                    <span className="mr-2 inline-block text-lime transition-transform group-open:rotate-90">›</span>{x.q}
+                  </summary>
+                  <p className="mt-2 pl-5 text-sm leading-relaxed text-ink-2 [overflow-wrap:anywhere]">{x.a}</p>
+                </details>
+              ))}
+            </div>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+              "@context": "https://schema.org", "@type": "FAQPage",
+              mainEntity: faq.map((x) => ({ "@type": "Question", name: x.q, acceptedAnswer: { "@type": "Answer", text: x.a } })),
+            }).replace(/</g, "\\u003c") }} />
+          </section>
+        )}
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
