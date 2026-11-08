@@ -21,7 +21,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
               <VenueLogo v={{ name: r.sym, logo: r.logo, color: "#2a3140", ink: "#e8ecf1", monogram: r.sym.slice(0, 3) }} size={34} rounded="rounded-full" />
               <div className="min-w-0">
                 <div className="break-all font-bold">{r.sym}</div>
-                <div className="font-mono text-[10px] text-ink-3">
+                <div className="font-mono text-xs text-ink-3">
                   {[r.promos ? `${r.promos} ${plural(r.promos, langOf(labels.promos), "promo")}` : "", r.lp ? `${r.lp} ${labels.lp}` : "", r.earnMax ? `${labels.earn} ${r.earnMax.toFixed(1)}%` : ""].filter(Boolean).join(" · ")}
                 </div>
               </div>

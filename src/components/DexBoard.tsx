@@ -114,7 +114,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
       {/* table */}
       <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
         <table className="w-full min-w-[940px] text-left text-sm">
-          <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+          <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
             <tr>
               <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right"><Term k="tvl" lang={lang} align="right">{A.colTvl}</Term></th>
               <th className="px-4 py-3 text-right"><Term k="apy" lang={lang} align="right">{A.colApy}</Term></th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
@@ -133,8 +133,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-1.5 font-mono text-[13px] font-bold">
                         {p.symbol}
-                        {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-[10px] text-teal">{A.stableTag}</span>}
-                        {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-[10px] text-amber"><Term k="il" lang={lang}>{A.il}</Term></span>}
+                        {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-xs text-teal">{A.stableTag}</span>}
+                        {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-xs text-amber"><Term k="il" lang={lang}>{A.il}</Term></span>}
                       </div>
                       <div className="break-words text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${p.meta}` : ""}</div>
                     </div>
@@ -144,8 +144,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                 <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl)}</td>
                 <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
-                  <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-[11px] font-semibold text-ink-3">{C.mo}</span></div>
-                  <div className="text-[11px] text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
+                  <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>
+                  <div className="text-xs text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">
                   {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-[#7ee787]">{pct(p.apyReward ?? 0)}</span></>}
@@ -157,7 +157,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                       type="button"
                       onClick={() => setOpenId(open ? null : p.id)}
                       aria-expanded={open}
-                      className="flex h-8 items-center gap-1.5 rounded-lg border border-line bg-white/[0.02] px-2 font-mono text-[11px] font-bold hover:border-line-2"
+                      className="flex h-8 items-center gap-1.5 rounded-lg border border-line bg-white/[0.02] px-2 font-mono text-xs font-bold hover:border-line-2"
                     >
                       <span className="text-lime">✓{pc.pros.length}</span><span className="text-rose">✕{pc.cons.length}</span>
                     </button>
@@ -174,7 +174,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                       <div className="text-sm font-bold">🧮 {C.title(money(amount), pct(p.apy))}</div>
                       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
-                          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
+                          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
                         ))}
                       </div>
                       <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>

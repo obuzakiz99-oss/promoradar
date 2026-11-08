@@ -100,7 +100,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
                   {r.venue && <VenueLogo v={r.venue} size={28} rounded="rounded-lg" />}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-bold">{r.text}</span>
-                    <span className="block font-mono text-[11px] text-ink-3">{usd(r.put)} · {r.when}</span>
+                    <span className="block font-mono text-xs text-ink-3">{usd(r.put)} · {r.when}</span>
                   </span>
                   <span className="shrink-0 font-mono text-sm font-bold text-lime">+{usd(r.income)}</span>
                 </a>
@@ -111,7 +111,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
                 <a href={plan.bonus.href} className="flex items-center gap-3 rounded-xl border border-dashed border-line-2 px-3 py-2.5 hover:border-lime/40">
                   <span className="grid size-6 shrink-0 place-items-center rounded-md bg-amber/10 text-xs">🎁</span>
                   <VenueLogo v={plan.bonus.venue} size={28} rounded="rounded-lg" />
-                  <span className="min-w-0 flex-1"><span className="block text-[11px] font-bold text-amber">{T.bonus}</span><span className="block truncate text-sm font-semibold">{plan.bonus.title}</span></span>
+                  <span className="min-w-0 flex-1"><span className="block text-xs font-bold text-amber">{T.bonus}</span><span className="block truncate text-sm font-semibold">{plan.bonus.title}</span></span>
                   {plan.bonus.label && <span className="shrink-0 font-mono text-xs font-bold text-amber">{plan.bonus.label}</span>}
                 </a>
               </li>
@@ -141,13 +141,13 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
             </div>
             <div className="mt-1 text-xs text-ink-3">{T.would}</div>
             <dl className={`mt-4 grid gap-2 text-sm ${bonusAdd > 0 ? "grid-cols-3" : "grid-cols-2"}`}>
-              <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-[11px] font-semibold text-ink-3">{T.inLp}</dt><dd className="font-mono font-bold">+{usd(res.lpPart)}</dd></div>
-              <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-[11px] font-semibold text-ink-3">{T.inEarn(`${bt.idleApr.toFixed(1)}%`)}</dt><dd className="font-mono font-bold">+{usd(res.idlePart)}</dd></div>
-              {bonusAdd > 0 && <div className="rounded-xl bg-lime/[0.08] px-3 py-2"><dt className="text-[11px] font-semibold text-lime">{T.bonusTile}</dt><dd className="font-mono font-bold text-lime">+{usd(bonusAdd)}</dd></div>}
+              <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-xs font-semibold text-ink-3">{T.inLp}</dt><dd className="font-mono font-bold">+{usd(res.lpPart)}</dd></div>
+              <div className="rounded-xl bg-white/[0.03] px-3 py-2"><dt className="text-xs font-semibold text-ink-3">{T.inEarn(`${bt.idleApr.toFixed(1)}%`)}</dt><dd className="font-mono font-bold">+{usd(res.idlePart)}</dd></div>
+              {bonusAdd > 0 && <div className="rounded-xl bg-lime/[0.08] px-3 py-2"><dt className="text-xs font-semibold text-lime">{T.bonusTile}</dt><dd className="font-mono font-bold text-lime">+{usd(bonusAdd)}</dd></div>}
             </dl>
             {res.pools.length > 0 && (
               <div className="mt-4">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.top}</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.top}</div>
                 <ul className="mt-2 space-y-1.5">
                   {res.pools.slice(0, 3).map((p) => (
                     <li key={`${p.exchange}:${p.token}:${p.start}`} className="flex items-center gap-2 text-sm">
@@ -166,7 +166,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
               const add = ex.reduce((s, x) => s + x.got, 0);
               return (
                 <div className="mt-4 rounded-xl border border-lime/25 bg-lime/[0.05] p-3">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-lime">{T.extraTitle}</div>
+                  <div className="text-xs font-bold uppercase tracking-wider text-lime">{T.extraTitle}</div>
                   <ul className="mt-2 space-y-1.5">
                     {ex.map((x) => (
                       <li key={x.key}>
@@ -182,14 +182,14 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
                     <span className="text-xs font-semibold text-ink-2">{T.withExtras}</span>
                     <span className="font-mono text-sm font-bold text-lime">{usd(res.amount)} → {usd(res.amount + res.profit + add)} <span className="text-ink-3">({sgn(res.profit + add)})</span></span>
                   </div>
-                  <p className="mt-1.5 text-[11px] leading-relaxed text-ink-3">{T.extraNote}</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-ink-3">{T.extraNote}</p>
                 </div>
               );
             })()}
             {res.heldDelta !== undefined && Math.abs(res.heldDelta) >= 0.01 && (
               <p className="mt-4 text-xs font-semibold text-ink-2">{T.held(`${sgn(res.lpPart + res.heldDelta + res.idlePart)} ${res.heldDelta < 0 ? "↓" : "↑"}`)}</p>
             )}
-            <p className="mt-3 text-[11px] leading-relaxed text-ink-3">{T.note}</p>
+            <p className="mt-3 text-xs leading-relaxed text-ink-3">{T.note}</p>
           </>
         )}
       </div>

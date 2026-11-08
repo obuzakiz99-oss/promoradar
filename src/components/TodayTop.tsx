@@ -54,11 +54,11 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
           const main = pu ? `${T.perPerson} ${pu.usd !== undefined ? compactUsd(pu.usd) : `${pu.amount.toLocaleString("en-US")} ${pu.unit}`}` : p!.reward ? `${T.pool} ${p!.reward.label}` : T.noDep;
           return (
             <article key={p!.id} className="card relative flex flex-col p-5" style={{ ["--tint" as string]: p!.venue.color }}>
-              <div className={`text-[11px] font-extrabold uppercase tracking-wider ${tone}`}>{label}</div>
+              <div className={`text-xs font-extrabold uppercase tracking-wider ${tone}`}>{label}</div>
               <div className="mt-3 flex items-center gap-2.5">
                 <VenueLogo v={p!.venue} size={28} rounded="rounded-lg" />
                 <span className="text-sm font-bold">{p!.venue.name}</span>
-                {hours !== undefined && <span className={`ml-auto font-mono text-[11px] font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>⏳ {T.left(hours)}</span>}
+                {hours !== undefined && <span className={`ml-auto font-mono text-xs font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>⏳ {T.left(hours)}</span>}
               </div>
               <h3 className="mt-2 text-[0.98rem] font-bold leading-snug">
                 <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem]">{p!.title}</a>

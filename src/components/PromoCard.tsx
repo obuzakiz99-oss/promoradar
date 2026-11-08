@@ -72,29 +72,29 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
-      {pin && <span className={`absolute -top-2.5 left-4 z-10 rounded-md px-2 py-0.5 text-[11px] font-extrabold ${pin.cls}`}>{pin.tag}</span>}
+      {pin && <span className={`absolute -top-2.5 left-4 z-10 rounded-md px-2 py-0.5 text-xs font-extrabold ${pin.cls}`}>{pin.tag}</span>}
       {/* header */}
       <div className="flex items-center gap-3">
         <VenueLogo v={p.venue} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-sm font-bold">{p.venue.name}</span>
-            <span className="rounded border border-line px-1 py-px font-mono text-[9px] font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
+            <span className="rounded border border-line px-1 py-px font-mono text-xs font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
           </div>
           <div className={`mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs font-semibold ${cs.text}`}>
             <span className="size-1.5 rounded-full" style={{ background: cs.dot }} />
             {t.cat[p.category]}
-            <span className={`nov ml-1 rounded px-1.5 py-px text-[10px] font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
+            <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {/* one badge only, so the exchange name always fits (most important first) */}
-          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>
-            : st === "ending" ? <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>
-            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>
-            : st === "upcoming" ? <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>
-            : isDrop && (m.hot ?? 0) >= 60 ? <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>
-            : isNew ? <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>
+          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>
+            : st === "ending" ? <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>
+            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>
+            : st === "upcoming" ? <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>
+            : isDrop && (m.hot ?? 0) >= 60 ? <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>
+            : isNew ? <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>
             : null}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
@@ -106,7 +106,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
           <h3 className="break-words font-mono text-[0.98rem] font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">{p.title}</a>
           </h3>
-          <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold text-ink-3">
+          <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-semibold text-ink-3">
             {m.chain && <span className="rounded-md bg-white/5 px-1.5 py-0.5">{m.chain}</span>}
             {p.tags.includes("stable") && <span className="rounded-md bg-teal/10 px-1.5 py-0.5 text-teal">stable</span>}
           </div>
@@ -128,7 +128,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
 
       {/* who it is for */}
       {(m.geo?.only || m.geo?.noUA || m.forNew || m.noDeposit || m.payout?.form) && (
-        <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px] font-bold">
+        <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs font-bold">
           {m.geo?.only && <span className="rounded-md bg-amber/10 px-1.5 py-0.5 text-amber">🌍 {GEO_ONLY[lang](m.geo.only)}</span>}
           {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-1.5 py-0.5 text-rose">{NO_UA[lang]}</span>}
           {m.forNew && <span className="rounded-md bg-sky/10 px-1.5 py-0.5 text-sky">🆕 {FOR_NEW[lang]}</span>}
@@ -143,32 +143,32 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         <div className="flex items-end justify-between gap-3">
           {isFarm ? (
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
               <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-[#7ee787]">+{m.apr}%</div>
-              {m.baseApr ? <div className="font-mono text-[11px] text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
+              {m.baseApr ? <div className="font-mono text-xs text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
             </div>
           ) : m.perUser && p.reward ? (
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
-              <div className="mt-0.5 font-mono text-[11px] text-ink-3">{t.card.pool}: {p.reward.label}</div>
-              {m.minEntry && <div className="mt-0.5 font-mono text-[11px] font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
+              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}</div>
+              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
             </div>
           ) : p.reward ? (
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}</div>
-              {m.perUser && <div className="mt-0.5 font-mono text-[11px] font-bold text-lime">{PER[lang](`${m.perUser.amount.toLocaleString("en-US")} ${m.perUser.unit}`)}</div>}
-              {m.minEntry && <div className="mt-0.5 font-mono text-[11px] font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
+              {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](`${m.perUser.amount.toLocaleString("en-US")} ${m.perUser.unit}`)}</div>}
+              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
             </div>
           ) : m.perUser ? (
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.card.requires}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.requires}</div>
               <div className="mt-1.5 flex gap-1.5 text-ink-2">
                 {m.requires.map((r) => <span key={r} title={t.req[r] ?? r} className="grid size-6 place-items-center rounded-md bg-white/5"><ReqIcon k={r} /></span>)}
               </div>
@@ -204,13 +204,13 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
 
         {/* 07.11 user: every link first leads to the short explanation page; the exchange link lives there */}
         <div className="relative z-10 mt-4 grid">
-          <a href={href} className="btn btn-primary">
+          <a href={href} className="btn btn-ghost">
             {MORE[lang]}
             <Arrow className="size-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
         </div>
         {m.source && (
-          <div className="mt-3 text-[11px] font-medium text-ink-3">
+          <div className="mt-3 text-xs font-medium text-ink-3">
             {t.card.via}: {m.source}{m.confirmed ? ` · ✓ ${t.card.confirmed}` : ""}
           </div>
         )}

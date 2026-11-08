@@ -11,7 +11,7 @@ import { venueOf } from "@/config/site";
 import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { BestBoard, type PromoItem, type SafeItem } from "@/components/BestBoard";
-import { ToolHeader } from "@/components/ToolsNav";
+import { PageHeader } from "@/components/PageHeader";
 import { Footer } from "@/components/Sections";
 import type { Venue } from "@/lib/types";
 
@@ -66,7 +66,7 @@ export default async function Best({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="best" title={T.bestTitle} sub={T.bestSub} updated={fetchedAt} />
+        <PageHeader lang={lang} title={T.bestTitle} sub={T.bestSub} updated={fetchedAt} nav={<a href={withBase(`/${lang}/learn/quiz/`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Підібрати мені","en":"Pick for me","ru":"Подобрать мне"} as Record<string, string>)[lang]}</a>} />
         <BestBoard lang={lang} safe={safe} pools={live} hedge={pools.hedge} prices={pools.prices} exchanges={exchanges} promos={top} now={now} />
         <p className="mt-10 text-xs text-ink-3">{t.lp.disclaimer} {t.aprHub.note}</p>
       </main>

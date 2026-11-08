@@ -33,7 +33,7 @@ export default async function FixedPage({ params }: { params: Params }) {
         {rows.length === 0 ? <p className="mt-8 text-ink-3">{P.noData}</p> : (
           <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+              <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                 <tr>{P.fixCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 2 ? "text-right" : ""}`}>{i === 2 ? <Term k="apy" lang={lang}>{c}</Term> : c}</th>)}</tr>
               </thead>
               <tbody className="divide-y divide-line">

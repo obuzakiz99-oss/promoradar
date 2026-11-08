@@ -48,10 +48,10 @@ function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
   return (
     <div className={`rounded-xl border px-3.5 py-3 ${good ? "border-teal/25 bg-teal/[0.06]" : "border-line bg-white/[0.03]"}`} title={L.hedgeNote}>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-ink-3">🛡 {L.hedgeApr}</span>
+        <span className="text-xs font-bold uppercase tracking-wider text-ink-3">🛡 {L.hedgeApr}</span>
         <span className={`font-mono text-lg font-bold ${good ? "text-teal" : "text-ink-3"}`}>≈{fmtPct(hc.hedgedApr ?? 0)}</span>
       </div>
-      <ul className="mt-1.5 space-y-0.5 text-[11.5px] text-ink-2">
+      <ul className="mt-1.5 space-y-0.5 text-xs text-ink-2">
         <li>• {L.shortOn.replace("{c}", r.pool.stake).replace("{ex}", hc.venue ?? "")}</li>
         <li>• {L.funding.replace("{x}", `${(hc.fundingApr ?? 0) > 0 ? "+" : ""}${fmtPct(hc.fundingApr ?? 0)}`)}</li>
         <li>• {L.hedgeCost.replace("{x}", fmtPct(hc.costPct ?? 0))}</li>
@@ -216,11 +216,11 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="break-words font-bold">{p.name}</span>
                     {r.chgReward !== undefined && (
-                      <span className={`rounded-md px-1.5 py-0.5 font-mono text-[10px] font-bold ${chgClass(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
+                      <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${chgClass(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
                         {p.token} {fmtChg(r.chgReward)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>
                       </span>
                     )}
-                    {isBest && <span className="rounded-md bg-lime px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-[#0b0f05]">Best</span>}
+                    {isBest && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-[#0b0f05]">Best</span>}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs font-semibold text-ink-3">
                     <span>{ex?.name}</span>
@@ -239,37 +239,37 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               {/* stake → earn */}
               <div className="flex items-center gap-2 text-sm">
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3"><Term k="stake" lang={lang}>{L.stake}</Term></div>
+                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3"><Term k="stake" lang={lang}>{L.stake}</Term></div>
                   <div className="mt-0.5 flex items-center gap-1.5 font-bold"><VenueLogo v={tokenVenue(pool.stake, pool.stakeLogo)} size={20} rounded="rounded-full" />{pool.stake}</div>
                 </div>
                 <span className="mt-4 text-ink-3">→</span>
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{L.earn}</div>
+                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{L.earn}</div>
                   <div className="mt-0.5 font-bold">{p.token}</div>
                 </div>
               </div>
 
               {/* apr + limits */}
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
+                <div className="text-xs font-bold uppercase tracking-wider text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
                 <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
-                {pool.apr !== undefined && <div className="nov text-[11px] font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
+                {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                 {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
-                <div className="font-mono text-[11px] text-ink-3">
+                <div className="font-mono text-xs text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
                 </div>
                 {r.hc.needed && (
                   <div className={`mt-1.5 rounded-lg border px-2 py-1 ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`} title={L.hedgeNote}>
-                    <div className="text-[10px] font-bold uppercase tracking-wider opacity-80">🛡 {L.hedgeApr}</div>
+                    <div className="text-xs font-bold uppercase tracking-wider opacity-80">🛡 {L.hedgeApr}</div>
                     <div className="font-mono text-lg font-bold leading-tight">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</div>
-                    {r.hc.possible && r.hc.venue && <div className="text-[10px] font-semibold opacity-80">{HEDGE_VIA[lang](pool.stake, r.hc.venue)}</div>}
+                    {r.hc.possible && r.hc.venue && <div className="text-xs font-semibold opacity-80">{HEDGE_VIA[lang](pool.stake, r.hc.venue)}</div>}
                   </div>
                 )}
               </div>
 
               {/* profit */}
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{L.yourProfit}</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{L.yourProfit}</div>
                 {r.profit !== undefined ? (
                   <>
                     {r.belowMin ? (
@@ -278,17 +278,17 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     ) : (
                       <>
                         <div className="font-mono text-xl font-bold text-ink">{fmtUsd(r.profit)}</div>
-                        <div className="font-mono text-[11px] text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
+                        <div className="font-mono text-xs text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
                       </>
                     )}
                     {r.adjusted !== undefined && pool.stake !== "USDT" && Math.abs((r.chgReward ?? 0)) + Math.abs(r.chgStake ?? 0) >= 1 && (
-                      <div className="mt-1 text-[11px] font-semibold text-ink-3" title={L.ifPriceNote}>
+                      <div className="mt-1 text-xs font-semibold text-ink-3" title={L.ifPriceNote}>
                         {L.ifPrice}: <span className="font-mono font-bold">{r.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(r.adjusted))}</span>
                       </div>
                     )}
                   </>
                 ) : <div className="font-mono text-xl font-bold text-ink-3">—</div>}
-                <div className="mt-1 text-[11px] font-semibold text-ink-3">
+                <div className="mt-1 text-xs font-semibold text-ink-3">
                   {live ? `${L.endsIn} ${duration(p.end - now, t.time)}` : `${L.startsIn} ${duration(p.start - now, t.time)}`}
                 </div>
               </div>
@@ -308,7 +308,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}
               <details className="group border-t border-line pt-3 lg:col-span-5">
-                <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
                   <span className="transition-transform group-open:rotate-90">▸</span>{MORE[lang]}
                 </summary>
                 <div className="nov-1col mt-3 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">

@@ -8,7 +8,8 @@ import { VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
 import { compactUsd } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
-import { ToolHeader } from "@/components/ToolsNav";
+import { PageHeader } from "@/components/PageHeader";
+import { withBase } from "@/lib/base";
 import { Footer } from "@/components/Sections";
 import type { Promo } from "@/lib/types";
 
@@ -43,7 +44,7 @@ export default async function Bonuses({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="bonuses" title={T.bonusTitle} sub={T.bonusSub} updated={fetchedAt} />
+        <PageHeader lang={lang} title={T.bonusTitle} sub={T.bonusSub} updated={fetchedAt} nav={<a href={withBase(`/${lang}/#promos`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Усі акції","en":"All promos","ru":"Все акции"} as Record<string, string>)[lang]}</a>} />
         {rows.length === 0 ? <p className="mt-10 text-ink-3">{T.noBonus}</p> : (
           <div className="mt-8 space-y-3">
             {rows.map(({ id, list, best }) => {

@@ -45,7 +45,7 @@ export function SourcesSection({ t, status }: { t: Dict; status: Record<string, 
                   <li key={id} className="flex items-center gap-2.5 text-sm">
                     <span className={`size-2 rounded-full ${s.ok ? "bg-lime shadow-[0_0_8px] shadow-lime/60" : "bg-rose"}`} title={s.ok ? t.sources.ok : `${t.sources.fail}: ${s.error ?? ""}`} />
                     <span className="font-semibold text-ink">{s.name}</span>
-                    <span className="rounded border border-line px-1 font-mono text-[9px] font-bold uppercase tracking-wider text-ink-3">{s.via}</span>
+                    <span className="rounded border border-line px-1 font-mono text-xs font-bold uppercase tracking-wider text-ink-3">{s.via}</span>
                     <span className="ml-auto font-mono text-xs text-ink-3">{s.ok ? `${s.count} ${plural(s.count, langOf(t.sources.items), "promo")}` : t.sources.fail}</span>
                   </li>
                 ))}
@@ -105,7 +105,7 @@ export function ProSection({ t }: { t: Dict }) {
             </ul>
           </div>
           <div className="card relative p-7 ring-1 ring-lime/50 hover:transform-none" style={{ background: "linear-gradient(180deg, rgb(200 255 61 / 0.08), rgb(200 255 61 / 0.01)), var(--color-surface)" }}>
-            <span className="absolute right-5 top-5 rounded-full bg-lime px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.pro.popular}</span>
+            <span className="absolute right-5 top-5 rounded-full bg-lime px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.pro.popular}</span>
             <div className="text-sm font-bold text-lime">Pro</div>
             <div className="mt-2 flex items-baseline gap-1">
               <span className="font-display text-4xl font-semibold">${PRO.priceMonthUsd}</span>
@@ -135,7 +135,7 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-3">{t.footer.disclaimer}</p>
           <p className="mt-4 text-xs text-ink-3">© {new Date(fetchedAt).getFullYear()} {SITE.name}. {t.footer.rights}</p>
           <nav className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
-            {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="hover:text-ink">{label}</a>)}
+            {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-11 items-center hover:text-ink">{label}</a>)}
           </nav>
         </div>
         <div className="flex flex-col gap-3 text-sm md:items-end">

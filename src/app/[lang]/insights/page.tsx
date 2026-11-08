@@ -52,7 +52,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
               </dl>
               <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[640px] text-left text-sm">
-                  <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                  <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                     <tr>{P.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 3 ? "text-right" : ""}`}>{c}</th>)}</tr>
                   </thead>
                   <tbody className="divide-y divide-line">
@@ -87,7 +87,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
               )}
               <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[520px] text-left text-sm">
-                  <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                  <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                     <tr>{P.decayCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 1 ? "text-right" : ""}`}>{c}</th>)}</tr>
                   </thead>
                   <tbody className="divide-y divide-line">

@@ -129,8 +129,8 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
-                  {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-[#0b0f05]">{A.best}</span>}
-                  {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
+                  {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-[#0b0f05]">{A.best}</span>}
+                  {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
                 </div>
                 <div className="mt-0.5 text-xs font-semibold text-ink-3">
                   <Term k={o.type === "fixed" ? "fixed" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
@@ -139,8 +139,8 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <div className="font-mono text-2xl font-bold tracking-tight text-ink">{pct(o.apr)}</div>
-                  {o.aprMax ? <div className="font-mono text-xs font-bold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : <div className="text-[11px] text-ink-3">{A.base}</div>}
-                  {o.apr > 0 && <div className="nov text-[11px] font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
+                  {o.aprMax ? <div className="font-mono text-xs font-bold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : <div className="text-xs text-ink-3">{A.base}</div>}
+                  {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
                 </div>
                 <a href={o.url} target="_blank" rel="noopener" className="btn btn-ghost hidden h-10 px-4 text-sm sm:inline-flex">{A.open} ↗</a>
               </div>

@@ -203,22 +203,22 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   </div>
                   <div className="ml-auto text-right">
                     <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr)}</div>
-                    <div className="text-[11px] text-ink-3">{ended ? "APR" : T.apr}{x.aprStart ? ` · ${T.aprStart} ${fmtApr(x.aprStart)}` : ""}</div>
+                    <div className="text-xs text-ink-3">{ended ? "APR" : T.apr}{x.aprStart ? ` · ${T.aprStart} ${fmtApr(x.aprStart)}` : ""}</div>
                     {!ended && (() => {
                       const hc = hedgeCalc(x, p, data.hedge, 1000, now);
                       if (!hc.needed) return null;
                       return (
                         <div className={`mt-1 font-mono text-sm font-bold ${hc.possible && (hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={t.lp.hedgeNote}>
-                          🛡 {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-[10px] font-semibold">{t.lp.hedgeApr}</span>
+                          🛡 {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
                         </div>
                       );
                     })()}
                   </div>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
-                  <div><dt className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
+                  <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
                     <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
-                  <div><dt className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
+                  <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
                     <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
                 </dl>
                 {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
@@ -241,7 +241,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
             <p className="mt-1 max-w-3xl text-sm text-ink-3">{T.calcSub}</p>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[520px] text-left text-sm">
-                <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr><th className="px-4 py-3">{T.stake}</th><th className="px-4 py-3">{T.with("$100")}</th><th className="px-4 py-3">{T.with("$1 000")}</th><th className="px-4 py-3">{T.withMax}</th></tr>
                 </thead>
                 <tbody className="divide-y divide-line">
@@ -256,7 +256,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                               : !c ? <span className="text-ink-3">—</span>
                               : c.below ? <span className="text-xs font-semibold text-amber">{T.belowMin(`${fmtNum(x.minStake)} ${x.stake}`)}</span>
                               : <><div className="font-mono font-bold text-ink">≈ {usd(c.total)}</div>
-                                  <div className="font-mono text-[11px] text-ink-3">{i === 2 ? `${usd(c.amount)} · ` : ""}{usd(c.perDay)}{T.perDay} · {T.untilEnd}</div></>}
+                                  <div className="font-mono text-xs text-ink-3">{i === 2 ? `${usd(c.amount)} · ` : ""}{usd(c.perDay)}{T.perDay} · {T.untilEnd}</div></>}
                           </td>
                         ))}
                       </tr>

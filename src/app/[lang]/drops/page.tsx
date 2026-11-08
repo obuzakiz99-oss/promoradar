@@ -114,7 +114,7 @@ export default async function DropsPage({ params }: { params: Params }) {
             {!pm.ok ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.pmNone}</p> : (
               <div className="overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[520px] text-left text-sm">
-                  <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3"><tr>{P.pmCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
+                  <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{P.pmCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
                   <tbody className="divide-y divide-line">
                     {pm.rows.slice(0, 15).map((r) => (
                       <tr key={r.slug} className="hover:bg-white/[0.02]">

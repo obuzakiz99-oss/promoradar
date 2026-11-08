@@ -6,7 +6,7 @@ import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { MyBoard, type MyPromo } from "@/components/MyBoard";
-import { ToolHeader } from "@/components/ToolsNav";
+import { PageHeader } from "@/components/PageHeader";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
@@ -29,7 +29,7 @@ export default async function My({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
-        <ToolHeader lang={lang} active="my" title={T.myTitle} sub={T.mySub} />
+        <PageHeader lang={lang} title={T.myTitle} sub={T.mySub} nav={<a href={withBase(`/${lang}/#promos`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Усі акції","en":"All promos","ru":"Все акции"} as Record<string, string>)[lang]}</a>} />
         <MyBoard promos={light} lang={lang} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />

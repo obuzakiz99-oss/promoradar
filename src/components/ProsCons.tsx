@@ -13,12 +13,12 @@ export function ProsCons({ pc, max = 3, more = "+", className = "" }: { pc: PC; 
     <div className={`grid gap-x-6 gap-y-1.5 text-[12.5px] leading-snug sm:grid-cols-2 ${className}`}>
       <ul className="space-y-1.5">
         {pros.map((x) => (
-          <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-lime/15 text-[10px] font-black text-lime">✓</span>{x}</li>
+          <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-lime/15 text-xs font-black text-lime">✓</span>{x}</li>
         ))}
       </ul>
       <ul className="space-y-1.5">
         {cons.map((x) => (
-          <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-rose/15 text-[10px] font-black text-rose">✕</span>{x}</li>
+          <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-rose/15 text-xs font-black text-rose">✕</span>{x}</li>
         ))}
       </ul>
       {extra > 0 && (

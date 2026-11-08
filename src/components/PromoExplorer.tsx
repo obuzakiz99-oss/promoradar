@@ -246,7 +246,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
                 className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-[#151005]" : "bg-lime text-[#0b0f05]") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
               >
                 {k === "saved" ? <>★ {t.saved.tab}</> : t.kinds[k as Exclude<Kind, "saved">]}
-                <span className={`font-mono text-[11px] ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
+                <span className={`font-mono text-xs ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
               </button>
             ))}
           </div>
@@ -266,10 +266,10 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   
       {venueList.length > 1 && (
         <details className="group relative w-fit">
-          <summary className={`flex h-9 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
+          <summary className={`flex h-11 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] sm:h-9 font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {t.filters.venues}
             {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}
-            {venues.size > 0 && <span className="font-mono text-[11px] text-lime">{venues.size}</span>}
+            {venues.size > 0 && <span className="font-mono text-xs text-lime">{venues.size}</span>}
             <span className="text-ink-3 transition-transform group-open:rotate-180">▾</span>
           </summary>
           <div className="absolute left-0 top-11 z-30 grid w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
@@ -278,7 +278,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
                 className={`flex min-h-9 items-center gap-2 rounded-xl border py-1 pl-1.5 pr-3 text-left text-[13px] font-bold leading-tight transition-all ${venues.has(v.id) ? "border-lime/60 bg-lime/10 text-ink" : "border-transparent text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
                 <VenueLogo v={v} size={22} rounded="rounded-lg" />
                 <span className="min-w-0 break-words">{v.name}</span>
-                <span className="ml-auto font-mono text-[11px] text-ink-3">{n}</span>
+                <span className="ml-auto font-mono text-xs text-ink-3">{n}</span>
               </button>
             ))}
           </div>
@@ -287,14 +287,14 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
         <label className="relative">
           <span className="sr-only">{G.country}</span>
           <select value={country} onChange={(e) => setCountry(e.target.value as Country)} title={G.country}
-            className={`h-9 appearance-none rounded-xl border pl-3 pr-8 text-[13px] font-bold focus:outline-none ${country !== "any" ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-surface text-ink-2"}`}>
+            className={`h-11 appearance-none rounded-xl border pl-3 pr-8 text-[13px] sm:h-9 font-bold focus:outline-none ${country !== "any" ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-surface text-ink-2"}`}>
             {(["any", "ua", "eu"] as Country[]).map((c) => <option key={c} value={c}>{G[c]}</option>)}
           </select>
           <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
         </label>
         {(["noDeposit", "low", "forNew", "cash"] as Quick[]).map((k) => (
           <button key={k} type="button" onClick={() => toggleQuick(k)} aria-pressed={quick.has(k)}
-            className={`h-9 rounded-xl border px-3 text-[13px] font-bold transition-colors ${quick.has(k) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
+            className={`h-11 rounded-xl border px-3 text-[13px] font-bold transition-colors sm:h-9 ${quick.has(k) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {G.quick[k]}
           </button>
         ))}

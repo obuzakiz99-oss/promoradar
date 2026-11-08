@@ -42,7 +42,7 @@ export function SaveButton({ id, labelAdd, labelRemove, size = "sm" }: { id: str
       aria-pressed={saved}
       title={saved ? labelRemove : labelAdd}
       aria-label={saved ? labelRemove : labelAdd}
-      className={`relative z-10 grid place-items-center rounded-lg border transition-colors ${size === "lg" ? "size-12" : "size-8"} ${saved ? "border-amber/50 bg-amber/15 text-amber" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
+      className={`relative z-10 grid place-items-center rounded-lg border transition-colors after:absolute after:-inset-2 after:content-[''] ${size === "lg" ? "size-12" : "size-8"} ${saved ? "border-amber/50 bg-amber/15 text-amber" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
     >
       <svg className={size === "lg" ? "size-5" : "size-4"} viewBox="0 0 20 20" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
         <path strokeLinejoin="round" d="m10 2.6 2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 7.9l5-.7L10 2.6Z" />

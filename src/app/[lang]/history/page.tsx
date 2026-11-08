@@ -105,7 +105,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
               <div className="card mt-5 p-5 hover:transform-none"><LineChart series={dropSeries} locale={locale} height={260} signed /></div>
               <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[620px] text-left text-sm">
-                  <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3"><tr>{X.dropCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
+                  <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.dropCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
                   <tbody className="divide-y divide-line">
                     {S.drop.map((d) => (
                       <tr key={d.key} className="hover:bg-white/[0.02]">
@@ -133,7 +133,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
               <div key={c.h} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
                 <div className={`font-display text-2xl font-semibold ${c.ratio === undefined ? "text-ink-3" : c.ratio < 0.7 ? "text-rose" : c.ratio < 0.95 ? "text-amber" : "text-lime"}`}>{c.ratio === undefined ? "…" : `×${c.ratio.toFixed(2)}`}</div>
                 <div className="mt-1 text-xs font-semibold text-ink-2">{X.after(c.h)}</div>
-                <div className="mt-0.5 font-mono text-[10px] text-ink-3">{c.ratio === undefined ? X.collecting : `${c.n} ${X.pools}`}</div>
+                <div className="mt-0.5 font-mono text-xs text-ink-3">{c.ratio === undefined ? X.collecting : `${c.n} ${X.pools}`}</div>
               </div>
             ))}
           </div>
@@ -165,12 +165,12 @@ export default async function HistoryPage({ params }: { params: Params }) {
               <div className="mt-5 flex items-end gap-4" style={{ height: 180 }}>
                 {S.byMonth.map((m) => (
                   <div key={m.month} className="flex flex-1 flex-col items-center justify-end gap-1.5" style={{ height: "100%" }}>
-                    <span className="font-mono text-[11px] font-bold text-ink-2">{m.pools}</span>
+                    <span className="font-mono text-xs font-bold text-ink-2">{m.pools}</span>
                     <div className="flex w-full max-w-16 flex-col-reverse overflow-hidden rounded-lg" style={{ height: `${(m.pools / maxMonth) * 120}px` }}>
                       {exList.map((ex) => m.byEx[ex] ? <div key={ex} title={`${exName(ex)}: ${m.byEx[ex]}`} style={{ height: `${(m.byEx[ex] / m.pools) * 100}%`, background: venueOf(ex).color }} /> : null)}
                     </div>
-                    <span className="text-[11px] font-semibold text-ink-3">{new Date(m.t).toLocaleString(locale, { month: "short", timeZone: "UTC" })}</span>
-                    <span className="font-mono text-[10px] text-lime">{pct(m.medApr)}</span>
+                    <span className="text-xs font-semibold text-ink-3">{new Date(m.t).toLocaleString(locale, { month: "short", timeZone: "UTC" })}</span>
+                    <span className="font-mono text-xs text-lime">{pct(m.medApr)}</span>
                   </div>
                 ))}
               </div>
@@ -184,7 +184,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <h3 className="mt-10 text-lg font-bold">{X.exTitle}</h3>
           <div className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[600px] text-left text-sm">
-              <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3"><tr>{X.exCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
+              <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.exCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">
                 {S.byEx.map((e) => (
                   <tr key={e.exchange} className="hover:bg-white/[0.02]">
@@ -204,14 +204,14 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <h3 className="mt-10 text-lg font-bold">{X.list}</h3>
           <div className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3"><tr>{X.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 4 ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
+              <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 4 ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">
                 {S.past.map((r) => (
                   <tr key={r.id} className="hover:bg-white/[0.02]">
                     <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs text-ink-2">{shortDate(r.start, lang)}</td>
                     <td className="px-4 py-2.5"><span className="flex items-center gap-2 text-ink-2"><VenueLogo v={venueOf(r.exchange)} size={18} rounded="rounded-md" />{exName(r.exchange)}</span></td>
                     <td className="px-4 py-2.5 font-bold">{r.token}</td>
-                    <td className="px-4 py-2.5 text-ink-2">{r.stake} {r.stable && <span className="ml-1 rounded bg-teal/10 px-1 text-[10px] font-bold text-teal">{X.stable}</span>}</td>
+                    <td className="px-4 py-2.5 text-ink-2">{r.stake} {r.stable && <span className="ml-1 rounded bg-teal/10 px-1 text-xs font-bold text-teal">{X.stable}</span>}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(r.aprStart)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{pct(r.apr)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{r.aprStart && r.apr ? chg((r.apr / r.aprStart - 1) * 100) : <span className="text-ink-3">—</span>}</td>

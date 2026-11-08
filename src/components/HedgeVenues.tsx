@@ -22,9 +22,9 @@ export function HedgeVenues({ coin, hedge, lang, className = "" }: { coin: strin
   const T = TX[lang];
   if (!hedge) return null;
   const perps = [...hedge.perps].sort((a, b) => b.fundingApr - a.fundingApr);
-  if (!perps.length) return <div className={`text-[11px] font-semibold text-ink-3 ${className}`}>⚠ {T.none(coin)}</div>;
+  if (!perps.length) return <div className={`text-xs font-semibold text-ink-3 ${className}`}>⚠ {T.none(coin)}</div>;
   return (
-    <div className={`flex flex-wrap items-center gap-1 text-[11px] font-semibold ${className}`} title={T.tip}>
+    <div className={`flex flex-wrap items-center gap-1 text-xs font-semibold ${className}`} title={T.tip}>
       <span className="text-ink-3">🛡 {T.hedge(coin)}</span>
       {perps.map((x) => (
         <a key={x.ex} href={FUT[x.ex]?.(coin) ?? "#"} target="_blank" rel="noopener"

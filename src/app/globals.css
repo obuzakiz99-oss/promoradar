@@ -9,7 +9,7 @@
   --color-line-2: rgb(255 255 255 / 0.12);
   --color-ink: #eef2f6;
   --color-ink-2: #a6b0bd;
-  --color-ink-3: #6b7685;
+  --color-ink-3: #808b9b;   /* ≥ 4.9:1 on bg, card and surface-2 (WCAG AA) — audit 08.11 */
   --color-lime: #c8ff3d;
   --color-lime-2: #9be22a;
   --color-teal: #3de0c8;

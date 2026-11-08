@@ -37,7 +37,7 @@ export default async function DocPage({ params }: { params: Params }) {
             <p className="mt-3 text-ink-2 sm:text-lg">{API_DOC[lang].sub}</p>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full text-left text-sm">
-                <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3"><tr>{API_DOC[lang].cols.map((c) => <th key={c} className="px-4 py-3">{c}</th>)}</tr></thead>
+                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{API_DOC[lang].cols.map((c) => <th key={c} className="px-4 py-3">{c}</th>)}</tr></thead>
                 <tbody className="divide-y divide-line">
                   {API_ENDPOINTS.map((e) => (
                     <tr key={e.path}>

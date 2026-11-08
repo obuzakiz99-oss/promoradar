@@ -261,7 +261,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
-          {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗<span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span></a>}
+          {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗<span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span></a>}
           {p.category !== "farming" && <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
         </div>
@@ -270,15 +270,15 @@ export default async function PromoPage({ params }: { params: Params }) {
         {p.category !== "farming" && (
           <div className={`mt-8 grid gap-3 sm:grid-cols-2 ${m.minEntry ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <div className="card p-4 hover:transform-none">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.detail.start}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.start}</div>
               <div className="mt-1 font-mono text-sm font-bold text-ink">{p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</div>
             </div>
             <div className="card p-4 hover:transform-none">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{t.detail.end}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.end}</div>
               <div className="mt-1 font-mono text-sm font-bold text-ink">{p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</div>
               {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}>⏳ {R.left} {duration(p.endsAt - now, t.time)}</div>}
               {cal && (
-                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-bold">
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold">
                   <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="text-sky hover:underline">📅 Google</a>
                   <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="text-sky hover:underline">📅 {R.calIcs}</a>
                   <span className="font-normal text-ink-3">{R.calNote}</span>
@@ -286,7 +286,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               )}
             </div>
             <div className="card p-4 hover:transform-none ring-1 ring-lime/20">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
               {pu ? (
                 <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}
                   {pu.usd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(pu.usd)}</span>}
@@ -297,9 +297,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             </div>
             {m.minEntry && (
               <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
                 <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString("en-US")}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
-                <div className="mt-1 text-[11px] leading-snug text-ink-3">“{m.minEntry.text}”</div>
+                <div className="mt-1 text-xs leading-snug text-ink-3">“{m.minEntry.text}”</div>
               </div>
             )}
           </div>
@@ -354,7 +354,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* who can join: region-exclusive / restricted countries / new users only */}
         {p.category !== "farming" && (m.geo || m.forNew || det) && (
           <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] px-4 py-3 text-sm">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{R.geoTitle}:</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.geoTitle}:</span>
             {m.geo?.only && <span className="rounded-md bg-amber/10 px-2 py-0.5 font-bold text-amber">🌍 {R.geoOnly(m.geo.only)}</span>}
             {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose">{R.geoNoUA}</span>}
             {m.geo?.noEU && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose">{R.geoNoEU}</span>}

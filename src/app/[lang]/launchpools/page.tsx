@@ -126,7 +126,7 @@ export default async function Launchpools({ params }: { params: Params }) {
                     <a key={id} href={withBase(`/${lang}/v/${id}/`)} className="flex h-11 items-center gap-2.5 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3.5 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
                       <VenueLogo v={exchanges[id]} size={30} rounded="rounded-lg" />
                       {exchanges[id].name}
-                      {s.last ? <span className="font-mono text-[11px] font-medium text-ink-3">{L.lastAgo}: {shortDate(s.last, lang)}</span> : null}
+                      {s.last ? <span className="font-mono text-xs font-medium text-ink-3">{L.lastAgo}: {shortDate(s.last, lang)}</span> : null}
                     </a>
                   );
                 })}
@@ -143,7 +143,7 @@ export default async function Launchpools({ params }: { params: Params }) {
               <a key={id} href={LP_ANN[id]} target="_blank" rel="noopener" className="flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2 hover:border-line-2 hover:text-ink">
                 <VenueLogo v={annVenues[id]} size={26} rounded="rounded-lg" />
                 {annVenues[id].name}
-                <span className="font-mono text-[11px] font-medium text-ink-3">{ann.filter((p) => p.venue.id === id).length || ""}</span>
+                <span className="font-mono text-xs font-medium text-ink-3">{ann.filter((p) => p.venue.id === id).length || ""}</span>
               </a>
             ))}
           </div>
@@ -173,9 +173,9 @@ export default async function Launchpools({ params }: { params: Params }) {
                   <span className={`ml-auto size-2 rounded-full ${s.ok ? "bg-lime" : "bg-rose"}`} />
                 </div>
                 <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  <div><dd className="font-mono text-lg font-bold">{s.count}</dd><dt className="text-[10px] font-semibold leading-tight text-ink-3">{L.statsCount}</dt></div>
-                  <div><dd className="font-mono text-lg font-bold">{s.avgDays ? s.avgDays.toFixed(0) : "—"}</dd><dt className="text-[10px] font-semibold leading-tight text-ink-3">{L.statsAvgDays}</dt></div>
-                  <div><dd className="font-mono text-lg font-bold">{s.last ? shortDate(s.last, lang) : "—"}</dd><dt className="text-[10px] font-semibold leading-tight text-ink-3">{L.statsLast}</dt></div>
+                  <div><dd className="font-mono text-lg font-bold">{s.count}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsCount}</dt></div>
+                  <div><dd className="font-mono text-lg font-bold">{s.avgDays ? s.avgDays.toFixed(0) : "—"}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsAvgDays}</dt></div>
+                  <div><dd className="font-mono text-lg font-bold">{s.last ? shortDate(s.last, lang) : "—"}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsLast}</dt></div>
                 </dl>
               </div>
             ))}
@@ -190,7 +190,7 @@ export default async function Launchpools({ params }: { params: Params }) {
             const tableOf = (rows: typeof archive) => (
             <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[760px] text-left text-sm">
-                <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[L.colToken, L.colEx, L.colDate, L.colStake, L.colApr, L.colReward, L.colUsers].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
                 </thead>
                   <tbody className="divide-y divide-line">

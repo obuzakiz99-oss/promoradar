@@ -20,7 +20,7 @@ export function Updated({ at, lang }: { at: number; lang: Locale }) {
   const m = Math.max(0, Math.round((now - at) / 60_000));
   const fresh = m <= 45;
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold ${fresh ? "border-lime/25 bg-lime/[0.06] text-lime" : "border-amber/30 bg-amber/10 text-amber"}`}
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold ${fresh ? "border-lime/25 bg-lime/[0.06] text-lime" : "border-amber/30 bg-amber/10 text-amber"}`}
       title={new Date(at).toLocaleString()}>
       <span className={`size-1.5 rounded-full ${fresh ? "bg-lime" : "bg-amber"}`} />{TXT[lang](m)}
     </span>

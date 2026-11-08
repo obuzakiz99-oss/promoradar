@@ -97,7 +97,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
                         <span className="font-bold">{u.sym}</span>
-                        <span className={`rounded-md px-1.5 py-0.5 font-mono text-[11px] font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}% {T.ofCap}</span>
+                        <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}% {T.ofCap}</span>
                       </span>
                       <span className="mt-1 block text-sm text-ink-2">{day(u.date, lang)} · {T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)} · <span className="font-mono">{compactUsd(u.usd)}</span></span>
                       <span className="mt-0.5 block break-words text-xs text-ink-3">{u.sale} · {T.type[u.type]}</span>
@@ -115,7 +115,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.all}</h2>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[860px] text-left text-sm">
-                <thead className="bg-white/[0.03] text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
                 </thead>
                 <tbody className="divide-y divide-line">
@@ -123,17 +123,17 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                     const href = tokenHref(u);
                     return (
                       <tr key={`${u.sym}${u.date}`} className="hover:bg-white/[0.02]">
-                        <td className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-[11px] text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
+                        <td className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-xs text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
                             <VenueLogo v={logo(u)} size={28} rounded="rounded-full" />
                             <div className="min-w-0">
                               {href ? <a href={href} className="font-bold hover:text-lime">{u.sym}</a> : <span className="font-bold">{u.sym}</span>}
-                              <div className="break-words text-[11px] text-ink-3">{u.name}{u.unlockedPct ? ` · ${u.unlockedPct.toFixed(0)}% ${T.already}` : ""}</div>
+                              <div className="break-words text-xs text-ink-3">{u.name}{u.unlockedPct ? ` · ${u.unlockedPct.toFixed(0)}% ${T.already}` : ""}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-[11px] text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
+                        <td className="px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
                         <td className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
                         <td className="px-4 py-3 text-ink-2">{u.sale || "—"}</td>
                         <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>

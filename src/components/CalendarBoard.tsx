@@ -52,7 +52,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
               return (
                 <li key={e.id + e.kind} className="card flex flex-wrap items-center gap-3 p-3.5 sm:flex-nowrap" style={{ ["--tint" as string]: e.venue.color }}>
                   <span suppressHydrationWarning className="w-14 shrink-0 font-mono text-sm font-bold text-ink-2">{new Date(e.at).toLocaleTimeString(locTag(lang), { hour: "2-digit", minute: "2-digit" })}</span>
-                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase ${e.kind === "start" ? "bg-sky/15 text-sky" : "bg-amber/15 text-amber"}`}>{label}</span>
+                  <span className={`shrink-0 rounded-md px-2 py-0.5 text-xs font-extrabold uppercase ${e.kind === "start" ? "bg-sky/15 text-sky" : "bg-amber/15 text-amber"}`}>{label}</span>
                   <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                   <a href={e.href} className="min-w-0 flex-1 break-words text-sm font-semibold hover:text-lime">{e.venue.name}: {e.title}</a>
                   <div className="flex shrink-0 gap-1.5">

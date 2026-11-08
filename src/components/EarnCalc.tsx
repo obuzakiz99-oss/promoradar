@@ -130,11 +130,11 @@ export function EarnCalc({ lang, m, endsAt, now }: { lang: Locale; m: M; endsAt?
         ))}
       </ul>
       {m.tiers && m.tiers.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-mono">
+        <div className="mt-3 flex flex-wrap gap-1.5 text-xs font-mono">
           {m.tiers.map((t) => <span key={t.min} className={`rounded-md px-1.5 py-0.5 ${t.min <= v ? "bg-lime/10 text-lime" : "bg-white/5 text-ink-3"}`}>≥{usd(t.min)} → {t.reward}</span>)}
         </div>
       )}
-      <p className="mt-3 text-[11px] text-ink-3">{T.note}</p>
+      <p className="mt-3 text-xs text-ink-3">{T.note}</p>
     </section>
   );
 }

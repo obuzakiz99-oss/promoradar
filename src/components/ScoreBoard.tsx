@@ -44,7 +44,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
 
   const Th = ({ k, className = "" }: { k: Key; className?: string }) => (
     <th className={`px-3 py-2 text-right ${className}`}>
-      <button type="button" onClick={() => setSort(k)} className={`text-[11px] font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? " ↓" : ""}</button>
+      <button type="button" onClick={() => setSort(k)} className={`text-xs font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? " ↓" : ""}</button>
     </th>
   );
 
@@ -63,8 +63,8 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
         <table className="w-full text-sm">
           <thead className="bg-white/[0.03]">
             <tr>
-              <th className="px-3 py-2 text-left text-[11px] font-bold uppercase tracking-wider text-ink-3">#</th>
-              <th className="px-3 py-2 text-left text-[11px] font-bold uppercase tracking-wider text-ink-3"></th>
+              <th className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-ink-3">#</th>
+              <th className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-ink-3"></th>
               <Th k="score" /><Th k="promos" /><Th k="poolUsd" /><Th k="perUserMedian" /><Th k="entryMedian" /><Th k="noDepositPct" /><Th k="launchpools" /><Th k="usdtEarn" />
             </tr>
           </thead>
@@ -76,7 +76,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
                   <a href={`${venueBase}${r.venue.id}/`} className="flex items-center gap-2.5 font-bold hover:text-lime">
                     <VenueLogo v={r.venue} size={28} rounded="rounded-lg" /> {r.venue.name}
                   </a>
-                  <div className="mt-1 flex flex-wrap gap-1.5 pl-[38px] text-[10px] font-bold">
+                  <div className="mt-1 flex flex-wrap gap-1.5 pl-[38px] text-xs font-bold">
                     {r.kycPct !== undefined && <span className="rounded bg-white/5 px-1.5 py-0.5 text-ink-3">{T.kyc} {r.kycPct}%</span>}
                     {r.newUsersPct > 0 && <span className="rounded bg-sky/10 px-1.5 py-0.5 text-sky">{r.newUsersPct}% {T.newUsers}</span>}
                     {r.hidden > 0 && <span className="rounded bg-amber/10 px-1.5 py-0.5 text-amber">{T.hidden(r.hidden)}</span>}
@@ -85,7 +85,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
                 <td className="px-3 py-3 text-right"><span className="rounded-lg bg-lime/10 px-2 py-1 font-mono font-bold text-lime">{r.score}</span></td>
                 <td className="px-3 py-3 text-right font-mono">{r.promos}</td>
                 <td className="px-3 py-3 text-right font-mono">{usd(r.poolUsd) ?? T.none}</td>
-                <td className="px-3 py-3 text-right font-mono">{usd(r.perUserMedian) ?? T.none}{r.perUserMax ? <span className="block text-[10px] text-ink-3">max {usd(r.perUserMax)}</span> : null}</td>
+                <td className="px-3 py-3 text-right font-mono">{usd(r.perUserMedian) ?? T.none}{r.perUserMax ? <span className="block text-xs text-ink-3">max {usd(r.perUserMax)}</span> : null}</td>
                 <td className="px-3 py-3 text-right font-mono">{r.entryMedian === undefined ? T.none : r.entryMedian === 0 ? "$0" : usd(r.entryMedian)}</td>
                 <td className="px-3 py-3 text-right font-mono">{r.noDepositPct}%</td>
                 <td className="px-3 py-3 text-right font-mono">{r.launchpools || T.none}</td>
@@ -100,7 +100,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
       <div className="mt-5 grid gap-3 lg:hidden">
         <div className="scroll-x -mx-1 flex gap-1.5 px-1">
           {(Object.keys(T.cols) as Key[]).map((k) => (
-            <button key={k} type="button" onClick={() => setSort(k)} className={`h-8 shrink-0 rounded-lg px-2.5 text-[11px] font-bold ${sort === k ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2"}`}>{T.cols[k]}</button>
+            <button key={k} type="button" onClick={() => setSort(k)} className={`h-8 shrink-0 rounded-lg px-2.5 text-xs font-bold ${sort === k ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2"}`}>{T.cols[k]}</button>
           ))}
         </div>
         {rows.map((r, i) => (
@@ -112,15 +112,15 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
               <span className="ml-auto rounded-lg bg-lime/10 px-2 py-1 font-mono font-bold text-lime">{r.score}</span>
             </div>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center font-mono text-xs">
-              <div><div className="text-[10px] text-ink-3">{T.cols.promos}</div>{r.promos}</div>
-              <div><div className="text-[10px] text-ink-3">{T.cols.perUserMedian}</div>{usd(r.perUserMedian) ?? T.none}</div>
-              <div><div className="text-[10px] text-ink-3">{T.cols.entryMedian}</div>{r.entryMedian === undefined ? T.none : r.entryMedian === 0 ? "$0" : usd(r.entryMedian)}</div>
-              <div><div className="text-[10px] text-ink-3">{T.cols.poolUsd}</div>{usd(r.poolUsd) ?? T.none}</div>
-              <div><div className="text-[10px] text-ink-3">{T.cols.noDepositPct}</div>{r.noDepositPct}%</div>
-              <div><div className="text-[10px] text-ink-3">{T.cols.usdtEarn}</div>{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</div>
+              <div><div className="text-xs text-ink-3">{T.cols.promos}</div>{r.promos}</div>
+              <div><div className="text-xs text-ink-3">{T.cols.perUserMedian}</div>{usd(r.perUserMedian) ?? T.none}</div>
+              <div><div className="text-xs text-ink-3">{T.cols.entryMedian}</div>{r.entryMedian === undefined ? T.none : r.entryMedian === 0 ? "$0" : usd(r.entryMedian)}</div>
+              <div><div className="text-xs text-ink-3">{T.cols.poolUsd}</div>{usd(r.poolUsd) ?? T.none}</div>
+              <div><div className="text-xs text-ink-3">{T.cols.noDepositPct}</div>{r.noDepositPct}%</div>
+              <div><div className="text-xs text-ink-3">{T.cols.usdtEarn}</div>{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</div>
             </div>
             {(r.kycPct !== undefined || r.hidden > 0) && (
-              <div className="mt-2 flex flex-wrap gap-1.5 text-[10px] font-bold">
+              <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-bold">
                 {r.kycPct !== undefined && <span className="rounded bg-white/5 px-1.5 py-0.5 text-ink-3">{T.kyc} {r.kycPct}%</span>}
                 {r.hidden > 0 && <span className="rounded bg-amber/10 px-1.5 py-0.5 text-amber">{T.hidden(r.hidden)}</span>}
               </div>

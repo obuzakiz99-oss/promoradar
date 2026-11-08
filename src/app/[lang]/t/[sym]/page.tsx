@@ -89,7 +89,7 @@ export default async function TokenPage({ params }: { params: Params }) {
           </div>
           {tk.price !== undefined && !stable && (
             <div className="text-right">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-ink-3">{T.price}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.price}</div>
               <div className="font-mono text-2xl font-bold">{fmtPrice(tk.price)}</div>
               {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{tk.change.toFixed(1)}% · 24h</div>}
             </div>
@@ -118,11 +118,11 @@ export default async function TokenPage({ params }: { params: Params }) {
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{venueOf(p.exchange).name} · {p.name}</div>
-                  <div className="mt-0.5 flex flex-wrap gap-x-3 font-mono text-[11px] text-ink-3">
+                  <div className="mt-0.5 flex flex-wrap gap-x-3 font-mono text-xs text-ink-3">
                     {p.pools.map((x) => <span key={x.stake}>{T.stake} {x.stake}{x.apr ? ` · ${x.apr.toFixed(1)}%` : ""}{x.newUsers ? ` · ${T.newUsers}` : ""}</span>)}
                   </div>
                 </div>
-                <span className="shrink-0 font-mono text-[11px] font-bold text-ink-2">{p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</span>
+                <span className="shrink-0 font-mono text-xs font-bold text-ink-2">{p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</span>
               </a>
             ))}
           </div>
@@ -135,7 +135,7 @@ export default async function TokenPage({ params }: { params: Params }) {
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>
-                  <div className="mt-0.5 font-mono text-[11px] text-ink-3">{venueOf(p.exchange).name}{pool.maxStake ? ` · ${T.cap} ${pool.maxStake.toLocaleString("en-US")} ${pool.stake}` : ""}{pool.newUsers ? ` · ${T.newUsers}` : ""} · {p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</div>
+                  <div className="mt-0.5 font-mono text-xs text-ink-3">{venueOf(p.exchange).name}{pool.maxStake ? ` · ${T.cap} ${pool.maxStake.toLocaleString("en-US")} ${pool.stake}` : ""}{pool.newUsers ? ` · ${T.newUsers}` : ""} · {p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</div>
                 </div>
                 {pool.apr !== undefined && <span className="shrink-0 font-mono text-lg font-bold text-lime">{pool.apr.toFixed(1)}%</span>}
               </a>
