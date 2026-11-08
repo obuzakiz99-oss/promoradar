@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
+import { VenuePayout } from "@/components/VenuePayout";
 import { PROMO_PAGES, VENUES, venueOf } from "@/config/site";
 import type { Locale } from "@/lib/i18n";
 
@@ -68,6 +69,9 @@ export default async function VenuePage({ params }: { params: Params }) {
             <a href={PROMO_PAGES[id]} target="_blank" rel="noopener" className="btn btn-primary h-11 shrink-0 px-5 text-sm">{NOAUTO[lang].open(v.name)} ↗</a>
           </div>
         )}
+
+        {/* how this exchange pays: verified facts + what its promos' rules say */}
+        <VenuePayout venueId={id} venueName={v.name} promos={mine} lang={lang} />
 
         <section className="mt-10">
           <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>

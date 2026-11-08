@@ -154,10 +154,13 @@ function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
 const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
 
-const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string }> = {
-  uk: { title: "Що ви реально отримаєте", unknown: "❓ Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →" },
-  en: { title: "What you actually get", unknown: "❓ Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →" },
-  ru: { title: "Что вы реально получите", unknown: "❓ Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →" },
+const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string; remind: string; calTitle: string; calDesc: (claim?: number) => string }> = {
+  uk: { title: "Що ви реально отримаєте", unknown: "❓ Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
+    remind: "Нагадати забрати нагороду:", calTitle: "🎁 Забрати нагороду", calDesc: (c) => `Перевірте Центр нагород на біржі й заберіть нагороду${c ? ` — на це є ${c} дн., потім вона згорає` : ""}.` },
+  en: { title: "What you actually get", unknown: "❓ Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
+    remind: "Remind me to claim the reward:", calTitle: "🎁 Claim your reward", calDesc: (c) => `Check the exchange's rewards center and claim your reward${c ? ` — you have ${c} days before it expires` : ""}.` },
+  ru: { title: "Что вы реально получите", unknown: "❓ Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →",
+    remind: "Напомнить забрать награду:", calTitle: "🎁 Забрать награду", calDesc: (c) => `Проверьте Центр наград на бирже и заберите награду${c ? ` — на это есть ${c} дн., потом она сгорит` : ""}.` },
 };
 
 const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: string; claim: string; watch: string; title: string; note: (venue: string) => string }> = {
@@ -312,6 +315,12 @@ export default async function PromoPage({ params }: { params: Params }) {
           const po = m.payout;
           const chips = po ? timingChips(po, lang) : [];
           const PT = PAY_TX[lang];
+          // when the reward should show up (promo end + review/payout days) — a calendar reminder to go and claim it
+          const claimAt = po?.manual && p.endsAt ? p.endsAt + ((po.payDays ?? po.reviewDays ?? 1) * 86400_000) : undefined;
+          const claimCal: CalEvent | undefined = claimAt && claimAt > fetchedAt ? {
+            uid: `claim-${p.id.replace(/[^a-z0-9]/gi, "-")}`, title: Array.from(`${PT.calTitle}: ${p.title}`).slice(0, 180).join(""), at: claimAt,
+            description: `${p.venue.name} · ${PT.calDesc(po?.claimDays)}`, url: `https://${SITE.domain}/${lang}/p/${slug}/`,
+          } : undefined;
           return (
             <section id="payout" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
               <h2 className="font-display text-xl font-semibold tracking-tight">💰 {PT.title}</h2>
@@ -330,7 +339,14 @@ export default async function PromoPage({ params }: { params: Params }) {
                   </ul>
                 </div>
               )}
-              <a href={withBase(`/${lang}/learn/rewards/`)} className="mt-4 inline-block text-sm font-semibold text-lime hover:underline">{PT.more}</a>
+              {claimCal && (
+                <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold">
+                  <span className="font-semibold text-ink-2">⏰ {PT.remind}</span>
+                  <a href={googleCalUrl(claimCal)} target="_blank" rel="noopener" className="text-sky hover:underline">📅 Google</a>
+                  <a href={icsHref([claimCal])} download={`claim-${slug.split("-")[0]}.ics`} className="text-sky hover:underline">📅 {R.calIcs}</a>
+                </div>
+              )}
+              <a href={withBase(`/${lang}/learn/rewards/`)} className="mt-4 block text-sm font-semibold text-lime hover:underline">{PT.more}</a>
             </section>
           );
         })()}

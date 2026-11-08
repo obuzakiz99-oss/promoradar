@@ -19,8 +19,6 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     { href: withBase(`/${lang}/tools/`), label: TOOLS[lang].nav },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav },
     { href: withBase(`/${lang}/unlocks/`), label: TRADER_NAV[lang], adv: true, wide: "lg:block" },
-    { href: withBase(`/${lang}/#how`), label: t.nav.how, wide: "2xl:block" },
-    { href: withBase(`/${lang}/#sources`), label: t.nav.sources, wide: "xl:block" },
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block" }] : []),
   ];
   return (
