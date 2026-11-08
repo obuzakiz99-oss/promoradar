@@ -34,6 +34,8 @@ export async function getJson<T = any>(url: string, timeout = 12_000, init?: { m
   return r.json() as Promise<T>;
 }
 export async function getText(url: string, timeout = 12_000): Promise<string> {
+  const relayed = fromRelay(url);   // e.g. DropsTab /vesting, which refuses GitHub's US runners
+  if (relayed) return relayed;
   const r = await fetch(url, { headers: UA, next: { revalidate: SITE.revalidateSeconds }, signal: AbortSignal.timeout(timeout) });
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.text();
