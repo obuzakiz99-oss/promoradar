@@ -59,9 +59,10 @@ export function payoutOf(lines: string[]): Payout | undefined {
   const hit = (re: RegExp) => { const s = ss.find((x) => re.test(x)); if (s) quotes.add(s); return s; };
   // sentences that mention vouchers only in passing ("cannot be combined with vouchers", "volume using fee vouchers is
   // not included", Binance's "Learn how to redeem a voucher" footer) say nothing about what THIS promo pays
-  const aside = (x: string) => /\b(combined|stack(ed)?|together) with\b|\bexclud\w*\b|\bnot (be )?(count\w*|eligible|included)\b|\blearn how to redeem\b/i.test(x);
+  const aside = (x: string) => /\bcombined\b|\b(stack(ed)?|together) with\b|\bexclud\w*\b|\bnot (be )?(count\w*|eligible|included)\b|\blearn how to redeem\b|\b(does not|doesn't|do not|don't) (say|state|specify|mention)\b|\bnot (stated|specified|said)\b|\bwhether\b/i.test(x);
   const pick = (test: (x: string) => boolean) => { const s = ss.find(test); if (s) quotes.add(s); return !!s; };
-  const voucher = pick((x) => VOUCHER.test(x) && !aside(x));
+  // "XP cannot be withdrawn" describes points, not a voucher
+  const voucher = pick((x) => VOUCHER.test(x) && !aside(x) && !/\b(XP|points?)\b/.test(x));
   // "profits made with the bonus are withdrawable" is about a voucher, not a cash reward
   const cash = pick((x) => (CASH.test(x) || TOKEN_VOUCHER_OK.test(x) || TO_WALLET.test(x)) && !/\bprofits?\b/i.test(x) && !aside(x));
   const points = !voucher && !cash && !!hit(POINTS);
