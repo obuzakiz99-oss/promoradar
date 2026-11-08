@@ -25,7 +25,7 @@ export function todayPins(promos: Promo[], lang: Locale, now: number): Array<{ i
   const best = pick([...ok].filter((p) => val(p) >= 10).sort((a, b) => val(b) - val(a)));
   const free = pick([...ok].filter((p) => p.meta?.noDeposit).sort((a, b) => val(b) - val(a) || (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0) || b.publishedAt - a.publishedAt));
   const ending = pick([...ok].filter((p) => p.endsAt && p.endsAt - now < 72 * 3600_000).sort((a, b) => (val(b) || (b.reward?.usd ?? 0) / 1000) - (val(a) || (a.reward?.usd ?? 0) / 1000)));
-  return ([[best, `🔥 ${T.best}`, "bg-lime text-on-accent"], [free, `🆓 ${T.free}`, "bg-teal text-on-accent"], [ending, `⏳ ${T.ending}`, "bg-rose text-on-accent"]] as const)
+  return ([[best, T.best, "accent"], [free, T.free, "success"], [ending, T.ending, "danger"]] as const)
     .filter(([p]) => p).map(([p, tag, cls]) => ({ id: p!.id, tag, cls }));
 }
 
@@ -61,7 +61,7 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
                 {hours !== undefined && <span className={`ml-auto font-mono text-xs font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>⏳ {T.left(hours)}</span>}
               </div>
               <h3 className="mt-2 text-[0.98rem] font-bold leading-snug">
-                <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem]">{p!.title}</a>
+                <a href={href} className="after:absolute after:inset-0 after:rounded-2xl">{p!.title}</a>
               </h3>
               <div className={`mt-3 font-display text-3xl font-semibold ${tone}`}>{main}</div>
               <div className="relative z-10 mt-auto flex items-center justify-between gap-2 pt-4">

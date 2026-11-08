@@ -89,7 +89,7 @@ export function ProSection({ t }: { t: Dict }) {
   const href = PRO.checkoutUrl || SITE.telegram;
   return (
     <section id="pro" className="mx-auto max-w-7xl scroll-mt-20 px-4 pb-24 sm:px-6">
-      <div className="relative overflow-hidden rounded-[2rem] border border-line bg-bg-2 px-6 py-14 sm:px-12">
+      <div className="relative overflow-hidden rounded-3xl border border-line bg-bg-2 px-6 py-14 sm:px-12">
         <div className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-lime/10 blur-3xl" />
         <div className="relative mx-auto max-w-2xl text-center">
           <div className="mx-auto w-fit"><LogoMark size={44} /></div>

@@ -8,6 +8,7 @@ import { SaveButton } from "./SaveButton";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 import { showHeadline, titleOf } from "@/lib/titletpl";
+import { Badge, type Tone } from "./Badge";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -64,6 +65,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
   const st = statusOf(p, now);
   const lvl = promoLevel(p);
   const own = titleOf(p, lang);
+  const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
   const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
@@ -72,7 +74,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
-      {pin && <span className={`absolute -top-2.5 left-4 z-10 rounded-md px-2 py-0.5 text-xs font-extrabold ${pin.cls}`}>{pin.tag}</span>}
+      {pin && <Badge tone={pin.cls as Tone} className="absolute -top-3 left-4 z-10 bg-surface ring-1 ring-current/30">{pin.tag}</Badge>}
       {/* header */}
       <div className="flex items-center gap-3">
         <VenueLogo v={p.venue} />
@@ -89,12 +91,12 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {/* one badge only, so the exchange name always fits (most important first) */}
-          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-on-accent">{t.card.sponsored}</span>
-            : st === "ending" ? <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>
-            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-on-accent">✦ {FRESH[lang]}</span>
-            : st === "upcoming" ? <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>
-            : isDrop && (m.hot ?? 0) >= 60 ? <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>
-            : isNew ? <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>
+          {p.sponsored ? <Badge tone="accent">{t.card.sponsored}</Badge>
+            : st === "ending" ? <Badge tone="danger">{cap(t.status.ending)}</Badge>
+            : fresh ? <Badge tone="accent">{cap(FRESH[lang])}</Badge>
+            : st === "upcoming" ? <Badge tone="info">{cap(t.status.upcoming)}</Badge>
+            : isDrop && (m.hot ?? 0) >= 60 ? <Badge tone="warning">{m.hot}°</Badge>
+            : isNew ? <Badge tone="accent" variant="outline">{cap(t.card.new)}</Badge>
             : null}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
@@ -104,7 +106,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
       {isFarm ? (
         <div className="mt-4">
           <h3 className="break-words font-mono text-[0.98rem] font-bold leading-snug text-ink">
-            <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">{p.title}</a>
+            <a href={href} className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">{p.title}</a>
           </h3>
           <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-semibold text-ink-3">
             {m.chain && <span className="rounded-md bg-white/5 px-1.5 py-0.5">{m.chain}</span>}
@@ -115,7 +117,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         <>
           {/* our own short title from the parsed facts; the exchange's headline stays below in small type (audit 08.11) */}
           <h3 className="mt-4 line-clamp-2 break-words text-base font-bold leading-snug text-ink">
-            <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">
+            <a href={href} className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">
               {own ?? calm(isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
           </h3>
@@ -129,14 +131,14 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
       {/* who it is for + what is paid — at most 2 badges, one style, no emoji (audit 08.11) */}
       {(() => {
         const b: Array<[string, string]> = [];
-        if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "border-amber/30 text-amber"]);
-        if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "border-rose/30 text-rose"]);
-        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form].replace(/^\S+\s/, ""), "border-line-2 text-ink-2"]);
-        if (m.noDeposit) b.push([NO_DEP[lang], "border-teal/30 text-teal"]);
-        if (m.forNew) b.push([FOR_NEW[lang], "border-sky/30 text-sky"]);
+        if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
+        if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "danger"]);
+        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form].replace(/^\S+\s/, ""), "neutral"]);
+        if (m.noDeposit && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
+        if (m.forNew) b.push([FOR_NEW[lang], "info"]);
         return b.length ? (
           <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs font-semibold">
-            {b.slice(0, 2).map(([x, cls]) => <span key={x} className={`rounded-md border px-2 py-0.5 ${cls}`}>{x}</span>)}
+            {b.slice(0, 2).map(([x, tone]) => <Badge key={x} tone={tone as Tone} variant="outline">{x}</Badge>)}
           </div>
         ) : null;
       })()}
