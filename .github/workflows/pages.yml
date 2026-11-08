@@ -45,6 +45,10 @@ jobs:
           cache: npm
       - run: npm ci
 
+      # design-system guard: no text below 12px, no raw hex colours or arbitrary radii in components (fails the build)
+      - name: UI audit
+        run: node scripts/audit-ui.mjs
+
       - name: Build static site
         run: npm run build
         env:

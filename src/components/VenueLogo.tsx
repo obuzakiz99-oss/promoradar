@@ -15,7 +15,7 @@ export function VenueLogo({ v, size = 36, rounded = "rounded-xl" }: { v: Pick<Ve
   return (
     <span
       className={`relative grid shrink-0 place-items-center overflow-hidden font-display font-bold ring-1 ring-white/10 ${rounded}`}
-      style={{ width: size, height: size, background: v.color, color: v.ink, fontSize: Math.max(9, size * 0.32) }}
+      style={{ width: size, height: size, background: v.color, color: v.ink, fontSize: Math.max(12, size * 0.32) }}
       aria-hidden="true"
     >
       {v.monogram}

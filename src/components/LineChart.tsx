@@ -24,12 +24,12 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
         {ticks.map((v) => (
           <g key={v}>
             <line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="rgb(255 255 255 / 0.07)" />
-            <text x={L - 6} y={Y(v) + 4} textAnchor="end" fontSize="11" fill="#6b7685" fontFamily="var(--font-mono)">{fmt(v)}{unit}</text>
+            <text x={L - 6} y={Y(v) + 4} textAnchor="end" fontSize="12" fill="var(--color-ink-3)" fontFamily="var(--font-mono)">{fmt(v)}{unit}</text>
           </g>
         ))}
         {signed && <line x1={L} x2={W - R} y1={Y(0)} y2={Y(0)} stroke="rgb(255 255 255 / 0.35)" strokeDasharray="4 4" />}
         {dates.map((t, i) => (
-          <text key={t} x={X(t)} y={H - 6} textAnchor={i === 0 ? "start" : i === 2 ? "end" : "middle"} fontSize="11" fill="#6b7685">
+          <text key={t} x={X(t)} y={H - 6} textAnchor={i === 0 ? "start" : i === 2 ? "end" : "middle"} fontSize="12" fill="var(--color-ink-3)">
             {new Date(t).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}
           </text>
         ))}

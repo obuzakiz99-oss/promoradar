@@ -7,7 +7,7 @@ import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
-import { titleOf } from "@/lib/titletpl";
+import { showHeadline, titleOf } from "@/lib/titletpl";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -65,7 +65,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
   const lvl = promoLevel(p);
   const own = titleOf(p, lang);
   // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
-  const calm = (s: string) => { const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
+  const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
   return (
     <article
@@ -119,7 +119,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
               {own ?? calm(isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
           </h3>
-          {own && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{calm(p.title)}</p>}
+          {own && showHeadline(p, lang) && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{calm(p.title)}</p>}
           {isDrop && m.actions && (
             <p className="mt-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}

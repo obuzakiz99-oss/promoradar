@@ -28,24 +28,13 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           <span className="hidden md:inline-flex"><MyStar href={withBase(`/${lang}/my/`)} label={({ uk: "Мої акції", en: "My promos", ru: "Мои акции" } as const)[lang]} /></span>
-          <span className="hidden sm:block"><LangSwitch current={lang} /></span>
+          <LangSwitch current={lang} />
           {HAS_TG && (
             <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">
               <TgIcon /> {t.nav.telegram}
             </a>
           )}
-          {/* phone menu: <details> works without JavaScript */}
-          <details className="group relative md:hidden">
-            <summary aria-label="Menu" className="grid size-9 cursor-pointer list-none place-items-center rounded-xl border border-line bg-white/[0.03] text-ink [&::-webkit-details-marker]:hidden">
-              <svg className="size-5 group-open:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 5h14v1.6H3V5Zm0 4.2h14v1.6H3V9.2Zm0 4.2h14V15H3v-1.6Z" /></svg>
-              <svg className="hidden size-5 group-open:block" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="m5.1 4 4.9 4.9L14.9 4 16 5.1 11.1 10l4.9 4.9-1.1 1.1-4.9-4.9L5.1 16 4 14.9 8.9 10 4 5.1 5.1 4Z" /></svg>
-            </summary>
-            <nav className="absolute right-0 top-12 w-64 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl">
-              <NavLinks items={items} phone />
-              {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-ink-2 hover:bg-white/5 hover:text-ink"><TgIcon /> {t.nav.telegram}</a>}
-              <div className="mt-1 border-t border-line px-2 pt-3 pb-1"><LangSwitch current={lang} /></div>
-            </nav>
-          </details>
+          {/* phones: sections live in the bottom tab bar (MobileTabBar); the header keeps only the language switch */}
         </div>
       </div>
     </header>
