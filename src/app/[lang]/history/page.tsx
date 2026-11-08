@@ -89,7 +89,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <header>
           <YieldTabs lang={lang} active="history" updated={pools.fetchedAt} />
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.histTitle}</h1>

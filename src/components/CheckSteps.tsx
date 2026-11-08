@@ -30,7 +30,7 @@ export function CheckSteps({ id, steps, lang = "uk", big = false }: { id: string
             <li key={s.h} className={`card p-5 hover:transform-none ${big ? "sm:p-6" : ""} ${on ? "opacity-70" : ""}`}>
               <div className="flex gap-4">
                 <button type="button" onClick={() => toggle(i)} aria-pressed={on} aria-label={s.h}
-                  className={`grid size-9 shrink-0 place-items-center rounded-xl font-mono text-sm font-bold transition ${on ? "bg-lime text-[#0b0f05]" : "bg-lime/10 text-lime hover:bg-lime/20"}`}>
+                  className={`grid size-9 shrink-0 place-items-center rounded-xl font-mono text-sm font-bold transition ${on ? "bg-lime text-on-accent" : "bg-lime/10 text-lime hover:bg-lime/20"}`}>
                   {on ? "✓" : i + 1}
                 </button>
                 <div className="min-w-0">

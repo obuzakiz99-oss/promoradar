@@ -146,7 +146,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <a href={withBase(`/${lang}/launchpools/`)} className="text-sm font-bold text-ink-3 hover:text-ink">{T.back}</a>
 
         <header className="mt-6 flex flex-wrap items-start gap-4">

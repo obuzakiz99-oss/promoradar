@@ -1,4 +1,5 @@
 import type { Promo } from "./types";
+import { money } from "./format";
 
 /**
  * Our own short card title, built from the parsed facts instead of a machine-translated headline (audit 08.11):
@@ -7,8 +8,7 @@ import type { Promo } from "./types";
  * Returns undefined when we know too little — then the card keeps the exchange's own headline.
  */
 type L = "uk" | "en" | "ru";
-const usd = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("en-US") : n}`;
-const amt = (n: number, unit: string) => (/^(USD|USDT|USDC)$/.test(unit) && unit === "USD" ? usd(n) : `${n.toLocaleString("en-US")} ${unit}`);
+
 
 const DO: Record<L, Record<"trade" | "deposit" | "stake" | "hold" | "buy", (x: string) => string>> = {
   uk: { trade: (x) => `Торгуйте від ${x}`, deposit: (x) => `Внесіть від ${x}`, stake: (x) => `Застейкайте від ${x}`, hold: (x) => `Тримайте від ${x}`, buy: (x) => `Купіть від ${x}` },
@@ -26,11 +26,14 @@ const POOL: Record<L, (x: string) => string> = { uk: (x) => `фонд ${x}`, en:
 export function titleOf(p: Promo, lang: L): string | undefined {
   const m = p.meta ?? {};
   if (p.category === "farming" || p.venue.kind === "airdrop") return undefined;
-  const what = m.minEntry ? DO[lang][m.minEntry.kind](m.minEntry.unit === "USD" ? usd(m.minEntry.amount) : amt(m.minEntry.amount, m.minEntry.unit))
+  const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang))
     : m.noDeposit ? DEF[lang].free : DEF[lang][p.category];
-  const much = m.perUser ? PER[lang](m.perUser.unit === "USD" ? usd(m.perUser.amount) : amt(m.perUser.amount, m.perUser.unit))
+  const much = m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
     : m.aprPct !== undefined ? `+${m.aprPct}% APR` : p.reward ? POOL[lang](p.reward.label) : undefined;
   // only when it says more than a generic phrase: a threshold, a per-person amount, an APR or a pool
-  if (!much && !m.minEntry) return undefined;
+  if (!much && !m.minEntry) {
+    const foreign = lang !== "en" && !/[а-яіїєґё]/i.test(p.title);
+    return foreign ? what : undefined;
+  }
   return much ? `${what ?? ""}${what ? " → " : ""}${much}` : what;
 }

@@ -32,7 +32,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
   const { after, decay, median, decayMedian, fetchedAt } = await getInsights();
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <YieldTabs lang={lang} active="insights" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">📊 {P.insTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.insSub}</p>

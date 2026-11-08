@@ -26,7 +26,7 @@ export default async function HedgePage({ params }: { params: Params }) {
   const options = hedgeOptions(live, pools.hedge, pools.prices, pools.fetchedAt);
   return (
     <>
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <header>
           <YieldTabs lang={lang} active="hedge" />
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.hedgeTitle}</h1>

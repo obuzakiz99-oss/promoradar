@@ -105,7 +105,7 @@ export function ProSection({ t }: { t: Dict }) {
             </ul>
           </div>
           <div className="card relative p-7 ring-1 ring-lime/50 hover:transform-none" style={{ background: "linear-gradient(180deg, rgb(200 255 61 / 0.08), rgb(200 255 61 / 0.01)), var(--color-surface)" }}>
-            <span className="absolute right-5 top-5 rounded-full bg-lime px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.pro.popular}</span>
+            <span className="absolute right-5 top-5 rounded-full bg-lime px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-on-accent">{t.pro.popular}</span>
             <div className="text-sm font-bold text-lime">Pro</div>
             <div className="mt-2 flex items-baseline gap-1">
               <span className="font-display text-4xl font-semibold">${PRO.priceMonthUsd}</span>

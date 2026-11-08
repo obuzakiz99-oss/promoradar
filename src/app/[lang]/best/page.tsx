@@ -65,7 +65,7 @@ export default async function Best({ params }: { params: Params }) {
   const exchanges = Object.fromEntries(LP_API.map((id) => [id, venueOf(id)]));
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <PageHeader lang={lang} title={T.bestTitle} sub={T.bestSub} updated={fetchedAt} nav={<a href={withBase(`/${lang}/learn/quiz/`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Підібрати мені","en":"Pick for me","ru":"Подобрать мне"} as Record<string, string>)[lang]}</a>} />
         <BestBoard lang={lang} safe={safe} pools={live} hedge={pools.hedge} prices={pools.prices} exchanges={exchanges} promos={top} now={now} />
         <p className="mt-10 text-xs text-ink-3">{t.lp.disclaimer} {t.aprHub.note}</p>

@@ -243,7 +243,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
                 role="tab"
                 aria-selected={kind === k}
                 onClick={() => { setKind(k); setVenues(new Set()); setCat("all"); }}
-                className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-[#151005]" : "bg-lime text-[#0b0f05]") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
+                className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-[#151005]" : "bg-lime text-on-accent") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
               >
                 {k === "saved" ? <>★ {t.saved.tab}</> : t.kinds[k as Exclude<Kind, "saved">]}
                 <span className={`font-mono text-xs ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>

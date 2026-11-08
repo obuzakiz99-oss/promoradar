@@ -74,7 +74,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
 
   const Presets = ({ v, set }: { v: number; set: (n: number) => void }) => (
     <div className="flex gap-1.5">
-      {PRESETS.map((p) => <button key={p} type="button" onClick={() => set(p)} className={`h-8 rounded-lg px-2.5 font-mono text-xs font-bold ${v === p ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{usd(p)}</button>)}
+      {PRESETS.map((p) => <button key={p} type="button" onClick={() => set(p)} className={`h-8 rounded-lg px-2.5 font-mono text-xs font-bold ${v === p ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{usd(p)}</button>)}
     </div>
   );
 

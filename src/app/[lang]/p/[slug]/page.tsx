@@ -14,6 +14,7 @@ import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
 import { EarnCalc } from "@/components/EarnCalc";
+import { titleOf } from "@/lib/titletpl";
 import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
 import { withBase } from "@/lib/base";
 import { getTokens, isStableSym } from "@/lib/tokens";
@@ -188,6 +189,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const joinUrl = p.category === "farming" ? p.joinUrl || p.url : p.url;
   const refUrl = p.category !== "farming" && venueCfg?.refUrl ? venueCfg.refUrl : undefined;
   const R = RULES_TX[lang];
+  const own = titleOf(p, lang);
   const det = details?.[p.id];
   const ex = faqs?.[p.id]?.[lang];
   const faq = ex?.faq ?? [];
@@ -214,7 +216,7 @@ export default async function PromoPage({ params }: { params: Params }) {
     </span>
   ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-[#7ee787]">+{m.apr}% APR</span> : p.reward ? p.reward.label + (p.reward.usd && p.reward.unit !== "USD" ? ` (≈${compactUsd(p.reward.usd)})` : "") : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? p.reward.label + (p.reward.usd && p.reward.unit !== "USD" ? ` (≈${compactUsd(p.reward.usd)})` : "") : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],
@@ -226,7 +228,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink-3">
           <Link href={`/${lang}#promos`} className="hover:text-ink">← {t.detail.back}</Link>
           <span>/</span>
@@ -244,8 +246,16 @@ export default async function PromoPage({ params }: { params: Params }) {
               {m.confirmed && <span className="rounded-md bg-teal/10 px-2 py-1 text-teal">✓ {t.card.confirmed}</span>}
               {(m.hot ?? 0) >= 60 && <span className="rounded-md bg-amber/10 px-2 py-1 text-amber">🔥 {m.hot}°</span>}
             </div>
-            <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{isAggregator ? `${p.title} — Airdrop` : p.title}</h1>
-            <p className="mt-2 text-ink-2">{p.venue.name}</p>
+            {/* H1 = our short title (display font only for short text); the full headline is the subtitle — audit 08.11 */}
+            {own ? (
+              <>
+                <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{own}</h1>
+                <p className="mt-2 text-lg leading-snug text-ink-2">{isAggregator ? `${p.title} — Airdrop` : p.title}</p>
+              </>
+            ) : (
+              <h1 className="mt-3 text-2xl font-bold leading-tight tracking-tight sm:text-3xl">{isAggregator ? `${p.title} — Airdrop` : p.title}</h1>
+            )}
+            <p className="mt-2 text-ink-3">{p.venue.name}</p>
             {coins.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {coins.map((c) => (

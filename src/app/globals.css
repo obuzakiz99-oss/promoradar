@@ -17,6 +17,8 @@
   --color-rose: #ff6b8b;
   --color-violet: #a38bff;
   --color-sky: #5ab8ff;
+  --color-on-accent: #0b0f05;   /* text on lime / teal / amber fills */
+  --color-success: #7ee787;     /* farming APR, "+" values */
 
   --font-display: "Unbounded Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;

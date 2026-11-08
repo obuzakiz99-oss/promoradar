@@ -18,7 +18,7 @@ export function TraderTabs({ lang, active, updated }: { lang: Locale; active: Tr
       <nav className="scroll-x flex max-w-full gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" aria-label={TRADER_NAV[lang]}>
         {(["unlocks", "fixed", "insights"] as const).map((id) => (
           <Link key={id} href={`/${lang}/${id}`} aria-current={active === id ? "page" : undefined}
-            className={`flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${active === id ? "bg-lime text-[#0b0f05]" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
+            className={`flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${active === id ? "bg-lime text-on-accent" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
             <span aria-hidden="true">{ICON[id]}</span>{L[lang][id]}
           </Link>
         ))}

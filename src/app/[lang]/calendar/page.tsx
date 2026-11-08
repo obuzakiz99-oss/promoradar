@@ -41,7 +41,7 @@ export default async function Calendar({ params }: { params: Params }) {
   }
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <header>
           <CalendarTabs lang={lang} active="calendar" updated={fetchedAt} />
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.calTitle}</h1>

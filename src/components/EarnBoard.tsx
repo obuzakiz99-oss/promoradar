@@ -62,7 +62,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <div className="flex flex-wrap gap-1.5">
             {popular.filter((c) => byCoin.has(c)).map((c) => (
-              <button key={c} onClick={() => setCoin(c)} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
+              <button key={c} onClick={() => setCoin(c)} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
             ))}
           </div>
           <div className="adv relative lg:ml-auto lg:w-56">
@@ -93,10 +93,10 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
       {/* exchange chips — tap to see only that exchange */}
       {coinExchanges.length > 1 && (
         <div className="scroll-x mt-3 flex gap-1.5">
-          <button onClick={() => setEx("all")} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
+          <button onClick={() => setEx("all")} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
           {coinExchanges.map((id) => (
             <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
-              className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-[#0b0f05]" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>
+              className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>
               <VenueLogo v={exchanges[id]} size={24} rounded="rounded-md" />{exchanges[id].name}
             </button>
           ))}
@@ -129,7 +129,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {} }: {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
-                  {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-[#0b0f05]">{A.best}</span>}
+                  {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">{A.best}</span>}
                   {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
                 </div>
                 <div className="mt-0.5 text-xs font-semibold text-ink-3">

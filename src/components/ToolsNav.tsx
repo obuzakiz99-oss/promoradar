@@ -17,7 +17,7 @@ export function ToolsNav({ lang, active }: { lang: Locale; active?: ToolId }) {
           key={id}
           href={`/${lang}/${id}`}
           aria-current={active === id ? "page" : undefined}
-          className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-3.5 text-sm font-bold transition-colors ${active === id ? "bg-lime text-[#0b0f05]" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
+          className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-3.5 text-sm font-bold transition-colors ${active === id ? "bg-lime text-on-accent" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
         >
           <span aria-hidden="true">{TOOL_ICON[id]}</span>{T.tools[id][0]}
         </Link>

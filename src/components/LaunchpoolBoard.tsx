@@ -152,7 +152,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             </div>
             <div className="mt-2 flex gap-2">
               {PRESETS.map((v) => (
-                <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-[#0b0f05]" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString("en-US")}</button>
+                <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString("en-US")}</button>
               ))}
             </div>
           </div>
@@ -220,7 +220,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                         {p.token} {fmtChg(r.chgReward)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>
                       </span>
                     )}
-                    {isBest && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-[#0b0f05]">Best</span>}
+                    {isBest && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">Best</span>}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs font-semibold text-ink-3">
                     <span>{ex?.name}</span>

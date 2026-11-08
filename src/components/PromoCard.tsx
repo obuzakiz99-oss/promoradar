@@ -1,6 +1,6 @@
 import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
-import { ago, compactUsd, duration, shortDate } from "@/lib/format";
+import { ago, compactUsd, duration, num, shortDate } from "@/lib/format";
 import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
@@ -14,7 +14,7 @@ export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }>
   competition: { dot: "#ffb547", text: "text-amber" },
   bonus:       { dot: "#3de0c8", text: "text-teal" },
   earn:        { dot: "#5ab8ff", text: "text-sky" },
-  farming:     { dot: "#7ee787", text: "text-[#7ee787]" },
+  farming:     { dot: "#7ee787", text: "text-success" },
   listing:     { dot: "#a38bff", text: "text-violet" },
   referral:    { dot: "#ff6b8b", text: "text-rose" },
   other:       { dot: "#6b7685", text: "text-ink-2" },
@@ -89,9 +89,9 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {/* one badge only, so the exchange name always fits (most important first) */}
-          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">{t.card.sponsored}</span>
+          {p.sponsored ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-on-accent">{t.card.sponsored}</span>
             : st === "ending" ? <span className="rounded-md border border-rose/30 bg-rose/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-rose">{t.status.ending}</span>
-            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-[#0b0f05]">✦ {FRESH[lang]}</span>
+            : fresh ? <span className="rounded-md bg-lime px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-on-accent">✦ {FRESH[lang]}</span>
             : st === "upcoming" ? <span className="rounded-md border border-sky/30 bg-sky/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-sky">{t.status.upcoming}</span>
             : isDrop && (m.hot ?? 0) >= 60 ? <span className="rounded-md border border-amber/30 bg-amber/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-amber">🔥 {m.hot}°</span>
             : isNew ? <span className="rounded-md border border-lime/30 bg-lime/10 px-2 py-1 text-xs font-extrabold uppercase tracking-wide text-lime">{t.card.new}</span>
@@ -114,7 +114,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
       ) : (
         <>
           {/* our own short title from the parsed facts; the exchange's headline stays below in small type (audit 08.11) */}
-          <h3 className="mt-4 break-words text-[1.02rem] font-bold leading-snug text-ink">
+          <h3 className="mt-4 line-clamp-2 break-words text-base font-bold leading-snug text-ink">
             <a href={href} className="after:absolute after:inset-0 after:rounded-[1.25rem] focus-visible:outline-none">
               {own ?? calm(isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
@@ -126,17 +126,20 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
         </>
       )}
 
-      {/* who it is for */}
-      {(m.geo?.only || m.geo?.noUA || m.forNew || m.noDeposit || m.payout?.form) && (
-        <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs font-bold">
-          {m.geo?.only && <span className="rounded-md bg-amber/10 px-1.5 py-0.5 text-amber">🌍 {GEO_ONLY[lang](m.geo.only)}</span>}
-          {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-1.5 py-0.5 text-rose">{NO_UA[lang]}</span>}
-          {m.forNew && <span className="rounded-md bg-sky/10 px-1.5 py-0.5 text-sky">🆕 {FOR_NEW[lang]}</span>}
-          {m.noDeposit && <span className="rounded-md bg-lime/10 px-1.5 py-0.5 text-lime">🆓 {NO_DEP[lang]}</span>}
-          {/* what the reward really is — read from the official rules */}
-          {m.payout?.form && <span className={`rounded-md px-1.5 py-0.5 ${FORM_CLS[m.payout.form]}`}>{FORM_BADGE[lang][m.payout.form]}</span>}
-        </div>
-      )}
+      {/* who it is for + what is paid — at most 2 badges, one style, no emoji (audit 08.11) */}
+      {(() => {
+        const b: Array<[string, string]> = [];
+        if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "border-amber/30 text-amber"]);
+        if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "border-rose/30 text-rose"]);
+        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form].replace(/^\S+\s/, ""), "border-line-2 text-ink-2"]);
+        if (m.noDeposit) b.push([NO_DEP[lang], "border-teal/30 text-teal"]);
+        if (m.forNew) b.push([FOR_NEW[lang], "border-sky/30 text-sky"]);
+        return b.length ? (
+          <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs font-semibold">
+            {b.slice(0, 2).map(([x, cls]) => <span key={x} className={`rounded-md border px-2 py-0.5 ${cls}`}>{x}</span>)}
+          </div>
+        ) : null;
+      })()}
 
       {/* footer */}
       <div className="mt-auto pt-5">
@@ -144,27 +147,27 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
           {isFarm ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
-              <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-[#7ee787]">+{m.apr}%</div>
+              <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-success">+{m.apr}%</div>
               {m.baseApr ? <div className="font-mono text-xs text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
             </div>
           ) : m.perUser && p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{num(m.perUser.amount, lang)} {m.perUser.unit}</div>
               <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}</div>
-              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
+              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}</div>
-              {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](`${m.perUser.amount.toLocaleString("en-US")} ${m.perUser.unit}`)}</div>}
-              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${m.minEntry.amount.toLocaleString("en-US")}</div>}
+              {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](`${num(m.perUser.amount, lang)} ${m.perUser.unit}`)}</div>}
+              {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : m.perUser ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{m.perUser.amount.toLocaleString("en-US")} {m.perUser.unit}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{num(m.perUser.amount, lang)} {m.perUser.unit}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>

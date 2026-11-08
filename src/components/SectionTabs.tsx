@@ -35,14 +35,27 @@ const CAL: Tab[] = [
 
 function Row({ tabs, active, lang, small, label }: { tabs: Tab[]; active: string; lang: L; small?: boolean; label: string }) {
   return (
-    <nav className={`scroll-x flex max-w-full gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit ${small ? "mt-2" : ""}`} aria-label={label}>
-      {tabs.map((x) => (
-        <Link key={x.id} href={`/${lang}${x.href}`} aria-current={active === x.id ? "page" : undefined}
-          className={`flex shrink-0 items-center rounded-xl px-4 font-bold transition-colors ${small ? "h-9 text-xs" : "h-11 text-sm"} ${active === x.id ? (small ? "bg-white/10 text-ink" : "bg-lime text-[#0b0f05]") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
-          {x.label[lang]}
-        </Link>
-      ))}
-    </nav>
+    // audit 08.11: section tabs = underline (not lime fills, which belong to filter chips); the second level = segmented control
+    small ? (
+      <nav className="scroll-x mt-3 flex max-w-full gap-1 rounded-xl border border-line bg-white/[0.02] p-1 sm:w-fit" aria-label={label}>
+        {tabs.map((x) => (
+          <Link key={x.id} href={`/${lang}${x.href}`} aria-current={active === x.id ? "page" : undefined}
+            className={`flex h-9 shrink-0 items-center rounded-lg px-3.5 text-[13px] font-bold transition-colors ${active === x.id ? "bg-white/10 text-ink" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}>
+            {x.label[lang]}
+          </Link>
+        ))}
+      </nav>
+    ) : (
+      <nav className="scroll-x flex max-w-full gap-6 border-b border-line" aria-label={label}>
+        {tabs.map((x) => (
+          <Link key={x.id} href={`/${lang}${x.href}`} aria-current={active === x.id ? "page" : undefined}
+            className={`relative flex h-11 shrink-0 items-center text-[15px] font-bold transition-colors ${active === x.id ? "text-ink" : "text-ink-3 hover:text-ink"}`}>
+            {x.label[lang]}
+            {active === x.id && <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-lime" />}
+          </Link>
+        ))}
+      </nav>
+    )
   );
 }
 

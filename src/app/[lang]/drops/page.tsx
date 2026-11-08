@@ -39,7 +39,7 @@ export default async function DropsPage({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <PromoTabs lang={lang} active="drops" />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{P.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.sub}</p>

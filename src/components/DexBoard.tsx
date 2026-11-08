@@ -148,7 +148,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                   <div className="text-xs text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">
-                  {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-[#7ee787]">{pct(p.apyReward ?? 0)}</span></>}
+                  {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-success">{pct(p.apyReward ?? 0)}</span></>}
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-3">{pct(p.apy30d)}</td>
                 <td className="px-4 py-3 text-right">
