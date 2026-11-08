@@ -170,7 +170,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   }, [rowsRaw, rank, picked]);
 
   const pickedRow = picked ? rows.find((r) => rowKey(r) === picked) : undefined;
-  const best = pickedRow ?? rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
+  // "best" = the most profitable pool (its badge); the summary line shows the picked pool when there is one
+  const top = rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
+  const best = pickedRow ?? top;
 
   return (
     <div>
@@ -261,7 +263,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           const live = p.status === "live";
           const span = p.end - p.start;
           const pct = live ? Math.min(100, Math.max(0, ((now - p.start) / span) * 100)) : 0;
-          const isBest = r === best;
+          const isBest = r === top;
           const isPicked = rowKey(r) === picked;
           const lvl = poolLevel(pool.stake, p.token);
           return (
