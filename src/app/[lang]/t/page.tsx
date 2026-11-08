@@ -28,7 +28,7 @@ export default async function Tokens({ params }: { params: Params }) {
   const { tokens, fetchedAt } = await getTokens(lang);
   const rows: TokenRow[] = [...tokens.values()].map((x) => ({
     sym: x.sym, logo: x.logo, href: withBase(`/${lang}/t/${x.sym}/`), promos: x.promos.length, lp: x.lpReward.length + x.lpStake.length,
-    earnMax: x.earn[0]?.apr, score: x.promos.length * 3 + x.lpReward.length * 5 + x.lpStake.length + Math.min(x.earn.length, 5),
+    earnMax: x.earn.find((o) => !o.newUsers && o.apr <= 100)?.apr, score: x.promos.length * 3 + x.lpReward.length * 5 + x.lpStake.length + Math.min(x.earn.length, 5),
   })).sort((a, b) => b.score - a.score);
   return (
     <>

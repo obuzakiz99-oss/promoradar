@@ -22,8 +22,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 /** A promo counts as a new-user offer when it's a deposit/welcome bonus or explicitly targets newcomers. */
+// the same set as the "Бонуси" filter on the promo list (category bonus) plus anything marked "for new users" — audit 08.11:
+// the page showed 1 promo while the list filter said 29
 const isNewUser = (p: Promo) =>
-  p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.title);
+  p.category === "bonus" || !!p.meta?.forNew
+  || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title));
 
 export default async function Bonuses({ params }: { params: Params }) {
   const { lang } = await params;

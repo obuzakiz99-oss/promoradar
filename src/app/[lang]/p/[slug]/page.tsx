@@ -261,7 +261,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
-          {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗</a>}
+          {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗<span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span></a>}
           {p.category !== "farming" && <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
         </div>
@@ -306,7 +306,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         )}
 
         {/* "how much would I get" — only when the rules give something to calculate with */}
-        {p.category !== "farming" && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
+        {p.category !== "farming" && p.category !== "competition" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
 

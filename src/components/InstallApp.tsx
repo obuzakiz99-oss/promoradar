@@ -23,9 +23,10 @@ export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register(`${base}/sw.js`, { scope: `${base}/` }).catch(() => { /* not critical */ });
     let ok = false;
     try {
-      const visits = Number(localStorage.getItem("pr:visits") || "0") + 1;
-      localStorage.setItem("pr:visits", String(visits));
-      ok = visits >= 2 && !localStorage.getItem("pr:installNo");
+      // count browsing sessions, not page loads (every page of the static site is a load): offer from the 3rd session
+      let visits = Number(localStorage.getItem("pr:visits") || "0");
+      if (!sessionStorage.getItem("pr:session")) { sessionStorage.setItem("pr:session", "1"); visits += 1; localStorage.setItem("pr:visits", String(visits)); }
+      ok = visits >= 3 && !localStorage.getItem("pr:installNo");
     } catch { /* storage blocked */ }
     const standalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone;
     if (!ok || standalone) return;
@@ -39,7 +40,7 @@ export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
   if (!show) return null;
   const T = TX[lang];
   return (
-    <div role="dialog" className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-md animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
+    <div role="dialog" className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 sm:bottom-4 animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
       <p className="text-sm font-semibold text-ink">{T.text}</p>
       {ios && <p className="mt-1 text-xs text-ink-2">{T.ios}</p>}
       <div className="mt-3 flex gap-2">

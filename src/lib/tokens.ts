@@ -60,7 +60,7 @@ export function buildTokens(promos: Promo[], projects: PoolProject[], offers: Ea
   for (const [k, list] of byCoin) {
     const exchanges = new Set(list.map((o) => o.exchange)).size;
     const t = map.get(k) ?? (exchanges >= 3 ? get(k) : undefined);
-    if (t) t.earn = list.sort((a, b) => b.apr - a.apr).slice(0, 12);
+    if (t) t.earn = list.sort((a, b) => Number(!!a.newUsers) - Number(!!b.newUsers) || b.apr - a.apr).slice(0, 12);   // new-user promo rates (capped) go last
   }
 
   // a token with only a headline mention (no reward in it, no Launchpool, no Earn) isn't worth a page

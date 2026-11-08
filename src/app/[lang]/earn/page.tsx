@@ -41,7 +41,7 @@ export default async function EarnPage({ params }: { params: Params }) {
             {ids.map((id) => (
               <span key={id} className="flex h-9 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2">
                 <span className={`size-1.5 rounded-full ${status[id]?.ok ? "bg-lime" : "bg-rose"}`} />
-                {exchanges[id].name}<span className="font-mono text-[11px] text-ink-3">{status[id]?.count ?? 0}</span>
+                {exchanges[id].name}<span className="font-mono text-[11px] text-ink-3">{status[id]?.count ?? 0} {({ uk: "продуктів", en: "products", ru: "продуктов" } as const)[lang]}</span>
               </span>
             ))}
           </div>

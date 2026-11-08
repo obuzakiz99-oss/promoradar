@@ -44,22 +44,14 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
     return [...m.entries()].filter(([v]) => venues[v]).sort((a, b) => b[1].length - a[1].length).slice(0, max);
   }, [items, cat, venues, max]);
   const pos = spots(ranked.length);
-  // nothing picked yet (or the pick isn't in this category) → show the busiest venue, so the card is never empty
-  const cur = ranked.find(([v]) => v === sel) ?? ranked[0];
+  // the card shows only after a venue is tapped — a default card looked like an ad for one exchange (audit 08.11)
+  const cur = ranked.find(([v]) => v === sel);
   const top = cur ? cur[1].slice().sort((a, b) => (b.usd ?? 0) - (a.usd ?? 0)).slice(0, 4) : [];
   const counts = useMemo(() => Object.fromEntries(CATS.map((c) => [c, c === "all" ? items.length : items.filter((i) => i.category === c).length])), [items]);
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex flex-wrap justify-center gap-1">
-        {CATS.filter((c) => counts[c] > 0).map((c) => (
-          <button key={c} type="button" onClick={() => { setCat(c); setSel(null); }}
-            className={`h-8 rounded-full border px-2.5 text-xs font-bold transition ${cat === c ? "border-lime/50 bg-lime/15 text-lime" : "border-line bg-white/[0.02] text-ink-3 hover:text-ink"}`}>
-            {c === "all" ? labels.all : labels.cats[c] ?? catLabels[c].split(" / ")[0]} <span className="font-mono opacity-70">{counts[c]}</span>
-          </button>
-        ))}
-      </div>
-
+      {/* (category chips removed: they duplicated the list filters below — audit 08.11) */}
       <div className="relative mx-auto aspect-square w-full max-w-[400px]">
         <div className="absolute inset-0 rounded-full border border-line-2 bg-[radial-gradient(circle_at_center,rgb(200_255_61/0.07),transparent_65%)]" />
         {[0.78, 0.44].map((s) => <div key={s} className="absolute rounded-full border border-line" style={{ inset: `${((1 - s) / 2) * 100}%` }} />)}
