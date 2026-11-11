@@ -86,7 +86,7 @@ const uk = {
     disclaimer: "APR — оцінка біржі на момент оновлення; фактичний дохід залежить від ціни токена і кількості учасників.",
   },
   filters: { all: "Усі", search: "Пошук: токен, біржа, протокол…", sort: "Сортувати", newest: "Нові", ending: "Скоро завершуються", biggest: "Найбільша винагорода", venues: "Майданчики", more: "Ще", less: "Згорнути", reset: "Скинути", empty: "Нічого не знайдено. Спробуйте інші фільтри.", results: "результатів" },
-  cat: { airdrop: "Airdrop / Launchpool", competition: "Змагання", bonus: "Бонус за депозит", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Розіграші та інше" } as Record<Category, string>,
+  cat: { airdrop: "Аірдроп / Launchpool", competition: "Змагання", bonus: "Бонус за депозит", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Розіграші та інше" } as Record<Category, string>,
   card: {
     join: "Взяти участь", details: "Умови", pool: "Фонд", endsIn: "Завершиться через", started: "Опубліковано", new: "Нове", sponsored: "Реклама", soon: "Старт",
     apr: "APR винагород", base: "базовий", tvl: "TVL", ongoing: "Постійна програма", actions: "Що зробити", via: "джерело", confirmed: "Підтверджено", hot: "Гаряче", open: "Відкрити", requires: "Потрібно",
@@ -304,7 +304,7 @@ const ru: Dict = {
     disclaimer: "APR — оценка биржи на момент обновления; фактический доход зависит от цены токена и количества участников.",
   },
   filters: { all: "Все", search: "Поиск: токен, биржа, протокол…", sort: "Сортировать", newest: "Новые", ending: "Скоро завершатся", biggest: "Крупнейшая награда", venues: "Площадки", more: "Ещё", less: "Свернуть", reset: "Сбросить", empty: "Ничего не найдено. Попробуйте другие фильтры.", results: "результатов" },
-  cat: { airdrop: "Airdrop / Launchpool", competition: "Соревнование", bonus: "Бонус за депозит", earn: "Earn / Стейкинг", farming: "Фарм ликвидности", listing: "Листинг-кампания", referral: "Реферальная", other: "Розыгрыши и другое" },
+  cat: { airdrop: "Аирдроп / Launchpool", competition: "Соревнование", bonus: "Бонус за депозит", earn: "Earn / Стейкинг", farming: "Фарм ликвидности", listing: "Листинг-кампания", referral: "Реферальная", other: "Розыгрыши и другое" },
   card: {
     join: "Участвовать", details: "Условия", pool: "Фонд", endsIn: "Закончится через", started: "Опубликовано", new: "Новое", sponsored: "Реклама", soon: "Старт",
     apr: "APR наград", base: "базовый", tvl: "TVL", ongoing: "Постоянная программа", actions: "Что сделать", via: "источник", confirmed: "Подтверждено", hot: "Горячее", open: "Открыть", requires: "Нужно",
