@@ -43,7 +43,7 @@ function load(): Store {
 }
 
 /** Texts that don't need translating: numbers, tickers, links, one-word lines. */
-const skip = (s: string) => s.length < 3 || !/[a-z]{3}/i.test(s) || /^https?:\/\/\S+$/.test(s) || /^[A-Z0-9$#@.,:%/+\- ]+$/.test(s);
+const skip = (s: string) => s.length < 3 || !/[a-z]{3}/i.test(s) || /^https?:\/\/\S+$/.test(s) || (/^[A-Z0-9$#@.,:%/+\- ]+$/.test(s) && !/[A-Z]{3,}\s+[A-Z]{2,}\s+[A-Z]{2,}/.test(s));   // ALL-CAPS sentences ("OUTRUN THE FREEZE") still get translated
 /** Text that is already in the target language (Cyrillic) needs no translation. */
 const isCyr = (s: string) => (s.match(/[Ѐ-ӿ]/g)?.length ?? 0) > s.length * 0.3;
 
