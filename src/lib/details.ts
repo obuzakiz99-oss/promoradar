@@ -529,6 +529,39 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
-  for (const p of promos) if (store[p.id]) out[p.id] = { ...store[p.id], facts: factsOf(store[p.id].blocks) };
+  for (const p of promos) if (store[p.id]) {
+    const blocks = dropBoilerplate(store[p.id].blocks, p.id, store);
+    out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
+  }
   return out;
+}
+
+/**
+ * Site chrome scraped together with a promo page (menus, language lists, "Log in / Sign up", footers) shows up as a long
+ * run of short blocks that repeat word for word in many promos of the same source. Drop runs of ≥ 8 consecutive blocks
+ * that each occur in ≥ 3 promos of that source and are mostly short labels; repeated rule text (standard terms, a
+ * campaign posted several times) stays.
+ */
+const COMMON = new Map<string, Map<string, number>>();
+function dropBoilerplate(blocks: Block[], id: string, store: Record<string, PromoDetails>): Block[] {
+  const srcOf = (k: string) => (k.startsWith("tg:") ? k.split("/")[0] : k.split(":")[0]);   // telegram channel / venue
+  const src = srcOf(id);
+  let counts = COMMON.get(src);
+  if (!counts) {
+    counts = new Map();
+    for (const [k, d] of Object.entries(store)) if (srcOf(k) === src) for (const x of new Set(d.blocks.map((b) => b.x))) counts.set(x, (counts.get(x) ?? 0) + 1);
+    COMMON.set(src, counts);
+  }
+  const common = blocks.map((b) => b.x.length <= 300 && (counts!.get(b.x) ?? 0) >= 3);
+  const keep = blocks.map(() => true);
+  for (let i = 0; i < blocks.length;) {
+    if (!common[i]) { i++; continue; }
+    let j = i;
+    while (j < blocks.length && common[j]) j++;
+    // menus are mostly labels ("Spot", "Log in", "Español"): short, no digits, ≤ 5 words — rule text isn't
+    const label = (x: string) => x.length <= 40 && !/\d/.test(x) && x.split(/\s+/).length <= 5;
+    if (j - i >= 8 && blocks.slice(i, j).filter((b) => label(b.x)).length >= 0.6 * (j - i)) for (let k = i; k < j; k++) keep[k] = false;
+    i = j;
+  }
+  return blocks.filter((_, i) => keep[i]);
 }
