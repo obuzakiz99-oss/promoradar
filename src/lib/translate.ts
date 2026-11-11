@@ -159,7 +159,9 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
         for (const [k, s] of TODO[lang]) if (!m.has(k)) m.set(k, s);
         merged[lang] = [...m].map(([k, s]) => ({ k, s }));
       }
-      fs.writeFileSync(TODO_FILE(), JSON.stringify(merged));
+      const tmp = `${TODO_FILE()}.${process.pid}.tmp`;          // atomic: a half-written file would wipe the list
+      fs.writeFileSync(tmp, JSON.stringify(merged));
+      fs.renameSync(tmp, TODO_FILE());
     }
   } catch { /* read-only */ }
   return out;
