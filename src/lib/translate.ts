@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import MANUAL_JSON from "@/config/translations-manual.json";
 
 /**
  * Machine translation of promo texts (titles, key rules, full rules) into Ukrainian and Russian.
@@ -10,6 +11,9 @@ import { createHash } from "node:crypto";
  *     whatever DeepL's quota can't cover. Its usage is counted here per calendar month (data/translations.json).
  * Every translation is stored in data/translations.json (the `data` branch), so each text is translated once.
  * Without any key nothing is translated and the original text is shown.
+ * src/config/translations-manual.json = hand translations (written by Claude in a session; key = same sha1 hash as the
+ * store) — they win over machine ones. Texts nobody translated yet are listed in data/translate-todo.json (priority order)
+ * so the next session can translate them into the manual file.
  */
 export type TLang = "uk" | "ru";
 const LANGS: TLang[] = ["uk", "ru"];
@@ -23,6 +27,11 @@ const KEEP_MS = 60 * 86400_000;
 
 type Store = Record<TLang, Record<string, { t: string; at: number }>> & { usage?: { month: string; azure: number } };
 let MEM: Store | null = null;
+let DEEPL_LEFT: Promise<number> | undefined;
+let DEEPL_SPENT: number | undefined;   // DeepL chars used by this build so far (all calls together)
+const MANUAL = MANUAL_JSON as unknown as Record<TLang, Record<string, string>>;
+const TODO: Record<TLang, Map<string, string>> = { uk: new Map(), ru: new Map() };
+const TODO_FILE = () => path.join(process.cwd(), "data", "translate-todo.json");
 const key = (s: string) => createHash("sha1").update(s).digest("base64url").slice(0, 16);
 const month = () => new Date().toISOString().slice(0, 7);
 
@@ -86,8 +95,10 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
   const providers: Provider[] = [];
   const dk = process.env.DEEPL_API_KEY;
   if (dk) {
-    const left = await deeplLeft(dk).catch(() => 0);
-    providers.push({ name: "deepl", budget: Math.min(DEEPL_PER_BUILD, left), run: (t, l) => deepl(t, l, dk), spent: () => {} });
+    DEEPL_LEFT ??= deeplLeft(dk).catch(() => 0);            // asked once per build, not per page
+    const left = await DEEPL_LEFT;
+    DEEPL_SPENT ??= 0;
+    providers.push({ name: "deepl", budget: Math.min(DEEPL_PER_BUILD, left) - DEEPL_SPENT, run: (t, l) => deepl(t, l, dk), spent: (n) => { DEEPL_SPENT = (DEEPL_SPENT ?? 0) + n; } });
   }
   const ak = process.env.AZURE_TRANSLATOR_KEY;
   if (ak) {
@@ -99,7 +110,7 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
   if (providers.length) {
     // interleave: Ukrainian first (main audience), then Russian; each text goes to the first provider with budget left
     for (const lang of LANGS) {
-      let todo = want[lang].filter((s) => !store[lang][key(s)] && !isCyr(s));
+      let todo = want[lang].filter((s) => !store[lang][key(s)] && !MANUAL[lang]?.[key(s)] && !isCyr(s));
       for (const pr of providers) {
         let i = 0;
         const rest: string[] = [];
@@ -128,6 +139,25 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
     try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
   }
   const out = { uk: {}, ru: {} } as Record<TLang, Record<string, string>>;
-  for (const lang of LANGS) for (const s of want[lang]) { const hit = store[lang][key(s)]; if (hit) out[lang][s] = hit.t; }
+  for (const lang of LANGS) for (const s of want[lang]) {
+    const k = key(s), t = MANUAL[lang]?.[k] ?? store[lang][k]?.t;
+    if (t) out[lang][s] = t;
+    else if (!isCyr(s)) TODO[lang].set(k, s);
+  }
+  // what's still untranslated (all calls of this build, most important first) → data/ for the next hand-translation pass
+  try {
+    if (fs.existsSync(path.dirname(TODO_FILE()))) fs.writeFileSync(TODO_FILE(), JSON.stringify({
+      at: new Date().toISOString(),
+      uk: [...TODO.uk].map(([k, s]) => ({ k, s })), ru: [...TODO.ru].map(([k, s]) => ({ k, s })),
+    }));
+  } catch { /* read-only */ }
   return out;
+}
+
+/** Translate loose texts (Polymarket questions, unlock labels…) for one language; originals where nothing is known. */
+export async function trList(lang: string, texts: string[]): Promise<(s: string) => string> {
+  if (lang !== "uk" && lang !== "ru") return (s) => s;
+  const l = lang as TLang;
+  const m = await translateAll({ uk: l === "uk" ? texts : [], ru: l === "ru" ? texts : [] }).catch(() => undefined);
+  return (s) => m?.[l]?.[s.trim()] ?? s;
 }

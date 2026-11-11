@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
+import { trList } from "@/lib/translate";
 import { getPromos } from "@/lib/promos";
 import { getPmRewards } from "@/lib/pmrewards";
 import { CLAIM_RE, DROP_ICON, DROP_LEVEL, DROP_TEXT, DROP_TYPES, EXTRA_TEXT, dropType, isFreeStable } from "@/lib/drops";
@@ -27,6 +28,7 @@ export default async function DropsPage({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), D = DROP_TEXT[lang], P = D.page;
   const [{ promos, fetchedAt }, pm] = await Promise.all([getPromos(lang), getPmRewards()]);
+  const trq = await trList(lang, pm.rows.slice(0, 15).map((r) => r.question));
   const live = promos.filter((p) => (!p.endsAt || p.endsAt > fetchedAt) && p.venue.kind !== "airdrop");
   const byType = Object.fromEntries(DROP_TYPES.map((k) => [k, live.filter((p) => dropType(p.title) === k)]));
   const X = EXTRA_TEXT[lang];
@@ -118,7 +120,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                   <tbody className="divide-y divide-line">
                     {pm.rows.slice(0, 15).map((r) => (
                       <tr key={r.slug} className="hover:bg-white/[0.02]">
-                        <td className="px-4 py-2.5"><a href={`https://polymarket.com/market/${r.slug}`} target="_blank" rel="noopener" className="font-semibold hover:text-lime">{r.question}</a></td>
+                        <td className="px-4 py-2.5"><a href={`https://polymarket.com/market/${r.slug}`} target="_blank" rel="noopener" className="font-semibold hover:text-lime">{trq(r.question)}</a></td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold text-lime">${r.daily.toLocaleString("en-US", { maximumFractionDigits: 0 })}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.maxSpread !== undefined ? `±${r.maxSpread}¢` : "—"}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.minSize ?? "—"}</td>

@@ -3,6 +3,7 @@ import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { dropstabCoin, getUnlocks, isBig, UNLOCK_SRC, type Unlock } from "@/lib/unlocks";
+import { trList } from "@/lib/translate";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
 import { compactUsd, duration } from "@/lib/format";
@@ -65,6 +66,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = X[lang];
   const [{ rows, fetchedAt, ok }, { tokens }] = await Promise.all([getUnlocks(), getTokens()]);
+  const trs = await trList(lang, rows.map((u) => u.sale).filter(Boolean));
   const big = rows.filter(isBig).sort((a, b) => b.pctCap - a.pctCap).slice(0, 9);
 
   const tokenHref = (u: Unlock) => (tokens.has(u.sym) ? withBase(`/${lang}/t/${u.sym}/`) : undefined);
@@ -100,7 +102,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}% {T.ofCap}</span>
                       </span>
                       <span className="mt-1 block text-sm text-ink-2">{day(u.date, lang)} · {T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)} · <span className="font-mono">{compactUsd(u.usd)}</span></span>
-                      <span className="mt-0.5 block break-words text-xs text-ink-3">{u.sale} · {T.type[u.type]}</span>
+                      <span className="mt-0.5 block break-words text-xs text-ink-3">{trs(u.sale)} · {T.type[u.type]}</span>
                       <span className="mt-2 block text-xs"><span title={impactText(u, lang)} className={`cursor-help rounded-md px-1.5 py-0.5 font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span></span>
                     </span>
                   </a>
@@ -135,7 +137,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         </td>
                         <td className="px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
                         <td className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
-                        <td className="px-4 py-3 text-ink-2">{u.sale || "—"}</td>
+                        <td className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
                         <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
                         <td className="px-4 py-3">
                           <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
