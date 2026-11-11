@@ -1,3 +1,5 @@
+import JUNK_JSON from "@/config/rules-junk.json";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { DEX_FEEDS } from "@/config/site";
@@ -543,6 +545,8 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
  * campaign posted several times) stays.
  */
 const COMMON = new Map<string, Map<string, number>>();
+/** Hand-picked site chrome that slips past the run filter (config/rules-junk.json, keyed like translate.ts). */
+const JUNK = new Set<string>((JUNK_JSON as { keys: string[] }).keys);
 function dropBoilerplate(blocks: Block[], id: string, store: Record<string, PromoDetails>): Block[] {
   const srcOf = (k: string) => (k.startsWith("tg:") ? k.split("/")[0] : k.split(":")[0]);   // telegram channel / venue
   const src = srcOf(id);
@@ -563,6 +567,7 @@ function dropBoilerplate(blocks: Block[], id: string, store: Record<string, Prom
     i = j;
   }
   // page widgets and cookie banners never belong to the rules
+  blocks.forEach((b, i) => { if (JUNK.has(createHash("sha1").update(b.x.trim()).digest("base64url").slice(0, 16))) keep[i] = false; });
   blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /\bcookies\b/i.test(b.x) || /^\S*\*{3,}\S*@\S+ won /.test(b.x) || /^Draws Left:|^Total Deposit[：:]/.test(b.x)) keep[i] = false; });
   return blocks.filter((_, i) => keep[i]);
 }
