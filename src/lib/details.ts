@@ -563,7 +563,7 @@ function dropBoilerplate(blocks: Block[], id: string, store: Record<string, Prom
     i = j;
   }
   // page widgets and cookie banners never belong to the rules
-  blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /cookies/i.test(b.x)) keep[i] = false; });
+  blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /\bcookies\b/i.test(b.x)) keep[i] = false; });
   return blocks.filter((_, i) => keep[i]);
 }
 /** A menu entry: a short label ("Spot", "Log in", "Español") or a label glued to its description ("SpotBuy and sell…"). */
