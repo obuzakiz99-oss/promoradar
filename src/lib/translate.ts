@@ -146,10 +146,21 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
   }
   // what's still untranslated (all calls of this build, most important first) → data/ for the next hand-translation pass
   try {
-    if (fs.existsSync(path.dirname(TODO_FILE()))) fs.writeFileSync(TODO_FILE(), JSON.stringify({
-      at: new Date().toISOString(),
-      uk: [...TODO.uk].map(([k, s]) => ({ k, s })), ru: [...TODO.ru].map(([k, s]) => ({ k, s })),
-    }));
+    if (fs.existsSync(path.dirname(TODO_FILE()))) {
+      // the build renders pages in several worker processes: merge with what other workers of THIS build wrote
+      const run = process.env.GITHUB_RUN_ID ?? "local";
+      type Todo = { run?: string; at: string; uk: Array<{ k: string; s: string }>; ru: Array<{ k: string; s: string }> };
+      let prev: Todo | undefined;
+      try { prev = JSON.parse(fs.readFileSync(TODO_FILE(), "utf8")); } catch { /* none yet */ }
+      const merged: Todo = { run, at: new Date().toISOString(), uk: [], ru: [] };
+      for (const lang of LANGS) {
+        const m = new Map<string, string>();
+        if (prev?.run === run) for (const x of prev[lang] ?? []) if (!MANUAL[lang]?.[x.k]) m.set(x.k, x.s);
+        for (const [k, s] of TODO[lang]) if (!m.has(k)) m.set(k, s);
+        merged[lang] = [...m].map(([k, s]) => ({ k, s }));
+      }
+      fs.writeFileSync(TODO_FILE(), JSON.stringify(merged));
+    }
   } catch { /* read-only */ }
   return out;
 }
