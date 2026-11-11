@@ -559,9 +559,15 @@ function dropBoilerplate(blocks: Block[], id: string, store: Record<string, Prom
     let j = i;
     while (j < blocks.length && common[j]) j++;
     // menus are mostly labels ("Spot", "Log in", "Español"): short, no digits, ≤ 5 words — rule text isn't
-    const label = (x: string) => x.length <= 40 && !/\d/.test(x) && x.split(/\s+/).length <= 5;
-    if (j - i >= 8 && blocks.slice(i, j).filter((b) => label(b.x)).length >= 0.6 * (j - i)) for (let k = i; k < j; k++) keep[k] = false;
+    if (j - i >= 8 && blocks.slice(i, j).filter((b) => menuLike(b.x)).length >= 0.6 * (j - i)) for (let k = i; k < j; k++) keep[k] = false;
     i = j;
   }
+  // page widgets and cookie banners never belong to the rules
+  blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /cookies/i.test(b.x)) keep[i] = false; });
   return blocks.filter((_, i) => keep[i]);
+}
+/** A menu entry: a short label ("Spot", "Log in", "Español") or a label glued to its description ("SpotBuy and sell…"). */
+function menuLike(x: string): boolean {
+  if (x.length <= 40 && !/\d/.test(x) && x.split(/\s+/).length <= 5) return true;
+  return x.length <= 120 && /[a-z][A-Z][a-z]/.test(x.slice(0, 40)) && !/[.!?]$/.test(x);
 }
