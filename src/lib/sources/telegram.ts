@@ -15,13 +15,37 @@ const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|spotlig
 const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update)\b/i;
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
-function headline(text: string): string {
-  const lines = text.split("\n")
+const postLines = (text: string) => text.split("\n")
     .map((l) => l.replace(/^[^\p{L}\p{N}$#@]+/u, "").replace(/^(Bitrue Official Update|Official Update|Announcement)[\s ]*[—–:-][\s ]*/i, "").trim())
     .filter((l) => l.length > 6 && !/^(bitrue official update|official update|announcement)$/i.test(l));
+const cap = (h: string) => (h.length > 170 ? `${h.slice(0, 167).replace(/\s+\S*$/, "")}…` : h);
+
+function headline(text: string): string {
+  const lines = postLines(text);
   let h = lines[0] ?? "";
   if (h.length < 28 && lines[1]) h = `${h} — ${lines[1]}`;
-  return h.length > 170 ? `${h.slice(0, 167).replace(/\s+\S*$/, "")}…` : h;
+  return cap(h);
+}
+
+const titleOk = (t: string) => !!t && !(CHATTER.test(t) && !/kickstarter|\bclaim\b|airdrop distribut/i.test(t)) && isPromo(t) && STRONG.test(t);
+/** A real reward amount near the top of the post ("20,000 USDT prize pool", "$10,000", "6% APY"). */
+const AMOUNT = /(\$\s?\d[\d,.]*\s*[kmb]?\b|\b\d[\d,.]*\s*[kmb]?\s*(usdt|usdc|usd|btc|eth)\b|\b\d+(\.\d+)?\s?%\s*(apr|apy)\b)/i;
+
+/**
+ * 12.11: KuCoin / HTX posts often open with a slogan ("POWERING UP THE GRID, KUFAM!") or a question and name the
+ * campaign only on the next lines. If the headline fails, take the first of the next 3 lines that passes — but only
+ * when the top of the post also names a concrete reward amount, so chatter with a stray "rewards" word stays out.
+ */
+function pickTitle(text: string): string {
+  const h = cleanTitle(headline(text));
+  if (titleOk(h)) return h;
+  if (!AMOUNT.test(text.slice(0, 500))) return "";
+  for (const l of postLines(text).slice(1, 4)) {
+    if (/https?:\/\/|^(more )?details\b/i.test(l)) continue;
+    const t = cleanTitle(cap(l.replace(/[:：]\s*$/, "")));
+    if (t.length >= 20 && titleOk(t)) return t;
+  }
+  return "";
 }
 
 /*
@@ -78,7 +102,7 @@ async function channel(venue: string, ch: string): Promise<Promo[]> {
   return Object.values(store.promos).filter((p) => p.id.toLowerCase().startsWith(`tg:${ch.toLowerCase()}/`));
 }
 
-function parsePage(html: string, venue: string, ch: string): { promos: Promo[]; minId: number; oldest: number } {
+export function parsePage(html: string, venue: string, ch: string): { promos: Promo[]; minId: number; oldest: number } {
   const posts = [...html.matchAll(/<div class="tgme_widget_message [^"]*"[^>]*data-post="([^"]+)"[\s\S]*?(?=<div class="tgme_widget_message_wrap|$)/g)];
   let minId = 0, oldest = Infinity;
   for (const [block, post] of posts) {
@@ -95,8 +119,8 @@ function parsePage(html: string, venue: string, ch: string): { promos: Promo[]; 
     const date = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
     if (!body || !date) continue;
     const text = strip(body);
-    const title = cleanTitle(headline(text));
-    if (!title || (CHATTER.test(title) && !/kickstarter|\bclaim\b|airdrop distribut/i.test(title)) || !isPromo(title) || !STRONG.test(title)) continue;
+    const title = pickTitle(text);
+    if (!title) continue;
     // link to the exchange's own article when the post has one; otherwise to the post itself
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)
     const own = new URL(site).hostname.replace(/^(www|app)\./, "");
