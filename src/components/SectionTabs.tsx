@@ -4,7 +4,7 @@ import { Updated } from "./Updated";
 
 /**
  * Tabs inside the four main sections (audit 08.11: one menu item per user question, the old pages become tabs).
- *  Акції      — all promos · airdrops · by coin
+ *  Акції      — all promos · airdrops · by coin · exchange rating
  *  Дохідність — Launchpool · Earn · DeFi pools · fixed yield; Launchpool has its own row: now · APR history · analytics · hedge
  *  Календар   — promos · token unlocks
  */
@@ -15,6 +15,7 @@ const PROMO: Tab[] = [
   { id: "all", href: "/#promos", label: { uk: "Усі акції", en: "All promos", ru: "Все акции" } },
   { id: "drops", href: "/drops/", label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" } },
   { id: "tokens", href: "/t/", label: { uk: "За монетою", en: "By coin", ru: "По монете" } },
+  { id: "exchanges", href: "/exchanges/", label: { uk: "Рейтинг бірж", en: "Exchange rating", ru: "Рейтинг бирж" } },
 ];
 const YIELD: Tab[] = [
   { id: "lp", href: "/launchpools/", label: { uk: "Launchpool", en: "Launchpool", ru: "Launchpool" } },
@@ -59,7 +60,7 @@ function Row({ tabs, active, lang, small, label }: { tabs: Tab[]; active: string
   );
 }
 
-export function PromoTabs({ lang, active }: { lang: L; active: "all" | "drops" | "tokens" }) {
+export function PromoTabs({ lang, active }: { lang: L; active: "all" | "drops" | "tokens" | "exchanges" }) {
   return <Row tabs={PROMO} active={active} lang={lang} label="Promos" />;
 }
 

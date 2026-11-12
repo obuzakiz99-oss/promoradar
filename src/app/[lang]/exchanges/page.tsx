@@ -7,6 +7,7 @@ import { getEarn } from "@/lib/earn";
 import { scorecards } from "@/lib/scorecards";
 import { withBase } from "@/lib/base";
 import { ScoreBoard } from "@/components/ScoreBoard";
+import { PromoTabs } from "@/components/SectionTabs";
 import { Footer } from "@/components/Sections";
 
 export const revalidate = 900;
@@ -33,7 +34,8 @@ export default async function Exchanges({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{TX[lang].title}</h1>
+        <PromoTabs lang={lang} active="exchanges" />
+        <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{TX[lang].title}</h1>
         <p className="mt-2 max-w-3xl text-ink-2">{TX[lang].sub}</p>
         <ScoreBoard data={data} lang={lang} venueBase={withBase(`/${lang}/v/`)} />
       </main>
