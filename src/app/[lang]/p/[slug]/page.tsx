@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, money, nfLocale, sentenceCase } from "@/lib/format";
+import { compactUsd, duration, money, nfLocale, noEmoji, sentenceCase } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -28,6 +28,7 @@ function factGroups(facts: Array<{ k: FactKey; text: string }>): Array<[FactKey,
 const FACT_ICON: Record<FactKey, IconName> = { period: "clock", who: "user", min: "cash", how: "checkCircle", payout: "gift", kyc: "id", region: "globe" };
 import { SaveButton } from "@/components/SaveButton";
 import { HideButton } from "@/components/HideButton";
+import { SummaryTiles } from "@/components/SummaryTiles";
 import { Share } from "@/components/Share";
 import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
@@ -204,13 +205,14 @@ const COMBO_TX: Record<Locale, { title: string; sub: (v: string) => string; why:
   },
 };
 const UI_TX: Record<Locale, {
-  reward: string; action: string; time: string; who: string; fund: string; noAmount: string; noDeposit: string; tasks: string; seeRules: string;
+  reward: string; action: string; time: string; who: string; allUsers: string; cat: Record<"competition" | "referral" | "airdrop" | "listing" | "bonus" | "earn" | "other", string>; fund: string; noAmount: string; noDeposit: string; tasks: string; seeRules: string;
   left: string; startsIn: string; noEnd: string; forAll: string; uaOk: string; notUA: string; onlyNew: string; kyc: string; region: (r: string) => string;
   todo: string; good: string; more: string; ex: string; exTasks: string; quote: string;
   s: { reg: (v: string, kyc: boolean, nw: boolean) => string; act: Record<"trade" | "deposit" | "stake" | "hold" | "buy", (a: string, fut: boolean) => string>; free: string; rank: string; join: string; auto: string; manual: string };
 }> = {
   uk: {
-    reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
+    reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", allUsers: "Усі користувачі",
+    cat: { competition: "Торгувати — рейтинг", referral: "Запросити друзів", airdrop: "Виконати завдання", listing: "Торгувати новим токеном", bonus: "Депозит або торгівля", earn: "Покласти в Earn", other: "Виконати умови" }, fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
     left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна — можна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${r}`),
     todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
     s: {
@@ -220,7 +222,8 @@ const UI_TX: Record<Locale, {
     },
   },
   en: {
-    reward: "Reward", action: "What to do", time: "Time", who: "Who can join", fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
+    reward: "Reward", action: "What to do", time: "Time", who: "Who can join", allUsers: "All users",
+    cat: { competition: "Trade — leaderboard", referral: "Invite friends", airdrop: "Do the tasks", listing: "Trade the new token", bonus: "Deposit or trade", earn: "Put in Earn", other: "Meet the conditions" }, fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
     left: "left", startsIn: "starts in", noEnd: "no end date", forAll: "No restrictions found", uaOk: "Ukraine — OK", notUA: "Not for Ukraine", onlyNew: "New users only", kyc: "KYC", region: (r) => (r === "region" ? "Some regions" : `${r} only`),
     todo: "What to do", good: "Good to know", more: "Show the full conditions", ex: "Tasks on the exchange page", exTasks: "Each task is a separate reward", quote: "As written in the rules",
     s: {
@@ -230,7 +233,8 @@ const UI_TX: Record<Locale, {
     },
   },
   ru: {
-    reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
+    reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", allUsers: "Все пользователи",
+    cat: { competition: "Торговать — рейтинг", referral: "Пригласить друзей", airdrop: "Выполнить задания", listing: "Торговать новым токеном", bonus: "Депозит или торговля", earn: "Положить в Earn", other: "Выполнить условия" }, fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
     left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина — можно", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${r}`),
     todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
     s: {
@@ -240,26 +244,6 @@ const UI_TX: Record<Locale, {
     },
   },
 };
-
-/** One summary tile: icon, label, 2–4 words; the full rule text opens on click (no JS needed). */
-function Tile({ icon, label, value, tone = "text-ink", children }: { icon: IconName; label: string; value: React.ReactNode; tone?: string; children?: React.ReactNode }) {
-  const head = (
-    <span className="flex items-start gap-3">
-      <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-white/[0.05] ${tone}`}><Icon name={icon} className="size-5" /></span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-xs font-semibold text-ink-3">{label}</span>
-        <span className={`block font-semibold leading-snug [overflow-wrap:anywhere] ${tone}`}>{value}</span>
-      </span>
-      {children ? <span aria-hidden="true" className="mt-1 text-xs text-ink-3 transition-transform group-open:rotate-180">▾</span> : null}
-    </span>
-  );
-  return children ? (
-    <details className="group card p-4 hover:transform-none">
-      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">{head}</summary>
-      <div className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-ink-2 [overflow-wrap:anywhere]">{children}</div>
-    </details>
-  ) : <div className="card p-4 hover:transform-none">{head}</div>;
-}
 
 /** "Sign Up & Deposit, Get 40 USDT" + its one-line description from a campaign page (KuCoin-style task lists). */
 function tasksOf(blocks: Array<{ t: string; x: string }>): Array<{ title: string; desc?: string }> {
@@ -395,52 +379,64 @@ export default async function PromoPage({ params }: { params: Params }) {
           <HideButton id={p.id} lang={lang} size="lg" />
         </div>
 
-        {/* the four answers people look for, 2–4 words each; details open on click (audit 12.11) */}
+        {/* the four answers people look for, 2–4 words each; one click opens all four (audit 12.11) */}
         {p.category !== "farming" && (() => {
           const U = UI_TX[lang];
           const po = m.payout;
           const kyc = !!m.requires?.includes("kyc") || !!det?.facts.some((f) => f.k === "kyc");
           const amt = m.minEntry ? money(m.minEntry.amount, m.minEntry.unit === "USD" ? "USD" : m.minEntry.unit, lang) : "";
           const actIcon: Record<string, IconName> = { trade: "trend", deposit: "cash", stake: "bank", hold: "wallet", buy: "cash" };
+          // no threshold in the rules → say what kind of thing it is instead of "see the rules"
+          const byCat: Partial<Record<string, [IconName, string]>> = { competition: ["trend", U.cat.competition], referral: ["user", U.cat.referral], airdrop: ["checkCircle", U.cat.airdrop], listing: ["trend", U.cat.listing], bonus: ["cash", U.cat.bonus], earn: ["bank", U.cat.earn] };
+          const act: [IconName, string, string] = m.noDeposit ? ["checkCircle", U.noDeposit, "text-teal"]
+            : m.minEntry ? [actIcon[m.minEntry.kind], `${R.kind[m.minEntry.kind]} ${R.from} ${amt}`, "text-amber"]
+            : [...(byCat[p.category] ?? (["checkCircle", U.cat.other] as [IconName, string])), "text-ink"];
           const ending = p.endsAt && p.endsAt - now < 3 * 86400_000;
           const whoParts: Array<[string, string]> = [];
           if (m.geo?.noUA) whoParts.push([U.notUA, "text-rose"]);
-          if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
-          if (m.forNew) whoParts.push([U.onlyNew, "text-sky"]);
+          else if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
+          else if (det) whoParts.push([U.uaOk, "text-ink"]);
+          whoParts.push(m.forNew ? [U.onlyNew, "text-sky"] : [U.allUsers, "text-ink"]);
           if (kyc) whoParts.push([U.kyc, "text-ink"]);
+          const clean = (x: string) => noEmoji(x).replace(/^\s*[-–•]\s*/, "");
+          const whoLines = m.geo?.text ? [m.geo.text] : (det?.facts ?? []).filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").map((f) => f.text).slice(0, 3);
           return (
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Tile icon="coins" label={U.reward} tone="text-lime"
-                value={<>{pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
-                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}</>}>
-                {pu?.text && <p>“{pu.text}”</p>}
-                {!pu && p.reward && <p>{R.poolShared} {p.reward.label}</p>}
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {po?.form ? <span className={`rounded-md px-2 py-0.5 font-bold ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span> : null}
-                  {po ? timingChips(po, lang).map((c) => <span key={c} className="rounded-md bg-white/5 px-2 py-0.5 font-semibold">{c}</span>) : null}
-                </div>
-                <p className="mt-2 text-ink-3">{FORM_TEXT[lang][po?.form ?? "unknown"]}</p>
-              </Tile>
-              <Tile icon={m.noDeposit ? "checkCircle" : m.minEntry ? actIcon[m.minEntry.kind] : "scroll"} label={U.action} tone={m.noDeposit ? "text-teal" : m.minEntry ? "text-amber" : "text-ink"}
-                value={m.noDeposit ? U.noDeposit : m.minEntry ? `${R.kind[m.minEntry.kind]} ${R.from} ${amt}` : U.seeRules}>
-                {m.minEntry?.text ? <p>“{m.minEntry.text}”</p> : undefined}
-              </Tile>
-              <Tile icon="hourglass" label={U.time} tone={ending ? "text-rose" : "text-ink"}
-                value={p.startsAt && p.startsAt > now ? `${U.startsIn} ${duration(p.startsAt - now, t.time)}` : p.endsAt ? `${U.left} ${duration(p.endsAt - now, t.time)}` : U.noEnd}>
-                <p>{t.detail.start}: {p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</p>
-                <p>{t.detail.end}: {p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</p>
-                {cal && (
-                  <div className="mt-2 flex flex-wrap gap-x-3 font-bold">
-                    <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
-                    <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
+            <SummaryTiles lang={lang} tiles={[
+              {
+                icon: "coins", label: U.reward, tone: "text-lime",
+                value: <>{pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
+                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}</>,
+                body: <>
+                  {pu?.text && <p>“{clean(pu.text)}”</p>}
+                  {!pu && p.reward && <p>{R.poolShared} {p.reward.label}</p>}
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {po?.form ? <span className={`rounded-md px-2 py-0.5 font-bold ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span> : null}
+                    {po ? timingChips(po, lang).map((c) => <span key={c} className="rounded-md bg-white/5 px-2 py-0.5 font-semibold">{c}</span>) : null}
                   </div>
-                )}
-              </Tile>
-              <Tile icon={m.geo?.noUA ? "alert" : "user"} label={U.who} tone={whoParts[0]?.[1] ?? "text-ink"}
-                value={whoParts.length ? whoParts.map((x) => x[0]).join(" · ") : det ? U.uaOk : U.forAll}>
-                {m.geo?.text ? <p>“{m.geo.text}”</p> : det?.facts.filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").slice(0, 3).map((f) => <p key={f.text}>{f.text.replace(/^\s*[-–•]\s*/, "")}</p>)}
-              </Tile>
-            </div>
+                  <p className="mt-2 text-ink-3">{FORM_TEXT[lang][po?.form ?? "unknown"]}</p>
+                </>,
+              },
+              { icon: act[0], label: U.action, tone: act[2], value: act[1], body: m.minEntry?.text ? <p>“{clean(m.minEntry.text)}”</p> : undefined },
+              {
+                icon: "hourglass", label: U.time, tone: ending ? "text-rose" : "text-ink",
+                value: p.startsAt && p.startsAt > now ? `${U.startsIn} ${duration(p.startsAt - now, t.time)}` : p.endsAt ? `${U.left} ${duration(p.endsAt - now, t.time)}` : U.noEnd,
+                body: <>
+                  <p>{t.detail.start}: {p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</p>
+                  <p>{t.detail.end}: {p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</p>
+                  {cal && (
+                    <div className="mt-2 flex flex-wrap gap-x-3 font-bold">
+                      <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                      <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
+                    </div>
+                  )}
+                </>,
+              },
+              {
+                icon: m.geo?.noUA ? "alert" : "user", label: U.who, tone: whoParts[0]?.[1] ?? "text-ink",
+                value: whoParts.map((x) => x[0]).join(" · "),
+                body: whoLines.length ? <>{whoLines.map((x) => <p key={x}>{clean(x)}</p>)}</> : undefined,
+              },
+            ]} />
           );
         })()}
 
@@ -466,7 +462,7 @@ export default async function PromoPage({ params }: { params: Params }) {
                 {steps.map(([ic, x], i) => (
                   <li key={i} className="flex gap-3 rounded-xl bg-white/[0.03] p-3">
                     <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
-                    <span className="min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]"><Icon name={ic} className="mr-1 text-ink-3" />{x}</span>
+                    <span className="min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]"><Icon name={ic} className="mr-1 size-4 text-ink-3" />{x}</span>
                   </li>
                 ))}
               </ol>

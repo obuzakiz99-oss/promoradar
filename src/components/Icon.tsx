@@ -50,9 +50,11 @@ export type IconName =
   | "target" | "star" | "trend" | "chart" | "search" | "sprout" | "compass" | "book" | "unlock" | "rocket" | "bank" | "layers"
   | "parachute" | "wallet" | "graduation" | "ticket" | "tag" | "box" | "camera";
 
-export function Icon({ name, className = "size-[1.1em]", label }: { name: IconName; className?: string; label?: string }) {
+export function Icon({ name, className = "", label }: { name: IconName; className?: string; label?: string }) {
+  // a class without a size used to drop the default and blow the icon up to its container (audit 12.11)
+  const cls = /(^|\s)size-/.test(className) ? className : `size-[1.1em] ${className}`;
   return (
-    <svg className={`inline-block shrink-0 align-[-0.15em] ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
+    <svg className={`inline-block shrink-0 align-[-0.15em] ${cls}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
       strokeLinecap="round" strokeLinejoin="round" role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : true}>
       <path d={P[name]} />
     </svg>
