@@ -352,11 +352,6 @@ export default async function PromoPage({ params }: { params: Params }) {
           </div>
         )}
 
-        {/* "how much would I get" — only when the rules give something to calculate with */}
-        {p.category !== "farming" && p.category !== "competition" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
-          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
-        )}
-
         {/* mix promos (audit 12.11): same exchange, same time, the same action counts in each */}
         {combos.length > 0 && (
           <section id="combo" className="card mt-6 scroll-mt-24 p-5 hover:transform-none sm:p-6">
@@ -375,6 +370,11 @@ export default async function PromoPage({ params }: { params: Params }) {
             {comboSum > 0 && <p className="mt-3 text-sm font-semibold">{C.sum(compactUsd(comboSum), combos.length + 1)}</p>}
             <p className="mt-2 text-xs text-ink-3"><Icon name="alert" /> {C.note}</p>
           </section>
+        )}
+
+        {/* "how much would I get" — only when the rules give something to calculate with */}
+        {p.category !== "farming" && p.category !== "competition" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
+          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
 
         {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}

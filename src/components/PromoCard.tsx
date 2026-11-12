@@ -6,6 +6,8 @@ import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
 import { HideButton } from "./HideButton";
+import { ComboPanel } from "./ComboPanel";
+import type { Combo } from "@/lib/combos";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 import { showHeadline, titleOf } from "@/lib/titletpl";
@@ -41,7 +43,6 @@ function ReqIcon({ k }: { k: string }) {
 }
 
 const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new for you", ru: "новое для вас" };
-const COMBO: Record<Locale, (n: number) => string> = { uk: (n) => `Поєднується ще з ${n}`, en: (n) => `Stacks with ${n} more`, ru: (n) => `Совмещается ещё с ${n}` };
 const MORE: Record<Locale, string> = { uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
 const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 1 людину`, en: (v) => `up to ${v} per person`, ru: (v) => `до ${v} на 1 человека` };
 const GEO_ONLY: Record<Locale, (r: string) => string> = {
@@ -53,7 +54,7 @@ const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No 
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };
 const PER_T: Record<Locale, string> = { uk: "Максимум на 1 людину", en: "Max per person", ru: "Максимум на 1 человека" };
 
-export function PromoCard({ p, t, lang, now, index, fresh, pin, combo = 0 }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string }; combo?: number }) {
+export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string }; combos?: Combo[] }) {
   const cs = CAT_STYLE[p.category];
   const isNew = p.publishedAt > 0 && now - p.publishedAt < 48 * 3600_000;
   // "Join" goes straight to this promo's own page on the exchange (a farm pool's own page for farming)
@@ -210,12 +211,10 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combo = 0 }: { p
           </div>
         </div>
 
-        {/* stackable with other promos on this exchange (audit 12.11) — the list is on the promo page */}
-        {combo > 0 && (
-          <a href={`${href}#combo`} className="relative z-10 mt-3 inline-flex min-h-8 items-center gap-1.5 self-start text-xs font-semibold text-teal hover:underline">
-            <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7l10-5Zm-10 10 10 5 10-5M2 17l10 5 10-5" /></svg>
-            {COMBO[lang](combo)}
-          </a>
+        {/* stackable with other promos on this exchange (audit 12.11): opens a short list right in the card */}
+        {combos && combos.length > 0 && (
+          <ComboPanel lang={lang} why={combos[0].why} ownUsd={m.perUser?.usd}
+            items={combos.map(({ p: q }) => ({ id: q.id, href: withBase(`/${lang}/p/${slugOf(q)}/`), title: titleOf(q, lang) ?? q.title, usd: q.meta?.perUser?.usd, left: q.endsAt ? duration(q.endsAt - now, t.time) : undefined }))} />
         )}
         {/* 07.11 user: every link first leads to the short explanation page; the exchange link lives there */}
         <div className="relative z-10 mt-4 grid">

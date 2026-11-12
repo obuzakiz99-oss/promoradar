@@ -6,7 +6,7 @@ import { PromoCard, CAT_STYLE } from "./PromoCard";
 import { PROX } from "@/lib/i18n-pro";
 import { VenueLogo } from "./VenueLogo";
 import { useSaved } from "./SaveButton";
-import { comboCount } from "@/lib/combos";
+import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
 
@@ -174,7 +174,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const geoHidden = promos.length - geoAll.length;
   const userHidden = geoAll.filter((p) => hiddenIds.includes(p.id)).length;
   // how many other live promos each one stacks with (same exchange, same action, same time)
-  const combos = useMemo(() => new Map(promos.map((p) => [p.id, comboCount(p, promos, serverNow)])), [promos, serverNow]);
+  const combos = useMemo(() => new Map(promos.map((p) => [p.id, combosFor(p, promos, serverNow)])), [promos, serverNow]);
   const geoOk = useMemo(() => (showHidden || kind === "saved" ? geoAll : geoAll.filter((p) => !hiddenIds.includes(p.id))), [geoAll, hiddenIds, showHidden, kind]);
   const byKind = useMemo(
     () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
@@ -372,7 +372,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       {list.length ? (
         <>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} combo={combos.get(p.id) ?? 0} index={i % PAGE} fresh={!!since && p.publishedAt > since} pin={i < 3 ? pinOf.get(p.id) : undefined} />)}
+            {list.slice(0, limit).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} combos={combos.get(p.id)} index={i % PAGE} fresh={!!since && p.publishedAt > since} pin={i < 3 ? pinOf.get(p.id) : undefined} />)}
           </div>
           {list.length > limit && (
             <div className="mt-8 flex justify-center">
