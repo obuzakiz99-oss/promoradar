@@ -43,7 +43,7 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
       <div className="card mt-8 p-6 hover:transform-none sm:p-8">
         <div className="flex gap-1.5">{Q.q.map((x, i) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-lime" : "bg-white/10"}`} />)}</div>
         <h2 className="mt-6 text-xl font-bold sm:text-2xl">{q.text}</h2>
-        <div className="mt-5 grid gap-2.5">
+        <div className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {q.opts.map(([v, label]) => (
             <button key={v} type="button" onClick={() => setAns((s) => ({ ...s, [q.id]: v }))}
               className="flex h-14 items-center rounded-xl border border-line bg-white/[0.02] px-5 text-left font-semibold text-ink-2 transition hover:border-lime/50 hover:bg-lime/[0.06] hover:text-ink">
@@ -60,7 +60,7 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
       <h2 className="font-display text-2xl font-semibold tracking-tight">{Q.result}</h2>
       {ans.account === "no" && <a href={startHref} className="mt-3 inline-block text-sm font-bold text-lime hover:underline">{Q.noAccount}</a>}
       {picks.length === 0 ? <p className="mt-4 text-ink-3">{Q.empty}</p> : (
-        <div className="mt-5 space-y-3">
+        <div className="mt-5 grid gap-3 lg:grid-cols-2">
           {picks.map((it) => {
             const m = income(it);
             return (
