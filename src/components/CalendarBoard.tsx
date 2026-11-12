@@ -16,7 +16,7 @@ function gcal(e: CalEvent, label: string) {
   return `https://calendar.google.com/calendar/render?${q.toString()}`;
 }
 
-/** One .ics file for one event or the whole calendar (with a 2-hour reminder each). */
+/** One .ics file for one event (with a 2-hour reminder). */
 function downloadIcs(evs: Array<[CalEvent, string]>, name: string) {
   const esc = (s: string) => s.replace(/[\\,;]/g, (m) => `\\${m}`).replace(/\n/g, "\\n");
   const ics = [
@@ -37,10 +37,10 @@ function downloadIcs(evs: Array<[CalEvent, string]>, name: string) {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
-const X: Record<Locale, { more: string; allIcs: string; add: string }> = {
-  uk: { more: "Показати ще 7 днів", allIcs: "Весь календар у .ics", add: "Додати в календар" },
-  en: { more: "Show 7 more days", allIcs: "Whole calendar (.ics)", add: "Add to calendar" },
-  ru: { more: "Показать ещё 7 дней", allIcs: "Весь календарь в .ics", add: "Добавить в календарь" },
+const X: Record<Locale, { more: string; add: string }> = {
+  uk: { more: "Показати ще 7 днів", add: "Додати в календар" },
+  en: { more: "Show 7 more days", add: "Add to calendar" },
+  ru: { more: "Показать ещё 7 дней", add: "Добавить в календарь" },
 };
 
 /** Compact calendar (audit 08.11): 7 days at a time, one-line rows, one "add to calendar" menu per row. */
@@ -56,8 +56,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
   if (!groups.size) return <p className="mt-10 text-ink-3">{T.noEvents}</p>;
   return (
     <div className="mt-8">
-      <button type="button" onClick={() => downloadIcs(events.map((e) => [e, e.kind === "start" ? T.starts : T.ends]), "promoradar-calendar")} className="btn btn-ghost h-11 px-4 text-sm">{L.allIcs}</button>
-      <div className="mt-6 space-y-8">
+      <div className="space-y-8">
         {all.slice(0, days).map(([d, list]) => (
           <section key={d}>
             <h2 className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 text-lg font-bold backdrop-blur">
