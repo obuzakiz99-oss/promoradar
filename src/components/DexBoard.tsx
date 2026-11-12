@@ -7,10 +7,18 @@ import { Term } from "./Term";
 import { ProsCons } from "./ProsCons";
 import { compactUsd, num } from "@/lib/format";
 import { dexPC } from "@/lib/proscons";
+import type { Hedge } from "@/lib/pools";
+import { dexHedge } from "@/lib/dexhedge";
+import { HedgeVenues } from "./HedgeVenues";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
 const EXPLAIN: Record<Locale, string> = { uk: "Умови й ризики", en: "Terms & risks", ru: "Условия и риски" };
+const HX: Record<Locale, { title: string; leg: (c: string, sh: number, usd: string) => string; apy: string; none: (c: string) => string; note: string; short: string }> = {
+  uk: { title: "Хедж ціни", leg: (c, sh, usd) => `Шорт ${c} на ${sh}% суми (${usd})`, apy: "APY з хеджем", none: (c) => `На ${c} немає ф'ючерса — ризик ціни не захеджувати`, note: "Шорт ставиться один раз на вході: він знімає ризик падіння ціни, але не непостійну втрату, якщо ціни сильно розійдуться. Фандинг змінюється щогодини; винагороди в токені протоколу краще продавати одразу.", short: "з хеджем" },
+  en: { title: "Price hedge", leg: (c, sh, usd) => `Short ${c} for ${sh}% of the amount (${usd})`, apy: "APY with hedge", none: (c) => `No futures for ${c} — the price risk can't be hedged`, note: "The short is opened once at entry: it removes the price direction, not impermanent loss if prices move far apart. Funding changes every hour; sell protocol-token rewards as they come.", short: "hedged" },
+  ru: { title: "Хедж цены", leg: (c, sh, usd) => `Шорт ${c} на ${sh}% суммы (${usd})`, apy: "APY с хеджем", none: (c) => `На ${c} нет фьючерса — ценовой риск не захеджировать`, note: "Шорт ставится один раз на входе: он снимает риск падения цены, но не непостоянную потерю, если цены сильно разойдутся. Фандинг меняется каждый час; награды в токене протокола лучше продавать сразу.", short: "с хеджем" },
+};
 const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
 const STATS: Record<Locale, string> = { uk: "Історія APY (DefiLlama)", en: "APY history (DefiLlama)", ru: "История APY (DefiLlama)" };
@@ -36,7 +44,7 @@ function logo(p: DexPool) {
   return { name: p.project, logo: p.logo, color: `hsl(${h} 65% 60%)`, ink: "#0b0d10", monogram: p.project.slice(0, 2).toUpperCase() };
 }
 
-export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string }) {
+export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl, hedge = {} }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string; hedge?: Record<string, Hedge> }) {
   // the page ships only the top pools (light HTML); the full list (~1500) loads right after from the static JSON
   const [pools, setPools] = useState(initial);
   useEffect(() => {
@@ -91,6 +99,30 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
       </div>
       <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
     </div>
+    {(() => {
+      const hd = dexHedge(p.symbol, p.apy, hedge);
+      if (!hd) return null;
+      const H = HX[lang];
+      return (
+        <div className="mb-4 max-w-3xl rounded-xl border border-teal/30 bg-teal/[0.05] p-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="text-sm font-bold">{H.title}</div>
+            {hd.hedgedApy !== undefined && <div className="text-sm"><span className="text-ink-3">{H.apy}: </span><span className={`font-mono text-base font-bold ${hd.hedgedApy > 0 ? "text-teal" : "text-rose"}`}>{pct(hd.hedgedApy)}</span>
+              <span className="font-mono text-xs text-ink-3"> · {money((amount * hd.hedgedApy) / 100 / 12)}{C.mo}</span></div>}
+          </div>
+          <div className="mt-2 space-y-2">
+            {hd.legs.map((l) => (
+              <div key={l.coin}>
+                {l.venue ? <div className="text-xs font-semibold text-ink-2">{H.leg(l.coin, Math.round(l.share * 100), money(amount * l.share))}</div>
+                  : <div className="text-xs font-semibold text-amber">{H.none(l.coin)}</div>}
+                <HedgeVenues coin={l.coin} hedge={hedge[l.coin]} lang={lang} className="mt-1" />
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-ink-3">{H.note}</p>
+        </div>
+      );
+    })()}
     <ProsCons lang={lang} pc={pc} max={10} />
     <div className="mt-4 flex flex-wrap gap-2">
       {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
@@ -169,7 +201,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                     </div>
                     <div className="break-words text-xs font-semibold text-ink-3">{p.project} · {p.chain}</div>
                   </div>
-                  <div className={`font-mono text-lg font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</div>
+                  <div className="text-right"><div className={`font-mono text-lg font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</div>{(() => { const hd = dexHedge(p.symbol, p.apy, hedge); return hd?.hedgedApy !== undefined ? <div className="text-xs font-semibold text-teal">{HX[lang].short} {pct(hd.hedgedApy)}</div> : null; })()}</div>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2 font-mono text-xs">
                   <div><div className="font-sans text-ink-3">{C.col(money(amount))}</div><span className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}</span>{C.mo}</div>
@@ -215,7 +247,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                 </td>
                 <td className="px-4 py-3 text-ink-2">{p.chain}</td>
                 <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl)}</td>
-                <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</td>
+                <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}{(() => { const hd = dexHedge(p.symbol, p.apy, hedge); return hd?.hedgedApy !== undefined ? <div className="text-xs font-semibold text-teal">{HX[lang].short} {pct(hd.hedgedApy)}</div> : null; })()}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
                   <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>
                   <div className="text-xs text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
