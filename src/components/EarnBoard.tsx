@@ -163,7 +163,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
               <button type="button" onClick={() => setEx(o.exchange)} title={v.name}><VenueLogo v={v} size={40} /></button>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
+                  <button type="button" onClick={() => setEx(o.exchange)} className="inline-flex min-h-8 items-center font-bold hover:text-lime hover:underline">{v.name}</button>
                   {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">{A.best}</span>}
                   {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">{A.newUsers}</span>}
                 </div>

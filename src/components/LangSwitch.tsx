@@ -16,7 +16,7 @@ export function LangSwitch({ current }: { current: Locale }) {
           href={`/${l}${rest}`}
           onClick={() => { try { localStorage.setItem("pr:lang", l); } catch {} }}
           aria-current={l === current ? "true" : undefined}
-          className={`rounded-full px-2.5 py-1.5 transition-colors ${l === current ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}
+          className={`inline-flex min-h-8 items-center rounded-full px-2.5 py-1.5 transition-colors ${l === current ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}
         >
           {LABEL[l]}
         </Link>

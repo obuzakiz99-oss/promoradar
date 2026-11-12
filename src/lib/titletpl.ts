@@ -73,6 +73,9 @@ export function titleOf(p: Promo, lang: L): string | undefined {
     : m.aprPct !== undefined ? `+${m.aprPct}% APR` : p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined;
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;
   const subj = subject(p.titleOrig ?? p.title, lang, p.venue.name);
+  // audit 12.11: "Змагання → фонд 1M USDC" says nothing the reward line doesn't — when we can't name the subject
+  // and the headline reads in this language ("Binance Pick: прогнозуйте…"), the headline is the better title
+  if (!subj && showHeadline(p, lang)) return undefined;
   const kind = subj ? `${KIND[lang][p.category]}: ${subj}` : KIND[lang][p.category];
   if (much) return `${subj ? kind : what ?? kind} → ${much}`;
   if (what) return subj ? `${kind} · ${what}` : `${KIND[lang][p.category]} · ${what}`;

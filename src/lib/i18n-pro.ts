@@ -15,7 +15,7 @@ export const PROX: Record<Locale, {
     insTitle: "Аналітика Launchpool", insSub: "Що відбувається з токенами після Launchpool і як змінюється APR — за нашими даними.",
     listTitle: "Токени після Launchpool", listSub: "Ціна в перший день торгів на Gate → через 7 і 30 днів і зараз. Відповідає на питання: продавати одразу чи тримати.", listCols: ["Токен", "Біржа", "Старт пулу", "+7 днів", "+30 днів", "Зараз"], median: "Медіана",
     decayTitle: "Як падає APR", decaySub: "Стартовий APR (оцінка біржі на старті) проти фінального — для завершених пулів Gate.", decayCols: ["Пул", "Стартовий APR", "Фінальний", "Фінал / старт"], noData: "Поки замало даних.", method: "Ціни — денні свічки Gate (закриття дня). Токени без пари на Gate пропущені.",
-    sinceTitle: "З вашого останнього візиту", sinceNew: (n) => `${n} нових акцій — позначені «нове для вас»`, sinceNone: "Нових акцій з останнього візиту немає",
+    sinceTitle: "З вашого останнього візиту", sinceNew: (n) => `${n} нових акцій — позначені «нове для вас»`, sinceNone: "нових акцій немає",
   },
   en: {
     fundTitle: "Funding Radar", fundSub: "Perpetual funding on 5 exchanges in % per year and the spread between them. Short where funding is highest and long where it's lowest — earning the difference without price risk (carry).",
@@ -25,7 +25,7 @@ export const PROX: Record<Locale, {
     insTitle: "Launchpool insights", insSub: "What happens to tokens after a Launchpool and how APR changes — from our data.",
     listTitle: "Tokens after a Launchpool", listSub: "Price on the first trading day on Gate → after 7 and 30 days and now. Answers: sell right away or hold?", listCols: ["Token", "Exchange", "Pool start", "+7 days", "+30 days", "Now"], median: "Median",
     decayTitle: "How APR falls", decaySub: "Starting APR (exchange estimate at launch) vs the final one — finished Gate pools.", decayCols: ["Pool", "Start APR", "Final", "Final / start"], noData: "Not enough data yet.", method: "Prices are Gate daily candles (close). Tokens without a Gate pair are skipped.",
-    sinceTitle: "Since your last visit", sinceNew: (n) => `${n} new promos — marked "new for you"`, sinceNone: "No new promos since your last visit",
+    sinceTitle: "Since your last visit", sinceNew: (n) => `${n} new promos — marked "new for you"`, sinceNone: "no new promos",
   },
   ru: {
     fundTitle: "Funding Radar", fundSub: "Фандинг бессрочных фьючерсов на 5 биржах в % годовых и разница между ними. Шорт там, где фандинг выше всего, и лонг там, где ниже, — заработок на разнице без риска цены (carry).",
@@ -35,6 +35,6 @@ export const PROX: Record<Locale, {
     insTitle: "Аналитика Launchpool", insSub: "Что происходит с токенами после Launchpool и как меняется APR — по нашим данным.",
     listTitle: "Токены после Launchpool", listSub: "Цена в первый день торгов на Gate → через 7 и 30 дней и сейчас. Отвечает на вопрос: продавать сразу или держать.", listCols: ["Токен", "Биржа", "Старт пула", "+7 дней", "+30 дней", "Сейчас"], median: "Медиана",
     decayTitle: "Как падает APR", decaySub: "Стартовый APR (оценка биржи на старте) против финального — для завершённых пулов Gate.", decayCols: ["Пул", "Стартовый APR", "Финальный", "Финал / старт"], noData: "Пока мало данных.", method: "Цены — дневные свечи Gate (закрытие дня). Токены без пары на Gate пропущены.",
-    sinceTitle: "С вашего последнего визита", sinceNew: (n) => `${n} новых акций — отмечены «новое для вас»`, sinceNone: "Новых акций с последнего визита нет",
+    sinceTitle: "С вашего последнего визита", sinceNew: (n) => `${n} новых акций — отмечены «новое для вас»`, sinceNone: "новых акций нет",
   },
 };

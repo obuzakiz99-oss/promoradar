@@ -129,6 +129,8 @@ function earn(pool: Pool, p: PoolProject, prices: Record<string, number>, from: 
   return { below: false as const, amount, perDay, total: perDay * days };
 }
 
+const HEDGE_LOSS_LP: Record<string, string> = { uk: "хедж коштує більше, ніж дає пул", en: "the hedge costs more than the pool pays", ru: "хедж стоит больше, чем даёт пул" };
+
 export default async function LaunchpoolPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
@@ -236,6 +238,8 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                     {!ended && (() => {
                       const hc = hedgeCalc(x, p, data.hedge, 1000, now);
                       if (!hc.needed) return null;
+                      // a negative hedged APR next to the pool APR read as a second, contradictory APR (audit 12.11)
+                      if (hc.possible && hc.hedgedApr !== undefined && hc.hedgedApr <= 0) return <div className="mt-1 text-xs font-semibold text-ink-3" title={t.lp.hedgeNote}>{HEDGE_LOSS_LP[lang]}</div>;
                       return (
                         <div className={`mt-1 font-mono text-sm font-bold ${hc.possible && (hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={t.lp.hedgeNote}>
                           {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
@@ -257,8 +261,9 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   </div>
                 )}
                 {!ended && realApr(x) !== undefined && (
-                  <p className="mt-3 text-xs text-ink-3" title={CHART_TX[lang].realNote}>
+                  <p className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
                     {CHART_TX[lang].real}: <span className={`font-mono font-bold ${realApr(x)! >= (x.apr ?? 0) * 0.7 ? "text-ink" : "text-amber"}`}>{fmtApr(realApr(x))}</span>
+                    <Hint lang={lang}>{CHART_TX[lang].realNote}</Hint>
                   </p>
                 )}
                 {x.newUsers && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{T.newUsers}</p>}

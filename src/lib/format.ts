@@ -30,6 +30,8 @@ export const WORDS = {
   promo: { uk: ["акція", "акції", "акцій"], ru: ["акция", "акции", "акций"], en: ["promo", "promos", "promos"] },
   participant: { uk: ["учасник", "учасники", "учасників"], ru: ["участник", "участника", "участников"], en: ["participant", "participants", "participants"] },
   pool: { uk: ["пул", "пули", "пулів"], ru: ["пул", "пула", "пулов"], en: ["pool", "pools", "pools"] },
+  protocol: { uk: ["протокол", "протоколи", "протоколів"], ru: ["протокол", "протокола", "протоколов"], en: ["protocol", "protocols", "protocols"] },
+  chain: { uk: ["мережа", "мережі", "мереж"], ru: ["сеть", "сети", "сетей"], en: ["chain", "chains", "chains"] },
 } as const;
 /** "2 акції", "5 акцій", "21 акція"; non-integers (3.5K) take the "many"/"few" form like Ukrainian grammar does. */
 export function plural(n: number, lang: string, w: keyof typeof WORDS): string {
@@ -59,8 +61,14 @@ export const noEmoji = (s: string) => s.replace(/[\u{1F000}-\u{1FAFF}☀-➿⭐�
 /** "ВАША ХВИЛЯ АІРДРОПІВ ПОЧИНАЄТЬСЯ ЗАРАЗ!" → "Ваша хвиля аірдропів починається зараз!" (any script); short Latin
  *  all-caps words stay as they are, they are tickers (USDT, BTC, KCS). Normal headlines are returned unchanged. */
 export function sentenceCase(s: string): string {
+  // a shouting part next to a calm one ("ЗНАЙДИ KCEX І ВИГРАЙ! — Час трохи пограти") is calmed on its own
+  const parts = s.split(/(\s[—|]\s)/);
+  if (parts.length > 1) return parts.map((x, i) => (i % 2 ? x : sentenceCase1(x, 8))).join("");
+  return sentenceCase1(s, 12);
+}
+function sentenceCase1(s: string, min: number): string {
   const letters = s.match(/\p{L}/gu) ?? [];
-  if (letters.length < 12) return s;
+  if (letters.length < min) return s;
   const upper = letters.filter((c) => c !== c.toLowerCase() && c === c.toUpperCase()).length;
   if (upper / letters.length < 0.7) return s;
   const low = s.replace(/\p{L}+/gu, (w) => (/^[A-Z0-9]{2,5}$/.test(w) ? w : w.toLowerCase()));

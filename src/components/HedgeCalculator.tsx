@@ -13,6 +13,15 @@ const fmtOf = (lc: string) => ({
   num: (x: number) => x.toLocaleString(lc, { maximumFractionDigits: x < 1 ? 6 : x < 100 ? 4 : 0 }),
 });
 
+// input guards and the pool's per-person limit (audit 12.11: −500 $, leverage 0 → "$∞", leverage 100 → "+0%" with no warning)
+const LIM: Record<string, [number, number]> = { capital: [0, 1e9], price: [1e-12, 1e9], apr: [0, 1e5], days: [0, 3650], funding: [-1000, 1000], leverage: [1, 20], mmr: [0, 10], fees: [0, 50] };
+const clampV = (k: string, x: number) => { const [lo, hi] = LIM[k] ?? [-Infinity, Infinity]; return Number.isFinite(x) ? Math.min(hi, Math.max(lo, x)) : lo; };
+const CAP_TX = {
+  uk: { cap: (m: string) => `Ліміт пулу на одну людину ≈ ${m} — рахуємо з цієї суми`, risky: "Ліквідація надто близько: ціні досить трохи вирости. Зменште плече." },
+  en: { cap: (m: string) => `The pool's per-person limit is ≈ ${m} — we calculate with that amount`, risky: "Liquidation is too close: a small price rise is enough. Lower the leverage." },
+  ru: { cap: (m: string) => `Лимит пула на одного человека ≈ ${m} — считаем от этой суммы`, risky: "Ликвидация слишком близко: цене хватит немного вырасти. Снизьте плечо." },
+} as const;
+
 export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lang: Locale }) {
   const T = TOOLS[lang];
   const { usd, num } = fmtOf(nfLocale(lang));
@@ -28,24 +37,29 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
     const o = options.find((x) => x.key === key);
     if (o) setV((s) => ({ ...s, price: o.price, apr: o.apr, days: o.days, funding: o.fundingApr, fees: o.feesPct, coin: o.coin, venue: o.venue }));
   };
+  const lc = nfLocale(lang);
+  const CT = CAP_TX[lang as keyof typeof CAP_TX] ?? CAP_TX.uk;
+  const capped = !!preset?.maxUsd && v.capital > preset.maxUsd;
   const r = useMemo(() => {
-    const qty = v.capital / v.price;
-    const margin = v.capital / v.leverage;
+    const c = Object.fromEntries(Object.entries(v).map(([k, x]) => [k, typeof x === "number" ? clampV(k, x) : x])) as typeof v;
+    if (preset?.maxUsd && c.capital > preset.maxUsd) c.capital = preset.maxUsd;
+    const qty = c.capital / c.price;
+    const margin = c.capital / c.leverage;
     // isolated short is liquidated when margin − N·u = mmr·N·(1+u)  →  u = (1/L − mmr) / (1 + mmr)
-    const liq = v.price * (1 + (1 / v.leverage - v.mmr / 100) / (1 + v.mmr / 100));
-    const rewards = (v.capital * v.apr) / 100 * (v.days / 365);
-    const funding = (v.capital * v.funding) / 100 * (v.days / 365);
-    const costs = (v.capital * v.fees) / 100;
+    const liq = c.price * (1 + (1 / c.leverage - c.mmr / 100) / (1 + c.mmr / 100));
+    const rewards = (c.capital * c.apr) / 100 * (c.days / 365);
+    const funding = (c.capital * c.funding) / 100 * (c.days / 365);
+    const costs = (c.capital * c.fees) / 100;
     const net = rewards + funding - costs;
-    const total = v.capital + margin;
-    return { qty, margin, liq, rewards, funding, costs, net, total, netApr: total > 0 && v.days > 0 ? (net / total) * (365 / v.days) * 100 : 0 };
-  }, [v]);
-  const fill = (s: string) => s.replace("{q}", num(r.qty)).replace("{c}", v.coin).replace("{a}", usd(v.capital)).replace("{v}", v.venue).replace("{l}", String(v.leverage)).replace("{m}", usd(r.margin));
+    const total = c.capital + margin;
+    return { c, qty, margin, liq, rewards, funding, costs, net, total, netApr: total > 0 && c.days > 0 ? (net / total) * (365 / c.days) * 100 : 0 };
+  }, [v, preset?.maxUsd]);
+  const fill = (s: string) => s.replace("{q}", num(r.qty)).replace("{c}", v.coin).replace("{a}", usd(r.c.capital)).replace("{v}", v.venue).replace("{l}", String(r.c.leverage)).replace("{m}", usd(r.margin));
 
   const field = (k: keyof typeof v, label: string, step = "any") => (
     <label className="block">
       <span className="text-xs font-semibold text-ink-3">{label}</span>
-      <input type="number" step={step} value={v[k] as number} onChange={(e) => { setSel("custom"); setV((s) => ({ ...s, [k]: Number(e.target.value) })); }}
+      <input type="number" step={step} min={LIM[k]?.[0]} max={LIM[k]?.[1]} value={v[k] as number} onChange={(e) => { setSel("custom"); setV((s) => ({ ...s, [k]: Number(e.target.value) })); }}
         className="mt-1 h-11 w-full rounded-xl border border-line bg-white/[0.03] px-3 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
     </label>
   );
@@ -70,7 +84,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
           {field("mmr", T.mmr)}
           {field("fees", T.fees)}
         </div>
-        {preset?.maxUsd && v.capital > preset.maxUsd && <p className="mt-3 text-xs font-semibold text-amber">max ≈ {usd(preset.maxUsd)}</p>}
+        {capped && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{CT.cap(usd(preset!.maxUsd!))}</p>}
       </div>
 
       <div className="space-y-4">
@@ -81,9 +95,16 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
               <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{fill(s)}</span></li>
             ))}
           </ol>
-          <div className="mt-4 rounded-xl bg-white/[0.03] px-4 py-3 text-sm">
-            {T.liq}: <span className="font-mono font-bold text-ink">${num(r.liq)}</span> <span className="text-ink-3">{T.liqUp.replace("{x}", `${((r.liq / v.price - 1) * 100).toFixed(0)}%`)}</span>
-          </div>
+          {(() => {
+            const up = (r.liq / r.c.price - 1) * 100;
+            const risky = up < 15;
+            return (
+              <div className={`mt-4 rounded-xl px-4 py-3 text-sm ${risky ? "bg-rose/10" : "bg-white/[0.03]"}`}>
+                {T.liq}: <span className={`font-mono font-bold ${risky ? "text-rose" : "text-ink"}`}>${num(r.liq)}</span> <span className="text-ink-3">{T.liqUp.replace("{x}", `${up.toLocaleString(lc, { maximumFractionDigits: 0 })}%`)}</span>
+                {risky && <p className="mt-1 text-xs font-semibold text-rose">{CT.risky}</p>}
+              </div>
+            );
+          })()}
         </div>
         <div className="card p-5 hover:transform-none sm:p-6">
           <dl className="space-y-2 text-sm">
@@ -91,7 +112,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
               <div key={k} className="flex justify-between gap-4"><dt className="text-ink-3">{k}</dt><dd className="font-mono font-bold">{x}</dd></div>
             ))}
             <div className="flex justify-between gap-4 border-t border-line pt-3 text-base"><dt className="font-bold">{T.net}</dt><dd className={`font-mono font-bold ${r.net >= 0 ? "text-lime" : "text-ink-3"}`}>{r.net >= 0 ? "+" : ""}{usd(r.net)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-ink-3">{T.netApr}</dt><dd className="font-mono font-bold">{r.netApr.toFixed(1)}%</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-ink-3">{T.netApr}</dt><dd className="font-mono font-bold">{r.netApr.toLocaleString(lc, { maximumFractionDigits: 1 })}%</dd></div>
           </dl>
         </div>
         <p className="text-xs leading-relaxed text-ink-3">{T.hedgeWarn}</p>

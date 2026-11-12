@@ -124,7 +124,8 @@ const FACT_RE: Array<[FactKey, RegExp]> = [
   ["how", /\b(click|tap) (on )?(the )?["“]?(register|join|participate|claim|subscribe|apply|stake)|\bmust (register|sign up|opt in|join|click)|\bregister (for|via|on|through)|\bjoin (now|the event|the campaign)\b/i],
   ["payout", /\b(rewards?|prizes?|airdrops?|vouchers?|tokens?|bonus(es)?) (will|shall) be (distributed|credited|sent|airdropped|issued|allocated|delivered)|\bdistribut(ed|ion) (within|by|on|before|after)\b/i],
   ["region", /\b(not (be )?(available|eligible|open)|excluded|prohibited|restricted)\b[^.]{0,80}\b(regions?|countr(y|ies)|jurisdictions?|residents?|users (from|in|located))\b|\b(users|residents) (from|in) [^.]{0,80}\b(are not|cannot|will not be) (eligible|able)\b/i],
-  ["kyc", /\b(KYC|identity verification|verified (users|accounts)|complete (the )?verification)\b/i],
+  // translated rules too (audit 12.11: "пройдуть верифікацію особи" was not seen as KYC on /uk)
+  ["kyc", /\b(KYC|identity verification|verified (users|accounts)|complete (the )?verification)\b|верифікац\p{L}* (особи|особистост\p{L}*|акаунт\p{L}*)|пройд\p{L}* верифікац|верификац\p{L}* (личност\p{L}*|аккаунт\p{L}*)|пройд\p{L}* верификац|підтвердж\p{L}* особ/iu],
 ];
 
 export function factsOf(blocks: Block[]): Fact[] {

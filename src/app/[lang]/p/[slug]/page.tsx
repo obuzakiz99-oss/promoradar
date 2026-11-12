@@ -59,7 +59,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!p) return { title: "404" };
   const t = getDict(lang);
   const bits = [p.venue.name, t.cat[p.category], p.reward?.label, p.meta?.apr ? `+${p.meta.apr}% APR` : ""].filter(Boolean).join(" · ");
-  const title = p.venue.kind === "airdrop" ? `${p.title} Airdrop` : `${p.title} — ${p.venue.name}`;
+  // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
+  const head = sentenceCase(noEmoji(p.title)).replace(/\s{2,}/g, " ").trim();
+  const short = head.length > 90 ? `${head.slice(0, 88).replace(/[\s,.:;—–-]+\S*$/, "")}…` : head;
+  const title = p.venue.kind === "airdrop" ? `${short} Airdrop` : `${short} — ${p.venue.name}`;
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
   return {
@@ -356,7 +359,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             </div>
             {/* H1 = our short title; the exchange's own headline is in the rules below (audit 12.11: less text up top) */}
             <h1 className={`mt-3 leading-tight tracking-tight ${own ? "font-display text-2xl font-semibold sm:text-4xl" : "text-2xl font-bold sm:text-3xl"}`} title={own ? p.title : undefined}>
-              {own ? linkCoins(own) : sentenceCase(isAggregator ? `${p.title} — Airdrop` : p.title)}
+              {own ? linkCoins(own) : sentenceCase(noEmoji(isAggregator ? `${p.title} — Airdrop` : p.title))}
             </h1>
             {coins.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
