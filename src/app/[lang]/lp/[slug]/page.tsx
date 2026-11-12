@@ -7,7 +7,7 @@ import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { venueOf } from "@/config/site";
-import { compactUsd, duration, shortDate } from "@/lib/format";
+import { compactUsd, duration, num, shortDate } from "@/lib/format";
 import { hedgeCalc, poolPC } from "@/lib/proscons";
 import { GUIDES } from "@/lib/guides";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -82,7 +82,9 @@ const X: Record<Locale, {
 
 const fmtNum = (n?: number) => (n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
 const fmtApr = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
-const usd = (x: number) => (x >= 100 ? `$${Math.round(x).toLocaleString("en-US")}` : `$${x.toFixed(2)}`);
+// site-wide number format: uk/ru "$1 000", en "$1,000"
+const usd = (x: number, lang: string) => (x >= 100 ? `$${num(Math.round(x), lang, 0)}` : `$${x.toFixed(2)}`);
+const STAKE_OF: Record<string, (x: string) => string> = { uk: (x) => `стейк ${x}`, en: (x) => `stake ${x}`, ru: (x) => `стейк ${x}` };
 const LP_SECTION = /launch ?pool|gem ?pool|pool ?x|boost ?hub|jumpstart/i;
 
 async function find(slug: string) {
@@ -242,7 +244,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[520px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
-                  <tr><th className="px-4 py-3">{T.stake}</th><th className="px-4 py-3">{T.with("$100")}</th><th className="px-4 py-3">{T.with("$1 000")}</th><th className="px-4 py-3">{T.withMax}</th></tr>
+                  <tr><th className="px-4 py-3">{T.stake}</th><th className="px-4 py-3">{T.with("$100")}</th><th className="px-4 py-3">{T.with(`$${num(1000, lang, 0)}`)}</th><th className="px-4 py-3">{T.withMax}</th></tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {p.pools.map((x) => {
@@ -255,8 +257,8 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                             {!x.apr ? <span className="text-ink-3">{T.noApr}</span>
                               : !c ? <span className="text-ink-3">—</span>
                               : c.below ? <span className="text-xs font-semibold text-amber">{T.belowMin(`${fmtNum(x.minStake)} ${x.stake}`)}</span>
-                              : <><div className="font-mono font-bold text-ink">≈ {usd(c.total)}</div>
-                                  <div className="font-mono text-xs text-ink-3">{i === 2 ? `${usd(c.amount)} · ` : ""}{usd(c.perDay)}{T.perDay} · {T.untilEnd}</div></>}
+                              : <><div className="font-mono font-bold text-ink">≈ {usd(c.total, lang)}</div>
+                                  <div className="font-mono text-xs text-ink-3">{i === 2 ? `${STAKE_OF[lang](usd(c.amount, lang))} · ` : ""}{usd(c.perDay, lang)}{T.perDay} · {T.untilEnd}</div></>}
                           </td>
                         ))}
                       </tr>

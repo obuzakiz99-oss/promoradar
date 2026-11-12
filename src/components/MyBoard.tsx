@@ -4,7 +4,7 @@ import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import { TOOLS } from "@/lib/i18n-tools";
 import { getDict } from "@/lib/i18n";
-import { duration } from "@/lib/format";
+import { duration, money } from "@/lib/format";
 import { useSaved, toggleSaved } from "./SaveButton";
 import { VenueLogo } from "./VenueLogo";
 import { deadlineReminder, icsFile } from "@/lib/ics";
@@ -57,7 +57,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
   return (
     <div className="mt-8">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">${total.toLocaleString("en-US", { maximumFractionDigits: 2 })}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
+        <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">{money(total, "USD", lang)}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold">{activeN}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.status.joined} · {T.active}</div></div>
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>
         <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">📅 {withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>

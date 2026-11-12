@@ -12,11 +12,12 @@ import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
 import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
-import { compactUsd, duration } from "@/lib/format";
+import { compactUsd, duration, money } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
 const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
+const HEDGE_LOSS: Record<Locale, string> = { uk: "хедж коштує більше, ніж дає пул", en: "the hedge costs more than the pool pays", ru: "хедж стоит больше, чем даёт пул" };
 const HEDGE_VIA: Record<Locale, (c: string, ex: string) => string> = { uk: (c, ex) => `шорт ${c} на ${ex}`, en: (c, ex) => `short ${c} on ${ex}`, ru: (c, ex) => `шорт ${c} на ${ex}` };
 const OPEN: Record<Locale, string> ={ uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
 const MORE: Record<Locale, string> ={ uk: "Детальніше: плюси, мінуси, хедж", en: "More: pros, cons, hedge", ru: "Подробнее: плюсы, минусы, хедж" };
@@ -26,7 +27,8 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
   let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360;
   return { name, logo, color: `hsl(${h} 70% 62%)`, ink: "#0b0d10", monogram: name.slice(0, 3) };
 }
-const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(n < 1 ? 4 : 2)}`);
+// tiny amounts keep 2 significant digits ("0.000031 XAUT"), never round down to a bare "0"
+const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : n >= 0.01 || n <= 0 ? `${+n.toFixed(n < 1 ? 4 : 2)}` : n < 1e-6 ? "<0.000001" : (+n.toPrecision(2)).toFixed(Math.min(8, 1 - Math.floor(Math.log10(n)))));
 const UNIT: Record<Locale, { label: string; hint: string }> = {
   uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку праворуч — і суму можна буде ввести в ній (наприклад, 0.05 BTC)." },
   en: { label: "Amount unit", hint: "Pick a stake coin on the right — then you can enter the amount in it (e.g. 0.05 BTC)." },
@@ -217,7 +219,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             ) : coin === "all" ? <div className="mt-1.5 text-xs text-ink-3">{UNIT[lang].hint}</div> : null}
             <div className="mt-2 flex gap-2">
               {PRESETS.map((v) => (
-                <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString("en-US")}</button>
+                <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>{money(v, "USD", lang)}</button>
               ))}
             </div>
           </div>
@@ -331,6 +333,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     <div className="flex items-center gap-1 text-xs font-semibold opacity-80"><svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z" /></svg>{L.hedgeApr}</div>
                     <div className="font-mono text-lg font-bold leading-tight">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</div>
                     {r.hc.possible && r.hc.venue && <div className="text-xs font-semibold opacity-80">{HEDGE_VIA[lang](pool.stake, r.hc.venue)}</div>}
+                    {r.hc.possible && (r.hc.hedgedApr ?? 0) < 0 && <div className="text-xs font-semibold text-amber">{HEDGE_LOSS[lang]}</div>}
                   </div>
                 )}
               </div>
