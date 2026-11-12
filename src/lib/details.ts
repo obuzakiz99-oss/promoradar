@@ -15,7 +15,7 @@ import { decodeEntities, getJson, getText } from "./sources/util";
 export type Block = { t: "h" | "p" | "li" | "tr"; x: string; cells?: string[] };
 export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "kyc";
 export interface Fact { k: FactKey; text: string }
-export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number }
+export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number }
 
 const VER = 5;               // bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
@@ -31,7 +31,7 @@ const ENT: Record<string, string> = {
 };
 const named = (s: string) => s.replace(/&([a-z]+\d*);/gi, (m, n: string) => ENT[n.toLowerCase()] ?? m);
 
-function htmlToBlocks(html: string): Block[] {
+export function htmlToBlocks(html: string): Block[] {
   let h = html
     .replace(/<(script|style|svg|noscript|iframe)[\s\S]*?<\/\1>/gi, "")
     .replace(/<img[^>]*>/gi, "")
@@ -480,6 +480,41 @@ async function fromUrl(url: string): Promise<string> {
   return htmlFromPage(await getText(url, 12_000));
 }
 
+/** Campaign pages rendered on the laptop for Telegram promos (relay branch rules.json, see scripts/tg-enrich.mjs). */
+function relayRules(): Record<string, { at: number; html: string }> {
+  try { return JSON.parse(fs.readFileSync(path.join(process.cwd(), "relay", "rules.json"), "utf8")); } catch { return {}; }
+}
+
+const STOP = new Set(["with", "your", "this", "that", "from", "into", "will", "have", "more", "live", "join", "trade", "trading", "share", "rewards", "reward", "event", "campaign", "users", "now", "up", "to", "and", "the", "for", "get", "win"]);
+const words = (s: string) => new Set((s.toLowerCase().match(/[a-z][a-z0-9]{3,}/g) ?? []).filter((w) => !STOP.has(w)));
+const WALLET = /\b[A-Za-z0-9]{3,8}\.{3}[A-Za-z0-9]{3,6}\b|\b[a-z0-9]{1,4}\*{2,}[a-z0-9]*@/i;
+const UI = /^(log ?in|sign ?up|register( now)?|download( app| now)?|share|hide|view (details|more)|join now|more|english|en|copy|confirm|cancel|ok|go|claim|deposit|trade now|it ends in|ends in|campaign ends in|ending in|days?|hrs?|hours?|mins?|minutes?|secs?|seconds?|promotion countdown)$/i;
+/**
+ * A campaign page rendered in a browser carries site chrome around the rules: menus, countdown digits, live
+ * leaderboards. Start at the first block that names the campaign (shares ≥ 2 title words) — a page that never does is
+ * not about this promo and is ignored — and drop countdown / UI / leaderboard pieces.
+ */
+export function campaignBlocks(blocks: Block[], title: string): Block[] {
+  const tw = words(title);
+  const hits = (x: string) => { let n = 0; for (const w of words(x)) if (tw.has(w)) n++; return n; };
+  const start = blocks.findIndex((b) => hits(b.x) >= Math.min(2, tw.size));
+  if (start < 0) return [];
+  const out: Block[] = [];
+  let chars = 0;
+  for (const b of blocks.slice(start)) {
+    const x = b.x.trim();
+    if (x.length < 4 || UI.test(x) || WALLET.test(x)) continue;
+    if (/^[\d\s:.,$%+\-–—/()]+[A-Z]{0,4}$/.test(x) && x.length < 24) continue;      // countdowns, bare numbers, "$815"
+    if (/^\d+\s*(d|day|days|h|hrs?|hours?|m|mins?|s|secs?)$/i.test(x)) continue;
+    if (/^[\d\s:dhms]+$/i.test(x) && x.length < 20) continue;                       // "13D:19:11:49"
+    if (/^(deposited|traded|my (rank|rewards?|trading vol)|your (rank|volume))\b/i.test(x)) continue;   // the viewer's own (empty) stats
+    if (b.t === "tr" && b.cells && b.cells.filter((c) => /^[\d\s.,$%#-]*$/.test(c) || WALLET.test(c)).length >= b.cells.length - 1) continue;   // leaderboard rows
+    out.push(b);
+    if ((chars += x.length) > 9000) break;
+  }
+  return out.length >= 3 ? out : [];
+}
+
 /** Key of a page in browser-rules.json: origin + path, no query / trailing slash. */
 export function browserKey(url: string): string {
   try { const u = new URL(url.replace(/&amp;/g, "&")); return (u.origin + u.pathname).replace(/\/$/, ""); } catch { return url; }
@@ -516,7 +551,20 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   // (OKX, Bybit, MEXC, Bitget campaign pages…) — used when they hold more than what the build could fetch itself
   const BR = BROWSER_RULES as Record<string, { at: number; html: string }>;
   const len = (d?: PromoDetails) => (d ? d.blocks.reduce((n, b) => n + b.x.length, 0) : 0);
+  const RR = relayRules();
   for (const p of promos) {
+    // a Telegram post is short: append the campaign page it links to (read on the laptop, scripts/tg-enrich.mjs)
+    const rr = p.id.startsWith("tg:") ? RR[browserKey(p.url)] : undefined;
+    const post = store[p.id];
+    if (rr?.html && post?.partial && !post.ex) {
+      const page = campaignBlocks(htmlToBlocks(rr.html), p.title);
+      if (page.length) {
+        const seen = new Set(post.blocks.map((b) => b.x));
+        const blocks = [...post.blocks, { t: "h" as const, x: "On the exchange page" }, ...page.filter((b) => !seen.has(b.x))];
+        store[p.id] = { blocks, facts: factsOf(blocks), at: now, v: VER, ex: rr.at };
+        continue;
+      }
+    }
     const r = BR[browserKey(p.url)];
     if (!r?.html) continue;
     const blocks = htmlToBlocks(r.html);
