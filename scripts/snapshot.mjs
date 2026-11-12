@@ -21,7 +21,10 @@ for (const o of earn.offers) {
 for (const p of pools.projects) {
   if (p.status !== "live") continue;
   for (const x of p.pools) if (x.apr !== undefined && x.apr !== null) {
-    snap.pools[`${p.exchange}:${p.id}:${x.stake}`] = { name: `${p.name} ${x.stake}→${p.token}`, apr: +Number(x.apr).toFixed(2) };
+    const e = { name: `${p.name} ${x.stake}→${p.token}`, apr: +Number(x.apr).toFixed(2) };
+    if (x.staked) e.staked = Math.round(x.staked);                 // total staked (pool page charts)
+    if (x.participants) e.users = x.participants;
+    snap.pools[`${p.exchange}:${p.id}:${x.stake}`] = e;
   }
 }
 

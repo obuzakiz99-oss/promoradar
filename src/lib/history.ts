@@ -8,7 +8,7 @@ import path from "node:path";
 export interface Snapshot {
   t: number;
   earn: Record<string, Record<string, number>>;          // coin → exchange → best base APR %
-  pools: Record<string, { name: string; apr: number }>;  // "exchange:project:stake" → APR %
+  pools: Record<string, { name: string; apr: number; staked?: number; users?: number }>;  // "exchange:project:stake" → APR %, total staked, participants
 }
 
 export function readHistory(): Snapshot[] {

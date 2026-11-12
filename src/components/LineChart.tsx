@@ -4,7 +4,7 @@ export interface Series { name: string; color: string; points: Array<[number, nu
 const PALETTE = ["#c8ff3d", "#3de0c8", "#5ab8ff", "#ffb547", "#a38bff", "#ff6b8b", "#7ee787", "#f2c67c"];
 export const seriesColor = (i: number) => PALETTE[i % PALETTE.length];
 
-export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false, legend = true }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean; legend?: boolean }) {
+export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false, legend = true, kind = "pct" }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean; legend?: boolean; kind?: "pct" | "num" | "usd" }) {
   const all = series.flatMap((s) => s.points);
   if (all.length < 2) return null;
   const W = 720, H = height, L = 60, R = 12, Tp = 12, B = 26;
@@ -16,7 +16,12 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
   const X = (t: number) => L + ((t - x0) / Math.max(1, x1 - x0)) * (W - L - R);
   const Y = (v: number) => Tp + (1 - (v - y0) / (y1 - y0)) * (H - Tp - B);
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((k) => y0 + (y1 - y0) * k);
-  const fmt = (v: number) => { const a = Math.abs(v), s = a >= 100 ? Math.round(v).toString() : a >= 10 ? v.toFixed(1) : v.toFixed(signed ? 1 : 2); return signed && v > 0 ? `+${s}` : s; };
+  const short = (v: number) => { const a = Math.abs(v); return a >= 1e9 ? `${+(v / 1e9).toFixed(1)}B` : a >= 1e6 ? `${+(v / 1e6).toFixed(1)}M` : a >= 1e3 ? `${+(v / 1e3).toFixed(1)}K` : `${Math.round(v)}`; };
+  const fmt = (v: number) => {
+    if (kind !== "pct") return `${kind === "usd" ? "$" : ""}${short(v)}`;
+    const a = Math.abs(v), s = a >= 100 ? Math.round(v).toString() : a >= 10 ? v.toFixed(1) : v.toFixed(signed ? 1 : 2); return signed && v > 0 ? `+${s}` : s;
+  };
+  if (kind !== "pct") unit = "";
   const dates = [x0, x0 + (x1 - x0) / 2, x1];
   return (
     <figure>

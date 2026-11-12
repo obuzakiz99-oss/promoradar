@@ -76,7 +76,7 @@ async function gate(now: number): Promise<PoolProject[]> {
       pools: (p.reward_pools ?? []).map((r: any): Pool => ({
         stake: r.coin, stakeLogo: r.coin_icon, apr: num(r.rate_year), aprStart: num(r.maybe_year_rate), reward: num(r.total_amount),
         minStake: num(r.personal_min_amount) || undefined, maxStake: num(r.personal_max_amount) || undefined,
-        participants: num(r.order_count), newUsers: Number(r.limit_rule) > 0,
+        participants: num(r.order_count), newUsers: Number(r.limit_rule) > 0, staked: num(r.already_buy_total_amount) || undefined,
       })),
     };
   });

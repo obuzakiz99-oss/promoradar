@@ -14,6 +14,8 @@ import { VenueLogo } from "@/components/VenueLogo";
 import { ProsCons } from "@/components/ProsCons";
 import { HedgeVenues } from "@/components/HedgeVenues";
 import { Footer } from "@/components/Sections";
+import { LineChart, seriesColor, type Series } from "@/components/LineChart";
+import { readHistory } from "@/lib/history";
 
 export const revalidate = 900;
 export const dynamicParams = false; // static GitHub Pages export: every page is pre-rendered
@@ -24,6 +26,11 @@ export async function generateStaticParams() {
 
 type Params = Promise<{ lang: string; slug: string }>;
 
+const CHART_TX: Record<Locale, { title: string; sub: string; apr: string; users: string; staked: string; real: string; realNote: string }> = {
+  uk: { title: "Як змінюється пул", sub: "Наші знімки кожні 30 хвилин. Учасники й обсяг стейку зберігаються з 12 листопада.", apr: "APR, %", users: "Учасники", staked: "Застейкано, $", real: "Розрахунковий APR за поточною ціною токена", realNote: "Вартість усієї винагороди за рік ÷ вартість усього застейканого. Якщо він набагато нижчий за APR біржі, токен подешевшав або учасників стало більше." },
+  en: { title: "How the pool changes", sub: "Our snapshots every 30 minutes. Participants and stake size are kept since 12 November.", apr: "APR, %", users: "Participants", staked: "Staked, $", real: "Estimated APR at the current token price", realNote: "Value of all rewards per year ÷ value of everything staked. Far below the exchange APR means the token got cheaper or more people joined." },
+  ru: { title: "Как меняется пул", sub: "Наши снимки каждые 30 минут. Участники и объём стейка хранятся с 12 ноября.", apr: "APR, %", users: "Участники", staked: "Застейкано, $", real: "Расчётный APR по текущей цене токена", realNote: "Стоимость всей награды за год ÷ стоимость всего застейканного. Если он намного ниже APR биржи — токен подешевел или участников стало больше." },
+};
 const X: Record<Locale, {
   back: string; kicker: (ex: string) => string; title: (stake: string, token: string) => string; sub: (ex: string, token: string) => string;
   start: string; end: string; endsIn: string; startsIn: string; ended: string; fund: string; users: string;
@@ -133,6 +140,25 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
   const live = p.status === "live", ended = p.status === "ended";
   const stakes = [...new Set(p.pools.map((x) => x.stake))];
   const participants = p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined);
+  // dollar values and the APR the pool really pays at today's prices: reward value per year ÷ value staked (audit 12.11)
+  const pxOf = (c: string) => data.prices[c] ?? (isStable(c) ? 1 : undefined);
+  const totalDays = Math.max(1, (p.end - p.start) / 86400_000);
+  const realApr = (x: Pool) => {
+    const pt = pxOf(p.token), ps = pxOf(x.stake);
+    return x.reward && x.staked && pt && ps ? ((x.reward * pt * 365) / totalDays / (x.staked * ps)) * 100 : undefined;
+  };
+  // history of this project's pools from the 30-minute snapshots: APR, participants, value staked
+  const snaps = readHistory().filter((s) => s.t >= p.start - 86400_000);
+  const keyOf = (x: Pool) => `${p.exchange}:${p.id}:${x.stake}`;
+  const seriesOf = (pick: (e: { apr: number; staked?: number; users?: number }, x: Pool) => number | undefined): Series[] =>
+    p.pools.map((x, i) => ({
+      name: x.stake, color: seriesColor(i),
+      points: snaps.flatMap((s) => { const e = s.pools?.[keyOf(x)]; const v = e ? pick(e, x) : undefined; return v !== undefined && Number.isFinite(v) ? [[s.t, v] as [number, number]] : []; }),
+    })).filter((x) => x.points.length >= 2);
+  const aprSeries = seriesOf((e) => e.apr);
+  const usersSeries = seriesOf((e) => e.users);
+  const stakedSeries = seriesOf((e, x) => { const ps = pxOf(x.stake); return e.staked && ps ? e.staked * ps : undefined; });
+  const locale = lang === "en" ? "en-US" : lang === "ru" ? "ru-RU" : "uk-UA";
 
   // our page with the translated official announcement, if the feed has it
   const { promos } = await getPromos(lang);
@@ -201,7 +227,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <VenueLogo v={{ name: x.stake, logo: x.stakeLogo, color: "#2a313b", ink: "#eef2f6", monogram: x.stake.slice(0, 3) }} size={36} rounded="rounded-full" />
                   <div className="min-w-0">
                     <div className="font-bold">{T.stake} {x.stake} → {p.token}</div>
-                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward)} {p.token}</div> : null}
+                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward)} {p.token}{pxOf(p.token) ? ` ≈ ${compactUsd(x.reward * pxOf(p.token)!)}` : ""}</div> : null}
                   </div>
                   <div className="ml-auto text-right">
                     <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr)}</div>
@@ -221,7 +247,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
                     <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
-                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
+                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
                 </dl>
                 {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
                   <div className="mt-3 flex flex-col gap-1.5">
@@ -229,12 +255,33 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                     {x.stake !== p.token && <HedgeVenues coin={p.token} hedge={data.hedge[p.token]} lang={lang} />}
                   </div>
                 )}
+                {!ended && realApr(x) !== undefined && (
+                  <p className="mt-3 text-xs text-ink-3" title={CHART_TX[lang].realNote}>
+                    {CHART_TX[lang].real}: <span className={`font-mono font-bold ${realApr(x)! >= (x.apr ?? 0) * 0.7 ? "text-ink" : "text-amber"}`}>{fmtApr(realApr(x))}</span>
+                  </p>
+                )}
                 {x.newUsers && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{T.newUsers}</p>}
                 {x.stake === p.token && <p className="mt-3 rounded-lg bg-rose/10 px-3 py-2 text-xs font-semibold text-rose">{T.priceRisk}</p>}
               </div>
             ))}
           </div>
         </section>
+
+        {/* history charts (audit 12.11): APR, participants and value staked over time, per stake coin */}
+        {(aprSeries.length > 0 || usersSeries.length > 0 || stakedSeries.length > 0) && (
+          <section className="mt-14">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">{CHART_TX[lang].title}</h2>
+            <p className="mt-1 text-sm text-ink-3">{CHART_TX[lang].sub}</p>
+            <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
+              {([[CHART_TX[lang].apr, aprSeries, "pct"], [CHART_TX[lang].users, usersSeries, "num"], [CHART_TX[lang].staked, stakedSeries, "usd"]] as const).map(([title, ser, kind]) => ser.length > 0 && (
+                <div key={title} className="card p-4 hover:transform-none">
+                  <h3 className="mb-2 text-sm font-bold">{title}</h3>
+                  <LineChart series={ser} locale={locale} height={200} kind={kind} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* earnings */}
         {!ended && (
