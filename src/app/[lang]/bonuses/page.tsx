@@ -6,7 +6,7 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { getPromos } from "@/lib/promos";
 import { VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
-import { compactUsd } from "@/lib/format";
+import { compactUsd, noEmoji } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PageHeader } from "@/components/PageHeader";
 import { withBase } from "@/lib/base";
@@ -64,7 +64,7 @@ export default async function Bonuses({ params }: { params: Params }) {
                     {list.slice(0, 5).map((p) => (
                       <li key={p.id} className="flex gap-2">
                         <span className="text-lime">•</span>
-                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words text-ink-2 hover:text-ink">{p.title}{p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({p.reward.label})</span> : null}</Link>
+                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words text-ink-2 hover:text-ink">{noEmoji(p.title)}{p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({p.reward.label})</span> : null}</Link>
                       </li>
                     ))}
                   </ul>

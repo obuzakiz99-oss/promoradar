@@ -52,3 +52,6 @@ export function num(n: number, lang: string, digits = 2): string {
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;
 }
+
+/** Exchange headlines without emoji (audit 12.11): lists show the text, the icons come from our own set. */
+export const noEmoji = (s: string) => s.replace(/[\u{1F000}-\u{1FAFF}☀-➿⭐️‍]/gu, "").replace(/\s{2,}/g, " ").trim();

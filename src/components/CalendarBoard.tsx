@@ -4,6 +4,7 @@ import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import { TOOLS } from "@/lib/i18n-tools";
 import { VenueLogo } from "./VenueLogo";
+import { noEmoji } from "@/lib/format";
 
 export interface CalEvent { id: string; at: number; kind: "start" | "end"; venue: Venue; title: string; href: string; source: string }
 
@@ -71,7 +72,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                     <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                     <a href={e.href} className="min-w-0 flex-1 text-sm hover:text-lime">
                       <span className={`text-xs font-bold ${e.kind === "start" ? "text-sky" : "text-amber"}`}>{label}</span>
-                      <span className="line-clamp-2 break-words font-semibold">{e.venue.name}: {e.title}</span>
+                      <span className="line-clamp-2 break-words font-semibold">{e.venue.name}: {noEmoji(e.title)}</span>
                     </a>
                     <details className="relative shrink-0">
                       <summary aria-label={L.add} title={L.add} className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-line text-ink-2 hover:border-line-2 hover:text-ink [&::-webkit-details-marker]:hidden">
