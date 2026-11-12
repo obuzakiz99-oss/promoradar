@@ -11,8 +11,8 @@ const strip = (html: string) =>
   decodeEntities(html.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").trim();
 
 /** A post headline must itself announce a campaign (market chatter / memes are skipped). */
-const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
-const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update)\b/i;
+const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|(?<!the )spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
+const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update|performance report|monthly report)\b/i;
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
 const postLines = (text: string) => text.split("\n")
@@ -41,7 +41,7 @@ function pickTitle(text: string): string {
   if (titleOk(h)) return h;
   if (!AMOUNT.test(text.slice(0, 500))) return "";
   for (const l of postLines(text).slice(1, 4)) {
-    if (/https?:\/\/|^(more )?details\b/i.test(l)) continue;
+    if (/https?:\/\/|^(more )?details\b|^\d+[.)]\s|^(prize|note|tip)\s*:|^(connect|copy|click|tap|visit|go to|follow|log ?in|sign in|scan|download|open)\b/i.test(l)) continue;
     const t = cleanTitle(cap(l.replace(/[:：]\s*$/, "")));
     if (t.length >= 20 && titleOk(t)) return t;
   }
