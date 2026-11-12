@@ -67,7 +67,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
               {list.map((e) => {
                 const label = e.kind === "start" ? T.starts : T.ends;
                 return (
-                  <li key={e.id + e.kind} className="card flex items-center gap-3 p-3" style={{ ["--tint" as string]: e.venue.color }}>
+                  <li key={e.id + e.kind} className="card relative flex items-center gap-3 p-3 has-[details[open]]:z-30" style={{ ["--tint" as string]: e.venue.color }}>
                     <span suppressHydrationWarning className="w-12 shrink-0 text-sm font-bold tabular-nums text-ink-2">{new Date(e.at).toLocaleTimeString(locTag(lang), { hour: "2-digit", minute: "2-digit" })}</span>
                     <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                     <a href={e.href} className="min-w-0 flex-1 text-sm hover:text-lime">
@@ -78,7 +78,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                       <summary aria-label={L.add} title={L.add} className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-line text-ink-2 hover:border-line-2 hover:text-ink [&::-webkit-details-marker]:hidden">
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5" /></svg>
                       </summary>
-                      <div className="absolute right-0 top-12 z-20 flex w-48 flex-col rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
+                      <div className="absolute right-0 top-12 z-40 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
                         <a href={gcal(e, label)} target="_blank" rel="noopener" className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
                         <button type="button" onClick={() => downloadIcs([[e, label]], `promoradar-${e.id}`)} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
                       </div>

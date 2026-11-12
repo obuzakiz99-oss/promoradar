@@ -21,7 +21,7 @@ const uk = {
   perYear: "/рік", perMonth: "≈ за місяць", est: "оцінка", none: "Зараз немає варіантів",
   // calendar
   calTitle: "Календар акцій", calSub: "Що стартує і що закінчується найближчим часом.",
-  starts: "Старт", ends: "Кінець", today: "Сьогодні", tomorrow: "Завтра", addGoogle: "Google Calendar", addIcs: ".ics",
+  starts: "Старт", ends: "Кінець", today: "Сьогодні", tomorrow: "Завтра", addGoogle: "Google Calendar", addIcs: "iPhone / Outlook (.ics)",
   noEvents: "Найближчим часом подій немає",
   // tracker
   myTitle: "Мої акції", mySub: "Збережені акції (★) з вашим статусом і заробітком. Дані лише у вашому браузері.",
@@ -65,7 +65,7 @@ const en: T = {
   promos: "Biggest prize pools", promosSub: "Live campaigns with the largest pools",
   perYear: "/yr", perMonth: "≈ per month", est: "estimate", none: "Nothing right now",
   calTitle: "Promo calendar", calSub: "What starts and ends soon.",
-  starts: "Starts", ends: "Ends", today: "Today", tomorrow: "Tomorrow", addGoogle: "Google Calendar", addIcs: ".ics",
+  starts: "Starts", ends: "Ends", today: "Today", tomorrow: "Tomorrow", addGoogle: "Google Calendar", addIcs: "iPhone / Outlook (.ics)",
   noEvents: "No upcoming events",
   myTitle: "My promos", mySub: "Saved promos (★) with your status and earnings. Stored only in your browser.",
   status: { saved: "Saved", joined: "Joined", done: "Done", skipped: "Skipped" },
@@ -104,7 +104,7 @@ const ru: T = {
   promos: "Крупнейшие призовые фонды", promosSub: "Акции с самыми большими фондами, которые ещё идут",
   perYear: "/год", perMonth: "≈ в месяц", est: "оценка", none: "Сейчас нет вариантов",
   calTitle: "Календарь акций", calSub: "Что стартует и что заканчивается в ближайшее время.",
-  starts: "Старт", ends: "Конец", today: "Сегодня", tomorrow: "Завтра", addGoogle: "Google Calendar", addIcs: ".ics",
+  starts: "Старт", ends: "Конец", today: "Сегодня", tomorrow: "Завтра", addGoogle: "Google Calendar", addIcs: "iPhone / Outlook (.ics)",
   noEvents: "Ближайших событий нет",
   myTitle: "Мои акции", mySub: "Сохранённые акции (★) с вашим статусом и заработком. Данные только в вашем браузере.",
   status: { saved: "Сохранено", joined: "Участвую", done: "Завершено", skipped: "Пропустил" },
