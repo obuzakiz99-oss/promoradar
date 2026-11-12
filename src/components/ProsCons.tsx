@@ -3,7 +3,13 @@ import { useState } from "react";
 import type { PC } from "@/lib/proscons";
 
 /** Compact pros (green ✓) and cons (red ✕). Shows `max` of each, the rest behind a toggle. */
-export function ProsCons({ pc, max = 3, more = "+", className = "" }: { pc: PC; max?: number; more?: string; className?: string }) {
+// the "show the rest" toggle: a real 32px target with words, not a bare "+ 1" (audit 12.11)
+const MORE_TX: Record<string, { more: (n: number) => string; less: string }> = {
+  uk: { more: (n) => `Ще ${n}`, less: "Згорнути" }, en: { more: (n) => `${n} more`, less: "Show less" }, ru: { more: (n) => `Ещё ${n}`, less: "Свернуть" },
+};
+
+export function ProsCons({ pc, max = 3, className = "", lang = "uk" }: { pc: PC; max?: number; more?: string; className?: string; lang?: string }) {
+  const M = MORE_TX[lang] ?? MORE_TX.uk;
   const [open, setOpen] = useState(false);
   const extra = Math.max(0, pc.pros.length - max) + Math.max(0, pc.cons.length - max);
   const pros = open ? pc.pros : pc.pros.slice(0, max);
@@ -22,8 +28,9 @@ export function ProsCons({ pc, max = 3, more = "+", className = "" }: { pc: PC; 
         ))}
       </ul>
       {extra > 0 && (
-        <button type="button" onClick={() => setOpen((v) => !v)} className="justify-self-start text-[12px] font-bold text-ink-3 hover:text-ink sm:col-span-2">
-          {open ? "−" : `${more} ${extra}`}
+        <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open}
+          className="-ml-2 inline-flex min-h-8 items-center justify-self-start rounded-lg px-2 text-xs font-bold text-ink-3 hover:bg-white/5 hover:text-ink sm:col-span-2">
+          {open ? M.less : M.more(extra)}
         </button>
       )}
     </div>

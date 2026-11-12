@@ -49,7 +49,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
 
   const Th = ({ k, className = "" }: { k: Key; className?: string }) => (
     <th className={`px-3 py-2 text-right ${className}`} aria-sort={sort === k ? (k === "entryMedian" ? "ascending" : "descending") : undefined}>
-      <button type="button" onClick={() => setSort(k)} className={`text-xs font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? arrow(k) : ""}</button>
+      <button type="button" onClick={() => setSort(k)} className={`inline-flex min-h-8 items-center text-xs font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? arrow(k) : ""}</button>
     </th>
   );
 

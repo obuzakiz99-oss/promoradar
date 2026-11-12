@@ -297,7 +297,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
             {p.pools.map((x) => (
               <div key={x.stake} className="card p-5 hover:transform-none">
                 {p.pools.length > 1 && <div className="mb-3 font-bold">{T.stake} {x.stake}</div>}
-                <ProsCons max={12} pc={poolPC(lang, p, x, { now, chgStake: data.changes[x.stake], chgReward: data.changes[p.token], price: data.prices[x.stake] ?? (isStable(x.stake) ? 1 : undefined), hedge: data.hedge, amountUsd: 1000 })} />
+                <ProsCons lang={lang} max={12} pc={poolPC(lang, p, x, { now, chgStake: data.changes[x.stake], chgReward: data.changes[p.token], price: data.prices[x.stake] ?? (isStable(x.stake) ? 1 : undefined), hedge: data.hedge, amountUsd: 1000 })} />
               </div>
             ))}
           </div>

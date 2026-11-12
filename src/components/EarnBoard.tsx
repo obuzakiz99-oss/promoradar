@@ -191,7 +191,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
                 <a href={o.url} target="_blank" rel="noopener" className="btn btn-ghost hidden h-10 px-4 text-sm sm:inline-flex">{A.open} ↗</a>
               </div>
               <div className="col-span-3 border-t border-line pt-3">
-                <ProsCons pc={earnPC(lang, o, avg)} max={2} />
+                <ProsCons lang={lang} pc={earnPC(lang, o, avg)} max={2} />
               </div>
             </div>
           );

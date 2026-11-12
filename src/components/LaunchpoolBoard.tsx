@@ -239,7 +239,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             {prices[best.p.token] ? <span className="font-mono text-sm font-bold text-lime">≈ {fmtNum(best.profit / prices[best.p.token])} {best.p.token}</span> : null}
             <span className="text-ink-2">{L.total} · {best.p.name} · {L.stake} {best.pool.stake} · {exchanges[best.p.exchange]?.name}</span>
             {best.adjusted !== undefined && best.danger && (
-              <span className="basis-full text-xs font-semibold text-ink-3">{L.ifPrice}: {best.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(best.adjusted))}</span>
+              <span className="basis-full text-xs font-semibold text-ink-3">{L.ifPrice}: <span className={best.adjusted < 0 ? "text-rose" : "text-lime"}>{best.adjusted < 0 ? "−" : "+"}{fmtUsd(Math.abs(best.adjusted))}</span></span>
             )}
           </div>
         ) : null}
@@ -328,7 +328,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <div className="font-mono text-xs text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
                 </div>
-                {r.hc.needed && (
+                {r.hc.needed && r.hc.possible && (
                   <div className={`mt-1.5 rounded-lg border px-2 py-1 ${r.hc.possible && (r.hc.hedgedApr ?? 0) > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`} title={L.hedgeNote}>
                     <div className="flex items-center gap-1 text-xs font-semibold opacity-80"><svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z" /></svg>{L.hedgeApr}</div>
                     <div className="font-mono text-lg font-bold leading-tight">{r.hc.possible && r.hc.hedgedApr !== undefined ? fmtPct(r.hc.hedgedApr) : "—"}</div>
@@ -356,7 +356,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     )}
                     {r.adjusted !== undefined && pool.stake !== "USDT" && Math.abs((r.chgReward ?? 0)) + Math.abs(r.chgStake ?? 0) >= 1 && (
                       <div className="mt-1 text-xs font-semibold text-ink-3" title={L.ifPriceNote}>
-                        {L.ifPrice}: <span className="font-mono font-bold">{r.adjusted < 0 ? "−" : ""}{fmtUsd(Math.abs(r.adjusted))}</span>
+                        {L.ifPrice}: <span className={`font-mono font-bold ${r.adjusted < 0 ? "text-rose" : "text-lime"}`}>{r.adjusted < 0 ? "−" : "+"}{fmtUsd(Math.abs(r.adjusted))}</span>
                       </div>
                     )}
                   </>
@@ -374,7 +374,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               </div>
 
               {/* one action: the rules page (the whole card links there too) */}
-              <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-primary relative z-10 h-11 px-4 text-sm">{OPEN[lang]}</a>
+              {/* one lime button per view: only the best / picked pool gets the filled style, the rest are outlined */}
+              <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className={`btn relative z-10 h-11 px-4 text-sm ${isBest || isPicked ? "btn-primary" : "btn-ghost"}`}>{OPEN[lang]}</a>
 
               {/* where the price risk can be hedged with futures — visible right away */}
               {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (
@@ -391,7 +392,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 </summary>
                 <div className="nov-1col mt-3 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
                   <div className="adv"><HedgeBox r={r} L={L} /></div>
-                  <ProsCons pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
+                  <ProsCons lang={lang} pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
                 </div>
               </details>
             </article>
