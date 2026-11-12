@@ -5,12 +5,13 @@ import type { DexPool } from "@/lib/dexpools";
 import { VenueLogo } from "./VenueLogo";
 import { Term } from "./Term";
 import { ProsCons } from "./ProsCons";
-import { compactUsd } from "@/lib/format";
+import { compactUsd, num } from "@/lib/format";
 import { dexPC } from "@/lib/proscons";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
 const EXPLAIN: Record<Locale, string> = { uk: "Умови й ризики", en: "Terms & risks", ru: "Условия и риски" };
+const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
 const STATS: Record<Locale, string> = { uk: "Історія APY (DefiLlama)", en: "APY history (DefiLlama)", ru: "История APY (DefiLlama)" };
 const WHAT: Record<Locale, (pr: string, s: string, ch: string) => string> = {
@@ -24,7 +25,8 @@ const CALC: Record<Locale, { amount: string; col: (a: string) => string; mo: str
   en: { amount: "Amount, $", col: (a) => `Income on ${a}`, mo: "/mo", yr: "/yr", d: "day", w: "week", title: (a, apy) => `If you put in ${a} at ${apy} a year`, note: "Based on the current APY, which changes daily. Network fees not included.", il: "Two different coins in the pool: if their prices diverge, impermanent loss (IL) can eat into the income." },
   ru: { amount: "Сумма, $", col: (a) => `Доход с ${a}`, mo: "/мес", yr: "/год", d: "день", w: "неделя", title: (a, apy) => `Если вложить ${a} под ${apy} годовых`, note: "Расчёт по текущему APY — он меняется ежедневно. Без учёта комиссий сети.", il: "Пул из двух разных монет: если цены разойдутся, возможна непостоянная потеря (IL) — доход может быть меньше." },
 };
-const money = (x: number) => "$" + (x >= 1000 ? Math.round(x).toLocaleString("en-US") : x >= 10 ? x.toFixed(0) : x.toFixed(2));
+// site-wide number format: uk/ru "$1 000", en "$1,000"
+const usdFmt = (lang: Locale) => (x: number) => "$" + (x >= 1000 ? num(Math.round(x), lang, 0) : x >= 10 ? x.toFixed(0) : x.toFixed(2));
 const digits = (s: string) => s.replace(/[^0-9.]/g, "");
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
@@ -52,8 +54,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
   const [sort, setSort] = useState<Sort>("apy");
   const [limit, setLimit] = useState(PAGE);
   const [amtText, setAmt] = useState("1000");
-  const amount = Math.min(1e9, Number(digits(amtText)) || 0);
+  // empty field → the default amount (the placeholder), never "$0.00" everywhere
+  const amount = Math.min(1e9, Number(digits(amtText)) || 1000);
   const C = CALC[lang];
+  const money = usdFmt(lang);
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
 
   const list = useMemo(() => {
@@ -65,6 +69,35 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
     if (sort === "reward") l.sort((a, b) => (b.apyReward ?? 0) - (a.apyReward ?? 0));
     return l;
   }, [pools, cat, chain, stable, noIl, minTvl, q, sort]);
+
+  const reset = () => { setCat("all"); setChain("all"); setStable(false); setNoIl(false); setMinTvl(TVLS[0]); setQ(""); };
+  const pcButton = (p: DexPool, pc: ReturnType<typeof dexPC>, open: boolean, cls = "") => (
+    <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className={`btn btn-primary h-9 gap-2 px-3 text-xs ${cls}`}>
+      {EXPLAIN[lang]}
+      <span aria-hidden="true" className="font-mono">✓{pc.pros.length} ✕{pc.cons.length}</span>
+      <span className="sr-only">({PC_SR[lang](pc.pros.length, pc.cons.length)})</span>
+    </button>
+  );
+  const detail = (p: DexPool, pc: ReturnType<typeof dexPC>) => (
+    <>
+    <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
+    {/* the calculator, in detail */}
+    <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
+      <div className="text-sm font-bold">🧮 {C.title(money(amount), pct(p.apy))}</div>
+      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
+          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
+        ))}
+      </div>
+      <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
+    </div>
+    <ProsCons pc={pc} max={10} />
+    <div className="mt-4 flex flex-wrap gap-2">
+      {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
+      <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
+    </div>
+    </>
+  );
 
   const sel = "h-10 appearance-none rounded-xl border border-line bg-surface pl-3 pr-8 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none";
   const toggle = (on: boolean) => `h-10 rounded-xl border px-3 text-sm font-bold transition-colors ${on ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:text-ink"}`;
@@ -97,7 +130,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
         </label>
         <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           🧮 {C.amount}
-          <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal"
+          <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal" placeholder="1000" aria-label={C.amount}
             className="h-8 w-24 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
         </label>
         <button className={toggle(stable)} onClick={() => setStable((x) => !x)} aria-pressed={stable}>{A.stable}</button>
@@ -111,8 +144,48 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
         </div>
       </div>
 
+      {list.length === 0 && (
+        <div className="mt-4 rounded-2xl border border-dashed border-line p-8 text-center">
+          <p className="text-sm text-ink-2">{t.filters.empty}</p>
+          <button type="button" onClick={reset} className="btn btn-ghost mt-3 h-10 px-4 text-sm">{t.filters.reset}</button>
+        </div>
+      )}
+
+      {/* phone: cards (a 940px table is unreadable on a 390px screen) */}
+      {list.length > 0 && (
+        <div className="mt-4 grid gap-3 sm:hidden">
+          {list.slice(0, limit).map((p) => {
+            const pc = dexPC(lang, p);
+            const open = openId === p.id;
+            return (
+              <div key={p.id} className="card p-4 hover:transform-none">
+                <div className="flex items-start gap-3">
+                  <VenueLogo v={logo(p)} size={32} rounded="rounded-lg" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 font-mono text-sm font-bold">
+                      {p.symbol}
+                      {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-xs text-teal">{A.stableTag}</span>}
+                      {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-xs text-amber">{A.il}</span>}
+                    </div>
+                    <div className="break-words text-xs font-semibold text-ink-3">{p.project} · {p.chain}</div>
+                  </div>
+                  <div className={`font-mono text-lg font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</div>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2 font-mono text-xs">
+                  <div><div className="font-sans text-ink-3">{C.col(money(amount))}</div><span className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}</span>{C.mo}</div>
+                  <div><div className="font-sans text-ink-3">{A.colTvl}</div>{compactUsd(p.tvl)}</div>
+                  <div><div className="font-sans text-ink-3">{A.colAvg}</div>{pct(p.apy30d)}</div>
+                </div>
+                <div className="mt-3">{pcButton(p, pc, open, "w-full justify-center")}</div>
+                {open && <div className="mt-3">{detail(p, pc)}</div>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* table */}
-      <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
+      <div className={`mt-4 overflow-x-auto rounded-2xl border border-line max-sm:hidden ${list.length === 0 ? "hidden" : ""}`}>
         <table className="w-full min-w-[940px] text-left text-sm">
           <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
             <tr>
@@ -152,38 +225,13 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-3">{pct(p.apy30d)}</td>
                 <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setOpenId(open ? null : p.id)}
-                      aria-expanded={open}
-                      className="flex h-8 items-center gap-1.5 rounded-lg border border-line bg-white/[0.02] px-2 font-mono text-xs font-bold hover:border-line-2"
-                    >
-                      <span className="text-lime">✓{pc.pros.length}</span><span className="text-rose">✕{pc.cons.length}</span>
-                    </button>
-                    <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className="btn btn-primary h-8 px-3 text-xs">{EXPLAIN[lang]}</button>
-                  </div>
+                  <div className="flex justify-end">{pcButton(p, pc, open, "whitespace-nowrap")}</div>
                 </td>
               </tr>
               {open && (
                 <tr className="bg-white/[0.025]">
                   <td colSpan={8} className="px-4 pb-4 pt-1">
-                    <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
-                    {/* the calculator, in detail */}
-                    <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
-                      <div className="text-sm font-bold">🧮 {C.title(money(amount), pct(p.apy))}</div>
-                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
-                          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
-                        ))}
-                      </div>
-                      <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
-                    </div>
-                    <ProsCons pc={pc} max={10} />
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
-                      <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
-                    </div>
+                    {detail(p, pc)}
                   </td>
                 </tr>
               )}
