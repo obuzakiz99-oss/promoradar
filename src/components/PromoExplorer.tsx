@@ -6,6 +6,7 @@ import { PromoCard, CAT_STYLE } from "./PromoCard";
 import { PROX } from "@/lib/i18n-pro";
 import { VenueLogo } from "./VenueLogo";
 import { useSaved } from "./SaveButton";
+import { clearHidden, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
 
 type Sort = "newest" | "ending" | "biggest" | "perUser" | "minEntry";
@@ -40,6 +41,11 @@ const FILTER_KEYS = ["kind", "status", "cat", "sort", "venue", "quick", "q"];
 const FIRST = 9;   // cards shown before "show more" (user: keep the overview short)
 const PAGE = 24;  // cards added per "show more"
 const VENUE_CHIPS = 9;
+const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: string; reset: string }> = {
+  uk: { n: (n) => `Ви приховали: ${n}`, show: "показати", hideAgain: "знову сховати", reset: "повернути всі" },
+  en: { n: (n) => `You hid ${n}`, show: "show them", hideAgain: "hide again", reset: "restore all" },
+  ru: { n: (n) => `Вы скрыли: ${n}`, show: "показать", hideAgain: "снова скрыть", reset: "вернуть все" },
+};
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
@@ -160,8 +166,13 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promos, saved, country, quick]);
 
-  const geoOk = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
-  const geoHidden = promos.length - geoOk.length;
+  // promos the reader hid with the eye button stay out of the feed (but not out of "Saved"), unless they ask to see them
+  const hiddenIds = useHidden();
+  const [showHidden, setShowHidden] = useState(false);
+  const geoAll = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
+  const geoHidden = promos.length - geoAll.length;
+  const userHidden = geoAll.filter((p) => hiddenIds.includes(p.id)).length;
+  const geoOk = useMemo(() => (showHidden || kind === "saved" ? geoAll : geoAll.filter((p) => !hiddenIds.includes(p.id))), [geoAll, hiddenIds, showHidden, kind]);
   const byKind = useMemo(
     () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
       && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
@@ -339,6 +350,14 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
         ))}
       </div>}
+      {userHidden > 0 && (
+        <p className="mt-2 text-xs text-ink-3">
+          {HID[lang].n(userHidden)} ·{" "}
+          <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setShowHidden((x) => !x)}>{showHidden ? HID[lang].hideAgain : HID[lang].show}</button>
+          {" · "}
+          <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => { clearHidden(); setShowHidden(false); }}>{HID[lang].reset}</button>
+        </p>
+      )}
       {geoHidden > 0 && (
         <p className="mt-2 text-xs text-ink-3">{G.hidden(geoHidden)} · <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setCountry("any")}>{G.any}</button></p>
       )}

@@ -5,6 +5,7 @@ import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
 import { SaveButton } from "./SaveButton";
+import { HideButton } from "./HideButton";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 import { showHeadline, titleOf } from "@/lib/titletpl";
@@ -98,6 +99,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
             : isDrop && (m.hot ?? 0) >= 60 ? <Badge tone="warning">{m.hot}°</Badge>
             : isNew ? <Badge tone="accent" variant="outline">{cap(t.card.new)}</Badge>
             : null}
+          <HideButton id={p.id} lang={lang} />
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
       </div>
