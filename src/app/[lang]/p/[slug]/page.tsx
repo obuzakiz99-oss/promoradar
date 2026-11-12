@@ -27,6 +27,7 @@ function factGroups(facts: Array<{ k: FactKey; text: string }>): Array<[FactKey,
 }
 const FACT_ICON: Record<FactKey, IconName> = { period: "clock", who: "user", min: "cash", how: "checkCircle", payout: "gift", kyc: "id", region: "globe" };
 import { SaveButton } from "@/components/SaveButton";
+import { HideButton } from "@/components/HideButton";
 import { Share } from "@/components/Share";
 import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
@@ -251,7 +252,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
   // dollar value of coin amounts: the exchange's own figure, else the current Gate price of the coin (audit 12.11)
   const { px } = await prices().catch(() => ({ px: {} as Record<string, number> }));
-  const inUsd = (amount: number, unit: string, known?: number) => known ?? (/^USD/.test(unit) ? undefined : px[unit.toUpperCase()] ? amount * px[unit.toUpperCase()] : undefined);
+  const inUsd = (amount: number, unit: string, known?: number) => /^(USD|FDUSD|PYUSD|DAI|RLUSD)/i.test(unit) ? undefined : known ?? ( px[unit.toUpperCase()] ? amount * px[unit.toUpperCase()] : undefined);
   const rewardUsd = p.reward && p.reward.unit !== "USD" ? inUsd(p.reward.amount, p.reward.unit, p.reward.usd) : undefined;
   // coin tickers in our title link to their token page ("Аірдроп: WLFI → …"), audit 12.11
   const linkCoins = (text: string): React.ReactNode => {
@@ -327,6 +328,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗<span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span></a>}
           {p.category !== "farming" && <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>}
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} size="lg" />
+          <HideButton id={p.id} lang={lang} size="lg" />
         </div>
 
         {/* the three things people ask first: when it starts, when it ends, how much one person can get */}

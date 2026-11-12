@@ -41,7 +41,7 @@ const TX = {
   ru: { hide: "Скрыть", show: "Вернуть в ленту" },
 } as const;
 
-export function HideButton({ id, lang }: { id: string; lang: "uk" | "en" | "ru" }) {
+export function HideButton({ id, lang, size = "sm" }: { id: string; lang: "uk" | "en" | "ru"; size?: "sm" | "lg" }) {
   const hidden = useHidden().includes(id);
   const label = hidden ? TX[lang].show : TX[lang].hide;
   return (
@@ -51,9 +51,9 @@ export function HideButton({ id, lang }: { id: string; lang: "uk" | "en" | "ru" 
       aria-pressed={hidden}
       title={label}
       aria-label={label}
-      className={`relative z-10 grid size-8 place-items-center rounded-lg border transition-colors after:absolute after:-inset-1 after:content-[''] ${hidden ? "border-line-2 bg-white/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
+      className={`relative z-10 grid ${size === "lg" ? "size-12" : "size-8"} place-items-center rounded-lg border transition-colors after:absolute after:-inset-1 after:content-[''] ${hidden ? "border-line-2 bg-white/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
     >
-      <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg className={size === "lg" ? "size-5" : "size-4"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {hidden
           ? <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
           : <path d="M10.7 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.9 0 3.6-.6 5-1.4M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20" />}
