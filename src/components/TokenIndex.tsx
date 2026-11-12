@@ -2,6 +2,7 @@
 import { langOf, plural } from "@/lib/format";
 import { useState } from "react";
 import { VenueLogo } from "./VenueLogo";
+import { coinLogos, coinMonogram } from "@/lib/coinlogo";
 
 export interface TokenRow { sym: string; logo?: string; href: string; promos: number; lp: number; earnMax?: number; score: number }
 
@@ -18,7 +19,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
         <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {list.map((r) => (
             <a key={r.sym} href={r.href} className="card flex items-center gap-3 p-3">
-              <VenueLogo v={{ name: r.sym, logo: r.logo, color: "#2a3140", ink: "#e8ecf1", monogram: r.sym.slice(0, 3) }} size={34} rounded="rounded-full" />
+              <VenueLogo v={{ name: r.sym, logo: r.logo, color: "#2a3140", ink: "#e8ecf1", monogram: coinMonogram(r.sym) }} alts={coinLogos(r.sym)} size={34} rounded="rounded-full" />
               <div className="min-w-0">
                 <div className="break-all font-bold">{r.sym}</div>
                 <div className="font-mono text-xs text-ink-3">

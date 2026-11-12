@@ -12,6 +12,7 @@ import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
 import { getUnlocks } from "@/lib/unlocks";
+import { coinLogos, coinMonogram } from "@/lib/coinlogo";
 
 export const revalidate = 900;
 export const dynamicParams = false;
@@ -66,7 +67,7 @@ export default async function TokenPage({ params }: { params: Params }) {
   const tk = tokens.get(sym);
   if (!tk) notFound();
   const now = fetchedAt;
-  const coinV = { name: sym, logo: tk.logo, color: "#2a3140", ink: "#e8ecf1", monogram: sym.slice(0, 3) };
+  const coinV = { name: sym, logo: tk.logo, color: "#2a3140", ink: "#e8ecf1", monogram: coinMonogram(sym) };
   const stable = isStableSym(sym);
   const unlock = stable ? undefined : (await getUnlocks()).rows.find((u) => u.sym === sym && u.date > now);
   const trs = await trList(lang, unlock?.sale ? [unlock.sale] : []);
@@ -84,7 +85,7 @@ export default async function TokenPage({ params }: { params: Params }) {
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <nav className="text-sm font-semibold text-ink-3"><Link href={`/${lang}/t`} className="hover:text-ink">← {T.back}</Link></nav>
         <header className="mt-6 flex flex-col gap-5 rounded-3xl border border-line bg-bg-2 p-6 sm:flex-row sm:items-center sm:p-10">
-          <VenueLogo v={coinV} size={72} rounded="rounded-full" />
+          <VenueLogo v={coinV} alts={coinLogos(tk.sym)} size={72} rounded="rounded-full" />
           <div className="flex-1">
             <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{sym}</h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-2">{T.desc(sym)}</p>
@@ -99,7 +100,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         </header>
         {unlock && (
           <a href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
-            <span className="font-bold text-amber">🔓 {UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
+            <span className="font-bold text-amber">{UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
             <span className="font-mono text-ink-2">{compactUsd(unlock.usd)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
             <span className="text-ink-3">{trs(unlock.sale)}</span>
           </a>

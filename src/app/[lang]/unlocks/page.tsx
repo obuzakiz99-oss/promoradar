@@ -10,6 +10,7 @@ import { compactUsd, duration } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { impactOf, impactText, LEVEL_CLS, LEVEL_TXT } from "@/lib/unlock-impact";
+import { coinLogos, coinMonogram } from "@/lib/coinlogo";
 
 export const revalidate = 3600;
 type Params = Promise<{ lang: string }>;
@@ -70,7 +71,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
   const big = rows.filter(isBig).sort((a, b) => b.pctCap - a.pctCap).slice(0, 9);
 
   const tokenHref = (u: Unlock) => (tokens.has(u.sym) ? withBase(`/${lang}/t/${u.sym}/`) : undefined);
-  const logo = (u: Unlock) => ({ name: u.sym, logo: u.logo, color: "#2a313b", ink: "#eef2f6", monogram: u.sym.slice(0, 3) });
+  const logo = (u: Unlock) => ({ name: u.sym, logo: u.logo ?? coinLogos(u.sym)[0], color: "#2a313b", ink: "#eef2f6", monogram: coinMonogram(u.sym) });
 
   return (
     <>
@@ -128,7 +129,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-xs text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
-                            <VenueLogo v={logo(u)} size={28} rounded="rounded-full" />
+                            <VenueLogo v={logo(u)} alts={coinLogos(u.sym)} size={28} rounded="rounded-full" />
                             <div className="min-w-0">
                               {href ? <a href={href} className="font-bold hover:text-lime">{u.sym}</a> : <span className="font-bold">{u.sym}</span>}
                               <div className="break-words text-xs text-ink-3">{u.name && u.name.toLowerCase() !== u.sym.toLowerCase() ? u.name : ""}{u.name && u.name.toLowerCase() !== u.sym.toLowerCase() && u.unlockedPct ? " · " : ""}{u.unlockedPct ? `${u.unlockedPct.toFixed(0)}% ${T.already}` : ""}</div>

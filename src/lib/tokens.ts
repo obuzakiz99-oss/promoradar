@@ -2,6 +2,7 @@ import { buildShared } from "./sources/util";
 import type { Promo } from "./types";
 import type { PoolProject, Pool } from "./pools";
 import type { EarnOffer } from "./earn";
+import { coinLogos } from "./coinlogo";
 
 /**
  * Token pages (/t/SOL): everything the site knows about one coin — promos that give it away, Launchpools that reward it
@@ -71,7 +72,7 @@ export function buildTokens(promos: Promo[], projects: PoolProject[], offers: Ea
   for (const t of map.values()) {
     t.price = STABLE.has(t.sym) ? 1 : px[t.sym];
     t.change = chg[t.sym];
-    t.logo ??= `https://bin.bnbstatic.com/static/assets/logos/${t.sym}.png`;
+    t.logo ??= coinLogos(t.sym)[0];
     t.promos.sort((a, b) => (b.meta?.perUser?.usd ?? 0) - (a.meta?.perUser?.usd ?? 0) || (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0) || b.publishedAt - a.publishedAt);
   }
   return map;
@@ -90,7 +91,7 @@ export async function getTokens(lang?: string): Promise<{ tokens: Map<string, To
   // workers) — the first set computed in a build is stored and reused, like the promo list
   const keys = await buildKeys([...tokens.keys()]);
   const out = new Map<string, TokenInfo>();
-  for (const k of keys) out.set(k, tokens.get(k) ?? { sym: k, promos: [], lpReward: [], lpStake: [], earn: [], logo: `https://bin.bnbstatic.com/static/assets/logos/${k}.png` });
+  for (const k of keys) out.set(k, tokens.get(k) ?? { sym: k, promos: [], lpReward: [], lpStake: [], earn: [], logo: coinLogos(k)[0] });
   return { tokens: out, fetchedAt };
 }
 
