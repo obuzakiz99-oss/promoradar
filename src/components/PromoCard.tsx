@@ -155,21 +155,21 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
           ) : m.perUser && p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}</div>
-              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
+              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}{p.reward.usd && !/^USD/.test(p.reward.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(p.reward.usd)}</span> : null}</div>
               {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](money(m.perUser.amount, m.perUser.unit, lang))}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : m.perUser ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>

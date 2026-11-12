@@ -21,6 +21,7 @@ import { titleOf } from "@/lib/titletpl";
 import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
 import { withBase } from "@/lib/base";
 import { getTokens, isStableSym } from "@/lib/tokens";
+import { prices } from "@/lib/pools";
 
 export const revalidate = 900;
 export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
@@ -210,16 +211,21 @@ export default async function PromoPage({ params }: { params: Params }) {
     ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category),
   ].slice(0, 6);
 
+  // dollar value of coin amounts: the exchange's own figure, else the current Gate price of the coin (audit 12.11)
+  const { px } = await prices().catch(() => ({ px: {} as Record<string, number> }));
+  const inUsd = (amount: number, unit: string, known?: number) => known ?? (/^USD/.test(unit) ? undefined : px[unit.toUpperCase()] ? amount * px[unit.toUpperCase()] : undefined);
+  const rewardUsd = p.reward && p.reward.unit !== "USD" ? inUsd(p.reward.amount, p.reward.unit, p.reward.usd) : undefined;
   const pu = m.perUser;
+  const puUsd = pu ? inUsd(pu.amount, pu.unit, pu.usd) : undefined;
   const perUserCell: React.ReactNode = pu ? (
     <span>
       <span className="text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}</span>
-      {pu.usd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(pu.usd)})</span>}
+      {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd)})</span>}
       <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
     </span>
   ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? p.reward.label + (p.reward.usd && p.reward.unit !== "USD" ? ` (≈${compactUsd(p.reward.usd)})` : "") : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],
@@ -302,10 +308,10 @@ export default async function PromoPage({ params }: { params: Params }) {
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
               {pu ? (
                 <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}
-                  {pu.usd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(pu.usd)}</span>}
+                  {puUsd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(puUsd)}</span>}
                 </div>
               ) : (
-                <div className="mt-1 text-xs leading-snug text-ink-2">{p.reward ? `${R.poolShared} ${p.reward.label}` : R.noCapShort}</div>
+                <div className="mt-1 text-xs leading-snug text-ink-2">{p.reward ? `${R.poolShared} ${p.reward.label}${rewardUsd ? ` ≈ ${compactUsd(rewardUsd)}` : ""}` : R.noCapShort}</div>
               )}
             </div>
             {m.minEntry && (
