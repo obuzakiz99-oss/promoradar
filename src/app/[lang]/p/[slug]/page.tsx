@@ -233,7 +233,7 @@ export default async function PromoPage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink-3">
-          <Link href={`/${lang}#promos`} className="hover:text-ink">← {t.detail.back}</Link>
+          <Link href={`/${lang}#promos`} className="inline-flex min-h-8 items-center hover:text-ink">← {t.detail.back}</Link>
           <span>/</span>
           {venueCfg ? <Link href={`/${lang}/v/${p.venue.id}`} className="hover:text-ink">{p.venue.name}</Link> : <span>{p.venue.name}</span>}
         </nav>
@@ -292,8 +292,8 @@ export default async function PromoPage({ params }: { params: Params }) {
               {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}><Icon name="hourglass" /> {R.left} {duration(p.endsAt - now, t.time)}</div>}
               {cal && (
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold">
-                  <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="text-sky hover:underline"><Icon name="calendar" /> Google</a>
-                  <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
+                  <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                  <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
                   <span className="font-normal text-ink-3">{R.calNote}</span>
                 </div>
               )}
@@ -355,8 +355,8 @@ export default async function PromoPage({ params }: { params: Params }) {
               {claimCal && (
                 <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold">
                   <span className="font-semibold text-ink-2"><Icon name="clock" /> {PT.remind}</span>
-                  <a href={googleCalUrl(claimCal)} target="_blank" rel="noopener" className="text-sky hover:underline"><Icon name="calendar" /> Google</a>
-                  <a href={icsHref([claimCal])} download={`claim-${slug.split("-")[0]}.ics`} className="text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
+                  <a href={googleCalUrl(claimCal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                  <a href={icsHref([claimCal])} download={`claim-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
                 </div>
               )}
               <a href={withBase(`/${lang}/learn/rewards/`)} className="mt-4 block text-sm font-semibold text-lime hover:underline">{PT.more}</a>

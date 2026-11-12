@@ -135,7 +135,7 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-3">{t.footer.disclaimer}</p>
           <p className="mt-4 text-xs text-ink-3">© {new Date(fetchedAt).getFullYear()} {SITE.name}. {t.footer.rights}</p>
           <nav className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
-            {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-11 items-center hover:text-ink">{label}</a>)}
+            {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-11 min-w-6 justify-center items-center hover:text-ink">{label}</a>)}
           </nav>
         </div>
         <div className="flex flex-col gap-3 text-sm md:items-end">
