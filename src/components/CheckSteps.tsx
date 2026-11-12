@@ -7,7 +7,7 @@ const DONE: Record<string, (n: number, of: number) => string> = {
 };
 
 /** Numbered guide steps with tick boxes; progress is kept in this browser (localStorage `pr:steps:<id>`). */
-export function CheckSteps({ id, steps, lang = "uk", big = false }: { id: string; steps: CheckStep[]; lang?: string; big?: boolean }) {
+export function CheckSteps({ id, steps, lang = "uk", big = false, cols = 1 }: { id: string; steps: CheckStep[]; lang?: string; big?: boolean; cols?: 1 | 2 }) {
   const key = `pr:steps:${id}`;
   const [done, setDone] = useState<number[]>([]);
   useEffect(() => { try { setDone(JSON.parse(localStorage.getItem(key) ?? "[]")); } catch { /* blocked storage */ } }, [key]);
@@ -23,7 +23,8 @@ export function CheckSteps({ id, steps, lang = "uk", big = false }: { id: string
         <div className="h-1.5 w-40 overflow-hidden rounded-full bg-white/5"><div className="h-full rounded-full bg-lime transition-all" style={{ width: `${pct}%` }} /></div>
         {(DONE[lang] ?? DONE.uk)(done.length, steps.length)}
       </div>
-      <ol className={big ? "space-y-6" : "space-y-3"}>
+      {/* cols=2: long guides read as two columns on wide screens (owner, 12.11) */}
+      <ol className={cols === 2 ? "grid gap-4 md:grid-cols-2" : big ? "space-y-6" : "space-y-3"}>
         {steps.map((s, i) => {
           const on = done.includes(i);
           return (
