@@ -22,6 +22,7 @@ const HX: Record<Locale, { title: string; leg: (c: string, sh: number, usd: stri
 };
 const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
+const RISKS: Record<Locale, string> = { uk: "Плюси й ризики", en: "Pros & risks", ru: "Плюсы и риски" };
 const STATS: Record<Locale, string> = { uk: "Історія APY (DefiLlama)", en: "APY history (DefiLlama)", ru: "История APY (DefiLlama)" };
 const WHAT: Record<Locale, (pr: string, s: string, ch: string) => string> = {
   uk: (pr, s, ch) => `Пул ${s} у протоколі ${pr} (мережа ${ch}). Ви вносите монети зі свого гаманця і отримуєте частку комісій та/або нагород протоколу. Дохідність змінюється щодня — нижче плюси, мінуси та ризики.`,
@@ -88,10 +89,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     </button>
   );
   const detail = (p: DexPool, pc: ReturnType<typeof dexPC>) => (
-    <>
-    <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
+    <div className="grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
+    <div className="space-y-4">
     {/* the calculator, in detail */}
-    <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
+    <div className="rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
       <div className="flex items-center gap-2 text-sm font-bold">{C.title(money(amount), pct(p.apy))} <Hint lang={lang}>{C.note}{p.il ? ` ${C.il}` : ""}</Hint></div>
       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
@@ -104,7 +105,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       if (!hd) return null;
       const H = HX[lang];
       return (
-        <div className="mb-4 max-w-3xl rounded-xl border border-teal/30 bg-teal/[0.05] p-4">
+        <div className="rounded-xl border border-teal/30 bg-teal/[0.05] p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <div className="flex items-center gap-2 text-sm font-bold">{H.title} <Hint lang={lang}>{H.note}</Hint></div>
             {hd.hedgedApy !== undefined && <div className="text-sm"><span className="text-ink-3">{H.apy}: </span><span className={`font-mono text-base font-bold ${hd.hedgedApy > 0 ? "text-teal" : "text-rose"}`}>{pct(hd.hedgedApy)}</span>
@@ -122,12 +123,16 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
         </div>
       );
     })()}
-    <ProsCons lang={lang} pc={pc} max={10} />
-    <div className="mt-4 flex flex-wrap gap-2">
-      {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
-      <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
     </div>
-    </>
+    <div className="flex flex-col gap-4 rounded-xl border border-line bg-white/[0.02] p-4">
+      <div className="flex items-center gap-2 text-sm font-bold">{RISKS[lang]} <Hint lang={lang} align="right">{WHAT[lang](p.project, p.symbol, p.chain)}</Hint></div>
+      <ProsCons lang={lang} pc={pc} max={10} />
+      <div className="mt-auto flex flex-wrap gap-2">
+        {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
+        <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
+      </div>
+    </div>
+    </div>
   );
 
   const sel = "h-10 appearance-none rounded-xl border border-line bg-surface pl-3 pr-8 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none";

@@ -16,17 +16,17 @@ export function ProsCons({ pc, max = 3, className = "", lang = "uk" }: { pc: PC;
   const cons = open ? pc.cons : pc.cons.slice(0, max);
   if (!pc.pros.length && !pc.cons.length) return null;
   return (
-    <div className={`grid gap-x-6 gap-y-1.5 text-[12.5px] leading-snug sm:grid-cols-2 ${className}`}>
-      <ul className="space-y-1.5">
+    <div className={`grid gap-x-6 gap-y-1.5 text-[12.5px] leading-snug ${pc.pros.length && pc.cons.length ? "sm:grid-cols-2" : ""} ${className}`}>
+      {pros.length > 0 && <ul className="space-y-1.5">
         {pros.map((x) => (
           <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-lime/15 text-xs font-black text-lime">✓</span>{x}</li>
         ))}
-      </ul>
-      <ul className="space-y-1.5">
+      </ul>}
+      {cons.length > 0 && <ul className="space-y-1.5">
         {cons.map((x) => (
           <li key={x} className="flex gap-2 text-ink-2"><span className="mt-px grid size-4 shrink-0 place-items-center rounded-full bg-rose/15 text-xs font-black text-rose">✕</span>{x}</li>
         ))}
-      </ul>
+      </ul>}
       {extra > 0 && (
         <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open}
           className="-ml-2 inline-flex min-h-8 items-center justify-self-start rounded-lg px-2 text-xs font-bold text-ink-3 hover:bg-white/5 hover:text-ink sm:col-span-2">
