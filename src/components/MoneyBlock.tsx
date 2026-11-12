@@ -5,6 +5,7 @@ import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import type { Backtest, Extra, PlanData } from "@/lib/money";
 import { VenueLogo } from "./VenueLogo";
+import { Icon, type IconName } from "./Icon";
 
 const TX: Record<Locale, {
   planTitle: string; planSub: string; have: string; lp: (stake: string, token: string, ex: string) => string; forDays: (d: number) => string; perMonth: string;
@@ -85,7 +86,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
     <section className={`mx-auto grid max-w-7xl gap-4 px-4 pt-6 sm:px-6 ${bt ? "lg:grid-cols-2" : ""}`}>
       {/* today's plan */}
       <div className="card p-5 hover:transform-none sm:p-6" style={{ background: "linear-gradient(135deg, rgb(200 255 61 / 0.07), transparent 55%), var(--color-surface)" }}>
-        <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">🎯 {T.planTitle}</h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">{T.planTitle}</h2>
         <p className="mt-1 text-sm text-ink-3">{T.planSub}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <label className="flex h-12 items-center gap-2 rounded-xl border border-line bg-white/[0.03] px-3 focus-within:border-lime/50">
@@ -112,7 +113,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
             {plan.bonus && (
               <li>
                 <a href={plan.bonus.href} className="flex items-center gap-3 rounded-xl border border-dashed border-line-2 px-3 py-2.5 hover:border-lime/40">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-md bg-amber/10 text-xs">🎁</span>
+                  <span className="grid size-6 shrink-0 place-items-center rounded-md bg-amber/10 text-amber"><Icon name="gift" className="size-3.5" /></span>
                   <VenueLogo v={plan.bonus.venue} size={28} rounded="rounded-lg" />
                   <span className="min-w-0 flex-1"><span className="block text-xs font-bold text-amber">{T.bonus}</span><span className="block truncate text-sm font-semibold">{plan.bonus.title}</span></span>
                   {plan.bonus.label && <span className="shrink-0 font-mono text-xs font-bold text-amber">{plan.bonus.label}</span>}
@@ -132,7 +133,7 @@ export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Loca
       {/* backtest — removed from the home page 06.11 (user: "$50 за 3 місяці це смішно"); kept for possible reuse */}
       {bt && res && (
       <div className="card p-5 hover:transform-none sm:p-6">
-        <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">💰 {T.btTitle}</h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">{T.btTitle}</h2>
         <p className="mt-1 text-sm text-ink-3">{T.btSub(bt.days)}</p>
         {!res || bt.poolsUsed === 0 ? <p className="mt-5 text-sm text-ink-3">{T.noBt}</p> : (
           <>

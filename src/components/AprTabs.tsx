@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Dict, Locale } from "@/lib/i18n";
 import { Updated } from "./Updated";
+import { Icon, type IconName } from "./Icon";
 
 export type AprTab = "lp" | "earn" | "dex" | "funding" | "fixed";
 const EXTRA: Record<Locale, { funding: string; fixed: string }> = {
@@ -11,10 +12,10 @@ const EXTRA: Record<Locale, { funding: string; fixed: string }> = {
 
 /** Switcher between the APR Radar sections (+ data freshness). Advanced tabs are hidden in beginner mode. */
 export function AprTabs({ t, lang, active, updated }: { t: Dict; lang: Locale; active: AprTab; updated?: number }) {
-  const tabs: Array<{ id: AprTab; href: string; label: string; icon: string; adv?: boolean }> = [
-    { id: "lp", href: `/${lang}/launchpools`, label: t.aprHub.tabLp, icon: "🚀" },
-    { id: "earn", href: `/${lang}/earn`, label: t.aprHub.tabEarn, icon: "🏦" },
-    { id: "dex", href: `/${lang}/dex`, label: t.aprHub.tabDex, icon: "🦄", adv: true },
+  const tabs: Array<{ id: AprTab; href: string; label: string; icon: IconName; adv?: boolean }> = [
+    { id: "lp", href: `/${lang}/launchpools`, label: t.aprHub.tabLp, icon: "rocket" as IconName },
+    { id: "earn", href: `/${lang}/earn`, label: t.aprHub.tabEarn, icon: "bank" as IconName },
+    { id: "dex", href: `/${lang}/dex`, label: t.aprHub.tabDex, icon: "layers" as IconName, adv: true },
   ];
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -26,7 +27,7 @@ export function AprTabs({ t, lang, active, updated }: { t: Dict; lang: Locale; a
             aria-current={active === x.id ? "page" : undefined}
             className={`${x.adv && active !== x.id ? "adv " : ""}flex h-11 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${active === x.id ? "bg-lime text-on-accent" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
           >
-            <span aria-hidden="true">{x.icon}</span>{x.label}
+            <Icon name={x.icon} />{x.label}
           </Link>
         ))}
       </nav>

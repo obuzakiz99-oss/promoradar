@@ -33,7 +33,7 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
           </a>
           {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>}
         </div>
-        {learn && <a href={learn.href} className="mt-4 hidden text-sm font-bold text-lime hover:underline md:inline-block">🌱 {learn.label}</a>}
+        {learn && <a href={learn.href} className="mt-4 hidden text-sm font-bold text-lime hover:underline md:inline-block">{learn.label}</a>}
 
         <dl className="mt-8 grid max-w-xl grid-cols-3 gap-3">
           {[

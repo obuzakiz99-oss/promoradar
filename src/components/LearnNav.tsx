@@ -2,10 +2,11 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
 import { CheckSteps } from "./CheckSteps";
+import type { IconName } from "./Icon";
 
 export const LEARN_IDS = ["start", "quiz", "how", "rewards", "safety", "glossary"] as const;
 export type LearnId = (typeof LEARN_IDS)[number];
-export const LEARN_ICON: Record<LearnId, string> = { start: "🌱", how: "🧭", rewards: "🎁", safety: "🛡️", quiz: "🎯", glossary: "📖" };
+export const LEARN_ICON: Record<LearnId, IconName> = { start: "sprout", how: "compass", rewards: "gift", safety: "shield", quiz: "target", glossary: "book" };
 
 /** Title block + chips to the other beginner pages. */
 export function LearnHeader({ lang, active, title, sub }: { lang: Locale; active: LearnId; title: string; sub: string }) {

@@ -5,9 +5,9 @@ import type { Locale } from "@/lib/i18n";
 type BIP = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
 const TX: Record<Locale, { install: string; text: string; ios: string; later: string }> = {
-  uk: { install: "Встановити", text: "📲 PromoRadar як додаток — іконка на екрані, відкривається миттєво.", ios: "У Safari натисніть «Поділитися» ⬆️ → «На екран «Додому»».", later: "Не зараз" },
-  en: { install: "Install", text: "📲 PromoRadar as an app — an icon on your home screen, opens instantly.", ios: "In Safari tap Share ⬆️ → “Add to Home Screen”.", later: "Not now" },
-  ru: { install: "Установить", text: "📲 PromoRadar как приложение — иконка на экране, открывается мгновенно.", ios: "В Safari нажмите «Поделиться» ⬆️ → «На экран «Домой»».", later: "Не сейчас" },
+  uk: { install: "Встановити", text: "PromoRadar як додаток — іконка на екрані, відкривається миттєво.", ios: "У Safari натисніть «Поділитися» → «На екран «Додому»».", later: "Не зараз" },
+  en: { install: "Install", text: "PromoRadar as an app — an icon on your home screen, opens instantly.", ios: "In Safari tap Share → “Add to Home Screen”.", later: "Not now" },
+  ru: { install: "Установить", text: "PromoRadar как приложение — иконка на экране, открывается мгновенно.", ios: "В Safari нажмите «Поделиться» → «На экран «Домой»».", later: "Не сейчас" },
 };
 
 /**

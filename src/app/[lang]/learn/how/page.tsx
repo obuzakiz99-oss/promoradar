@@ -43,7 +43,7 @@ export default async function LearnHow({ params }: { params: Params }) {
                 <div className="flex flex-wrap gap-2">
                   {list.map((g) => (
                     <Link key={g.id} href={`/${lang}/learn/guide/${g.id}`} className="flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.03] pl-1.5 pr-3.5 text-sm font-bold hover:border-lime/50">
-                      <VenueLogo v={venueOf(g.venue)} size={26} rounded="rounded-lg" />{venueOf(g.venue).name}{g.steps.some((s) => s.img) ? " 📷" : ""}
+                      <VenueLogo v={venueOf(g.venue)} size={26} rounded="rounded-lg" />{venueOf(g.venue).name}{g.steps.some((s) => s.img) ? " · фото" : ""}
                     </Link>
                   ))}
                 </div>
@@ -63,7 +63,7 @@ export default async function LearnHow({ params }: { params: Params }) {
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <div className="mt-5"><Steps steps={s.steps} id={`how-${s.id}`} lang={lang} /></div>
-              <p className="mt-4 text-sm leading-relaxed text-ink-3">⚠️ {s.watch}</p>
+              <p className="mt-4 text-sm leading-relaxed text-ink-3">{s.watch}</p>
             </section>
           );
         })}

@@ -147,7 +147,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
         const total = best + f.fundingApr;
         return (
           <div className={`mt-2 inline-flex flex-wrap items-baseline gap-x-2 rounded-lg border px-3 py-1.5 text-xs font-semibold ${total > 0 ? "border-teal/30 bg-teal/[0.07] text-teal" : "border-line text-ink-3"}`}>
-            <span>🛡 {HEDGED[lang].title}:</span>
+            <span>{HEDGED[lang].title}:</span>
             <span className="font-mono text-base font-bold">≈ {pct(total)}</span>
             <span className="opacity-80">{HEDGED[lang].how(pct(best), `${f.fundingApr >= 0 ? "+" : "−"}${pct(Math.abs(f.fundingApr))}`, f.ex)}</span>
           </div>
@@ -165,7 +165,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
                 <div className="flex flex-wrap items-center gap-2">
                   <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
                   {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">{A.best}</span>}
-                  {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
+                  {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">{A.newUsers}</span>}
                 </div>
                 <div className="mt-0.5 text-xs font-semibold text-ink-3">
                   <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}

@@ -6,6 +6,7 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
 import { Footer } from "@/components/Sections";
 import { LEARN_ICON, LEARN_IDS } from "@/components/LearnNav";
+import { Icon } from "@/components/Icon";
 
 type Params = Promise<{ lang: string }>;
 
@@ -27,7 +28,7 @@ export default async function LearnHub({ params }: { params: Params }) {
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LEARN_IDS.map((id, i) => (
             <Link key={id} href={`/${lang}/learn/${id}`} className={`card group flex flex-col p-6 ${i === 0 ? "ring-1 ring-lime/40" : ""}`}>
-              <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-2xl">{LEARN_ICON[id]}</span>
+              <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-lime"><Icon name={LEARN_ICON[id]} className="size-6" /></span>
               <h2 className="mt-5 text-lg font-bold">{L.cards[id][0]}</h2>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-2">{L.cards[id][1]}</p>
               <span className="mt-5 text-sm font-bold text-lime group-hover:underline">{L.open} →</span>
@@ -35,7 +36,7 @@ export default async function LearnHub({ params }: { params: Params }) {
           ))}
           {/* the link checker gets its own entry next to Safety (audit 08.11) */}
           <Link href={`/${lang}/check`} className="card group flex flex-col p-6">
-            <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-2xl">🔍</span>
+            <span className="grid size-12 place-items-center rounded-2xl bg-lime/10 text-lime"><Icon name="search" className="size-6" /></span>
             <h2 className="mt-5 text-lg font-bold">{TOOLS[lang].tools.check[0]}</h2>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-2">{TOOLS[lang].tools.check[1]}</p>
             <span className="mt-5 text-sm font-bold text-lime group-hover:underline">{L.open} →</span>

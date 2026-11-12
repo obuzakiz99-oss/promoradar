@@ -31,9 +31,9 @@ export function impactOf(u: Unlock): { level: Level; who: Who } {
 
 type L = "uk" | "en" | "ru";
 export const LEVEL_TXT: Record<L, [string, string, string, string]> = {
-  uk: ["🟢 Слабкий", "🟡 Помірний", "🟠 Помітний", "🔴 Сильний"],
-  en: ["🟢 Low", "🟡 Moderate", "🟠 Noticeable", "🔴 Strong"],
-  ru: ["🟢 Слабое", "🟡 Умеренное", "🟠 Заметное", "🔴 Сильное"],
+  uk: ["Слабкий", "Помірний", "Помітний", "Сильний"],
+  en: ["Low", "Moderate", "Noticeable", "Strong"],
+  ru: ["Слабое", "Умеренное", "Заметное", "Сильное"],
 };
 export const LEVEL_CLS = ["bg-lime/10 text-lime", "bg-white/5 text-ink-2", "bg-amber/15 text-amber", "bg-rose/15 text-rose"];
 

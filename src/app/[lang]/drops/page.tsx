@@ -14,6 +14,7 @@ import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Updated } from "@/components/Updated";
 import { Footer } from "@/components/Sections";
+import { Icon, type IconName } from "@/components/Icon";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -34,9 +35,9 @@ export default async function DropsPage({ params }: { params: Params }) {
   const byType = Object.fromEntries(DROP_TYPES.map((k) => [k, live.filter((p) => dropType(p.title) === k)]));
   const X = EXTRA_TEXT[lang];
   // cross-cutting lists first, then the types
-  const sections: Array<{ id: string; icon: string; text: { title: string; what: string; how: string[]; risk: string }; level: Level; list: typeof live }> = [
-    { id: "free", icon: "💵", text: X.free, level: "easy", list: live.filter(isFreeStable) },
-    { id: "claim", icon: "🎁", text: X.claim, level: "easy", list: live.filter((p) => CLAIM_RE.test(p.title)) },
+  const sections: Array<{ id: string; icon: IconName; text: { title: string; what: string; how: string[]; risk: string }; level: Level; list: typeof live }> = [
+    { id: "free", icon: "cash" as IconName, text: X.free, level: "easy", list: live.filter(isFreeStable) },
+    { id: "claim", icon: "gift" as IconName, text: X.claim, level: "easy", list: live.filter((p) => CLAIM_RE.test(p.title)) },
     ...DROP_TYPES.map((k) => ({ id: k, icon: DROP_ICON[k], text: D[k], level: DROP_LEVEL[k], list: byType[k] })),
   ];
 
@@ -51,10 +52,10 @@ export default async function DropsPage({ params }: { params: Params }) {
         <nav className="mt-6 flex flex-wrap gap-2">
           {sections.filter((s) => s.list.length).map((s) => (
             <a key={s.id} href={`#${s.id}`} className={`${s.level === "hard" ? "adv " : ""}flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink`}>
-              {s.icon} {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>
+              <Icon name={s.icon} /> {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>
             </a>
           ))}
-          <a href="#polymarket" className="adv flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink">🎯 Polymarket</a>
+          <a href="#polymarket" className="adv flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink">Polymarket</a>
         </nav>
 
         {/* empty sub-sections are hidden until they have promos (audit 08.11) */}
@@ -62,7 +63,7 @@ export default async function DropsPage({ params }: { params: Params }) {
           return (
             <section key={k} id={k} className={`mt-14 scroll-mt-20 ${lvl === "hard" ? "adv" : ""}`}>
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-display text-2xl font-semibold tracking-tight">{icon} {T.title}</h2>
+                <h2 className="font-display text-2xl font-semibold tracking-tight"><Icon name={icon} className="size-6 text-lime" /> {T.title}</h2>
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
@@ -74,7 +75,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                       <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{s}</span></li>
                     ))}
                   </ol>
-                  <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3">⚠️ <b className="text-ink-2">{P.risk}:</b> {T.risk}</p>
+                  <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3"><Icon name="alert" /> <b className="text-ink-2">{P.risk}:</b> {T.risk}</p>
                 </div>
                 <div>
                   {list.length === 0 ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.none}</p> : (
@@ -102,7 +103,7 @@ export default async function DropsPage({ params }: { params: Params }) {
         {/* Polymarket liquidity rewards */}
         <section id="polymarket" className="adv mt-16 scroll-mt-20">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">🎯 {P.pmTitle}</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">{P.pmTitle}</h2>
             <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS.hard}`}>{LEVEL_TXT[lang].hard[0]}</span>
           </div>
           <p className="mt-2 max-w-3xl text-ink-2">{P.pmSub}</p>
@@ -112,7 +113,7 @@ export default async function DropsPage({ params }: { params: Params }) {
               <ol className="mt-3 space-y-2.5 text-sm">
                 {P.pmHow.map((s, i) => <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{s}</span></li>)}
               </ol>
-              <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3">⚠️ <b className="text-ink-2">{P.risk}:</b> {P.pmRisk}</p>
+              <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3"><Icon name="alert" /> <b className="text-ink-2">{P.risk}:</b> {P.pmRisk}</p>
             </div>
             {!pm.ok ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.pmNone}</p> : (
               <div className="overflow-x-auto rounded-2xl border border-line">

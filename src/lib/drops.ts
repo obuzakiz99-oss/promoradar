@@ -1,5 +1,6 @@
 import type { Locale } from "./i18n";
 import type { Level } from "./level";
+import type { IconName } from "@/components/Icon";
 
 /**
  * Ways exchanges give tokens away, beyond Launchpool / Earn: holder airdrops, launchpads, wallet TGEs, task airdrops,
@@ -17,7 +18,7 @@ export const DROP_RE: Record<DropType, RegExp> = {
   points: /\bpoints?\b|\bxp\b/i,
 };
 
-export const DROP_ICON: Record<DropType, string> = { holder: "🪂", launchpad: "🚀", wallet: "👛", tasks: "✅", learn: "🎓", points: "⭐" };
+export const DROP_ICON: Record<DropType, IconName> = { holder: "parachute", launchpad: "rocket", wallet: "wallet", tasks: "checkCircle", learn: "graduation", points: "star" };
 export const DROP_LEVEL: Record<DropType, Level> = { holder: "easy", launchpad: "medium", wallet: "medium", tasks: "medium", learn: "easy", points: "hard" };
 
 type Text = { title: string; what: string; how: string[]; risk: string };

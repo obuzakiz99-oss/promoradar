@@ -16,9 +16,9 @@ const GX: Record<Locale, {
   country: string; any: string; ua: string; eu: string; hidden: (n: number) => string;
   quick: Record<Quick, string>; perUser: string; minEntry: string;
 }> = {
-  uk: { country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "🆓 Без вкладень", low: "💵 Поріг до $100", forNew: "🆕 Для нових", cash: "💰 Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
-  en: { country: "Country", any: "🌍 Any", ua: "🇺🇦 Ukraine", eu: "🇪🇺 EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "🆓 No deposit", low: "💵 Entry ≤ $100", forNew: "🆕 New users", cash: "💰 Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
-  ru: { country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "🆓 Без вложений", low: "💵 Порог до $100", forNew: "🆕 Для новых", cash: "💰 Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
+  uk: { country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
+  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry ≤ $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
+  ru: { country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
 };
 
 /** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
@@ -250,7 +250,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </label>
           <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
             className={`h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
-            ⚙ {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
+            {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
           </button>
         </div>
 
@@ -345,7 +345,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
       {/* grid */}
       {since !== null && (
-        <p className="mt-5 text-sm font-semibold text-ink-2">✦ {PROX[lang].sinceTitle}: <span className={freshCount ? "text-lime" : "text-ink-3"}>{freshCount ? PROX[lang].sinceNew(freshCount) : PROX[lang].sinceNone}</span></p>
+        <p className="mt-5 text-sm font-semibold text-ink-2">{PROX[lang].sinceTitle}: <span className={freshCount ? "text-lime" : "text-ink-3"}>{freshCount ? PROX[lang].sinceNew(freshCount) : PROX[lang].sinceNone}</span></p>
       )}
       {list.length ? (
         <>

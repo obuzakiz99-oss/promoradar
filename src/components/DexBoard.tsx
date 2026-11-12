@@ -83,7 +83,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
     <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
     {/* the calculator, in detail */}
     <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
-      <div className="text-sm font-bold">🧮 {C.title(money(amount), pct(p.apy))}</div>
+      <div className="text-sm font-bold">{C.title(money(amount), pct(p.apy))}</div>
       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
           <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
@@ -129,7 +129,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
           </select>
         </label>
         <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
-          🧮 {C.amount}
+          {C.amount}
           <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal" placeholder="1000" aria-label={C.amount}
             className="h-8 w-24 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
         </label>

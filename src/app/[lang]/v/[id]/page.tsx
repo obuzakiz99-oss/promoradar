@@ -58,7 +58,7 @@ export default async function VenuePage({ params }: { params: Params }) {
             <div className="flex flex-wrap gap-3">
               <a href={cfg.refUrl || cfg.site} target="_blank" rel={cfg.refUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6">{t.venue.join} ↗{cfg.refUrl && <span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span>}</a>
               <a href={cfg.site} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6">{t.venue.site} ↗</a>
-              {GUIDES[lang].some((g) => g.id === id || g.venue === id) && <Link href={`/${lang}/learn/guide/${GUIDES[lang].find((g) => g.id === id || g.venue === id)!.id}`} className="btn btn-ghost h-12 px-6">🧭 {LEARN[lang].cards.how[0]}</Link>}
+              {GUIDES[lang].some((g) => g.id === id || g.venue === id) && <Link href={`/${lang}/learn/guide/${GUIDES[lang].find((g) => g.id === id || g.venue === id)!.id}`} className="btn btn-ghost h-12 px-6">{LEARN[lang].cards.how[0]}</Link>}
             </div>
           </div>
         </header>

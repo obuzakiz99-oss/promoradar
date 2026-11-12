@@ -60,7 +60,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">{money(total, "USD", lang)}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold">{activeN}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.status.joined} · {T.active}</div></div>
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>
-        <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">📅 {withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>
+        <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">{withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>
       </div>
       <ul className="mt-6 space-y-2">
         {rows.map(({ id, p, tr }) => {

@@ -20,7 +20,7 @@ export function FirstVisit({ text, yes, no }: { text: string; yes: string; no: s
   if (!show) return null;
   return (
     <div role="dialog" aria-live="polite" className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-xl animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl sm:bottom-5 sm:p-5">
-      <p className="text-sm font-semibold leading-relaxed text-ink">🌱 {text}</p>
+      <p className="text-sm font-semibold leading-relaxed text-ink">{text}</p>
       <div className="mt-3 flex gap-2">
         <button type="button" onClick={() => answer(true)} className="btn btn-primary h-10 px-5 text-sm">{yes}</button>
         <button type="button" onClick={() => answer(false)} className="btn btn-ghost h-10 px-4 text-sm">{no}</button>

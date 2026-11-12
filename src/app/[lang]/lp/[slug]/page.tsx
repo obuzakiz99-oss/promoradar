@@ -211,7 +211,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                       if (!hc.needed) return null;
                       return (
                         <div className={`mt-1 font-mono text-sm font-bold ${hc.possible && (hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={t.lp.hedgeNote}>
-                          🛡 {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
+                          {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
                         </div>
                       );
                     })()}

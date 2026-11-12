@@ -66,21 +66,21 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
         </div>
       </div>
 
-      <Section title={`🛡 ${T.safe}`} sub={T.safeSub}>
+      <Section title={`${T.safe}`} sub={T.safeSub}>
         {safe.length ? safe.map((s) => (
           <Row key={s.key} v={s.venue} title={s.title} sub={s.sub} href={s.url}
             right={pct(s.apr)} rightSub={`${usd(month(s.apr, s.capUsd))} ${T.perMonth}${s.aprMax ? ` · ↑${pct(s.aprMax)}` : ""}`} />
         )) : <p className="text-ink-3">{T.none}</p>}
       </Section>
 
-      <Section title={`⚖ ${T.hedged}`} sub={T.hedgedSub}>
+      <Section title={`${T.hedged}`} sub={T.hedgedSub}>
         {hedged.length ? hedged.map((h) => (
           <Row key={h.key} v={exchanges[h.p.exchange]} title={`${h.p.name}: ${h.stake} → ${h.p.token}`} sub={`APR ${pct(h.apr)} · short ${h.stake} @ ${h.venue} · ${T.est}`} href={withBase(`/${lang}/lp/${lpSlug(h.p)}/`)}
             right={`≈${pct(h.hedged)}`} rightSub={`${usd(month(h.hedged, h.capUsd))} ${T.perMonth}`} />
         )) : <p className="text-ink-3">{T.none}</p>}
       </Section>
 
-      <Section title={`🏆 ${T.promos}`} sub={T.promosSub}>
+      <Section title={`${T.promos}`} sub={T.promosSub}>
         {promos.map((p) => <Row key={p.key} v={p.venue} title={p.title} sub={p.venue.name} href={p.href} right={usd(p.usd)} rightSub={p.label} />)}
       </Section>
     </div>

@@ -4,9 +4,9 @@ type L = "uk" | "en" | "ru";
 
 /** Short badge for cards and filters. */
 export const FORM_BADGE: Record<L, Record<PayoutForm, string>> = {
-  uk: { cash: "💵 Можна вивести", voucher: "🎟 Ваучер / бонус", mixed: "💵+🎟 Гроші й ваучери", points: "⭐ Бали, не гроші" },
-  en: { cash: "💵 Withdrawable", voucher: "🎟 Voucher / bonus", mixed: "💵+🎟 Cash & vouchers", points: "⭐ Points, not money" },
-  ru: { cash: "💵 Можно вывести", voucher: "🎟 Ваучер / бонус", mixed: "💵+🎟 Деньги и ваучеры", points: "⭐ Баллы, не деньги" },
+  uk: { cash: "Можна вивести", voucher: "Ваучер / бонус", mixed: "Гроші й ваучери", points: "Бали, не гроші" },
+  en: { cash: "Withdrawable", voucher: "Voucher / bonus", mixed: "Cash & vouchers", points: "Points, not money" },
+  ru: { cash: "Можно вывести", voucher: "Ваучер / бонус", mixed: "Деньги и ваучеры", points: "Баллы, не деньги" },
 };
 export const FORM_CLS: Record<PayoutForm, string> = {
   cash: "bg-lime/10 text-lime", voucher: "bg-amber/10 text-amber", mixed: "bg-teal/10 text-teal", points: "bg-violet/10 text-violet",
@@ -48,9 +48,9 @@ const days = (lang: L, n: number) => {
 export function timingChips(po: Payout, lang: L): string[] {
   const out: string[] = [];
   const T = {
-    uk: { claim: (d: string) => `✋ Забрати вручну за ${d}`, manual: "✋ Треба забрати вручну", auto: "⚡ Приходить автоматично", review: (d: string) => `🔍 Перевірка до ${d}`, pay: (d: string) => `⏱ Виплата протягом ${d}` },
-    en: { claim: (d: string) => `✋ Claim manually within ${d}`, manual: "✋ Must be claimed manually", auto: "⚡ Paid automatically", review: (d: string) => `🔍 Review up to ${d}`, pay: (d: string) => `⏱ Paid within ${d}` },
-    ru: { claim: (d: string) => `✋ Забрать вручную за ${d}`, manual: "✋ Нужно забрать вручную", auto: "⚡ Приходит автоматически", review: (d: string) => `🔍 Проверка до ${d}`, pay: (d: string) => `⏱ Выплата в течение ${d}` },
+    uk: { claim: (d: string) => `Забрати вручну за ${d}`, manual: "Треба забрати вручну", auto: "Приходить автоматично", review: (d: string) => `Перевірка до ${d}`, pay: (d: string) => `Виплата протягом ${d}` },
+    en: { claim: (d: string) => `Claim manually within ${d}`, manual: "Must be claimed manually", auto: "Paid automatically", review: (d: string) => `Review up to ${d}`, pay: (d: string) => `Paid within ${d}` },
+    ru: { claim: (d: string) => `Забрать вручную за ${d}`, manual: "Нужно забрать вручную", auto: "Приходит автоматически", review: (d: string) => `Проверка до ${d}`, pay: (d: string) => `Выплата в течение ${d}` },
   }[lang];
   if (po.claimDays) out.push(T.claim(days(lang, po.claimDays)));
   else if (po.manual) out.push(T.manual);

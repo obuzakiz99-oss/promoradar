@@ -10,17 +10,17 @@ const X: Record<Locale, {
 }> = {
   uk: {
     title: (v) => `Як платить ${v}`, facts: "З офіційних правил біржі", stats: (n) => `Що кажуть правила акцій на сайті зараз (${n})`,
-    unknown: "❓ Не вказано", pay: (d, n) => `⏱ Типова виплата — до ${d} дн. після акції (з ${n})`, manual: (k, n) => `✋ Забирати вручну: ${k} з ${n}`, auto: (k, n) => `⚡ Автоматично: ${k} з ${n}`,
+    unknown: "Не вказано", pay: (d, n) => `Типова виплата — до ${d} дн. після акції (з ${n})`, manual: (k, n) => `Забирати вручну: ${k} з ${n}`, auto: (k, n) => `Автоматично: ${k} з ${n}`,
     src: "Джерело", checked: "перевірено", more: "Що таке ваучери, бонуси й бали →", none: "Біржа в правилах своїх акцій майже не пише, як і коли платить. Перевіряйте деталі нагороди на біржі.",
   },
   en: {
     title: (v) => `How ${v} pays`, facts: "From the exchange's official rules", stats: (n) => `What the rules of its promos on the site say (${n})`,
-    unknown: "❓ Not stated", pay: (d, n) => `⏱ Typical payout — within ${d} days after the promo (of ${n})`, manual: (k, n) => `✋ Claim manually: ${k} of ${n}`, auto: (k, n) => `⚡ Automatic: ${k} of ${n}`,
+    unknown: "Not stated", pay: (d, n) => `Typical payout — within ${d} days after the promo (of ${n})`, manual: (k, n) => `Claim manually: ${k} of ${n}`, auto: (k, n) => `Automatic: ${k} of ${n}`,
     src: "Source", checked: "checked", more: "Vouchers, bonuses and points explained →", none: "The exchange rarely says in its promo rules how and when it pays. Check the reward details on the exchange.",
   },
   ru: {
     title: (v) => `Как платит ${v}`, facts: "Из официальных правил биржи", stats: (n) => `Что говорят правила акций на сайте сейчас (${n})`,
-    unknown: "❓ Не указано", pay: (d, n) => `⏱ Типичная выплата — до ${d} дн. после акции (из ${n})`, manual: (k, n) => `✋ Забирать вручную: ${k} из ${n}`, auto: (k, n) => `⚡ Автоматически: ${k} из ${n}`,
+    unknown: "Не указано", pay: (d, n) => `Типичная выплата — до ${d} дн. после акции (из ${n})`, manual: (k, n) => `Забирать вручную: ${k} из ${n}`, auto: (k, n) => `Автоматически: ${k} из ${n}`,
     src: "Источник", checked: "проверено", more: "Что такое ваучеры, бонусы и баллы →", none: "Биржа в правилах своих акций почти не пишет, как и когда платит. Проверяйте детали награды на бирже.",
   },
 };
@@ -41,7 +41,7 @@ export function VenuePayout({ venueId, venueName, promos, lang }: { venueId: str
   const said = ps.length - forms.unknown;
   return (
     <section id="payout" className="card mt-6 scroll-mt-20 p-6 hover:transform-none">
-      <h2 className="font-display text-xl font-semibold tracking-tight">💸 {T.title(venueName)}</h2>
+      <h2 className="font-display text-xl font-semibold tracking-tight">{T.title(venueName)}</h2>
       {F && (
         <div className="mt-4">
           <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.facts}</div>

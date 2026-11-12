@@ -9,9 +9,9 @@ import { ShareTg } from "./ShareTg";
 const TX: Record<Locale, {
   title: string; sub: string; best: string; free: string; ending: string; perPerson: string; pool: string; left: (h: number) => string; open: string; share: string; noDep: string;
 }> = {
-  uk: { title: "🔥 Топ-3 на сьогодні", sub: "Перераховується з кожним оновленням: найбільше на одну людину, без вкладень і те, що ось-ось закінчиться.", best: "Найбільше на 1 людину", free: "Без вкладень", ending: "Встигніть до кінця", perPerson: "до", pool: "фонд", left: (h) => (h < 24 ? `залишилось ${h} год` : `залишилось ${Math.round(h / 24)} дн.`), open: "Умови →", share: "Поділитися", noDep: "участь безкоштовна" },
-  en: { title: "🔥 Today's top 3", sub: "Recalculated with every update: most per person, no deposit needed, and about to end.", best: "Most per person", free: "No deposit", ending: "Last chance", perPerson: "up to", pool: "pool", left: (h) => (h < 24 ? `${h} h left` : `${Math.round(h / 24)} d left`), open: "Rules →", share: "Share", noDep: "free to join" },
-  ru: { title: "🔥 Топ-3 на сегодня", sub: "Пересчитывается с каждым обновлением: больше всего на одного человека, без вложений и то, что вот-вот закончится.", best: "Больше всего на 1 человека", free: "Без вложений", ending: "Успейте до конца", perPerson: "до", pool: "фонд", left: (h) => (h < 24 ? `осталось ${h} ч` : `осталось ${Math.round(h / 24)} дн.`), open: "Условия →", share: "Поделиться", noDep: "участие бесплатно" },
+  uk: { title: "Топ-3 на сьогодні", sub: "Перераховується з кожним оновленням: найбільше на одну людину, без вкладень і те, що ось-ось закінчиться.", best: "Найбільше на 1 людину", free: "Без вкладень", ending: "Встигніть до кінця", perPerson: "до", pool: "фонд", left: (h) => (h < 24 ? `залишилось ${h} год` : `залишилось ${Math.round(h / 24)} дн.`), open: "Умови →", share: "Поділитися", noDep: "участь безкоштовна" },
+  en: { title: "Today's top 3", sub: "Recalculated with every update: most per person, no deposit needed, and about to end.", best: "Most per person", free: "No deposit", ending: "Last chance", perPerson: "up to", pool: "pool", left: (h) => (h < 24 ? `${h} h left` : `${Math.round(h / 24)} d left`), open: "Rules →", share: "Share", noDep: "free to join" },
+  ru: { title: "Топ-3 на сегодня", sub: "Пересчитывается с каждым обновлением: больше всего на одного человека, без вложений и то, что вот-вот закончится.", best: "Больше всего на 1 человека", free: "Без вложений", ending: "Успейте до конца", perPerson: "до", pool: "фонд", left: (h) => (h < 24 ? `осталось ${h} ч` : `осталось ${Math.round(h / 24)} дн.`), open: "Условия →", share: "Поделиться", noDep: "участие бесплатно" },
 };
 
 /** Three hand-picked-by-rule cards above the feed. Region-only, restricted, teaser and not-yet-started promos are skipped. */
@@ -58,7 +58,7 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
               <div className="mt-3 flex items-center gap-2.5">
                 <VenueLogo v={p!.venue} size={28} rounded="rounded-lg" />
                 <span className="text-sm font-bold">{p!.venue.name}</span>
-                {hours !== undefined && <span className={`ml-auto font-mono text-xs font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>⏳ {T.left(hours)}</span>}
+                {hours !== undefined && <span className={`ml-auto font-mono text-xs font-bold ${hours < 48 ? "text-rose" : "text-ink-3"}`}>{T.left(hours)}</span>}
               </div>
               <h3 className="mt-2 text-[0.98rem] font-bold leading-snug">
                 <a href={href} className="after:absolute after:inset-0 after:rounded-2xl">{p!.title}</a>

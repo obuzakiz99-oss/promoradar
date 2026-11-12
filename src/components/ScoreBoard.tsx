@@ -12,19 +12,19 @@ const TX: Record<Locale, {
   none: string; promos: string; open: string; how: string;
 }> = {
   uk: {
-    country: "Країна", any: "🌍 Будь-яка", ua: "🇺🇦 Україна", eu: "🇪🇺 ЄС",
+    country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС",
     cols: { score: "Бал", promos: "Акцій", poolUsd: "Фонди", perUserMedian: "На 1 людину (медіана)", entryMedian: "Поріг (медіана)", noDepositPct: "Без вкладень", launchpools: "Launchpool", usdtEarn: "USDT Earn" },
     kyc: "KYC у правилах", newUsers: "лише для нових", hidden: (n) => `${n} ${plural(n, "uk", "promo")} не для цієї країни`, none: "—", promos: "акцій", open: "Акції біржі →",
     how: "Бал 0–100: кількість акцій (35%), скільки можна отримати одній людині (30%), наскільки низький поріг (20%), частка акцій без вкладень (10%), Launchpool і ставка USDT Earn (5%). Рахується автоматично з поточних акцій — без платних місць.",
   },
   en: {
-    country: "Country", any: "🌍 Any", ua: "🇺🇦 Ukraine", eu: "🇪🇺 EU",
+    country: "Country", any: "Any", ua: "Ukraine", eu: "EU",
     cols: { score: "Score", promos: "Promos", poolUsd: "Pools", perUserMedian: "Per person (median)", entryMedian: "Entry (median)", noDepositPct: "No deposit", launchpools: "Launchpool", usdtEarn: "USDT Earn" },
     kyc: "KYC in rules", newUsers: "new users only", hidden: (n) => `${n} promos not for this country`, none: "—", promos: "promos", open: "Exchange promos →",
     how: "Score 0–100: number of promos (35%), what one person can get (30%), how low the entry is (20%), share of no-deposit promos (10%), Launchpools and USDT Earn rate (5%). Calculated automatically from current promos — no paid placements.",
   },
   ru: {
-    country: "Страна", any: "🌍 Любая", ua: "🇺🇦 Украина", eu: "🇪🇺 ЕС",
+    country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС",
     cols: { score: "Балл", promos: "Акций", poolUsd: "Фонды", perUserMedian: "На 1 человека (медиана)", entryMedian: "Порог (медиана)", noDepositPct: "Без вложений", launchpools: "Launchpool", usdtEarn: "USDT Earn" },
     kyc: "KYC в правилах", newUsers: "только для новых", hidden: (n) => `${n} ${plural(n, "ru", "promo")} не для этой страны`, none: "—", promos: "акций", open: "Акции биржи →",
     how: "Балл 0–100: количество акций (35%), сколько может получить один человек (30%), насколько низкий порог (20%), доля акций без вложений (10%), Launchpool и ставка USDT Earn (5%). Считается автоматически по текущим акциям — без платных мест.",

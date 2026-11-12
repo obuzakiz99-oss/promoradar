@@ -45,7 +45,7 @@ const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 
 const GEO_ONLY: Record<Locale, (r: string) => string> = {
   uk: (r) => (r === "region" ? "Лише для окремих регіонів" : `Лише ${r}`), en: (r) => (r === "region" ? "Selected regions only" : `${r} only`), ru: (r) => (r === "region" ? "Только для отдельных регионов" : `Только ${r}`),
 };
-const NO_UA: Record<Locale, string> = { uk: "⚠ Обмеження для України", en: "⚠ Not for Ukraine", ru: "⚠ Ограничение для Украины" };
+const NO_UA: Record<Locale, string> = { uk: "Обмеження для України", en: "Not for Ukraine", ru: "Ограничение для Украины" };
 const FOR_NEW: Record<Locale, string> = { uk: "Для нових користувачів", en: "New users", ru: "Для новых пользователей" };
 const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };

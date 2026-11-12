@@ -56,13 +56,13 @@ const fmtPct = (x: number) => `${x >= 100 || x <= -100 ? Math.round(x) : x.toFix
 /** "Hedged APR" panel: where to short, funding, entry/exit cost and the size up to which it still makes sense. */
 function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
   const hc = r.hc;
-  if (!hc.needed) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-2">🛡 {L.hedgeNotNeeded}</div>;
-  if (!hc.possible) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-3">🛡 {L.hedgeImpossible.replace("{c}", r.pool.stake)}</div>;
+  if (!hc.needed) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-2">{L.hedgeNotNeeded}</div>;
+  if (!hc.possible) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-3">{L.hedgeImpossible.replace("{c}", r.pool.stake)}</div>;
   const good = (hc.hedgedApr ?? 0) > 0;
   return (
     <div className={`rounded-xl border px-3.5 py-3 ${good ? "border-teal/25 bg-teal/[0.06]" : "border-line bg-white/[0.03]"}`} title={L.hedgeNote}>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-semibold text-ink-3">🛡 {L.hedgeApr}</span>
+        <span className="text-xs font-semibold text-ink-3">{L.hedgeApr}</span>
         <span className={`font-mono text-lg font-bold ${good ? "text-teal" : "text-ink-3"}`}>≈{fmtPct(hc.hedgedApr ?? 0)}</span>
       </div>
       <ul className="mt-1.5 space-y-0.5 text-xs text-ink-2">
@@ -410,7 +410,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             </span>
             <span className="text-sm text-ink-2">
               {a.reward && <span className="block font-mono font-bold text-lime">{a.reward}</span>}
-              {a.endsAt ? <span className="block text-xs text-ink-3">⏳ {duration(Math.max(0, a.endsAt - now), t.time)}</span> : a.date ? <span className="block text-xs text-ink-3">{new Date(a.date).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}</span> : null}
+              {a.endsAt ? <span className="block text-xs text-ink-3">{duration(Math.max(0, a.endsAt - now), t.time)}</span> : a.date ? <span className="block text-xs text-ink-3">{new Date(a.date).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}</span> : null}
             </span>
             <span className="btn btn-ghost h-10 px-4 text-sm">{t.card.details} →</span>
           </a>

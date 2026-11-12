@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Updated } from "./Updated";
 import type { Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
+import { Icon, type IconName } from "./Icon";
 
 export const TOOL_IDS = ["best", "calendar", "my", "hedge", "bonuses", "history", "check"] as const;
 export type ToolId = (typeof TOOL_IDS)[number];
-export const TOOL_ICON: Record<ToolId, string> = { best: "🎯", calendar: "📅", my: "⭐", hedge: "🛡", bonuses: "🎁", history: "📈", check: "🔍" };
+export const TOOL_ICON: Record<ToolId, IconName> = { best: "target", calendar: "calendar", my: "star", hedge: "shield", bonuses: "gift", history: "trend", check: "search" };
 
 /** Horizontal switcher between tool pages. */
 export function ToolsNav({ lang, active }: { lang: Locale; active?: ToolId }) {
@@ -19,7 +20,7 @@ export function ToolsNav({ lang, active }: { lang: Locale; active?: ToolId }) {
           aria-current={active === id ? "page" : undefined}
           className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-3.5 text-sm font-bold transition-colors ${active === id ? "bg-lime text-on-accent" : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
         >
-          <span aria-hidden="true">{TOOL_ICON[id]}</span>{T.tools[id][0]}
+          <Icon name={TOOL_ICON[id]} />{T.tools[id][0]}
         </Link>
       ))}
     </nav>
