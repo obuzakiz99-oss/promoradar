@@ -18,6 +18,7 @@ import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
 import { EarnCalc } from "@/components/EarnCalc";
 import { titleOf } from "@/lib/titletpl";
+import { combosFor, type ComboWhy } from "@/lib/combos";
 import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
 import { withBase } from "@/lib/base";
 import { getTokens, isStableSym } from "@/lib/tokens";
@@ -168,6 +169,23 @@ const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; mo
     remind: "Напомнить забрать награду:", calTitle: "🎁 Забрать награду", calDesc: (c) => `Проверьте Центр наград на бирже и заберите награду${c ? ` — на это есть ${c} дн., потом она сгорит` : ""}.` },
 };
 
+const COMBO_TX: Record<Locale, { title: string; sub: (v: string) => string; why: Record<ComboWhy, string>; upTo: string; sum: (x: string, n: number) => string; note: string }> = {
+  uk: {
+    title: "Можна поєднати", sub: (v) => `Ці акції ${v} йдуть одночасно й рахують ту саму дію — один обсяг або депозит може зарахуватися одразу в кілька.`,
+    why: { "trade-futures": "той самий обсяг ф'ючерсів", "trade-spot": "той самий обсяг споту", deposit: "той самий депозит", stake: "той самий стейк", free: "теж без вкладень" },
+    upTo: "до", sum: (x, n) => `Разом до ≈${x} на людину з ${n} акцій`, note: "Деякі біржі не зараховують обсяг двічі або забороняють участь у кількох кампаніях — перевірте це в правилах кожної акції.",
+  },
+  en: {
+    title: "Can be combined", sub: (v) => `These ${v} promos run at the same time and count the same action — one volume or deposit may count in several at once.`,
+    why: { "trade-futures": "same futures volume", "trade-spot": "same spot volume", deposit: "same deposit", stake: "same stake", free: "also no deposit" },
+    upTo: "up to", sum: (x, n) => `Up to ≈${x} per person across ${n} promos`, note: "Some exchanges don't count volume twice or forbid joining several campaigns — check each promo's rules.",
+  },
+  ru: {
+    title: "Можно совместить", sub: (v) => `Эти акции ${v} идут одновременно и считают одно и то же действие — один объём или депозит может засчитаться сразу в несколько.`,
+    why: { "trade-futures": "тот же объём фьючерсов", "trade-spot": "тот же объём спота", deposit: "тот же депозит", stake: "тот же стейк", free: "тоже без вложений" },
+    upTo: "до", sum: (x, n) => `Вместе до ≈${x} на человека из ${n} акций`, note: "Некоторые биржи не засчитывают объём дважды или запрещают участие в нескольких кампаниях — проверьте это в правилах каждой акции.",
+  },
+};
 const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: string; claim: string; watch: string; title: string; note: (venue: string) => string }> = {
   uk: { how: "Як це працює — простими словами", steps: "Що зробити", when: "Коли прийде нагорода", form: "У якій формі", claim: "Як отримати", watch: "На що звернути увагу", title: "Часті питання",
     note: (v) => `Пояснення склав AI тільки за офіційними правилами ${v}. Він може помилитися — перед участю звірте важливе з умовами нижче.` },
@@ -206,6 +224,10 @@ export default async function PromoPage({ params }: { params: Params }) {
     description: `${p.venue.name} · ${dateFull(p.endsAt, lang)}`, url: `https://${SITE.domain}/${lang}/p/${slug}/`,
   } : undefined;
   const tr = translateUrl(p.url, lang);
+  // other promos on this exchange the same action counts toward (one volume / deposit → several rewards)
+  const combos = combosFor(p, promos, now);
+  const C = COMBO_TX[lang];
+  const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.perUser?.usd ?? 0), 0);
   const related = [
     ...promos.filter((x) => x.id !== p.id && x.venue.id === p.venue.id),
     ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category),
@@ -333,6 +355,26 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* "how much would I get" — only when the rules give something to calculate with */}
         {p.category !== "farming" && p.category !== "competition" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
+        )}
+
+        {/* mix promos (audit 12.11): same exchange, same time, the same action counts in each */}
+        {combos.length > 0 && (
+          <section id="combo" className="card mt-6 scroll-mt-24 p-5 hover:transform-none sm:p-6">
+            <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight"><Icon name="layers" className="size-5 text-lime" /> {C.title}</h2>
+            <p className="mt-1.5 max-w-3xl text-sm text-ink-2">{C.sub(p.venue.name)}</p>
+            <ul className="mt-4 divide-y divide-line">
+              {combos.map(({ p: q, why }) => (
+                <li key={q.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3">
+                  <Link href={`/${lang}/p/${slugOf(q)}/`} className="min-w-0 flex-1 font-semibold hover:text-lime">{titleOf(q, lang) ?? q.title}</Link>
+                  <span className="rounded-md border border-line px-2 py-0.5 text-xs font-semibold text-ink-2">{C.why[why]}</span>
+                  {q.meta?.perUser?.usd ? <span className="font-mono text-sm font-bold text-lime">{C.upTo} {compactUsd(q.meta.perUser.usd)}</span> : null}
+                  {q.endsAt ? <span className="font-mono text-xs text-ink-3">{duration(q.endsAt - now, t.time)}</span> : null}
+                </li>
+              ))}
+            </ul>
+            {comboSum > 0 && <p className="mt-3 text-sm font-semibold">{C.sum(compactUsd(comboSum), combos.length + 1)}</p>}
+            <p className="mt-2 text-xs text-ink-3"><Icon name="alert" /> {C.note}</p>
+          </section>
         )}
 
         {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}
