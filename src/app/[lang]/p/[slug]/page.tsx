@@ -9,6 +9,22 @@ import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
 // fact labels get an SVG icon instead of the emoji that used to be part of the text
+/** Key facts grouped under one label each (audit 12.11: "Who can join" twice in a row), list dashes dropped,
+ *  near-duplicate lines merged (the longer one stays). */
+function factGroups(facts: Array<{ k: FactKey; text: string }>): Array<[FactKey, string[]]> {
+  const words = (x: string) => new Set(x.toLowerCase().replace(/[^\p{L}\p{N}%]+/gu, " ").split(" ").filter((w) => w.length > 2));
+  const same = (a: string, b: string) => { const A = words(a), B = words(b); const n = [...A].filter((w) => B.has(w)).length; return n / Math.max(1, Math.min(A.size, B.size)) >= 0.7; };
+  const out = new Map<FactKey, string[]>();
+  for (const f of facts) {
+    const text = f.text.replace(/^\s*[-–—•*]\s*/, "").trim();
+    if (!text) continue;
+    const list = out.get(f.k) ?? [];
+    const dup = list.findIndex((x) => same(x, text));
+    if (dup < 0) list.push(text); else if (text.length > list[dup].length) list[dup] = text;
+    out.set(f.k, list);
+  }
+  return [...out];
+}
 const FACT_ICON: Record<FactKey, IconName> = { period: "clock", who: "user", min: "cash", how: "checkCircle", payout: "gift", kyc: "id", region: "globe" };
 import { SaveButton } from "@/components/SaveButton";
 import { Share } from "@/components/Share";
@@ -468,10 +484,12 @@ export default async function PromoPage({ params }: { params: Params }) {
             <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="pin" className="size-5 text-lime" /> {R.keyTitle}</h2>
             <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0 ? R.keySubTr : R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">
-              {det.facts.map((f, i) => (
-                <div key={i} className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
-                  <dt className="flex items-center gap-1.5 font-semibold text-ink-3"><Icon name={FACT_ICON[f.k]} />{R.fact[f.k]}</dt>
-                  <dd className="min-w-0 text-ink [overflow-wrap:anywhere]">{f.text}</dd>
+              {factGroups(det.facts).map(([k, lines]) => (
+                <div key={k} className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
+                  <dt className="flex items-start gap-1.5 font-semibold text-ink-3"><Icon name={FACT_ICON[k]} className="mt-0.5 size-[1.1em]" />{R.fact[k]}</dt>
+                  <dd className="min-w-0 text-ink [overflow-wrap:anywhere]">
+                    {lines.length === 1 ? lines[0] : <ul className="space-y-1.5">{lines.map((x) => <li key={x} className="flex gap-2"><span className="text-ink-3">•</span><span>{x}</span></li>)}</ul>}
+                  </dd>
                 </div>
               ))}
             </dl>
