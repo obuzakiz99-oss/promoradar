@@ -77,29 +77,29 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combo = 0 }: { p
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
       {pin && <Badge tone={pin.cls as Tone} className="absolute -top-3 left-4 z-10 bg-surface ring-1 ring-current/30">{pin.tag}</Badge>}
-      {/* header */}
-      <div className="flex items-center gap-3">
+      {/* header (audit 12.11, phones): logo · name + category · two icon buttons; the status badge sits on the name
+          line so the exchange name keeps its width instead of breaking into four lines */}
+      <div className="flex items-start gap-3">
         <VenueLogo v={p.venue} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-sm font-bold">{p.venue.name}</span>
+            <span className="min-w-0 break-words text-sm font-bold">{p.venue.name}</span>
             <span className="rounded border border-line px-1 py-px font-mono text-xs font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
+            {/* one status badge (most important first) */}
+            {p.sponsored ? <Badge tone="accent">{t.card.sponsored}</Badge>
+              : st === "ending" ? <Badge tone="danger">{cap(t.status.ending)}</Badge>
+              : fresh ? <Badge tone="accent">{cap(FRESH[lang])}</Badge>
+              : st === "upcoming" ? <Badge tone="info">{cap(t.status.upcoming)}</Badge>
+              : isDrop && (m.hot ?? 0) >= 60 ? <Badge tone="warning">{m.hot}°</Badge>
+              : isNew ? <Badge tone="accent" variant="outline">{cap(t.card.new)}</Badge>
+              : null}
           </div>
           <div className={`mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs font-semibold ${cs.text}`}>
-            <span className="size-1.5 rounded-full" style={{ background: cs.dot }} />
-            {t.cat[p.category]}
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap"><span className="size-1.5 rounded-full" style={{ background: cs.dot }} />{t.cat[p.category]}</span>
             <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          {/* one badge only, so the exchange name always fits (most important first) */}
-          {p.sponsored ? <Badge tone="accent">{t.card.sponsored}</Badge>
-            : st === "ending" ? <Badge tone="danger">{cap(t.status.ending)}</Badge>
-            : fresh ? <Badge tone="accent">{cap(FRESH[lang])}</Badge>
-            : st === "upcoming" ? <Badge tone="info">{cap(t.status.upcoming)}</Badge>
-            : isDrop && (m.hot ?? 0) >= 60 ? <Badge tone="warning">{m.hot}°</Badge>
-            : isNew ? <Badge tone="accent" variant="outline">{cap(t.card.new)}</Badge>
-            : null}
+        <div className="flex shrink-0 items-center gap-1.5">
           <HideButton id={p.id} lang={lang} />
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
@@ -136,7 +136,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combo = 0 }: { p
         const b: Array<[string, string]> = [];
         if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
         if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "danger"]);
-        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form].replace(/^\S+\s/, ""), "neutral"]);
+        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form], "neutral"]);
         if (m.noDeposit && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
         if (m.forNew) b.push([FOR_NEW[lang], "info"]);
         return b.length ? (
