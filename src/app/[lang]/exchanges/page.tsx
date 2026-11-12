@@ -21,7 +21,8 @@ const TX: Record<Locale, { title: string; sub: string }> = {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: TX[lang].title, description: TX[lang].sub, alternates: { canonical: `/${lang}/exchanges` } };
+  // hidden for now (owner, 12.11): not in the menu or sitemap, and not indexed — remove `robots` to bring it back
+  return { title: TX[lang].title, description: TX[lang].sub, alternates: { canonical: `/${lang}/exchanges` }, robots: { index: false, follow: false } };
 }
 
 export default async function Exchanges({ params }: { params: Params }) {

@@ -21,7 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       out.push({ url: `${base}/${l}/${s}`, changeFrequency: s.startsWith("learn") ? "weekly" : "hourly", priority: s.startsWith("learn") ? 0.6 : 0.8 });
     for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, changeFrequency: "hourly", priority: 0.7 });
     out.push({ url: `${base}/${l}/t`, changeFrequency: "hourly", priority: 0.8 });
-    out.push({ url: `${base}/${l}/exchanges`, changeFrequency: "hourly", priority: 0.8 });
+    // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
+    // out.push({ url: `${base}/${l}/exchanges`, changeFrequency: "hourly", priority: 0.8 });
     for (const sym of tokens.keys()) out.push({ url: `${base}/${l}/t/${sym}`, changeFrequency: "hourly", priority: 0.7 });
     for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, changeFrequency: "hourly", priority: 0.7 });
     for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : undefined, changeFrequency: "daily", priority: 0.6 });

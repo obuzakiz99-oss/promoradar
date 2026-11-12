@@ -14,7 +14,8 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   // audit 08.11: one item per user question; the old pages are tabs inside these sections (components/SectionTabs.tsx)
   const items: NavItem[] = [
     { href: withBase(`/${lang}/#promos`), label: t.nav.promos, match: ["", "p", "v", "drops", "t", "bonuses"] },
-    { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
+    // exchange rating hidden for now (owner, 12.11) — the page stays at /exchanges/, only the menu entry is off
+    // { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
     { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
     { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], match: ["calendar", "unlocks"] },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn", "best", "check"] },
