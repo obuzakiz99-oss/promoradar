@@ -497,7 +497,10 @@ const UI = /^(log ?in|sign ?up|register( now)?|download( app| now)?|share|hide|v
 export function campaignBlocks(blocks: Block[], title: string): Block[] {
   const tw = words(title);
   const hits = (x: string) => { let n = 0; for (const w of words(x)) if (tw.has(w)) n++; return n; };
-  const start = blocks.findIndex((b) => hits(b.x) >= Math.min(2, tw.size));
+  let start = blocks.findIndex((b) => hits(b.x) >= Math.min(2, tw.size));
+  // the Telegram headline and the page can be worded differently ("Your wave of airdrops starts now!" → page
+  // "Market Tsunami: Sign Up…", the task list with 40 / 60 / 100 USDT got dropped): start at the page's first heading
+  if (start < 0) start = blocks.findIndex((b) => b.t === "h" && b.x.trim().length >= 8);
   if (start < 0) return [];
   const out: Block[] = [];
   let chars = 0;
