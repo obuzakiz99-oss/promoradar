@@ -503,7 +503,13 @@ export function campaignBlocks(blocks: Block[], title: string): Block[] {
   let chars = 0;
   for (const b of blocks.slice(start)) {
     const x = b.x.trim();
+    // the rules are over once the page moves on to other articles / marketing / app links
+    if (/^(articles|related articles|more articles|more themes|you may also like|recommended|why choose \w+\??|trade on the go with .*|download (the )?app.*|join the \w+ community)$/i.test(x) || /\bcookies?\b|privacy preference|waiting to reconnect/i.test(x)) break;
+    if (/^(progress\s*[\d/]+|view rewards|reward preview|refresh)$/i.test(x)) continue;
     if (x.length < 4 || UI.test(x) || WALLET.test(x)) continue;
+    if (/^(my |remaining rewards?\b|last price|change\s*-?[\d.]+%|(user ?id|uid)\s*[:：]|join now\s*>+|telegram\s*[:：]?$|discord\s*[:：]?$)/i.test(x)) continue;   // viewer's own empty stats, live quotes
+    if (/\d{1,2}\/\d{1,2} \d{2}:\d{2}:\d{2} \(UTC\)$/.test(x) && b.t !== "h") continue;   // "related article title11/09 09:00:00 (UTC)"
+    if (/\|\s*(latest news|announcements|official)\s*(\||$)/i.test(x)) continue;          // "11/12 09:00 (UTC)|Latest News|Official|…"
     if (/^[\d\s:.,$%+\-–—/()]+[A-Z]{0,4}$/.test(x) && x.length < 24) continue;      // countdowns, bare numbers, "$815"
     if (/^\d+\s*(d|day|days|h|hrs?|hours?|m|mins?|s|secs?)$/i.test(x)) continue;
     if (/^[\d\s:dhms]+$/i.test(x) && x.length < 20) continue;
@@ -553,19 +559,20 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   const BR = BROWSER_RULES as Record<string, { at: number; html: string }>;
   const len = (d?: PromoDetails) => (d ? d.blocks.reduce((n, b) => n + b.x.length, 0) : 0);
   const RR = relayRules();
-  for (const p of promos) {
-    // a Telegram post is short: append the campaign page it links to (read on the laptop, scripts/tg-enrich.mjs)
+  const EX_HEAD = "On the exchange page";
+  // a Telegram post is short: the campaign page it links to (read on the laptop, scripts/tg-enrich.mjs) is appended
+  // at output time, so cleanup changes apply to pages already read; the store keeps only the post
+  const pageOf = (p: Promo) => {
     const rr = p.id.startsWith("tg:") ? RR[browserKey(p.url)] : undefined;
+    return rr?.html ? campaignBlocks(htmlToBlocks(rr.html), p.title) : [];
+  };
+  for (const p of promos) {
     const post = store[p.id];
-    if (rr?.html && post?.partial && !post.ex) {
-      const page = campaignBlocks(htmlToBlocks(rr.html), p.title);
-      if (page.length) {
-        const seen = new Set(post.blocks.map((b) => b.x));
-        const blocks = [...post.blocks, { t: "h" as const, x: "On the exchange page" }, ...page.filter((b) => !seen.has(b.x))];
-        store[p.id] = { blocks, facts: factsOf(blocks), at: now, v: VER, ex: rr.at };
-        continue;
-      }
+    if (post?.ex) {   // 12.11 first version stored post + page together — keep the post part only
+      const i = post.blocks.findIndex((b) => b.t === "h" && b.x === EX_HEAD);
+      store[p.id] = { ...post, blocks: i >= 0 ? post.blocks.slice(0, i) : post.blocks, partial: true, ex: undefined };
     }
+    if (store[p.id]?.partial && pageOf(p).length) continue;
     const r = BR[browserKey(p.url)];
     if (!r?.html) continue;
     const blocks = htmlToBlocks(r.html);
@@ -581,7 +588,12 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
   for (const p of promos) if (store[p.id]) {
-    const blocks = dropBoilerplate(joinCells(store[p.id].blocks), p.id, store);
+    let blocks = dropBoilerplate(joinCells(store[p.id].blocks), p.id, store);
+    const page = store[p.id].partial ? pageOf(p) : [];
+    if (page.length) {
+      const seen = new Set(blocks.map((b) => b.x));
+      blocks = [...blocks, { t: "h", x: EX_HEAD }, ...page.filter((b) => !seen.has(b.x))];
+    }
     out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
   }
   return out;
