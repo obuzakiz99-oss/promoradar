@@ -7,6 +7,9 @@ import { findBySlug, slugOf, statusOf } from "@/lib/slug";
 import { compactUsd, duration } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
+import { Icon, type IconName } from "@/components/Icon";
+// fact labels get an SVG icon instead of the emoji that used to be part of the text
+const FACT_ICON: Record<FactKey, IconName> = { period: "clock", who: "user", min: "cash", how: "checkCircle", payout: "gift", kyc: "id", region: "globe" };
 import { SaveButton } from "@/components/SaveButton";
 import { Share } from "@/components/Share";
 import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
@@ -56,7 +59,7 @@ const RULES_TX: Record<Locale, {
 }> = {
   uk: {
     coinMore: "усі акції та стейкінг", calTitle: "Дедлайн акції", calIcs: "iPhone / Outlook", calNote: "нагадування за день до кінця",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону ${r}`), geoNoUA: "⚠ В умовах Україна серед обмежених країн", geoNoEU: "⚠ В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "🆕 Лише для нових користувачів",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону ${r}`), geoNoUA: "В умовах Україна серед обмежених країн", geoNoEU: "В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "Лише для нових користувачів",
     noteTr: (v) => `Машинний переклад (DeepL) офіційних умов ${v}. Якщо щось незрозуміло або розходиться — діє оригінал на сайті біржі.`,
     keySubTr: "Ключові рядки з офіційних правил біржі (машинний переклад). Повний текст — нижче.",
     minTitle: "Щоб отримати хоч щось", from: "від", kind: { trade: "Торгівля", deposit: "Депозит", stake: "Стейк", hold: "Тримати", buy: "Купівля" },
@@ -68,11 +71,11 @@ const RULES_TX: Record<Locale, {
     partial: "Біржа публікує тут лише короткий опис — повні правила за посиланням «Оригінал».",
     none: (v) => `Повний текст умов цієї акції опубліковано лише на сторінці ${v} — натисніть «Оригінал» або «Перекласти українською» вище.`,
     more: "Показати всі умови", signup: (v) => `Реєстрація на ${v}`,
-    fact: { period: "⏱ Період", who: "👤 Хто може брати участь", min: "💵 Мінімальні вимоги", how: "✅ Як взяти участь", payout: "🎁 Коли видадуть нагороди", kyc: "🪪 Верифікація (KYC)", region: "🌍 Обмеження по країнах" },
+    fact: { period: "Період", who: "Хто може брати участь", min: "Мінімальні вимоги", how: "Як взяти участь", payout: "Коли видадуть нагороди", kyc: "Верифікація (KYC)", region: "Обмеження по країнах" },
   },
   en: {
     coinMore: "all promos & staking", calTitle: "Promo deadline", calIcs: "iPhone / Outlook", calNote: "reminder a day before the end",
-    geoTitle: "Who it's for", geoOnly: (r) => (r === "region" ? "Selected regions only — check your country in the rules" : `${r} region only`), geoNoUA: "⚠ The rules list Ukraine as restricted", geoNoEU: "⚠ The rules list the EU/EEA as restricted", geoAll: "No restriction for Ukraine found in the rules", forNew: "🆕 New users only",
+    geoTitle: "Who it's for", geoOnly: (r) => (r === "region" ? "Selected regions only — check your country in the rules" : `${r} region only`), geoNoUA: "The rules list Ukraine as restricted", geoNoEU: "The rules list the EU/EEA as restricted", geoAll: "No restriction for Ukraine found in the rules", forNew: "New users only",
     noteTr: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
     keySubTr: "Key lines from the exchange's official rules. Full text below.",
     minTitle: "To get anything at all", from: "from", kind: { trade: "Trade", deposit: "Deposit", stake: "Stake", hold: "Hold", buy: "Buy" },
@@ -84,11 +87,11 @@ const RULES_TX: Record<Locale, {
     partial: "The exchange only publishes a short summary here — full rules via “Original”.",
     none: (v) => `The full conditions of this promo are published only on ${v}'s page — tap “Original” above.`,
     more: "Show all conditions", signup: (v) => `Sign up on ${v}`,
-    fact: { period: "⏱ Period", who: "👤 Who can join", min: "💵 Minimum requirements", how: "✅ How to join", payout: "🎁 When rewards are paid", kyc: "🪪 Verification (KYC)", region: "🌍 Country restrictions" },
+    fact: { period: "Period", who: "Who can join", min: "Minimum requirements", how: "How to join", payout: "When rewards are paid", kyc: "Verification (KYC)", region: "Country restrictions" },
   },
   ru: {
     coinMore: "все акции и стейкинг", calTitle: "Дедлайн акции", calIcs: "iPhone / Outlook", calNote: "напоминание за день до конца",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона ${r}`), geoNoUA: "⚠ В условиях Украина среди ограниченных стран", geoNoEU: "⚠ В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "🆕 Только для новых пользователей",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона ${r}`), geoNoUA: "В условиях Украина среди ограниченных стран", geoNoEU: "В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "Только для новых пользователей",
     noteTr: (v) => `Машинный перевод (DeepL) официальных условий ${v}. Если что-то непонятно или расходится — действует оригинал на сайте биржи.`,
     keySubTr: "Ключевые строки из официальных правил биржи (машинный перевод). Полный текст — ниже.",
     minTitle: "Чтобы получить хоть что-то", from: "от", kind: { trade: "Торговля", deposit: "Депозит", stake: "Стейк", hold: "Держать", buy: "Покупка" },
@@ -100,7 +103,7 @@ const RULES_TX: Record<Locale, {
     partial: "Биржа публикует здесь только краткое описание — полные правила по ссылке «Оригинал».",
     none: (v) => `Полный текст условий этой акции опубликован только на странице ${v} — нажмите «Оригинал» или «Перевести на русский» выше.`,
     more: "Показать все условия", signup: (v) => `Регистрация на ${v}`,
-    fact: { period: "⏱ Период", who: "👤 Кто может участвовать", min: "💵 Минимальные требования", how: "✅ Как участвовать", payout: "🎁 Когда выдадут награды", kyc: "🪪 Верификация (KYC)", region: "🌍 Ограничения по странам" },
+    fact: { period: "Период", who: "Кто может участвовать", min: "Минимальные требования", how: "Как участвовать", payout: "Когда выдадут награды", kyc: "Верификация (KYC)", region: "Ограничения по странам" },
   },
 };
 
@@ -156,11 +159,11 @@ const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
 
 const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string; remind: string; calTitle: string; calDesc: (claim?: number) => string }> = {
-  uk: { title: "Що ви реально отримаєте", unknown: "❓ Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
+  uk: { title: "Що ви реально отримаєте", unknown: "Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
     remind: "Нагадати забрати нагороду:", calTitle: "🎁 Забрати нагороду", calDesc: (c) => `Перевірте Центр нагород на біржі й заберіть нагороду${c ? ` — на це є ${c} дн., потім вона згорає` : ""}.` },
-  en: { title: "What you actually get", unknown: "❓ Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
+  en: { title: "What you actually get", unknown: "Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
     remind: "Remind me to claim the reward:", calTitle: "🎁 Claim your reward", calDesc: (c) => `Check the exchange's rewards center and claim your reward${c ? ` — you have ${c} days before it expires` : ""}.` },
-  ru: { title: "Что вы реально получите", unknown: "❓ Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →",
+  ru: { title: "Что вы реально получите", unknown: "Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →",
     remind: "Напомнить забрать награду:", calTitle: "🎁 Забрать награду", calDesc: (c) => `Проверьте Центр наград на бирже и заберите награду${c ? ` — на это есть ${c} дн., потом она сгорит` : ""}.` },
 };
 
@@ -244,7 +247,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               </span>
               <span className={`rounded-md px-2 py-1 ${st === "ending" ? "bg-rose/10 text-rose" : st === "upcoming" ? "bg-sky/10 text-sky" : "bg-lime/10 text-lime"}`}>{t.status[st]}</span>
               {m.confirmed && <span className="rounded-md bg-teal/10 px-2 py-1 text-teal">✓ {t.card.confirmed}</span>}
-              {(m.hot ?? 0) >= 60 && <span className="rounded-md bg-amber/10 px-2 py-1 text-amber">🔥 {m.hot}°</span>}
+              {(m.hot ?? 0) >= 60 && <span className="rounded-md bg-amber/10 px-2 py-1 text-amber"><Icon name="flame" /> {m.hot}°</span>}
             </div>
             {/* H1 = our short title (display font only for short text); the full headline is the subtitle — audit 08.11 */}
             {own ? (
@@ -286,11 +289,11 @@ export default async function PromoPage({ params }: { params: Params }) {
             <div className="card p-4 hover:transform-none">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.end}</div>
               <div className="mt-1 font-mono text-sm font-bold text-ink">{p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</div>
-              {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}>⏳ {R.left} {duration(p.endsAt - now, t.time)}</div>}
+              {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}><Icon name="hourglass" /> {R.left} {duration(p.endsAt - now, t.time)}</div>}
               {cal && (
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold">
-                  <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="text-sky hover:underline">📅 Google</a>
-                  <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="text-sky hover:underline">📅 {R.calIcs}</a>
+                  <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                  <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
                   <span className="font-normal text-ink-3">{R.calNote}</span>
                 </div>
               )}
@@ -333,7 +336,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           } : undefined;
           return (
             <section id="payout" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
-              <h2 className="font-display text-xl font-semibold tracking-tight">💰 {PT.title}</h2>
+              <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="coins" className="size-5 text-lime" /> {PT.title}</h2>
               <div className="mt-3 flex flex-wrap gap-2 text-sm font-bold">
                 {po?.form
                   ? <span className={`rounded-md px-2 py-1 ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span>
@@ -351,9 +354,9 @@ export default async function PromoPage({ params }: { params: Params }) {
               )}
               {claimCal && (
                 <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold">
-                  <span className="font-semibold text-ink-2">⏰ {PT.remind}</span>
-                  <a href={googleCalUrl(claimCal)} target="_blank" rel="noopener" className="text-sky hover:underline">📅 Google</a>
-                  <a href={icsHref([claimCal])} download={`claim-${slug.split("-")[0]}.ics`} className="text-sky hover:underline">📅 {R.calIcs}</a>
+                  <span className="font-semibold text-ink-2"><Icon name="clock" /> {PT.remind}</span>
+                  <a href={googleCalUrl(claimCal)} target="_blank" rel="noopener" className="text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                  <a href={icsHref([claimCal])} download={`claim-${slug.split("-")[0]}.ics`} className="text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
                 </div>
               )}
               <a href={withBase(`/${lang}/learn/rewards/`)} className="mt-4 block text-sm font-semibold text-lime hover:underline">{PT.more}</a>
@@ -365,9 +368,9 @@ export default async function PromoPage({ params }: { params: Params }) {
         {p.category !== "farming" && (m.geo || m.forNew || det) && (
           <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] px-4 py-3 text-sm">
             <span className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.geoTitle}:</span>
-            {m.geo?.only && <span className="rounded-md bg-amber/10 px-2 py-0.5 font-bold text-amber">🌍 {R.geoOnly(m.geo.only)}</span>}
-            {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose">{R.geoNoUA}</span>}
-            {m.geo?.noEU && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose">{R.geoNoEU}</span>}
+            {m.geo?.only && <span className="rounded-md bg-amber/10 px-2 py-0.5 font-bold text-amber"><Icon name="globe" /> {R.geoOnly(m.geo.only)}</span>}
+            {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose"><Icon name="alert" /> {R.geoNoUA}</span>}
+            {m.geo?.noEU && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose"><Icon name="alert" /> {R.geoNoEU}</span>}
             {m.forNew && <span className="rounded-md bg-sky/10 px-2 py-0.5 font-bold text-sky">{R.forNew}</span>}
             {!m.geo?.only && !m.geo?.noUA && det && <span className="font-semibold text-ink-2">✓ {R.geoAll}</span>}
             {m.geo?.text && <span className="block w-full text-xs text-ink-3">“{m.geo.text}”</span>}
@@ -377,7 +380,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* plain-language explainer — written by AI strictly from the official rules (src/lib/faq.ts) */}
         {ex && (
           <section id="how" className="card mt-4 scroll-mt-20 p-6 hover:transform-none ring-1 ring-sky/20">
-            <h2 className="font-display text-xl font-semibold tracking-tight">💡 {FQ.how}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="bulb" className="size-5 text-lime" /> {FQ.how}</h2>
             <p className="mt-1 text-xs text-ink-3">{FQ.note(p.venue.name)}</p>
             <p className="mt-4 text-[15px] leading-relaxed text-ink [overflow-wrap:anywhere]">{ex.summary}</p>
             <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3">{FQ.steps}</h3>
@@ -387,16 +390,16 @@ export default async function PromoPage({ params }: { params: Params }) {
               ))}
             </ol>
             <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 [&>*]:min-w-0">
-              {([["⏱", FQ.when, ex.payout.when], ["🎁", FQ.form, ex.payout.form], ["📥", FQ.claim, ex.payout.how]] as const).map(([ic, k, v]) => (
+              {([["clock", FQ.when, ex.payout.when], ["gift", FQ.form, ex.payout.form], ["inbox", FQ.claim, ex.payout.how]] as const).map(([ic, k, v]) => (
                 <div key={k} className="rounded-xl border border-line bg-white/[0.02] p-4">
-                  <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{ic} {k}</div>
+                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink-3"><Icon name={ic} /> {k}</div>
                   <p className="mt-2 text-sm leading-relaxed text-ink [overflow-wrap:anywhere]">{v}</p>
                 </div>
               ))}
             </div>
             {ex.watch.length > 0 && (
               <>
-                <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3">⚠ {FQ.watch}</h3>
+                <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3"><Icon name="alert" /> {FQ.watch}</h3>
                 <ul className="mt-3 space-y-2 text-sm text-ink-2">
                   {ex.watch.map((x, i) => <li key={i} className="flex gap-2"><span className="text-amber">•</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>)}
                 </ul>
@@ -408,12 +411,12 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* key points pulled from the official rules */}
         {det && det.facts.length > 0 && (
           <section className="card mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
-            <h2 className="font-display text-xl font-semibold tracking-tight">📌 {R.keyTitle}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="pin" className="size-5 text-lime" /> {R.keyTitle}</h2>
             <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0 ? R.keySubTr : R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">
               {det.facts.map((f, i) => (
                 <div key={i} className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[11rem_1fr] sm:gap-4">
-                  <dt className="font-semibold text-ink-3">{R.fact[f.k]}</dt>
+                  <dt className="flex items-center gap-1.5 font-semibold text-ink-3"><Icon name={FACT_ICON[f.k]} />{R.fact[f.k]}</dt>
                   <dd className="min-w-0 text-ink [overflow-wrap:anywhere]">{f.text}</dd>
                 </div>
               ))}
@@ -446,7 +449,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
           <aside className="flex flex-col gap-4">
             <div className={`card p-6 hover:transform-none ${isAggregator ? "ring-1 ring-amber/30" : "ring-1 ring-lime/20"}`}>
-              <div className={`text-sm font-bold ${isAggregator ? "text-amber" : "text-lime"}`}>{isAggregator ? `⚠ ${t.detail.aggregator}` : `✓ ${t.detail.official}`}</div>
+              <div className={`text-sm font-bold ${isAggregator ? "text-amber" : "text-lime"}`}>{isAggregator ? <><Icon name="alert" /> {t.detail.aggregator}</> : <><Icon name="check" /> {t.detail.official}</>}</div>
               <p className="mt-2 text-sm leading-relaxed text-ink-2">{isAggregator ? t.detail.aggregatorNote : t.detail.officialNote}</p>
             </div>
             <div className="card p-6 hover:transform-none">
@@ -463,7 +466,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* full conditions & rules */}
         {p.category !== "farming" && <section id="rules" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="font-display text-xl font-semibold tracking-tight">📜 {R.title}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="scroll" className="size-5 text-lime" /> {R.title}</h2>
             <div className="flex flex-wrap gap-3 text-sm font-semibold">
               {tr && <a href={tr} target="_blank" rel="noopener" className="text-lime hover:underline">{R.translate} ↗</a>}
               <a href={p.url} target="_blank" rel="noopener" className="text-ink-2 hover:text-ink">{R.original(p.venue.name)} ↗</a>
@@ -482,7 +485,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* more questions — same AI explainer */}
         {faq.length > 0 && (
           <section id="faq" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
-            <h2 className="font-display text-xl font-semibold tracking-tight">❓ {FQ.title}</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="help" className="size-5 text-lime" /> {FQ.title}</h2>
             <div className="mt-4 divide-y divide-line">
               {faq.map((x, i) => (
                 <details key={i} className="group py-3" open={i === 0}>
@@ -502,7 +505,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
-          <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink">⚑ {t.detail.report}</a>
+          <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>
         </div>
 
         {related.length > 0 && (
