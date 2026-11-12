@@ -10,7 +10,7 @@ import { ComboPanel } from "./ComboPanel";
 import type { Combo } from "@/lib/combos";
 import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
-import { showHeadline, titleOf } from "@/lib/titletpl";
+import { titleOf } from "@/lib/titletpl";
 import { Badge, type Tone } from "./Badge";
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
@@ -121,13 +121,12 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
         <>
           {/* our own short title from the parsed facts; the exchange's headline stays below in small type (audit 08.11) */}
           <h3 className="mt-4 line-clamp-2 break-words text-base font-bold leading-snug text-ink">
-            <a href={href} className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">
+            <a href={href} title={own ? calm(p.title) : undefined} className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">
               {own ?? calm(isDrop ? `${p.title} — Airdrop` : p.title)}
             </a>
           </h3>
-          {own && showHeadline(p, lang) && <p className="mt-1 line-clamp-2 break-words text-xs leading-snug text-ink-3">{calm(p.title)}</p>}
           {isDrop && m.actions && (
-            <p className="mt-2 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
+            <p className="mt-2 line-clamp-1 text-sm leading-snug text-ink-2"><span className="font-semibold text-ink-3">{t.card.actions}: </span>{m.actions}</p>
           )}
         </>
       )}
@@ -135,14 +134,15 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
       {/* who it is for + what is paid — at most 2 badges, one style, no emoji (audit 08.11) */}
       {(() => {
         const b: Array<[string, string]> = [];
-        if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
+        // one badge per card (audit 12.11), the most decisive first: can't join → region → no deposit → new users → payout form
         if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "danger"]);
-        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form], "neutral"]);
+        if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
         if (m.noDeposit && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
         if (m.forNew) b.push([FOR_NEW[lang], "info"]);
+        if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form], "neutral"]);
         return b.length ? (
           <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs font-semibold">
-            {b.slice(0, 2).map(([x, tone]) => <Badge key={x} tone={tone as Tone} variant="outline">{x}</Badge>)}
+            {b.slice(0, 1).map(([x, tone]) => <Badge key={x} tone={tone as Tone} variant="outline">{x}</Badge>)}
           </div>
         ) : null;
       })()}
