@@ -91,7 +91,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
       </div>
       <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
     </div>
-    <ProsCons pc={pc} max={10} />
+    <ProsCons lang={lang} pc={pc} max={10} />
     <div className="mt-4 flex flex-wrap gap-2">
       {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
       <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
@@ -112,7 +112,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl 
       </div>
 
       {/* filters */}
-      <div className="sticky top-16 z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6">
+      <div className="z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={A.searchPool}
           className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
         <label className="relative">

@@ -31,7 +31,7 @@ export default async function FixedPage({ params }: { params: Params }) {
         <YieldTabs lang={lang} active="fixed" updated={fetchedAt} />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{P.fixTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.fixSub}</p>
-        <Link href={`/${lang}/learn/guide/pendle-pt`} className="btn btn-primary mt-5 inline-flex h-11 px-5 text-sm">{P.fixGuide}</Link>
+        <Link href={`/${lang}/learn/guide/pendle-pt`} className="btn btn-primary mt-5 inline-flex h-auto min-h-11 max-w-full whitespace-normal px-5 py-2 text-left text-sm">{P.fixGuide}</Link>
         {rows.length === 0 ? <p className="mt-8 text-ink-3">{P.noData}</p> : (
           <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[640px] text-left text-sm">

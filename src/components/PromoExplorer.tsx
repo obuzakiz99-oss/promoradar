@@ -224,9 +224,10 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   return (
     <div>
       {/* toolbar */}
-      <div className="sticky top-16 z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <label className="relative flex-1 lg:max-w-sm">
+      {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
+      <div className="z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
+        <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
+          <label className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
             <span className="sr-only">{t.filters.search}</span>
             <svg className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.4 9.83l3.64 3.63a.75.75 0 1 0 1.06-1.06l-3.63-3.64A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clipRule="evenodd" /></svg>
             <input
@@ -235,12 +236,12 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
               placeholder={t.filters.search}
               className="h-11 w-full rounded-xl border border-line bg-white/[0.03] pl-10 pr-9 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none"
             />
-            {q && <button onClick={() => setQ("")} className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Clear">✕</button>}
+            {q && <button onClick={() => setQ("")} className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-ink" aria-label={t.filters.reset}>✕</button>}
           </label>
-          <label className="relative shrink-0 self-start lg:ml-auto">
+          <label className="relative min-w-0 flex-1 sm:flex-none lg:ml-auto">
             <span className="sr-only">{t.filters.sort}</span>
             <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}
-              className="h-11 appearance-none rounded-xl border border-line bg-surface pl-3 pr-9 text-xs font-bold text-ink focus:border-lime/50 focus:outline-none">
+              className="h-11 w-full appearance-none rounded-xl border border-line bg-surface pl-3 pr-9 text-xs font-bold text-ink focus:border-lime/50 focus:outline-none">
               {(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => (
                 <option key={s} value={s}>↕ {s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s]}</option>
               ))}
@@ -248,7 +249,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
           </label>
           <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
-            className={`h-11 shrink-0 self-start rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
+            className={`h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
             ⚙ {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
           </button>
         </div>

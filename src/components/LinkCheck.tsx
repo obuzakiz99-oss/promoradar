@@ -69,7 +69,7 @@ export function LinkCheck({ lang, official }: { lang: L; official: Official }) {
     <div className="mt-8 max-w-2xl">
       <form className="flex flex-col gap-2 sm:flex-row" onSubmit={(e) => { e.preventDefault(); setV(checkLink(q, official)); }}>
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={T.ph} inputMode="url" autoCapitalize="off" autoCorrect="off" spellCheck={false}
-          className="h-12 min-w-0 flex-1 rounded-xl border border-line bg-surface px-4 text-sm text-ink placeholder:text-ink-3 focus:border-lime/60 focus:outline-none" />
+          className="h-12 w-full min-w-0 rounded-xl sm:flex-1 border border-line bg-surface px-4 text-sm text-ink placeholder:text-ink-3 focus:border-lime/60 focus:outline-none" />
         <button type="submit" className="btn btn-primary h-12 px-6">{T.btn}</button>
       </form>
       {v && <Result v={v} lang={lang} />}
