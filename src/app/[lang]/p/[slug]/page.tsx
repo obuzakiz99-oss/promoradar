@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration } from "@/lib/format";
+import { compactUsd, duration, nfLocale } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -213,7 +213,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const pu = m.perUser;
   const perUserCell: React.ReactNode = pu ? (
     <span>
-      <span className="text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}</span>
+      <span className="text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}</span>
       {pu.usd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(pu.usd)})</span>}
       <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
     </span>
@@ -301,7 +301,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <div className="card p-4 hover:transform-none ring-1 ring-lime/20">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
               {pu ? (
-                <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString("en-US")} {pu.unit}
+                <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}
                   {pu.usd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(pu.usd)}</span>}
                 </div>
               ) : (
@@ -311,7 +311,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             {m.minEntry && (
               <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
                 <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
-                <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString("en-US")}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
+                <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString(nfLocale(lang))}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
                 <div className="mt-1 text-xs leading-snug text-ink-3">“{m.minEntry.text}”</div>
               </div>
             )}

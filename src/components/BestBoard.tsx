@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { nfLocale } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import type { Hedge, PoolProject } from "@/lib/pools";
@@ -61,7 +62,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
             className="h-12 w-full rounded-xl border border-line-2 bg-bg/60 pl-8 pr-3 font-display text-2xl font-semibold text-ink focus:border-lime/60 focus:outline-none" />
         </div>
         <div className="flex gap-2">
-          {[100, 1000, 10000].map((v) => <button key={v} onClick={() => setText(String(v))} className={`h-9 rounded-lg px-3 font-mono text-xs font-bold ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString("en-US")}</button>)}
+          {[100, 1000, 10000].map((v) => <button key={v} onClick={() => setText(String(v))} className={`h-9 rounded-lg px-3 font-mono text-xs font-bold ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>${v.toLocaleString(nfLocale(lang))}</button>)}
         </div>
       </div>
 

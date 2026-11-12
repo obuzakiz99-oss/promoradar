@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { nfLocale } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Promo } from "@/lib/types";
 
@@ -50,12 +51,16 @@ const TX: Record<Locale, {
   },
 };
 
-const usd = (x: number) => `$${x.toLocaleString("en-US", { maximumFractionDigits: x < 10 ? 2 : 0 })}`;
-const amt = (a: number, u: string) => (STABLE.test(u) ? usd(a) : `${a.toLocaleString("en-US", { maximumFractionDigits: 4 })} ${u}`);
+// number format follows the page language (audit 12.11)
+const fmtOf = (lc: string) => {
+  const usd = (x: number) => `$${x.toLocaleString(lc, { maximumFractionDigits: x < 10 ? 2 : 0 })}`;
+  return { usd, amt: (a: number, u: string) => (STABLE.test(u) ? usd(a) : `${a.toLocaleString(lc, { maximumFractionDigits: 4 })} ${u}`) };
+};
 
 /** "How much would I get" for one promo: threshold check, reward tier, exchange fees, net — or interest for APR promos. */
 export function EarnCalc({ lang, m, endsAt, now }: { lang: Locale; m: M; endsAt?: number; now: number }) {
   const T = TX[lang];
+  const { usd, amt } = fmtOf(nfLocale(lang));
   const kind = m.aprPct !== undefined ? "apr" : m.minEntry?.kind ?? (m.tiers?.length ? "trade" : "any");
   const start = m.minEntry?.amount ?? m.tiers?.[0]?.min ?? 1000;
   const [v, setV] = useState(start);

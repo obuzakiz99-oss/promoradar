@@ -1,6 +1,6 @@
 import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
-import { ago, compactUsd, duration, num, shortDate } from "@/lib/format";
+import { ago, compactUsd, duration, money, num, shortDate } from "@/lib/format";
 import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
@@ -155,7 +155,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
           ) : m.perUser && p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{num(m.perUser.amount, lang)} {m.perUser.unit}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}</div>
               <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}</div>
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
@@ -163,13 +163,13 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t:
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
               <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}</div>
-              {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](`${num(m.perUser.amount, lang)} ${m.perUser.unit}`)}</div>}
+              {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](money(m.perUser.amount, m.perUser.unit, lang))}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : m.perUser ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{num(m.perUser.amount, lang)} {m.perUser.unit}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { nfLocale } from "@/lib/format";
 import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -121,7 +122,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                     {pm.rows.slice(0, 15).map((r) => (
                       <tr key={r.slug} className="hover:bg-white/[0.02]">
                         <td className="px-4 py-2.5"><a href={`https://polymarket.com/market/${r.slug}`} target="_blank" rel="noopener" className="font-semibold hover:text-lime">{trq(r.question)}</a></td>
-                        <td className="px-4 py-2.5 text-right font-mono text-xs font-bold text-lime">${r.daily.toLocaleString("en-US", { maximumFractionDigits: 0 })}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs font-bold text-lime">${r.daily.toLocaleString(nfLocale(lang), { maximumFractionDigits: 0 })}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.maxSpread !== undefined ? `±${r.maxSpread}¢` : "—"}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs">{r.minSize ?? "—"}</td>
                       </tr>

@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { nfLocale } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import type { Backtest, Extra, PlanData } from "@/lib/money";
@@ -37,11 +38,13 @@ const TX: Record<Locale, {
 };
 
 const PRESETS = [100, 1000, 10000];
-const usd = (x: number, d = x < 10 ? 2 : 0) => `$${x.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: 0 })}`;
-const sgn = (x: number) => `${x >= 0 ? "+" : "−"}${usd(Math.abs(x))}`;
+// number format follows the page language (audit 12.11)
+const usdOf = (lc: string) => (x: number, d = x < 10 ? 2 : 0) => `$${x.toLocaleString(lc, { maximumFractionDigits: d, minimumFractionDigits: 0 })}`;
 
 export function MoneyBlock({ lang, plan, bt, venues, extras = [] }: { lang: Locale; plan: PlanData; bt?: Backtest; venues: Record<string, Venue>; extras?: Extra[] }) {
   const T = TX[lang];
+  const usd = usdOf(nfLocale(lang));
+  const sgn = (x: number) => `${x >= 0 ? "+" : "−"}${usd(Math.abs(x))}`;
   const [amount, setAmount] = useState(1000);
   const [btAmount, setBtAmount] = useState(1000);
 

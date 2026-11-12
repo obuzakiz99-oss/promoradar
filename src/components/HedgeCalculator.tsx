@@ -1,16 +1,21 @@
 "use client";
 import { useMemo, useState } from "react";
+import { nfLocale } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 
 import { TOOLS } from "@/lib/i18n-tools";
 
 import type { HedgeOption } from "@/lib/hedge-options";
 
-const usd = (x: number) => `${x < 0 ? "−" : ""}$${Math.abs(x).toLocaleString("en-US", { maximumFractionDigits: Math.abs(x) < 100 ? 2 : 0 })}`;
-const num = (x: number) => x.toLocaleString("en-US", { maximumFractionDigits: x < 1 ? 6 : x < 100 ? 4 : 0 });
+// number format follows the page language (audit 12.11)
+const fmtOf = (lc: string) => ({
+  usd: (x: number) => `${x < 0 ? "−" : ""}$${Math.abs(x).toLocaleString(lc, { maximumFractionDigits: Math.abs(x) < 100 ? 2 : 0 })}`,
+  num: (x: number) => x.toLocaleString(lc, { maximumFractionDigits: x < 1 ? 6 : x < 100 ? 4 : 0 }),
+});
 
 export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lang: Locale }) {
   const T = TOOLS[lang];
+  const { usd, num } = fmtOf(nfLocale(lang));
   const first = options[0];
   const [sel, setSel] = useState(first?.key ?? "custom");
   const preset = options.find((o) => o.key === sel);

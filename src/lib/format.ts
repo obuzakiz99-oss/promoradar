@@ -42,6 +42,8 @@ export function plural(n: number, lang: string, w: keyof typeof WORDS): string {
 /** Language of a translated label ("акцій" → uk, "акций" → ru, else en) — for components that only receive labels. */
 export const langOf = (label: string) => (/[іїєґ]/i.test(label) ? "uk" : /[ыэъё]|ий(\s|$)/i.test(label) ? "ru" : /[а-я]/i.test(label) ? "uk" : "en");
 
+/** Intl locale for the site language (uk/ru: "50 000", en: "50,000"). */
+export const nfLocale = (lang: string) => (lang === "en" ? "en-US" : lang === "ru" ? "ru-RU" : "uk-UA");
 /** One number format for the whole site (audit 08.11): uk/ru — space between thousands ("50 000"), en — comma. */
 export function num(n: number, lang: string, digits = 2): string {
   return new Intl.NumberFormat(lang === "en" ? "en-US" : lang === "ru" ? "ru-RU" : "uk-UA", { maximumFractionDigits: digits }).format(n);

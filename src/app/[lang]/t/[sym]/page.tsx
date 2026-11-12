@@ -6,7 +6,7 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { trList } from "@/lib/translate";
 import { getTokens, isStableSym } from "@/lib/tokens";
 import { venueOf } from "@/config/site";
-import { compactUsd, duration } from "@/lib/format";
+import { compactUsd, duration, nfLocale } from "@/lib/format";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 const UNLOCK_TX: Record<Locale, (d: string, left: string) => string> = { uk: (d, l) => `Наступний розлок: ${d} (через ${l})`, en: (d, l) => `Next unlock: ${d} (in ${l})`, ru: (d, l) => `Следующий разлок: ${d} (через ${l})` };
 const UNLOCK_CAP: Record<Locale, string> = { uk: "капіталізації", en: "of market cap", ru: "капитализации" };
-const fmtPrice = (x: number) => (x >= 1000 ? `$${x.toLocaleString("en-US", { maximumFractionDigits: 0 })}` : x >= 1 ? `$${x.toFixed(2)}` : `$${x.toPrecision(3)}`);
+const fmtPrice = (x: number, lc = "uk-UA") => (x >= 1000 ? `$${x.toLocaleString(lc, { maximumFractionDigits: 0 })}` : x >= 1 ? `$${x.toFixed(2)}` : `$${x.toPrecision(3)}`);
 
 export default async function TokenPage({ params }: { params: Params }) {
   const { lang, sym } = await params;
@@ -92,7 +92,7 @@ export default async function TokenPage({ params }: { params: Params }) {
           {tk.price !== undefined && !stable && (
             <div className="text-right">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.price}</div>
-              <div className="font-mono text-2xl font-bold">{fmtPrice(tk.price)}</div>
+              <div className="font-mono text-2xl font-bold">{fmtPrice(tk.price, nfLocale(lang))}</div>
               {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{tk.change.toFixed(1)}% · 24h</div>}
             </div>
           )}
@@ -137,7 +137,7 @@ export default async function TokenPage({ params }: { params: Params }) {
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>
-                  <div className="mt-0.5 font-mono text-xs text-ink-3">{venueOf(p.exchange).name}{pool.maxStake ? ` · ${T.cap} ${pool.maxStake.toLocaleString("en-US")} ${pool.stake}` : ""}{pool.newUsers ? ` · ${T.newUsers}` : ""} · {p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</div>
+                  <div className="mt-0.5 font-mono text-xs text-ink-3">{venueOf(p.exchange).name}{pool.maxStake ? ` · ${T.cap} ${pool.maxStake.toLocaleString(nfLocale(lang))} ${pool.stake}` : ""}{pool.newUsers ? ` · ${T.newUsers}` : ""} · {p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</div>
                 </div>
                 {pool.apr !== undefined && <span className="shrink-0 font-mono text-lg font-bold text-lime">{pool.apr.toFixed(1)}%</span>}
               </a>
@@ -151,7 +151,7 @@ export default async function TokenPage({ params }: { params: Params }) {
               <a key={i} href={o.url} target="_blank" rel="noopener" className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-0 hover:bg-white/[0.03]">
                 <VenueLogo v={venueOf(o.exchange)} size={28} rounded="rounded-lg" />
                 <span className="text-sm font-bold">{venueOf(o.exchange).name}</span>
-                <span className="text-xs text-ink-3">{o.type === "fixed" ? T.fixed(o.days ?? 0) : o.type === "onchain" ? T.onchain : T.flexible}{o.newUsers ? ` · ${T.newUsers}` : ""}{o.maxAmount ? ` · ${T.cap} ${o.maxAmount.toLocaleString("en-US")}` : ""}</span>
+                <span className="text-xs text-ink-3">{o.type === "fixed" ? T.fixed(o.days ?? 0) : o.type === "onchain" ? T.onchain : T.flexible}{o.newUsers ? ` · ${T.newUsers}` : ""}{o.maxAmount ? ` · ${T.cap} ${o.maxAmount.toLocaleString(nfLocale(lang))}` : ""}</span>
                 <span className="ml-auto font-mono text-lg font-bold text-lime">{o.apr.toFixed(2)}%</span>
               </a>
             ))}
