@@ -67,8 +67,8 @@ export default async function DropsPage({ params }: { params: Params }) {
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
-              <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
-                <div className="card p-5 hover:transform-none">
+              <div className="mt-5 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)]">
+                <div className="card p-5 hover:transform-none lg:sticky lg:top-24">
                   <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
                   <ol className="mt-3 space-y-2.5 text-sm">
                     {T.how.map((s, i) => (
@@ -107,8 +107,8 @@ export default async function DropsPage({ params }: { params: Params }) {
             <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS.hard}`}>{LEVEL_TXT[lang].hard[0]}</span>
           </div>
           <p className="mt-2 max-w-3xl text-ink-2">{P.pmSub}</p>
-          <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
-            <div className="card p-5 hover:transform-none">
+          <div className="mt-5 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)]">
+            <div className="card p-5 hover:transform-none lg:sticky lg:top-24">
               <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
               <ol className="mt-3 space-y-2.5 text-sm">
                 {P.pmHow.map((s, i) => <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{s}</span></li>)}
