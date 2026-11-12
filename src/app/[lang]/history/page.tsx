@@ -12,6 +12,7 @@ import { LineChart, seriesColor, type Series } from "@/components/LineChart";
 import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
+import { Hint } from "@/components/Hint";
 
 type Params = Promise<{ lang: string }>;
 const COINS = ["USDT", "USDC", "BTC", "ETH"];
@@ -99,8 +100,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- how APR is falling now ---- */}
         <section className="mt-12">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.drop}</h2>
-          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.dropSub}</p>
+          <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.drop} <Hint lang={lang}>{X.dropSub}</Hint></h2>
           {S.drop.length === 0 ? <p className="mt-6 rounded-2xl border border-dashed border-line-2 px-6 py-10 text-center text-ink-2">{X.dropNone}</p> : (
             <>
               <div className="card mt-5 p-5 hover:transform-none"><ChartPicker series={dropSeries} lang={lang} locale={locale} height={260} signed /></div>
@@ -127,8 +127,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- typical decay curve: shown only once ≥ 10 pools back it (audit 08.11: ×1.25 / ×0.09 on 3 pools misled) ---- */}
         {Math.max(0, ...curve.map((c) => c.n ?? 0)) >= 10 && <section className="mt-14">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.curve}</h2>
-          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.curveSub}</p>
+          <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.curve} <Hint lang={lang}>{X.curveSub}</Hint></h2>
           <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {curve.map((c) => (
               <div key={c.h} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
@@ -142,8 +141,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- 3-month statistics ---- */}
         <section className="mt-16">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.past}</h2>
-          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.pastSub}</p>
+          <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.past} <Hint lang={lang}>{X.pastSub}</Hint></h2>
           <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {([
               [String(S.totals.projects), X.tiles[0]], [String(S.totals.pools), X.tiles[1]],

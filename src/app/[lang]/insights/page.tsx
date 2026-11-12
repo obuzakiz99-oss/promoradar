@@ -8,6 +8,7 @@ import { venueOf } from "@/config/site";
 import { shortDate } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
+import { Hint } from "@/components/Hint";
 
 export const revalidate = 3600;
 type Params = Promise<{ lang: string }>;
@@ -38,8 +39,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.insSub}</p>
 
         <section className="mt-12">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">{P.listTitle}</h2>
-          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{P.listSub}</p>
+          <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{P.listTitle} <Hint lang={lang}>{P.listSub}</Hint></h2>
           {after.length === 0 ? <p className="mt-6 text-ink-3">{P.noData}</p> : (
             <>
               <dl className="mt-6 grid max-w-xl grid-cols-3 gap-3">
@@ -75,8 +75,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
         </section>
 
         <section className="mt-16">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">{P.decayTitle}</h2>
-          <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{P.decaySub}</p>
+          <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{P.decayTitle} <Hint lang={lang}>{P.decaySub}</Hint></h2>
           {decay.length === 0 ? <p className="mt-6 text-ink-3">{P.noData}</p> : (
             <>
               {decayMedian !== undefined && (

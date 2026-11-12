@@ -16,6 +16,7 @@ import { HedgeVenues } from "@/components/HedgeVenues";
 import { Footer } from "@/components/Sections";
 import { LineChart, seriesColor, type Series } from "@/components/LineChart";
 import { readHistory } from "@/lib/history";
+import { Hint } from "@/components/Hint";
 
 export const revalidate = 900;
 export const dynamicParams = false; // static GitHub Pages export: every page is pre-rendered
@@ -286,8 +287,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {/* earnings */}
         {!ended && (
           <section className="mt-12">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">{T.calcTitle}</h2>
-            <p className="mt-1 max-w-3xl text-sm text-ink-3">{T.calcSub}</p>
+            <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{T.calcTitle} <Hint lang={lang}>{T.calcSub}</Hint></h2>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[520px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">

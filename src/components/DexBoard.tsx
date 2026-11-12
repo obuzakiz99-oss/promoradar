@@ -10,6 +10,7 @@ import { dexPC } from "@/lib/proscons";
 import type { Hedge } from "@/lib/pools";
 import { dexHedge } from "@/lib/dexhedge";
 import { HedgeVenues } from "./HedgeVenues";
+import { Hint } from "./Hint";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
@@ -91,13 +92,12 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     <p className="mb-3 max-w-3xl text-sm text-ink-2">{WHAT[lang](p.project, p.symbol, p.chain)}</p>
     {/* the calculator, in detail */}
     <div className="mb-4 max-w-3xl rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
-      <div className="text-sm font-bold">{C.title(money(amount), pct(p.apy))}</div>
+      <div className="flex items-center gap-2 text-sm font-bold">{C.title(money(amount), pct(p.apy))} <Hint lang={lang}>{C.note}{p.il ? ` ${C.il}` : ""}</Hint></div>
       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
           <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
         ))}
       </div>
-      <p className="mt-2 text-xs text-ink-3">{C.note}{p.il ? ` ${C.il}` : ""}</p>
     </div>
     {(() => {
       const hd = dexHedge(p.symbol, p.apy, hedge);
@@ -106,7 +106,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       return (
         <div className="mb-4 max-w-3xl rounded-xl border border-teal/30 bg-teal/[0.05] p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <div className="text-sm font-bold">{H.title}</div>
+            <div className="flex items-center gap-2 text-sm font-bold">{H.title} <Hint lang={lang}>{H.note}</Hint></div>
             {hd.hedgedApy !== undefined && <div className="text-sm"><span className="text-ink-3">{H.apy}: </span><span className={`font-mono text-base font-bold ${hd.hedgedApy > 0 ? "text-teal" : "text-rose"}`}>{pct(hd.hedgedApy)}</span>
               <span className="font-mono text-xs text-ink-3"> · {money((amount * hd.hedgedApy) / 100 / 12)}{C.mo}</span></div>}
           </div>
@@ -119,7 +119,6 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
               </div>
             ))}
           </div>
-          <p className="mt-2 text-xs text-ink-3">{H.note}</p>
         </div>
       );
     })()}
