@@ -12,6 +12,8 @@ export interface EarnOffer {
   minAmount?: number;
   maxAmount?: number;       // per-user cap
   newUsers?: boolean;       // promo only for new users / first deposit
+  redeemHours?: number;     // withdrawal processing time (Bybit on-chain: up to 3 days)
+  via?: string;             // deposit is converted into this coin (Bybit on-chain USDT → USDE)
   url: string;
 }
 
@@ -60,6 +62,8 @@ async function bybit(): Promise<EarnOffer[]> {
         aprMax: best && best > base + 0.01 ? best : undefined,
         tierNote: best && best > base + 0.01 && top?.max && top.max > 0 ? `≤ ${fmtAmt(top.max)} ${p.coin}` : undefined,
         minAmount: n(p.minStakeAmount), url: "https://www.bybit.com/en/earn/home",
+        redeemHours: Number(p.redeemProcessingMinute) > 0 ? Number(p.redeemProcessingMinute) / 60 : undefined,
+        via: p.swapCoin && p.swapCoin !== p.coin ? p.swapCoin : undefined,
       });
     }
   }

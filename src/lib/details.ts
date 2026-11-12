@@ -17,7 +17,7 @@ export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "
 export interface Fact { k: FactKey; text: string }
 export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number }
 
-const VER = 4;               // bump when the parser changes → cached promos are re-read
+const VER = 5;               // bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
 const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
@@ -41,7 +41,7 @@ function htmlToBlocks(html: string): Block[] {
     .replace(/<li[^>]*>/gi, "\n§L§").replace(/<\/li>/gi, "\n");
   // tables → one marker line per row, cells joined by a separator
   h = h.replace(/<tr[^>]*>([\s\S]*?)<\/tr>/gi, (_, row: string) => {
-    const cells = [...row.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((m) => m[1].replace(/<[^>]+>/g, " "));
+    const cells = [...row.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((m) => m[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));   // line breaks inside a cell must not split the row
     return cells.length ? `\n§R§${cells.join("§C§")}\n` : "\n";
   });
   h = h.replace(/<br\s*\/?>/gi, "\n").replace(/<\/?(p|div|section|article|ul|ol|table|tbody|thead|blockquote)[^>]*>/gi, "\n").replace(/<[^>]+>/g, "");
@@ -532,8 +532,32 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
   for (const p of promos) if (store[p.id]) {
-    const blocks = dropBoilerplate(store[p.id].blocks, p.id, store);
+    const blocks = dropBoilerplate(joinCells(store[p.id].blocks), p.id, store);
     out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
+  }
+  return out;
+}
+
+/**
+ * Rows stored before VER 5 could be split by a line break inside a cell, leaving "§C§ 60 days" as a separate block.
+ * Glue such pieces back onto the preceding table row; any marker left elsewhere is removed.
+ */
+function joinCells(blocks: Block[]): Block[] {
+  const out: Block[] = [];
+  for (const b of blocks) {
+    if (!b.x.includes("§")) { out.push(b); continue; }
+    const prev = out[out.length - 1];
+    if (b.t !== "tr" && b.x.includes("§C§") && prev?.t === "tr" && prev.cells) {
+      const [head, ...rest] = b.x.split("§C§").map((c) => c.trim());
+      const cells = [...prev.cells];
+      if (head) cells[cells.length - 1] = `${cells[cells.length - 1]} ${head}`.trim();
+      cells.push(...rest);
+      out[out.length - 1] = { ...prev, cells, x: cells.filter(Boolean).join(" · ") };
+      continue;
+    }
+    const strip = (s: string) => s.replace(/§[RCHL]§/g, " ").replace(/\s+/g, " ").trim();
+    const x = strip(b.x);
+    if (x) out.push(b.cells ? { ...b, x, cells: b.cells.map(strip) } : { ...b, x });
   }
   return out;
 }

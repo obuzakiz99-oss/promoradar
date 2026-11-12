@@ -31,6 +31,8 @@ const D = {
     rewardNew: "Нагорода в новому токені {c} — краще продавати одразу",
     // earn
     flexible: "Можна забрати будь-коли",
+    redeemWait: "Виведення займає до {x}",
+    swapTo: "{c} конвертується в {x} — діє ризик цієї монети",
     onchain: "Ончейн-стейкінг — дохід від мережі",
     stableCoin: "Стейблкоїн — без цінового ризику",
     highEarn: "Ставка вища за середню ({x})",
@@ -74,6 +76,8 @@ const D = {
     lowApr: "Low yield — like plain Earn",
     rewardNew: "Paid in new token {c} — better sell on arrival",
     flexible: "Withdraw any time",
+    redeemWait: "Withdrawal takes up to {x}",
+    swapTo: "{c} is converted into {x} — that coin's risk applies",
     onchain: "On-chain staking — network yield",
     stableCoin: "Stablecoin — no price risk",
     highEarn: "Above-average rate ({x})",
@@ -116,6 +120,8 @@ const D = {
     lowApr: "Низкая доходность — как обычный Earn",
     rewardNew: "Награда в новом токене {c} — лучше продавать сразу",
     flexible: "Можно забрать в любой момент",
+    redeemWait: "Вывод занимает до {x}",
+    swapTo: "{c} конвертируется в {x} — действует риск этой монеты",
     onchain: "Ончейн-стейкинг — доход от сети",
     stableCoin: "Стейблкоин — без ценового риска",
     highEarn: "Ставка выше средней ({x})",
@@ -229,6 +235,8 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
 }
 
 /* ---------------- Exchange Earn ---------------- */
+const HRS: Record<Locale, string> = { uk: "год", en: "h", ru: "ч" };
+const DAYS: Record<Locale, string> = { uk: "дн.", en: "days", ru: "дн." };
 export function earnPC(lang: Locale, o: EarnOffer, avgForCoin: number): PC {
   const f = make(lang);
   const pros: string[] = [], cons: string[] = [];
@@ -238,6 +246,8 @@ export function earnPC(lang: Locale, o: EarnOffer, avgForCoin: number): PC {
   if (avgForCoin > 0 && o.apr > avgForCoin * 1.3 && !o.newUsers) pros.push(f("highEarn", pct(avgForCoin)));
   if (o.type === "fixed" && o.days) cons.push(f("locked", o.days));
   if (o.aprMax && o.tierNote) cons.push(f("tiered", o.tierNote.replace("≤ ", "")));
+  if ((o.redeemHours ?? 0) >= 2) cons.push(f("redeemWait", o.redeemHours! < 48 ? `${Math.round(o.redeemHours!)} ${HRS[lang]}` : `${Math.round(o.redeemHours! / 24)} ${DAYS[lang]}`));
+  if (o.via) cons.push(f("swapTo", o.via, o.coin));
   if (o.newUsers) cons.push(f("newOnly", o.maxAmount ? ` · max ${o.maxAmount} ${o.coin}` : ""));
   if (o.apr < 1 && !o.newUsers) cons.push(f("lowBase"));
   if (!STABLE.has(o.coin)) cons.push(f("volatileCoin", "", o.coin));

@@ -168,7 +168,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
                   {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">🎁 {A.newUsers}</span>}
                 </div>
                 <div className="mt-0.5 text-xs font-semibold text-ink-3">
-                  <Term k={o.type === "fixed" ? "fixed" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
+                  <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
                 </div>
               </div>
               <div className="flex items-center gap-4">

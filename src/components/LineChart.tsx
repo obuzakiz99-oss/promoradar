@@ -12,7 +12,7 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
   let y0 = Math.min(...ys), y1 = Math.max(...ys);
   if (y1 - y0 < 0.5) { y0 -= 0.5; y1 += 0.5; }
-  const pad = (y1 - y0) * 0.08; y0 = signed ? Math.min(0, y0 - pad) : Math.max(0, y0 - pad); y1 = signed ? Math.max(0, y1 + pad) : y1 + pad;   // signed: change in % (can be negative), 0 always visible
+  const pad = (y1 - y0) * 0.08; y0 = signed ? Math.max(-100, Math.min(0, y0 - pad)) : Math.max(0, y0 - pad); y1 = signed ? Math.max(0, y1 + pad) : y1 + pad;   // signed: change in % (can be negative), 0 always visible
   const X = (t: number) => L + ((t - x0) / Math.max(1, x1 - x0)) * (W - L - R);
   const Y = (v: number) => Tp + (1 - (v - y0) / (y1 - y0)) * (H - Tp - B);
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((k) => y0 + (y1 - y0) * k);

@@ -49,7 +49,7 @@ const NO_UA: Record<Locale, string> = { uk: "⚠ Обмеження для Ук�
 const FOR_NEW: Record<Locale, string> = { uk: "Для нових користувачів", en: "New users", ru: "Для новых пользователей" };
 const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };
-const PER_T: Record<Locale, string> = { uk: "До на 1 людину", en: "Per person, up to", ru: "До на 1 человека" };
+const PER_T: Record<Locale, string> = { uk: "Максимум на 1 людину", en: "Max per person", ru: "Максимум на 1 человека" };
 
 export function PromoCard({ p, t, lang, now, index, fresh, pin }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string } }) {
   const cs = CAT_STYLE[p.category];
