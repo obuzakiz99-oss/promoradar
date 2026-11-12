@@ -26,6 +26,11 @@ const chg = (x: number | undefined, base: number) => {
 };
 const medTxt = (v?: number) => (v === undefined ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(0)}%`);
 
+const FIRST = 25;
+const D90 = { uk: "+90 днів", en: "+90 days", ru: "+90 дней" } as const;
+const MORE_ROWS = { uk: (n: number) => `Показати ще ${n}`, en: (n: number) => `Show ${n} more`, ru: (n: number) => `Показать ещё ${n}` } as const;
+const LESS_ROWS = { uk: "Згорнути", en: "Show less", ru: "Свернуть" } as const;
+
 export default async function InsightsPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -42,32 +47,43 @@ export default async function InsightsPage({ params }: { params: Params }) {
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{P.listTitle} <Hint lang={lang}>{P.listSub}</Hint></h2>
           {after.length === 0 ? <p className="mt-6 text-ink-3">{P.noData}</p> : (
             <>
-              <dl className="mt-6 grid max-w-xl grid-cols-3 gap-3">
-                {([["+7", median.d7], ["+30", median.d30], [P.listCols[5], median.now]] as const).map(([l, v]) => (
+              <dl className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+                {([["+7", median.d7], ["+30", median.d30], ["+90", median.d90], [P.listCols[5], median.now]] as const).map(([l, v]) => (
                   <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
                     <dd className={`font-display text-2xl font-semibold ${v !== undefined && v < 0 ? "text-rose" : "text-lime"}`}>{medTxt(v)}</dd>
                     <dt className="mt-1 text-xs font-semibold text-ink-3">{P.median} · {l}</dt>
                   </div>
                 ))}
               </dl>
+              {/* up to 2 years of pools: the first rows show, the rest open with a CSS-only toggle (no JS) */}
+              <div className="group">
               <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
-                <table className="w-full min-w-[640px] text-left text-sm">
+                <table className="w-full min-w-[720px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
-                    <tr>{P.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 3 ? "text-right" : ""}`}>{c}</th>)}</tr>
+                    <tr>{[...P.listCols.slice(0, 5), D90[lang], P.listCols[5]].map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 3 ? "text-right" : ""}`}>{c}</th>)}</tr>
                   </thead>
                   <tbody className="divide-y divide-line">
-                    {after.map((a) => (
-                      <tr key={a.token} className="hover:bg-white/[0.02]">
+                    {after.map((a, i) => (
+                      <tr key={a.token} className={`hover:bg-white/[0.02] ${i >= FIRST ? "hidden group-has-[:checked]:table-row" : ""}`}>
                         <td className="px-4 py-2.5 font-bold">{a.token}</td>
                         <td className="px-4 py-2.5"><span className="flex items-center gap-2 text-ink-2"><VenueLogo v={venueOf(a.exchange)} size={20} rounded="rounded-md" />{venueOf(a.exchange).name}</span></td>
                         <td className="px-4 py-2.5 font-mono text-xs text-ink-2">{shortDate(a.start, lang)}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{chg(a.d7, a.d0)}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{chg(a.d30, a.d0)}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{chg(a.d90, a.d0)}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{chg(a.now, a.d0)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+              {after.length > FIRST && (
+                <label className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm">
+                  <input type="checkbox" className="sr-only" />
+                  <span className="group-has-[:checked]:hidden">{MORE_ROWS[lang](after.length - FIRST)}</span>
+                  <span className="hidden group-has-[:checked]:inline">{LESS_ROWS[lang]}</span>
+                </label>
+              )}
               </div>
               <p className="mt-3 text-xs text-ink-3">{P.method}</p>
             </>
