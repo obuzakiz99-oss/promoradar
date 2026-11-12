@@ -54,7 +54,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   }, [fullUrl, initial.length]);
   const A = t.aprHub;
   const [openId, setOpenId] = useState<string | null>(null);
-  const [cat, setCat] = useState("DEX");
+  const [cat, setCat] = useState("all");   // "All" comes first and is the default (owner, 12.11)
   const [chain, setChain] = useState("all");
   const [stable, setStable] = useState(false);
   const [noIl, setNoIl] = useState(false);
@@ -137,7 +137,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     <div>
       {/* category tabs */}
       <div className="scroll-x flex gap-1.5">
-        {["DEX", "all", ...categories.filter((c) => c !== "DEX")].map((c) => (
+        {["all", "DEX", ...categories.filter((c) => c !== "DEX")].map((c) => (
           <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : c}</button>
         ))}
       </div>
