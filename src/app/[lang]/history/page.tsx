@@ -9,6 +9,7 @@ import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
 import { LineChart, seriesColor, type Series } from "@/components/LineChart";
+import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 
@@ -98,11 +99,11 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- how APR is falling now ---- */}
         <section className="mt-12">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">📉 {X.drop}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.drop}</h2>
           <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.dropSub}</p>
           {S.drop.length === 0 ? <p className="mt-6 rounded-2xl border border-dashed border-line-2 px-6 py-10 text-center text-ink-2">{X.dropNone}</p> : (
             <>
-              <div className="card mt-5 p-5 hover:transform-none"><LineChart series={dropSeries} locale={locale} height={260} signed /></div>
+              <div className="card mt-5 p-5 hover:transform-none"><ChartPicker series={dropSeries} lang={lang} locale={locale} height={260} signed /></div>
               <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[620px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.dropCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
@@ -126,7 +127,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- typical decay curve: shown only once ≥ 10 pools back it (audit 08.11: ×1.25 / ×0.09 on 3 pools misled) ---- */}
         {Math.max(0, ...curve.map((c) => c.n ?? 0)) >= 10 && <section className="mt-14">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">⏱ {X.curve}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.curve}</h2>
           <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.curveSub}</p>
           <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {curve.map((c) => (
@@ -141,7 +142,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
         {/* ---- 3-month statistics ---- */}
         <section className="mt-16">
-          <h2 className="font-display text-2xl font-semibold tracking-tight">📊 {X.past}</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-tight">{X.past}</h2>
           <p className="mt-1.5 max-w-3xl text-sm text-ink-3">{X.pastSub}</p>
           <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {([
@@ -225,7 +226,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
         {/* ---- Earn rates over time ---- */}
         {earnCharts.length > 0 && (
           <section className="mt-16">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">🏦 {X.earn}</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">{X.earn}</h2>
             <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
               {earnCharts.map((c) => (
                 <div key={c.coin} className="card p-5 hover:transform-none">

@@ -4,10 +4,10 @@ export interface Series { name: string; color: string; points: Array<[number, nu
 const PALETTE = ["#c8ff3d", "#3de0c8", "#5ab8ff", "#ffb547", "#a38bff", "#ff6b8b", "#7ee787", "#f2c67c"];
 export const seriesColor = (i: number) => PALETTE[i % PALETTE.length];
 
-export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean }) {
+export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false, legend = true }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean; legend?: boolean }) {
   const all = series.flatMap((s) => s.points);
   if (all.length < 2) return null;
-  const W = 720, H = height, L = 44, R = 12, Tp = 12, B = 26;
+  const W = 720, H = height, L = 60, R = 12, Tp = 12, B = 26;
   const xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
   let y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -38,12 +38,12 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
             points={s.points.map(([t, v]) => `${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")} />
         ))}
       </svg>
-      <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-2">
+      {legend && <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-2">
         {series.map((s) => {
           const last = s.points[s.points.length - 1]?.[1];
           return <span key={s.name} className="flex items-center gap-1.5"><span className="size-2.5 rounded-full" style={{ background: s.color }} />{s.name}{last !== undefined && <span className="font-mono text-ink-3">{fmt(last)}{unit}</span>}</span>;
         })}
-      </figcaption>
+      </figcaption>}
     </figure>
   );
 }
