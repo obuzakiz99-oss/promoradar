@@ -55,3 +55,14 @@ export function money(n: number, unit: string, lang: string): string {
 
 /** Exchange headlines without emoji (audit 12.11): lists show the text, the icons come from our own set. */
 export const noEmoji = (s: string) => s.replace(/[\u{1F000}-\u{1FAFF}☀-➿⭐️‍]/gu, "").replace(/\s{2,}/g, " ").trim();
+
+/** "ВАША ХВИЛЯ АІРДРОПІВ ПОЧИНАЄТЬСЯ ЗАРАЗ!" → "Ваша хвиля аірдропів починається зараз!" (any script); short Latin
+ *  all-caps words stay as they are, they are tickers (USDT, BTC, KCS). Normal headlines are returned unchanged. */
+export function sentenceCase(s: string): string {
+  const letters = s.match(/\p{L}/gu) ?? [];
+  if (letters.length < 12) return s;
+  const upper = letters.filter((c) => c !== c.toLowerCase() && c === c.toUpperCase()).length;
+  if (upper / letters.length < 0.7) return s;
+  const low = s.replace(/\p{L}+/gu, (w) => (/^[A-Z0-9]{2,5}$/.test(w) ? w : w.toLowerCase()));
+  return low.replace(/\p{L}/u, (c) => c.toUpperCase());
+}

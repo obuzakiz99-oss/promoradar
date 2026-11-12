@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, nfLocale } from "@/lib/format";
+import { compactUsd, duration, money, nfLocale, sentenceCase } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -203,6 +203,76 @@ const COMBO_TX: Record<Locale, { title: string; sub: (v: string) => string; why:
     upTo: "до", sum: (x, n) => `Вместе до ≈${x} на человека из ${n} акций`, note: "Некоторые биржи не засчитывают объём дважды или запрещают участие в нескольких кампаниях — проверьте это в правилах каждой акции.",
   },
 };
+const UI_TX: Record<Locale, {
+  reward: string; action: string; time: string; who: string; fund: string; noAmount: string; noDeposit: string; tasks: string; seeRules: string;
+  left: string; startsIn: string; noEnd: string; forAll: string; uaOk: string; notUA: string; onlyNew: string; kyc: string; region: (r: string) => string;
+  todo: string; good: string; more: string; ex: string; exTasks: string; quote: string;
+  s: { reg: (v: string, kyc: boolean, nw: boolean) => string; act: Record<"trade" | "deposit" | "stake" | "hold" | "buy", (a: string, fut: boolean) => string>; free: string; rank: string; join: string; auto: string; manual: string };
+}> = {
+  uk: {
+    reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
+    left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна — можна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${r}`),
+    todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
+    s: {
+      reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
+      act: { trade: (a, f) => `Наторгуйте від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a) => `Внесіть депозит від ${a}`, stake: (a) => `Застейкайте від ${a}`, hold: (a) => `Тримайте на рахунку від ${a}`, buy: (a) => `Купіть на суму від ${a}` },
+      free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Register / Join» на сторінці акції", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення",
+    },
+  },
+  en: {
+    reward: "Reward", action: "What to do", time: "Time", who: "Who can join", fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
+    left: "left", startsIn: "starts in", noEnd: "no end date", forAll: "No restrictions found", uaOk: "Ukraine — OK", notUA: "Not for Ukraine", onlyNew: "New users only", kyc: "KYC", region: (r) => (r === "region" ? "Some regions" : `${r} only`),
+    todo: "What to do", good: "Good to know", more: "Show the full conditions", ex: "Tasks on the exchange page", exTasks: "Each task is a separate reward", quote: "As written in the rules",
+    s: {
+      reg: (v, kyc, nw) => `Sign up on ${v}${nw ? " (new account)" : ""}${kyc ? " and pass KYC" : ""}`,
+      act: { trade: (a, f) => `Trade from ${a}${f ? " in futures" : ""}`, deposit: (a) => `Deposit from ${a}`, stake: (a) => `Stake from ${a}`, hold: (a) => `Hold from ${a} on your account`, buy: (a) => `Buy for ${a} or more` },
+      free: "Do the promo's tasks — no deposit", rank: "Trade: your leaderboard place decides the reward", join: "Press “Register / Join” on the promo page", auto: "The reward is credited automatically", manual: "Claim the reward by hand after the end",
+    },
+  },
+  ru: {
+    reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
+    left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина — можно", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${r}`),
+    todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
+    s: {
+      reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
+      act: { trade: (a, f) => `Наторгуйте от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a) => `Внесите депозит от ${a}`, stake: (a) => `Застейкайте от ${a}`, hold: (a) => `Держите на счёте от ${a}`, buy: (a) => `Купите на сумму от ${a}` },
+      free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Register / Join» на странице акции", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания",
+    },
+  },
+};
+
+/** One summary tile: icon, label, 2–4 words; the full rule text opens on click (no JS needed). */
+function Tile({ icon, label, value, tone = "text-ink", children }: { icon: IconName; label: string; value: React.ReactNode; tone?: string; children?: React.ReactNode }) {
+  const head = (
+    <span className="flex items-start gap-3">
+      <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-white/[0.05] ${tone}`}><Icon name={icon} className="size-5" /></span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-xs font-semibold text-ink-3">{label}</span>
+        <span className={`block font-semibold leading-snug [overflow-wrap:anywhere] ${tone}`}>{value}</span>
+      </span>
+      {children ? <span aria-hidden="true" className="mt-1 text-xs text-ink-3 transition-transform group-open:rotate-180">▾</span> : null}
+    </span>
+  );
+  return children ? (
+    <details className="group card p-4 hover:transform-none">
+      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">{head}</summary>
+      <div className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-ink-2 [overflow-wrap:anywhere]">{children}</div>
+    </details>
+  ) : <div className="card p-4 hover:transform-none">{head}</div>;
+}
+
+/** "Sign Up & Deposit, Get 40 USDT" + its one-line description from a campaign page (KuCoin-style task lists). */
+function tasksOf(blocks: Array<{ t: string; x: string }>): Array<{ title: string; desc?: string }> {
+  const out: Array<{ title: string; desc?: string }> = [];
+  for (let i = 0; i < blocks.length && out.length < 6; i++) {
+    const b = blocks[i], x = b.x.trim();
+    if (b.t !== "h" || x.length > 90 || !/(\d[\d,.]*\s?(USDT|USDC|USD|BTC|ETH)\b|\$\s?\d)/.test(x)) continue;
+    const next = blocks[i + 1];
+    out.push({ title: x, desc: next && next.t !== "h" && next.x.length <= 220 ? next.x.trim() : undefined });
+  }
+  return out.length >= 2 ? out : [];
+}
+
 const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: string; claim: string; watch: string; title: string; note: (venue: string) => string }> = {
   uk: { how: "Як це працює — простими словами", steps: "Що зробити", when: "Коли прийде нагорода", form: "У якій формі", claim: "Як отримати", watch: "На що звернути увагу", title: "Часті питання",
     note: (v) => `Пояснення склав AI тільки за офіційними правилами ${v}. Він може помилитися — перед участю звірте важливе з умовами нижче.` },
@@ -300,16 +370,10 @@ export default async function PromoPage({ params }: { params: Params }) {
               {m.confirmed && <span className="rounded-md bg-teal/10 px-2 py-1 text-teal">✓ {t.card.confirmed}</span>}
               {(m.hot ?? 0) >= 60 && <span className="rounded-md bg-amber/10 px-2 py-1 text-amber"><Icon name="flame" /> {m.hot}°</span>}
             </div>
-            {/* H1 = our short title (display font only for short text); the full headline is the subtitle — audit 08.11 */}
-            {own ? (
-              <>
-                <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{linkCoins(own)}</h1>
-                <p className="mt-2 text-lg leading-snug text-ink-2">{isAggregator ? `${p.title} — Airdrop` : p.title}</p>
-              </>
-            ) : (
-              <h1 className="mt-3 text-2xl font-bold leading-tight tracking-tight sm:text-3xl">{isAggregator ? `${p.title} — Airdrop` : p.title}</h1>
-            )}
-            <p className="mt-2 text-ink-3">{p.venue.name}</p>
+            {/* H1 = our short title; the exchange's own headline is in the rules below (audit 12.11: less text up top) */}
+            <h1 className={`mt-3 leading-tight tracking-tight ${own ? "font-display text-2xl font-semibold sm:text-4xl" : "text-2xl font-bold sm:text-3xl"}`} title={own ? p.title : undefined}>
+              {own ? linkCoins(own) : sentenceCase(isAggregator ? `${p.title} — Airdrop` : p.title)}
+            </h1>
             {coins.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {coins.map((c) => (
@@ -331,44 +395,100 @@ export default async function PromoPage({ params }: { params: Params }) {
           <HideButton id={p.id} lang={lang} size="lg" />
         </div>
 
-        {/* the three things people ask first: when it starts, when it ends, how much one person can get */}
-        {p.category !== "farming" && (
-          <div className={`mt-8 grid gap-3 sm:grid-cols-2 ${m.minEntry ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
-            <div className="card p-4 hover:transform-none">
-              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.start}</div>
-              <div className="mt-1 font-mono text-sm font-bold text-ink">{p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</div>
+        {/* the four answers people look for, 2–4 words each; details open on click (audit 12.11) */}
+        {p.category !== "farming" && (() => {
+          const U = UI_TX[lang];
+          const po = m.payout;
+          const kyc = !!m.requires?.includes("kyc") || !!det?.facts.some((f) => f.k === "kyc");
+          const amt = m.minEntry ? money(m.minEntry.amount, m.minEntry.unit === "USD" ? "USD" : m.minEntry.unit, lang) : "";
+          const actIcon: Record<string, IconName> = { trade: "trend", deposit: "cash", stake: "bank", hold: "wallet", buy: "cash" };
+          const ending = p.endsAt && p.endsAt - now < 3 * 86400_000;
+          const whoParts: Array<[string, string]> = [];
+          if (m.geo?.noUA) whoParts.push([U.notUA, "text-rose"]);
+          if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
+          if (m.forNew) whoParts.push([U.onlyNew, "text-sky"]);
+          if (kyc) whoParts.push([U.kyc, "text-ink"]);
+          return (
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <Tile icon="coins" label={U.reward} tone="text-lime"
+                value={<>{pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
+                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}</>}>
+                {pu?.text && <p>“{pu.text}”</p>}
+                {!pu && p.reward && <p>{R.poolShared} {p.reward.label}</p>}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {po?.form ? <span className={`rounded-md px-2 py-0.5 font-bold ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span> : null}
+                  {po ? timingChips(po, lang).map((c) => <span key={c} className="rounded-md bg-white/5 px-2 py-0.5 font-semibold">{c}</span>) : null}
+                </div>
+                <p className="mt-2 text-ink-3">{FORM_TEXT[lang][po?.form ?? "unknown"]}</p>
+              </Tile>
+              <Tile icon={m.noDeposit ? "checkCircle" : m.minEntry ? actIcon[m.minEntry.kind] : "scroll"} label={U.action} tone={m.noDeposit ? "text-teal" : m.minEntry ? "text-amber" : "text-ink"}
+                value={m.noDeposit ? U.noDeposit : m.minEntry ? `${R.kind[m.minEntry.kind]} ${R.from} ${amt}` : U.seeRules}>
+                {m.minEntry?.text ? <p>“{m.minEntry.text}”</p> : undefined}
+              </Tile>
+              <Tile icon="hourglass" label={U.time} tone={ending ? "text-rose" : "text-ink"}
+                value={p.startsAt && p.startsAt > now ? `${U.startsIn} ${duration(p.startsAt - now, t.time)}` : p.endsAt ? `${U.left} ${duration(p.endsAt - now, t.time)}` : U.noEnd}>
+                <p>{t.detail.start}: {p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</p>
+                <p>{t.detail.end}: {p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</p>
+                {cal && (
+                  <div className="mt-2 flex flex-wrap gap-x-3 font-bold">
+                    <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
+                    <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
+                  </div>
+                )}
+              </Tile>
+              <Tile icon={m.geo?.noUA ? "alert" : "user"} label={U.who} tone={whoParts[0]?.[1] ?? "text-ink"}
+                value={whoParts.length ? whoParts.map((x) => x[0]).join(" · ") : det ? U.uaOk : U.forAll}>
+                {m.geo?.text ? <p>“{m.geo.text}”</p> : det?.facts.filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").slice(0, 3).map((f) => <p key={f.text}>{f.text.replace(/^\s*[-–•]\s*/, "")}</p>)}
+              </Tile>
             </div>
-            <div className="card p-4 hover:transform-none">
-              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.end}</div>
-              <div className="mt-1 font-mono text-sm font-bold text-ink">{p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</div>
-              {p.endsAt && <div className={`mt-0.5 text-xs font-bold ${p.endsAt - now < 3 * 86400_000 ? "text-rose" : "text-lime"}`}><Icon name="hourglass" /> {R.left} {duration(p.endsAt - now, t.time)}</div>}
-              {cal && (
-                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold">
-                  <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>
-                  <a href={icsHref([cal])} download={`promo-${slug.split("-")[0]}.ics`} className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> {R.calIcs}</a>
-                  <span className="font-normal text-ink-3">{R.calNote}</span>
+          );
+        })()}
+
+        {/* what to do — steps, plus the exchange's own task list when its page has one (audit 12.11) */}
+        {p.category !== "farming" && (() => {
+          const U = UI_TX[lang];
+          const kyc = !!m.requires?.includes("kyc") || !!det?.facts.some((f) => f.k === "kyc");
+          const amt = m.minEntry ? money(m.minEntry.amount, m.minEntry.unit === "USD" ? "USD" : m.minEntry.unit, lang) : "";
+          const needsJoin = !!det?.facts.some((f) => f.k === "how" && /register|join|sign ?up|opt.?in|зареєстр|приєдна|натисн|зарегистр|нажмите/i.test(f.text));
+          const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : [
+            ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
+            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
+            ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
+            ["gift", m.payout?.manual ? U.s.manual : U.s.auto],
+          ];
+          const tasks = det ? tasksOf(det.blocks) : [];
+          const warn = (ex?.watch?.length ? ex.watch : (det?.facts ?? []).map((f) => f.text).filter((x) => /\b(first|only|exclusive|not eligible|excluded|cannot|limited)\b|перш|лише|виключно|не можуть|обмежен|только|первых/i.test(x)))
+            .map((x) => x.replace(/^\s*[-–•]\s*/, "")).filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
+          return (
+            <section className="card mt-4 p-5 hover:transform-none sm:p-6">
+              <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight"><Icon name="checkCircle" className="size-5 text-lime" /> {U.todo}</h2>
+              <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {steps.map(([ic, x], i) => (
+                  <li key={i} className="flex gap-3 rounded-xl bg-white/[0.03] p-3">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
+                    <span className="min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]"><Icon name={ic} className="mr-1 text-ink-3" />{x}</span>
+                  </li>
+                ))}
+              </ol>
+              {tasks.length > 0 && (
+                <div className="mt-5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-ink-3">{U.ex} · <span className="normal-case tracking-normal">{U.exTasks}</span></h3>
+                  <ul className="mt-2 divide-y divide-line">
+                    {tasks.map((x) => (
+                      <li key={x.title} className="py-2.5 text-sm"><span className="font-semibold text-ink">{x.title}</span>{x.desc ? <span className="block text-xs text-ink-3">{x.desc}</span> : null}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
-            </div>
-            <div className="card p-4 hover:transform-none ring-1 ring-lime/20">
-              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.perUser}</div>
-              {pu ? (
-                <div className="mt-1 font-mono text-lg font-bold text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}
-                  {puUsd !== undefined && !/^USD/.test(pu.unit) && <span className="text-sm text-ink-3"> ≈{compactUsd(puUsd)}</span>}
+              {warn.length > 0 && (
+                <div className="mt-5 rounded-xl border border-amber/25 bg-amber/[0.05] p-3">
+                  <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber"><Icon name="alert" /> {U.good}</h3>
+                  <ul className="mt-2 space-y-1.5 text-sm text-ink-2">{warn.map((x) => <li key={x} className="flex gap-2"><span className="text-amber">•</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>)}</ul>
                 </div>
-              ) : (
-                <div className="mt-1 text-xs leading-snug text-ink-2">{p.reward ? `${R.poolShared} ${p.reward.label}${rewardUsd ? ` ≈ ${compactUsd(rewardUsd)}` : ""}` : R.noCapShort}</div>
               )}
-            </div>
-            {m.minEntry && (
-              <div className="card p-4 hover:transform-none" title={m.minEntry.text}>
-                <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{R.minTitle}</div>
-                <div className="mt-1 font-mono text-lg font-bold text-amber">{R.kind[m.minEntry.kind]} {R.from} {m.minEntry.unit === "USD" ? "$" : ""}{m.minEntry.amount.toLocaleString(nfLocale(lang))}{m.minEntry.unit !== "USD" ? ` ${m.minEntry.unit}` : ""}</div>
-                <div className="mt-1 text-xs leading-snug text-ink-3">“{m.minEntry.text}”</div>
-              </div>
-            )}
-          </div>
-        )}
+            </section>
+          );
+        })()}
 
         {/* mix promos (audit 12.11): same exchange, same time, the same action counts in each */}
         {combos.length > 0 && (
@@ -395,6 +515,14 @@ export default async function PromoPage({ params }: { params: Params }) {
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
 
+        {/* everything below is detail: folded by default (audit 12.11); #rules opens it (Chrome expands <details> on a fragment) */}
+        <details className="group mt-6 rounded-2xl border border-line bg-white/[0.015]">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-sm font-bold text-ink-2 hover:text-ink [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2"><Icon name="scroll" className="size-5 text-lime" /> {UI_TX[lang].more}</span>
+            <span aria-hidden="true" className="transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div className="px-1 pb-1 sm:px-2 sm:pb-2">
+            <p className="px-4 pt-1 text-sm text-ink-2"><span className="text-ink-3">{p.venue.name}:</span> {sentenceCase(p.title)}</p>
         {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}
         {p.category !== "farming" && det && (() => {
           const po = m.payout;
@@ -455,12 +583,6 @@ export default async function PromoPage({ params }: { params: Params }) {
             <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="bulb" className="size-5 text-lime" /> {FQ.how}</h2>
             <p className="mt-1 text-xs text-ink-3">{FQ.note(p.venue.name)}</p>
             <p className="mt-4 text-[15px] leading-relaxed text-ink [overflow-wrap:anywhere]">{ex.summary}</p>
-            <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3">{FQ.steps}</h3>
-            <ol className="mt-3 space-y-3 text-sm text-ink-2">
-              {ex.steps.map((x, i) => (
-                <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>
-              ))}
-            </ol>
             <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 [&>*]:min-w-0">
               {([["clock", FQ.when, ex.payout.when], ["gift", FQ.form, ex.payout.form], ["inbox", FQ.claim, ex.payout.how]] as const).map(([ic, k, v]) => (
                 <div key={k} className="rounded-xl border border-line bg-white/[0.02] p-4">
@@ -526,14 +648,6 @@ export default async function PromoPage({ params }: { params: Params }) {
               <div className={`text-sm font-bold ${isAggregator ? "text-amber" : "text-lime"}`}>{isAggregator ? <><Icon name="alert" /> {t.detail.aggregator}</> : <><Icon name="check" /> {t.detail.official}</>}</div>
               <p className="mt-2 text-sm leading-relaxed text-ink-2">{isAggregator ? t.detail.aggregatorNote : t.detail.officialNote}</p>
             </div>
-            <div className="card p-6 hover:transform-none">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.detail.steps}</h2>
-              <ol className="mt-4 space-y-3 text-sm text-ink-2">
-                {[t.detail.step1, t.detail.step2, t.detail.step3, t.detail.step4].map((s, i) => (
-                  <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span>{s}</li>
-                ))}
-              </ol>
-            </div>
           </aside>
         </div>
 
@@ -555,6 +669,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{R.none(p.venue.name)}</p>
           )}
         </section>}
+
+          </div>
+        </details>
 
         {/* more questions — same AI explainer */}
         {faq.length > 0 && (
