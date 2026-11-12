@@ -34,7 +34,8 @@ export function exposure(symbol: string): Array<{ coin: string; share: number }>
 
 export interface DexHedge { legs: Array<{ coin: string; share: number; venue?: string; fundingApr?: number }>; hedgedApy?: number; possible: boolean }
 
-/** Hedged APY = pool APY + Σ share × best short funding (positive funding pays the short). */
+const HEDGE_LEV = 2;   // same as Launchpool hedges (lib/proscons.ts)
+/** Hedged APY = (pool APY + Σ share × best short funding) ÷ (1 + margin for the shorts); positive funding pays the short. */
 export function dexHedge(symbol: string, apy: number, h: Record<string, Hedge>): DexHedge | undefined {
   const exp = exposure(symbol);
   if (!exp.length) return undefined;
@@ -45,5 +46,7 @@ export function dexHedge(symbol: string, apy: number, h: Record<string, Hedge>):
     return { coin, share, venue: best.ex, fundingApr: best.fundingApr };
   });
   const possible = legs.every((l) => l.venue);
-  return { legs, possible, hedgedApy: possible ? apy + legs.reduce((s, l) => s + l.share * (l.fundingApr ?? 0), 0) : undefined };
+  // the shorts need margin too: at 2× it is half of the shorted amount, so the yield is spread over deposit + margin
+  const margin = legs.reduce((s, l) => s + l.share / HEDGE_LEV, 0);
+  return { legs, possible, hedgedApy: possible ? (apy + legs.reduce((s, l) => s + l.share * (l.fundingApr ?? 0), 0)) / (1 + margin) : undefined };
 }

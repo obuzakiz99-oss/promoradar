@@ -173,6 +173,9 @@ const roundTrip = (amountUsd: number, depthUsd?: number) => {
   return 2 * Math.min(slip, 25) + 0.3;                                  // both sides + fees (~0.1% spot ×2, ~0.05% perp ×2)
 };
 
+/** Leverage assumed for the hedging short: 2× keeps the liquidation ~+50% away (new tokens jump 20–40% a day). */
+export const HEDGE_LEV = 2;
+
 export function hedgeCalc(pool: Pool, p: PoolProject, h: Record<string, Hedge>, amountUsd: number, now: number, maxUsd?: number): HedgeCalc {
   if (STABLE.has(pool.stake)) return { needed: false, possible: true };
   const hd = h[pool.stake];
@@ -182,7 +185,9 @@ export function hedgeCalc(pool: Pool, p: PoolProject, h: Record<string, Hedge>, 
   const days = Math.max(1, ((p.status === "live" ? p.end - now : p.end - p.start) / 86400_000));
   const amt = Math.max(amountUsd, 1);
   const costPct = roundTrip(amt, hd.spotDepthUsd);
-  const hedgedApr = pool.apr + best.fundingApr - (costPct * 365) / days;
+  // the short needs its own margin: at HEDGE_LEV× every $1 staked ties up 1/HEDGE_LEV more, so the yield is
+  // spread over stake + margin (audit 12.11: 173% + 44% funding was shown as 188% — on the stake alone)
+  const hedgedApr = (pool.apr + best.fundingApr - (costPct * 365) / days) / (1 + 1 / HEDGE_LEV);
   // largest size where round-trip costs stay ≤ half of the period yield:
   // 2·(0.3 + 2·a/depth) + 0.3 ≤ Y/2  →  a ≤ (Y/2 − 0.9) · depth / 4
   const periodYield = ((pool.apr + best.fundingApr) * days) / 365;
