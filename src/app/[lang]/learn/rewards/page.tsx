@@ -22,7 +22,7 @@ export default async function LearnRewards({ params }: { params: Params }) {
   const t = getDict(lang), R = REWARDS[lang];
   return (
     <>
-      <main className="mx-auto max-w-4xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="rewards" title={R.title} sub={R.sub} />
 
         <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2 [&>*]:min-w-0">

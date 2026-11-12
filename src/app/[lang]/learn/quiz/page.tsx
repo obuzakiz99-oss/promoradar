@@ -59,9 +59,10 @@ export default async function LearnQuiz({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-2xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="quiz" title={Q.title} sub={Q.sub} />
-        <Quiz lang={lang} items={items} startHref={withBase(`/${lang}/learn/start/`)} />
+        {/* the section frame is wide (same for every tab); the quiz itself stays at a comfortable width */}
+        <div className="max-w-2xl"><Quiz lang={lang} items={items} startHref={withBase(`/${lang}/learn/start/`)} /></div>
         <a href={withBase(`/${lang}/best/`)} className="card mt-6 flex items-center justify-between gap-3 p-5 text-sm font-bold">
           <span>{({ uk: "Без тесту: готові варіанти на сьогодні — від найбезпечнішого до найдохіднішого", en: "Skip the quiz: today's ready picks — from safest to highest yield", ru: "Без теста: готовые варианты на сегодня — от самого безопасного до самого доходного" } as const)[lang]}</span><span className="text-lime">→</span>
         </a>

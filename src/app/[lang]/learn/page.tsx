@@ -22,7 +22,7 @@ export default async function LearnHub({ params }: { params: Params }) {
   const t = getDict(lang), L = LEARN[lang];
   return (
     <>
-      <main className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-12 sm:px-6">
         <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{L.hubTitle}</h1>
         <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{L.hubSub}</p>
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

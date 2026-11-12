@@ -31,7 +31,7 @@ export default async function LearnHow({ params }: { params: Params }) {
   const t = getDict(lang), H = LEARN[lang].how;
   return (
     <>
-      <main className="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="how" title={H.title} sub={H.sub} />
         <div className="mt-8 rounded-2xl border border-lime/25 bg-lime/[0.05] p-5">
           <h2 className="text-sm font-bold uppercase tracking-wider text-lime">{LEARN[lang].guides}</h2>

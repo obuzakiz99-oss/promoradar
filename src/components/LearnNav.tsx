@@ -30,5 +30,5 @@ export function LearnHeader({ lang, active, title, sub }: { lang: Locale; active
 
 /** Numbered step list with tick boxes (progress saved in the browser under `id`). */
 export function Steps({ steps, id, lang }: { steps: Array<[string, string]>; id: string; lang: Locale }) {
-  return <CheckSteps id={id} lang={lang} steps={steps.map(([h, b]) => ({ h, b }))} />;
+  return <CheckSteps id={id} lang={lang} cols={2} steps={steps.map(([h, b]) => ({ h, b }))} />;
 }

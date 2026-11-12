@@ -22,7 +22,7 @@ export default async function LearnSafety({ params }: { params: Params }) {
   const t = getDict(lang), S = LEARN[lang].safety;
   return (
     <>
-      <main className="mx-auto max-w-4xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="safety" title={S.title} sub={S.sub} />
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {S.rules.map(([h, b], i) => (

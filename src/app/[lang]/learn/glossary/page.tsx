@@ -21,7 +21,7 @@ export default async function LearnGlossary({ params }: { params: Params }) {
   const terms = Object.entries(GLOSSARY[lang]).sort((a, b) => a[1][0].localeCompare(b[1][0], lang));
   return (
     <>
-      <main className="mx-auto max-w-4xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="glossary" title={G.title} sub={G.sub} />
         <dl className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {terms.map(([k, [name, def]]) => (
