@@ -110,6 +110,13 @@ async function getPromosLive(): Promise<Collected> {
       const po = payoutOf(d.blocks.map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x)));
       if (po) meta.payout = po;
       if (/\b(futures|perps?|perpetual|contract|CFD)\b/i.test(`${p.title} ${tm.minEntry?.text ?? ""}`)) meta.futures = true;
+      // a small headline amount someone "gets" is per person, not the pool ("Get $2 in WLFI" while the rules say
+      // 60,000 WLFI in total): keep it as the per-person figure and look for the real pool in the rules (audit 12.11)
+      const perPersonHeadline = !!p.reward && (p.reward.usd ?? Infinity) < 100 && /\b(get|receive|claim|earn|grab|enjoy)\s+(up to\s+)?\$?\s?\d/i.test(p.title);
+      if (perPersonHeadline && p.reward) {
+        meta.perUser ??= { amount: p.reward.amount, unit: p.reward.unit, usd: p.reward.usd, text: p.title };
+        p.reward = undefined;
+      }
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
       if (!p.reward && p.category !== "farming") {
         const pool = poolOf([p.title, ...d.blocks.map((b) => b.x)]);

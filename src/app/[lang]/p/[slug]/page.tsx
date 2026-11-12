@@ -215,6 +215,12 @@ export default async function PromoPage({ params }: { params: Params }) {
   const { px } = await prices().catch(() => ({ px: {} as Record<string, number> }));
   const inUsd = (amount: number, unit: string, known?: number) => known ?? (/^USD/.test(unit) ? undefined : px[unit.toUpperCase()] ? amount * px[unit.toUpperCase()] : undefined);
   const rewardUsd = p.reward && p.reward.unit !== "USD" ? inUsd(p.reward.amount, p.reward.unit, p.reward.usd) : undefined;
+  // coin tickers in our title link to their token page ("Аірдроп: WLFI → …"), audit 12.11
+  const linkCoins = (text: string): React.ReactNode => {
+    if (!coins.length) return text;
+    const re = new RegExp(`\\b(${coins.map((c) => c.sym.replace(/[^A-Z0-9]/gi, "")).join("|")})\\b`, "g");
+    return text.split(re).map((part, i) => (i % 2 ? <Link key={i} href={`/${lang}/t/${part}`} className="underline decoration-line-2 decoration-2 underline-offset-4 hover:text-lime">{part}</Link> : part));
+  };
   const pu = m.perUser;
   const puUsd = pu ? inUsd(pu.amount, pu.unit, pu.usd) : undefined;
   const perUserCell: React.ReactNode = pu ? (
@@ -258,7 +264,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             {/* H1 = our short title (display font only for short text); the full headline is the subtitle — audit 08.11 */}
             {own ? (
               <>
-                <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{own}</h1>
+                <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">{linkCoins(own)}</h1>
                 <p className="mt-2 text-lg leading-snug text-ink-2">{isAggregator ? `${p.title} — Airdrop` : p.title}</p>
               </>
             ) : (
