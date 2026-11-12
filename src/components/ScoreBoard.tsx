@@ -41,10 +41,15 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
   const pick = (x: Country) => { setC(x); try { localStorage.setItem("pr:country", x); } catch { /* blocked */ } };
   const val = (r: ScoreRow) => (sort === "entryMedian" ? -(r.entryMedian ?? 1e12) : (r[sort] as number | undefined) ?? -1);
   const rows = [...data[c]].sort((a, b) => val(b) - val(a));
+  // Columns filled for fewer than a quarter of the exchanges are noise (mostly "—"): hide them until the data fills in.
+  const filled = (k: "launchpools" | "usdtEarn") => rows.filter((r) => (r[k] ?? 0) > 0).length >= rows.length / 4;
+  const show: Record<Key, boolean> = { score: true, promos: true, poolUsd: true, perUserMedian: true, entryMedian: true, noDepositPct: true, launchpools: filled("launchpools"), usdtEarn: filled("usdtEarn") };
+  const keys = (Object.keys(T.cols) as Key[]).filter((k) => show[k]);
+  const arrow = (k: Key) => (k === "entryMedian" ? " ↑" : " ↓"); // entry sorts low → high
 
   const Th = ({ k, className = "" }: { k: Key; className?: string }) => (
-    <th className={`px-3 py-2 text-right ${className}`}>
-      <button type="button" onClick={() => setSort(k)} className={`text-xs font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? " ↓" : ""}</button>
+    <th className={`px-3 py-2 text-right ${className}`} aria-sort={sort === k ? (k === "entryMedian" ? "ascending" : "descending") : undefined}>
+      <button type="button" onClick={() => setSort(k)} className={`text-xs font-bold uppercase tracking-wider ${sort === k ? "text-lime" : "text-ink-3 hover:text-ink"}`}>{T.cols[k]}{sort === k ? arrow(k) : ""}</button>
     </th>
   );
 
@@ -65,7 +70,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
             <tr>
               <th className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-ink-3">#</th>
               <th className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-ink-3"></th>
-              <Th k="score" /><Th k="promos" /><Th k="poolUsd" /><Th k="perUserMedian" /><Th k="entryMedian" /><Th k="noDepositPct" /><Th k="launchpools" /><Th k="usdtEarn" />
+              {keys.map((k) => <Th key={k} k={k} />)}
             </tr>
           </thead>
           <tbody>
@@ -88,8 +93,8 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
                 <td className="px-3 py-3 text-right font-mono">{usd(r.perUserMedian) ?? T.none}{r.perUserMax ? <span className="block text-xs text-ink-3">max {usd(r.perUserMax)}</span> : null}</td>
                 <td className="px-3 py-3 text-right font-mono">{r.entryMedian === undefined ? T.none : r.entryMedian === 0 ? "$0" : usd(r.entryMedian)}</td>
                 <td className="px-3 py-3 text-right font-mono">{r.noDepositPct}%</td>
-                <td className="px-3 py-3 text-right font-mono">{r.launchpools || T.none}</td>
-                <td className="px-3 py-3 text-right font-mono">{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</td>
+                {show.launchpools && <td className="px-3 py-3 text-right font-mono">{r.launchpools || T.none}</td>}
+                {show.usdtEarn && <td className="px-3 py-3 text-right font-mono">{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</td>}
               </tr>
             ))}
           </tbody>
@@ -99,8 +104,8 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
       {/* phone cards */}
       <div className="mt-5 grid gap-3 lg:hidden">
         <div className="scroll-x -mx-1 flex gap-1.5 px-1">
-          {(Object.keys(T.cols) as Key[]).map((k) => (
-            <button key={k} type="button" onClick={() => setSort(k)} className={`h-8 shrink-0 rounded-lg px-2.5 text-xs font-bold ${sort === k ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2"}`}>{T.cols[k]}</button>
+          {keys.map((k) => (
+            <button key={k} type="button" onClick={() => setSort(k)} aria-pressed={sort === k} className={`h-8 shrink-0 rounded-lg px-2.5 text-xs font-bold ${sort === k ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2"}`}>{T.cols[k]}</button>
           ))}
         </div>
         {rows.map((r, i) => (
@@ -117,7 +122,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
               <div><div className="text-xs text-ink-3">{T.cols.entryMedian}</div>{r.entryMedian === undefined ? T.none : r.entryMedian === 0 ? "$0" : usd(r.entryMedian)}</div>
               <div><div className="text-xs text-ink-3">{T.cols.poolUsd}</div>{usd(r.poolUsd) ?? T.none}</div>
               <div><div className="text-xs text-ink-3">{T.cols.noDepositPct}</div>{r.noDepositPct}%</div>
-              <div><div className="text-xs text-ink-3">{T.cols.usdtEarn}</div>{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</div>
+              {show.usdtEarn && <div><div className="text-xs text-ink-3">{T.cols.usdtEarn}</div>{r.usdtEarn ? `${r.usdtEarn.toFixed(1)}%` : T.none}</div>}
             </div>
             {(r.kycPct !== undefined || r.hidden > 0) && (
               <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-bold">
