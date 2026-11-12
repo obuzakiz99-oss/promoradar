@@ -59,7 +59,7 @@ export default async function LearnQuiz({ params }: { params: Params }) {
 
   return (
     <>
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="quiz" title={Q.title} sub={Q.sub} />
         <Quiz lang={lang} items={items} startHref={withBase(`/${lang}/learn/start/`)} />
         <a href={withBase(`/${lang}/best/`)} className="card mt-6 flex items-center justify-between gap-3 p-5 text-sm font-bold">

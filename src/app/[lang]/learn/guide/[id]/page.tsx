@@ -32,7 +32,7 @@ export default async function GuidePage({ params }: { params: Params }) {
   const t = getDict(lang), L = LEARN[lang], v = venueOf(g.venue);
   return (
     <>
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <Link href={`/${lang}/learn/how`} className="text-sm font-bold text-ink-3 hover:text-ink">← {L.cards.how[0]}</Link>
         <div className="mt-5 flex items-center gap-3">
           <VenueLogo v={v} size={44} />

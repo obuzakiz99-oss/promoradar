@@ -30,7 +30,8 @@ export default async function DocPage({ params }: { params: Params }) {
   const base = `https://${SITE.domain}`;
   return (
     <>
-      <main className="mx-auto max-w-3xl px-4 pb-20 pt-12 sm:px-6">
+      {/* same page frame as every other page (owner 12.11); the text itself keeps a reading width */}
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6"><div className="max-w-3xl">
         {doc === "api" ? (
           <>
             <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{API_DOC[lang].title}</h1>
@@ -65,7 +66,7 @@ export default async function DocPage({ params }: { params: Params }) {
             </div>
           </>
         )}
-      </main>
+      </div></main>
       <Footer t={t} fetchedAt={Date.now()} lang={lang} />
     </>
   );
