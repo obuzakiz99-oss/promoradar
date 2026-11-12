@@ -153,3 +153,17 @@ html[data-novice="1"] .nov-1col { grid-template-columns: minmax(0, 1fr) !importa
 main :where(p, li, dd, blockquote) { overflow-wrap: anywhere; }
 /* grid/flex children never get wider than their column because of one long word */
 .card { min-width: 0; }
+
+/* Wide data tables on phones (audit 12.11): the first column (pool / token / date) stays pinned while the rest
+   scrolls sideways, and the right edge fades to hint that there is more. Detail rows (colspan) are left alone. */
+@media (max-width: 639px) {
+  .overflow-x-auto > table :is(th, td):first-child:not([colspan]) {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: var(--color-bg);
+    box-shadow: 1px 0 0 var(--color-line);
+  }
+  .overflow-x-auto > table thead :is(th):first-child { background-color: var(--color-surface); }
+  .overflow-x-auto:has(> table) { mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent); }
+}

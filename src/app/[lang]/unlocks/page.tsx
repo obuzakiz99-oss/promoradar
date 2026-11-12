@@ -131,7 +131,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                             <VenueLogo v={logo(u)} size={28} rounded="rounded-full" />
                             <div className="min-w-0">
                               {href ? <a href={href} className="font-bold hover:text-lime">{u.sym}</a> : <span className="font-bold">{u.sym}</span>}
-                              <div className="break-words text-xs text-ink-3">{u.name}{u.unlockedPct ? ` · ${u.unlockedPct.toFixed(0)}% ${T.already}` : ""}</div>
+                              <div className="break-words text-xs text-ink-3">{u.name && u.name.toLowerCase() !== u.sym.toLowerCase() ? u.name : ""}{u.name && u.name.toLowerCase() !== u.sym.toLowerCase() && u.unlockedPct ? " · " : ""}{u.unlockedPct ? `${u.unlockedPct.toFixed(0)}% ${T.already}` : ""}</div>
                             </div>
                           </div>
                         </td>
