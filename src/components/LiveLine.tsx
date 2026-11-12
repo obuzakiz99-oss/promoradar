@@ -1,4 +1,5 @@
 "use client";
+import { REFRESH_MIN } from "@/config/refresh";
 import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 
@@ -16,7 +17,7 @@ export function LiveLine({ at, newDay, lang }: { at: number; newDay: number; lan
   const age = now === null ? 0 : Math.max(0, now - at);
   const mins = Math.round(age / 60_000);
   const ago = mins < 1 ? T.justNow : mins < 90 ? T.min(mins) : T.hr(Math.round(mins / 60));
-  const next = Math.max(1, 30 - (mins % 30));
+  const next = Math.max(1, REFRESH_MIN - (mins % REFRESH_MIN));
   return (
     <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-ink-3">
       <span className={`size-1.5 rounded-full ${mins > 90 ? "bg-amber" : "bg-lime"}`} />

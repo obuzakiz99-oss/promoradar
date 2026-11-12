@@ -364,15 +364,17 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <div className="mt-1 text-xs font-semibold text-ink-3">
                   {live ? `${L.endsIn} ${duration(p.end - now, t.time)}` : `${L.startsIn} ${duration(p.start - now, t.time)}`}
                 </div>
+                {/* pick this pool: the summary above follows it and it stays on top while the amount changes */}
+                {r.profit !== undefined && (
+                  <button type="button" onClick={() => setPicked(isPicked ? null : rowKey(r))} aria-pressed={isPicked}
+                    className={`relative z-10 mt-1 inline-flex min-h-9 items-center gap-1.5 rounded-lg px-2 text-xs font-bold ${isPicked ? "bg-lime/10 text-lime" : "text-ink-3 hover:text-ink"}`}>
+                    <span aria-hidden="true" className={`grid size-4 place-items-center rounded border ${isPicked ? "border-lime bg-lime text-on-accent" : "border-line-2"}`}>{isPicked ? "✓" : ""}</span>{PICK[lang].off}
+                  </button>
+                )}
               </div>
 
-              {/* actions */}
-              <div className="flex gap-2 lg:flex-col">
-                {/* pick this pool: the summary above follows it and it stays on top while the amount changes */}
-                <button type="button" onClick={() => setPicked(isPicked ? null : rowKey(r))} aria-pressed={isPicked}
-                  className={`btn relative z-10 h-11 flex-1 px-4 text-sm ${isPicked ? "border border-lime/60 bg-lime/10 text-lime" : "btn-ghost"}`}>{isPicked ? `✓ ${PICK[lang].on}` : PICK[lang].off}</button>
-                <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-ghost relative z-10 h-11 flex-1 px-4 text-sm">{OPEN[lang]}</a>
-              </div>
+              {/* one action: the rules page (the whole card links there too) */}
+              <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="btn btn-primary relative z-10 h-11 px-4 text-sm">{OPEN[lang]}</a>
 
               {/* where the price risk can be hedged with futures — visible right away */}
               {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (

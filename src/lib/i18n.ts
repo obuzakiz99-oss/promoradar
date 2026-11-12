@@ -1,3 +1,4 @@
+import { REFRESH_MIN } from "@/config/refresh";
 import type { Category, VenueKind } from "./types";
 
 export const LOCALES = ["uk", "en", "ru"] as const;
@@ -9,7 +10,7 @@ const uk = {
   langName: "Українська",
   nav: { promos: "Акції", how: "Як це працює", sources: "Джерела", pro: "Pro", telegram: "Telegram" },
   hero: {
-    kicker: "Оновлюється кожні 30 хвилин",
+    kicker: `Оновлюється кожні ${REFRESH_MIN} хвилин`,
     radar: { all: "Усі", hint: "Натисніть на біржу на радарі — покажемо її найкращі акції", promos: "акцій", open: "Відкрити", allOf: "Усі акції біржі", cats: { airdrop: "Airdrop", competition: "Змагання", bonus: "Бонуси", earn: "Earn", listing: "Лістинги" } },
     title1: "Промоакції бірж і DeFi",
     title2: "в одному місці",
@@ -106,7 +107,7 @@ const uk = {
     title: "PromoRadar Pro",
     sub: "Дізнавайтесь про акції першими і знайте, скільки реально можна заробити.",
     free: "Безкоштовно", month: "/міс", year: "/рік",
-    freeFeatures: ["Усі акції бірж, DEX і DeFi", "Фільтри та пошук", "Оновлення кожні 30 хв"],
+    freeFeatures: ["Усі акції бірж, DEX і DeFi", "Фільтри та пошук", `Оновлення кожні ${REFRESH_MIN} хв`],
     proFeatures: ["Миттєві сповіщення в Telegram", "Оцінка прибутку для кожної акції", "Персональні фільтри та вотчліст", "Нагадування про дедлайни", "Без реклами"],
     cta: "Отримати Pro", soon: "Оплата відкриється найближчим часом — залиште заявку в Telegram", popular: "Найпопулярніше",
   },
@@ -122,7 +123,7 @@ const en: Dict = {
   langName: "English",
   nav: { promos: "Promos", how: "How it works", sources: "Sources", pro: "Pro", telegram: "Telegram" },
   hero: {
-    kicker: "Refreshed every 30 minutes",
+    kicker: `Refreshed every ${REFRESH_MIN} minutes`,
     radar: { all: "All", hint: "Tap an exchange on the radar to see its best promos", promos: "promos", open: "Open", allOf: "All promos", cats: { airdrop: "Airdrop", competition: "Contests", bonus: "Bonuses", earn: "Earn", listing: "Listings" } },
     title1: "Exchange & DeFi promos",
     title2: "in one place",
@@ -216,7 +217,7 @@ const en: Dict = {
     title: "PromoRadar Pro",
     sub: "Hear about promos first and know what you can actually earn.",
     free: "Free", month: "/mo", year: "/yr",
-    freeFeatures: ["All exchange, DEX and DeFi promos", "Filters & search", "Refreshed every 30 min"],
+    freeFeatures: ["All exchange, DEX and DeFi promos", "Filters & search", `Refreshed every ${REFRESH_MIN} min`],
     proFeatures: ["Instant Telegram alerts", "Profit estimate for every promo", "Personal filters & watchlist", "Deadline reminders", "No ads"],
     cta: "Get Pro", soon: "Checkout opens soon — join the waitlist on Telegram", popular: "Most popular",
   },
@@ -230,7 +231,7 @@ const ru: Dict = {
   langName: "Русский",
   nav: { promos: "Акции", how: "Как это работает", sources: "Источники", pro: "Pro", telegram: "Telegram" },
   hero: {
-    kicker: "Обновляется каждые 30 минут",
+    kicker: `Обновляется каждые ${REFRESH_MIN} минут`,
     radar: { all: "Все", hint: "Нажмите на биржу на радаре — покажем её лучшие акции", promos: "акций", open: "Открыть", allOf: "Все акции биржи", cats: { airdrop: "Airdrop", competition: "Конкурсы", bonus: "Бонусы", earn: "Earn", listing: "Листинги" } },
     title1: "Промоакции бирж и DeFi",
     title2: "в одном месте",
@@ -324,7 +325,7 @@ const ru: Dict = {
     title: "PromoRadar Pro",
     sub: "Узнавайте об акциях первыми и знайте, сколько реально можно заработать.",
     free: "Бесплатно", month: "/мес", year: "/год",
-    freeFeatures: ["Все акции бирж, DEX и DeFi", "Фильтры и поиск", "Обновление каждые 30 мин"],
+    freeFeatures: ["Все акции бирж, DEX и DeFi", "Фильтры и поиск", `Обновление каждые ${REFRESH_MIN} мин`],
     proFeatures: ["Мгновенные уведомления в Telegram", "Оценка прибыли для каждой акции", "Личные фильтры и вотчлист", "Напоминания о дедлайнах", "Без рекламы"],
     cta: "Получить Pro", soon: "Оплата откроется в ближайшее время — оставьте заявку в Telegram", popular: "Самый популярный",
   },

@@ -104,6 +104,24 @@ export default async function Launchpools({ params }: { params: Params }) {
               </div>
             ))}
           </dl>
+          {/* audit round 5: say plainly where the live pools come from, instead of only "N exchanges tracked" */}
+          <p className="mt-3 max-w-3xl text-xs leading-relaxed text-ink-3">
+            {(() => {
+              const by = (ok: (x: { ok: boolean; live: number }) => boolean) => Object.entries(status).filter(([, x]) => ok(x)).map(([id]) => venueOf(id).name);
+              const live = by((x) => x.ok && x.live > 0), idle = by((x) => x.ok && x.live === 0), down = by((x) => !x.ok);
+              const S = ({
+                uk: { live: "Активні пули зараз", idle: "без активних пулів", down: "тимчасово без даних", ann: "ще з оголошень" },
+                en: { live: "Live pools now", idle: "no live pools", down: "data temporarily unavailable", ann: "plus from announcements" },
+                ru: { live: "Активные пулы сейчас", idle: "без активных пулов", down: "временно без данных", ann: "ещё из объявлений" },
+              } as const)[lang];
+              return [
+                `${S.live}: ${live.join(", ") || "—"}`,
+                idle.length ? `${idle.join(", ")} — ${S.idle}` : "",
+                down.length ? `${down.join(", ")} — ${S.down}` : "",
+                ANN_IDS.length ? `${S.ann}: ${ANN_IDS.map((id) => venueOf(id).name).join(", ")}` : "",
+              ].filter(Boolean).join(" · ");
+            })()}
+          </p>
         </section>
 
         {/* board */}

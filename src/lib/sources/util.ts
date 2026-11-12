@@ -27,7 +27,8 @@ export function relayedAt(url: string): number | undefined {
 
 /** Small responses: use Next's fetch cache (ISR). */
 export async function getJson<T = any>(url: string, timeout = 12_000, init?: { method?: string; headers?: Record<string, string>; body?: string }): Promise<T> {
-  const relayed = !init?.body ? fromRelay(url) : undefined;
+  // POST bodies are relayed under "POST <url> <body>" (e.g. Bitget PoolX, which answers GitHub's runners with 429)
+  const relayed = fromRelay(init?.body ? `POST ${url} ${init.body}` : url);
   if (relayed) return JSON.parse(relayed) as T;
   const r = await fetch(url, { method: init?.method, body: init?.body, headers: { ...UA, ...init?.headers }, next: { revalidate: SITE.revalidateSeconds }, signal: AbortSignal.timeout(timeout) });
   if (!r.ok) throw new Error(`${r.status} ${url}`);

@@ -50,7 +50,7 @@ export async function getDexPools(): Promise<DexData> {
         category: pr.category === "Dexs" ? "DEX" : pr.category, chain: p.chain, symbol: p.symbol, meta: p.poolMeta || undefined,
         tvl: Math.round(p.tvlUsd), apy: +p.apy.toFixed(2), apyBase: p.apyBase ? +p.apyBase.toFixed(2) : undefined,
         apyReward: p.apyReward ? +p.apyReward.toFixed(2) : undefined, apy30d: p.apyMean30d ? +p.apyMean30d.toFixed(2) : undefined,
-        stable: !!p.stablecoin, il: p.ilRisk === "yes",
+        stable: !!p.stablecoin, il: p.ilRisk === "yes" && pr.category !== "Lending",   // a lending deposit has no impermanent loss
       });
     }
     out.sort((a, b) => b.tvl - a.tvl);
