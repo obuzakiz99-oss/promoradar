@@ -506,7 +506,8 @@ export function campaignBlocks(blocks: Block[], title: string): Block[] {
     if (x.length < 4 || UI.test(x) || WALLET.test(x)) continue;
     if (/^[\d\s:.,$%+\-–—/()]+[A-Z]{0,4}$/.test(x) && x.length < 24) continue;      // countdowns, bare numbers, "$815"
     if (/^\d+\s*(d|day|days|h|hrs?|hours?|m|mins?|s|secs?)$/i.test(x)) continue;
-    if (/^[\d\s:dhms]+$/i.test(x) && x.length < 20) continue;                       // "13D:19:11:49"
+    if (/^[\d\s:dhms]+$/i.test(x) && x.length < 20) continue;
+    if (/^[A-Z0-9]{2,12}\/[A-Z]{3,5}\s*[\d.,+\-%\s]+$/.test(x)) continue;                 // live price ticker "MAPO/USDT0.00097-0.04%"                       // "13D:19:11:49"
     if (/^(deposited|traded|my (rank|rewards?|trading vol)|your (rank|volume))\b/i.test(x)) continue;   // the viewer's own (empty) stats
     if (b.t === "tr" && b.cells && b.cells.filter((c) => /^[\d\s.,$%#-]*$/.test(c) || WALLET.test(c)).length >= b.cells.length - 1) continue;   // leaderboard rows
     out.push(b);
@@ -640,7 +641,7 @@ function dropBoilerplate(blocks: Block[], id: string, store: Record<string, Prom
   }
   // page widgets and cookie banners never belong to the rules
   blocks.forEach((b, i) => { if (JUNK.has(createHash("sha1").update(b.x.trim()).digest("base64url").slice(0, 16))) keep[i] = false; });
-  blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /\bcookies\b/i.test(b.x) || /^\S*\*{3,}\S*@\S+ won /.test(b.x) || /^Draws Left:|^Total Deposit[：:]/.test(b.x)) keep[i] = false; });
+  blocks.forEach((b, i) => { if (/^(Claimed|Progress)\s*:?\s*[\d/ ,]+$/.test(b.x) || /\bcookies\b/i.test(b.x) || /^\S*\*{3,}\S*@\S+ won /.test(b.x) || /^Draws Left:|^Total Deposit[：:]/.test(b.x) || /^[A-Z0-9]{2,12}\/[A-Z]{3,5}\s*[\d.,+\-%\s]+$/.test(b.x)) keep[i] = false; });
   return blocks.filter((_, i) => keep[i]);
 }
 /** A menu entry: a short label ("Spot", "Log in", "Español") or a label glued to its description ("SpotBuy and sell…"). */
