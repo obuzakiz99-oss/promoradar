@@ -35,6 +35,22 @@ for (const f of files.filter((x) => /[\\/](uk|ru)[\\/]/.test(x))) {
 }
 console.log(`ENGLISH UI WORDS on uk/ru pages: ${enLeft}`); for (const s of enEx) console.log(`     - ${s}`);
 
+/* ---------- 2b) untranslated promo titles on uk / ru pages (audit 12.11: keep the hand translation from rolling back) ---------- */
+const CYR = /[а-яіїєґё]/i;
+for (const lang of ["uk", "ru"]) {
+  const pages = files.filter((x) => new RegExp(`[\\\\/]${lang}[\\\\/]p[\\\\/]`).test(x));
+  const en = [];
+  for (const f of pages) {
+    const m = fs.readFileSync(f, "utf8").match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
+    const h1 = m ? textOf(m[1]).trim() : "";
+    if (h1 && !CYR.test(h1)) en.push(`${path.relative(OUT, f).replace(/\\/g, "/")}: "${h1.slice(0, 70)}"`);
+  }
+  console.log(`UNTRANSLATED promo titles (${lang}): ${en.length} of ${pages.length}`);
+  for (const s of en.slice(0, 8)) console.log(`     - ${s}`);
+  // GitHub Actions annotation: shows up on the run summary without failing the deploy
+  if (process.env.GITHUB_ACTIONS && en.length) console.log(`::warning title=Untranslated titles (${lang})::${en.length} of ${pages.length} promo pages have a title without Cyrillic — see data/translate-todo.json`);
+}
+
 /* ---------- 3) logic checks on every promo ---------- */
 const c = JSON.parse(fs.readFileSync(path.join(".next", "cache", "promos-build.json"), "utf8"));
 const now = c.fetchedAt, P = c.promos;
@@ -70,3 +86,4 @@ for (const f of files.filter((x) => /[\\/]uk[\\/]p[\\/]/.test(x))) {
   if (!/id="rules"/.test(h) && !/APR/.test(h)) noRules++;
 }
 console.log(`UK promo pages without a primary button: ${noJoin}, without rules block (non-farming): ${noRules}`);
+

@@ -61,6 +61,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # AI-written FAQ on promo pages (src/lib/faq.ts); empty = no FAQ
           FAQ_MODEL: ${{ vars.FAQ_MODEL || 'claude-opus-5-5' }}
 
+      # report only: broken text on pages, promo logic, untranslated uk/ru titles (warnings on the run, never blocks a deploy)
+      - name: Content audit
+        run: node scripts/audit-content.mjs
+        continue-on-error: true
+
       - name: Friendly 404 (old addresses redirect)
         run: node scripts/page-404.mjs
 

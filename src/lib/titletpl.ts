@@ -61,13 +61,16 @@ function subject(title: string, lang: L, venue: string): string | undefined {
   return parts.length ? parts.slice(0, 2).join(", ") : undefined;
 }
 
+// the parser's label is language-neutral ("2,000 USDC"); amounts under 10K get the reader's format ("2 000 USDC"),
+// bigger ones keep the compact K/M form
+const poolLabel = (r: NonNullable<Promo["reward"]>, lang: L) => (r.amount > 0 && r.amount < 1e4 ? money(r.amount, r.unit, lang) : r.label);
 const cyr = (s: string) => /[а-яіїєґё]/i.test(s);
 
 export function titleOf(p: Promo, lang: L): string | undefined {
   const m = p.meta ?? {};
   if (p.category === "farming" || p.venue.kind === "airdrop") return undefined;
   const much = m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
-    : m.aprPct !== undefined ? `+${m.aprPct}% APR` : p.reward ? POOL[lang](p.reward.label) : undefined;
+    : m.aprPct !== undefined ? `+${m.aprPct}% APR` : p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined;
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;
   const subj = subject(p.titleOrig ?? p.title, lang, p.venue.name);
   const kind = subj ? `${KIND[lang][p.category]}: ${subj}` : KIND[lang][p.category];
