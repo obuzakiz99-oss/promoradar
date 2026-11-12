@@ -34,6 +34,9 @@ type Kind = VenueKind | "all" | "saved";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];
 const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
+const SORTS: Sort[] = ["newest", "ending", "biggest", "perUser", "minEntry"];
+const QUICKS: Quick[] = ["noDeposit", "low", "forNew", "cash"];
+const FILTER_KEYS = ["kind", "status", "cat", "sort", "venue", "quick", "q"];
 const FIRST = 9;   // cards shown before "show more" (user: keep the overview short)
 const PAGE = 24;  // cards added per "show more"
 const VENUE_CHIPS = 9;
@@ -96,6 +99,42 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     return () => clearInterval(id);
   }, []);
   useEffect(() => setLimit(FIRST), [kind, cat, venues, q, sort, status, country, quick]);
+
+  // Filters live in the URL (shareable: ?cat=bonus&venue=bybit&quick=noDeposit) and are remembered per page between
+  // visits. A link with filters wins over the remembered ones; the first run only reads, so nothing is written on load.
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    let src = new URLSearchParams(location.search);
+    const key = `pr:filters:${location.pathname}`;
+    if (![...src.keys()].some((k) => FILTER_KEYS.includes(k))) { try { src = new URLSearchParams(localStorage.getItem(key) ?? ""); } catch { /* blocked */ } }
+    const one = <T extends string>(k: string, ok: readonly T[]) => { const v = src.get(k); return v && (ok as readonly string[]).includes(v) ? (v as T) : undefined; };
+    const many = (k: string) => (src.get(k) ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+    const k = one("kind", [...KINDS, "saved"] as Kind[]); if (k && showKinds) setKind(k);
+    const st = one("status", STATUSES); if (st) setStatus(st);
+    const c = one("cat", CATS); if (c) setCat(c);
+    const so = one("sort", SORTS); if (so) setSort(so);
+    const v = many("venue"); if (v.length) setVenues(new Set(v));
+    const qk = many("quick").filter((x): x is Quick => (QUICKS as readonly string[]).includes(x)); if (qk.length) setQuick(new Set(qk));
+    const qq = src.get("q"); if (qq) setQ(qq.slice(0, 80));
+    setRestored(true);
+  }, [showKinds]);
+  useEffect(() => {
+    if (!restored) return;
+    const u = new URLSearchParams(location.search);
+    FILTER_KEYS.forEach((k) => u.delete(k));
+    const f = new URLSearchParams();
+    if (kind !== "all") f.set("kind", kind);
+    if (status !== "all") f.set("status", status);
+    if (cat !== "all") f.set("cat", cat);
+    if (sort !== "newest") f.set("sort", sort);
+    if (venues.size) f.set("venue", [...venues].join(","));
+    if (quick.size) f.set("quick", [...quick].join(","));
+    if (q.trim()) f.set("q", q.trim());
+    f.forEach((v, k) => u.set(k, v));
+    const qs = u.toString();
+    history.replaceState(history.state, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
+    try { localStorage.setItem(`pr:filters:${location.pathname}`, f.toString()); } catch { /* blocked */ }
+  }, [restored, kind, status, cat, sort, venues, quick, q]);
 
   // "since your last visit": the previous visit time is frozen for this browser session, the new one saved for next time
   const [since, setSince] = useState<number | null>(null);
