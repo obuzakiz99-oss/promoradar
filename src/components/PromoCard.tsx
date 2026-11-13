@@ -77,7 +77,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
-      {pin && <Badge tone={pin.cls as Tone} className="absolute -top-3 left-4 z-10 bg-surface ring-1 ring-current/30">{pin.tag}</Badge>}
+      {/* solid backing under the tinted badge (owner 13.11: the card border showed through it) */}
+      {pin && <span className="absolute -top-3 left-4 z-10 rounded-md bg-surface"><Badge tone={pin.cls as Tone} className="ring-1 ring-current/30">{pin.tag}</Badge></span>}
       {/* header (audit 12.11, phones): logo · name + category · two icon buttons; the status badge sits on the name
           line so the exchange name keeps its width instead of breaking into four lines */}
       <div className="flex items-start gap-3">
