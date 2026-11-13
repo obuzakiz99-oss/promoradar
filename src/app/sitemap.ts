@@ -27,5 +27,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, changeFrequency: "hourly", priority: 0.7 });
     for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : undefined, changeFrequency: "daily", priority: 0.6 });
   }
-  return out;
+  // trailing slash = the canonical URL (trailingSlash export); without it every sitemap line was a 301 hop
+  return out.map((e) => ({ ...e, url: e.url.endsWith("/") ? e.url : `${e.url}/` }));
 }
