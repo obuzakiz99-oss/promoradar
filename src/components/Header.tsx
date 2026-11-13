@@ -17,7 +17,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     // exchange rating hidden for now (owner, 12.11) — the page stays at /exchanges/, only the menu entry is off
     // { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
     { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
-    { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], match: ["calendar", "unlocks"] },
+    { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], match: ["calendar", "unlocks", "sales"] },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn", "best", "check"] },
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block", match: ["pro"] }] : []),
   ];

@@ -31,6 +31,7 @@ const LP: Tab[] = [
 const CAL: Tab[] = [
   { id: "calendar", href: "/calendar/", label: { uk: "Акції", en: "Promos", ru: "Акции" } },
   { id: "unlocks", href: "/unlocks/", label: { uk: "Розлоки токенів", en: "Token unlocks", ru: "Разлоки токенов" } },
+  { id: "sales", href: "/sales/", label: { uk: "Токен-сейли", en: "Token sales", ru: "Токен-сейлы" } },
 ];
 
 function Row({ tabs, active, lang, small, label }: { tabs: Tab[]; active: string; lang: L; small?: boolean; label: string }) {
@@ -77,7 +78,7 @@ export function YieldTabs({ lang, active, updated }: { lang: L; active: YieldTab
   );
 }
 
-export function CalendarTabs({ lang, active, updated }: { lang: L; active: "calendar" | "unlocks"; updated?: number }) {
+export function CalendarTabs({ lang, active, updated }: { lang: L; active: "calendar" | "unlocks" | "sales"; updated?: number }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <Row tabs={CAL} active={active} lang={lang} label="Calendar" />
