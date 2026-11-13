@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
 import { InstallApp } from "@/components/InstallApp";
+import { PopoverClose } from "@/components/PopoverClose";
 import { MobileTabBar } from "@/components/MobileTabBar";
 
 export function generateStaticParams() {
@@ -53,6 +54,7 @@ export default async function LangLayout({ children, params }: { children: React
         {children}
         {/* outside the header: its backdrop-filter would trap position:fixed */}
         <InstallApp lang={lang} base={withBase("")} />
+        <PopoverClose />
         <MobileTabBar lang={lang} base={withBase("")} />
       </body>
     </html>

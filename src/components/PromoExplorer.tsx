@@ -312,7 +312,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   
   
       {venueList.length > 1 && (
-        <details className="group relative w-fit">
+        <details data-pop="" className="group relative w-fit">
           <summary className={`flex h-11 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] sm:h-9 font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {t.filters.venues}
             {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}

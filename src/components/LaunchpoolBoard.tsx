@@ -14,6 +14,7 @@ import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
 import { compactUsd, duration, money } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
+import { Icon } from "./Icon";
 
 type Sort = "profit" | "apr" | "hedged" | "end";
 const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
@@ -388,7 +389,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}
               <details className="group relative z-10 border-t border-line pt-3 lg:col-span-5">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
-                  <span className="transition-transform group-open:rotate-90">▸</span>{MORE[lang]}
+                  <Icon name="chevronDown" className="size-4 -rotate-90 transition-transform group-open:rotate-0" />{MORE[lang]}
                 </summary>
                 <div className="nov-1col mt-3 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
                   <div className="adv"><HedgeBox r={r} L={L} /></div>

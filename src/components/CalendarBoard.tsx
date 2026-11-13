@@ -82,7 +82,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                       <span className={`text-xs font-bold ${e.kind === "start" ? "text-sky" : "text-amber"}`}>{label}</span>
                       <span className="line-clamp-2 break-words font-semibold">{e.venue.name}: {noEmoji(e.title)}</span>
                     </a>
-                    <details className="relative shrink-0">
+                    <details data-pop="" className="relative shrink-0">
                       <summary aria-label={L.add} title={L.add} className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-line text-ink-2 hover:border-line-2 hover:text-ink [&::-webkit-details-marker]:hidden">
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5" /></svg>
                       </summary>
