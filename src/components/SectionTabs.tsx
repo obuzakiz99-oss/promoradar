@@ -26,7 +26,7 @@ const LP: Tab[] = [
   { id: "lp", href: "/launchpools/", label: { uk: "Зараз", en: "Now", ru: "Сейчас" } },
   { id: "history", href: "/history/", label: { uk: "Історія APR", en: "APR history", ru: "История APR" } },
   { id: "insights", href: "/insights/", label: { uk: "Що з токеном після", en: "Token after the pool", ru: "Что с токеном после" } },
-  { id: "hedge", href: "/hedge/", label: { uk: "Хедж", en: "Hedge", ru: "Хедж" } },
+  { id: "hedge", href: "/hedge/", label: { uk: "Калькулятор хеджу", en: "Hedge calculator", ru: "Калькулятор хеджа" } },
 ];
 const CAL: Tab[] = [
   { id: "calendar", href: "/calendar/", label: { uk: "Акції", en: "Promos", ru: "Акции" } },
