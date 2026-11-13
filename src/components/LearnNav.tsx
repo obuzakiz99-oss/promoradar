@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { LEARN } from "@/lib/i18n-learn";
 import { CheckSteps } from "./CheckSteps";
+import { LearnSeen } from "./LearnProgress";
 import type { IconName } from "./Icon";
 
 export const LEARN_IDS = ["start", "quiz", "how", "rewards", "safety", "glossary"] as const;
@@ -13,6 +14,7 @@ export function LearnHeader({ lang, active, title, sub }: { lang: Locale; active
   const L = LEARN[lang];
   return (
     <>
+      <LearnSeen id={active} />
       <Link href={`/${lang}/learn`} className="text-sm font-bold text-ink-3 hover:text-ink">{L.back}</Link>
       <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
       <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{sub}</p>

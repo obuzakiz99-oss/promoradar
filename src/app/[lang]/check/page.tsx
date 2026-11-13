@@ -6,6 +6,7 @@ import { officialList } from "./official";
 import { PageHeader } from "@/components/PageHeader";
 import { withBase } from "@/lib/base";
 import { LinkCheck } from "@/components/LinkCheck";
+import { LearnSeen } from "@/components/LearnProgress";
 import { Footer } from "@/components/Sections";
 
 type Params = Promise<{ lang: string }>;
@@ -24,6 +25,7 @@ export default async function CheckPage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <PageHeader lang={lang} title={T.tools.check[0]} sub={T.tools.check[1]} nav={<a href={withBase(`/${lang}/learn/safety/`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Безпека","en":"Safety","ru":"Безопасность"} as Record<string, string>)[lang]}</a>} />
+        <LearnSeen id="check" />
         <LinkCheck lang={lang} official={officialList()} />
       </main>
       <Footer t={t} fetchedAt={Date.now()} lang={lang} />

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import { LEARN } from "@/lib/i18n-learn";
@@ -19,6 +19,8 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
   const [ans, setAns] = useState<Record<string, string>>({});
   const step = Q.q.findIndex((q) => !ans[q.id]);
   const done = step === -1;
+  // the beginner hub counts the quiz as passed once it has a result
+  useEffect(() => { if (done) { try { localStorage.setItem("pr:learn:quiz", "1"); } catch { /* blocked storage */ } } }, [done]);
 
   const picks = useMemo(() => {
     if (!done) return [];
