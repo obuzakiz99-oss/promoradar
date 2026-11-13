@@ -5,27 +5,35 @@ import type { Venue } from "@/lib/types";
 import { TOOLS } from "@/lib/i18n-tools";
 import { VenueLogo } from "./VenueLogo";
 import { noEmoji } from "@/lib/format";
+import { SITE } from "@/config/site";
 
 export interface CalEvent { id: string; at: number; kind: "start" | "end"; venue: Venue; title: string; href: string; source: string }
 
 const stamp = (ts: number) => new Date(ts).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 const locTag = (l: Locale) => (l === "uk" ? "uk-UA" : l === "ru" ? "ru-RU" : "en-GB");
 
-function gcal(e: CalEvent, label: string) {
+// owner 13.11: the calendar entry links back to the promo on our site, then to the exchange's own page
+const SITE_TX = { uk: ["Деталі й умови на PromoRadar", "Сторінка біржі"], en: ["Details on PromoRadar", "Exchange page"], ru: ["Детали и условия на PromoRadar", "Страница биржи"] } as const;
+// href already carries the base path (/promoradar/…); the same value on the server and in the browser
+const siteUrl = (e: CalEvent) => (/^https?:/.test(e.href) ? e.href : `https://${SITE.domain.split("/")[0]}${e.href}`);
+const details = (e: CalEvent, lang: Locale) => `${SITE_TX[lang][0]}: ${siteUrl(e)}\n${SITE_TX[lang][1]}: ${e.source}`;
+const summary = (e: CalEvent, label: string) => `${label}: ${e.venue.name} — ${noEmoji(e.title)}`;
+
+function gcal(e: CalEvent, label: string, lang: Locale) {
   const end = e.at + 30 * 60_000;
-  const q = new URLSearchParams({ action: "TEMPLATE", text: `${label}: ${e.venue.name} — ${e.title}`, dates: `${stamp(e.at)}/${stamp(end)}`, details: e.source });
+  const q = new URLSearchParams({ action: "TEMPLATE", text: summary(e, label), dates: `${stamp(e.at)}/${stamp(end)}`, details: details(e, lang) });
   return `https://calendar.google.com/calendar/render?${q.toString()}`;
 }
 
 /** One .ics file for one event (with a 2-hour reminder). */
-function downloadIcs(evs: Array<[CalEvent, string]>, name: string) {
+function downloadIcs(evs: Array<[CalEvent, string]>, name: string, lang: Locale) {
   const esc = (s: string) => s.replace(/[\\,;]/g, (m) => `\\${m}`).replace(/\n/g, "\\n");
   const ics = [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//PromoRadar//EN",
     ...evs.flatMap(([e, label]) => [
       "BEGIN:VEVENT",
       `UID:${e.id}-${e.kind}@promoradar`, `DTSTAMP:${stamp(Date.now())}`, `DTSTART:${stamp(e.at)}`, `DTEND:${stamp(e.at + 30 * 60_000)}`,
-      `SUMMARY:${esc(`${label}: ${e.venue.name} — ${e.title}`)}`, `DESCRIPTION:${esc(e.source)}`, `URL:${e.source}`,
+      `SUMMARY:${esc(summary(e, label))}`, `DESCRIPTION:${esc(details(e, lang))}`, `URL:${siteUrl(e)}`,
       "BEGIN:VALARM", "TRIGGER:-PT2H", "ACTION:DISPLAY", "DESCRIPTION:PromoRadar", "END:VALARM",
       "END:VEVENT",
     ]),
@@ -79,8 +87,8 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5" /></svg>
                       </summary>
                       <div className="absolute right-0 top-12 z-40 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
-                        <a href={gcal(e, label)} target="_blank" rel="noopener" className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
-                        <button type="button" onClick={() => downloadIcs([[e, label]], `promoradar-${e.id}`)} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
+                        <a href={gcal(e, label, lang)} target="_blank" rel="noopener" className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
+                        <button type="button" onClick={() => downloadIcs([[e, label]], `promoradar-${e.id}`, lang)} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
                       </div>
                     </details>
                   </li>
