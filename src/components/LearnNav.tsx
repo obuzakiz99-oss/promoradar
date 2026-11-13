@@ -16,7 +16,7 @@ export function LearnHeader({ lang, active, title, sub }: { lang: Locale; active
       <Link href={`/${lang}/learn`} className="text-sm font-bold text-ink-3 hover:text-ink">{L.back}</Link>
       <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
       <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{sub}</p>
-      <nav className="scroll-x mt-6 flex gap-1.5" aria-label={L.nav}>
+      <nav className="scroll-x mt-6 flex gap-1.5 md:flex-wrap" aria-label={L.nav}>
         {LEARN_IDS.map((id) => (
           <Link key={id} href={`/${lang}/learn/${id}`} aria-current={id === active ? "page" : undefined}
             className={`flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-xs font-bold ${id === active ? "border-lime/50 bg-lime/15 text-lime" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>

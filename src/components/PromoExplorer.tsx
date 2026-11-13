@@ -268,7 +268,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
         </div>
 
-        <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1" role="tablist" aria-label="Category">
+        <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1 md:flex-wrap" role="tablist" aria-label="Category">
           <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} role="tab" aria-selected={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>

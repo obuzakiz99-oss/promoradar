@@ -103,7 +103,7 @@ export function ScoreBoard({ data, lang, venueBase }: { data: Record<Country, Sc
 
       {/* phone cards */}
       <div className="mt-5 grid gap-3 lg:hidden">
-        <div className="scroll-x -mx-1 flex gap-1.5 px-1">
+        <div className="scroll-x -mx-1 flex gap-1.5 px-1 md:flex-wrap">
           {keys.map((k) => (
             <button key={k} type="button" onClick={() => setSort(k)} aria-pressed={sort === k} className={`h-8 shrink-0 rounded-lg px-2.5 text-xs font-bold ${sort === k ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2"}`}>{T.cols[k]}</button>
           ))}

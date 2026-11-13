@@ -108,7 +108,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
       </div>
       {/* exchange chips — tap to see only that exchange */}
       {coinExchanges.length > 1 && (
-        <div className="scroll-x mt-3 flex gap-1.5">
+        <div className="scroll-x mt-3 flex gap-1.5 md:flex-wrap">
           <button onClick={() => setEx("all")} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
           {coinExchanges.map((id) => (
             <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
