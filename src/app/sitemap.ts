@@ -6,6 +6,7 @@ import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { getTokens } from "@/lib/tokens";
 import { getPools, lpPaged, lpSlug } from "@/lib/pools";
+import { GUIDE_IDS } from "@/lib/guides";
 
 export const revalidate = 3600;
 
@@ -21,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       out.push({ url: `${base}/${l}/${s}`, changeFrequency: s.startsWith("learn") ? "weekly" : "hourly", priority: s.startsWith("learn") ? 0.6 : 0.8 });
     for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, changeFrequency: "hourly", priority: 0.7 });
     out.push({ url: `${base}/${l}/t`, changeFrequency: "hourly", priority: 0.8 });
+    for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, changeFrequency: "weekly", priority: 0.6 });
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
     // out.push({ url: `${base}/${l}/exchanges`, changeFrequency: "hourly", priority: 0.8 });
     for (const sym of tokens.keys()) out.push({ url: `${base}/${l}/t/${sym}`, changeFrequency: "hourly", priority: 0.7 });
