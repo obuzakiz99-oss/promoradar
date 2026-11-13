@@ -12,7 +12,7 @@ const TX: Record<Locale, { install: string; text: string; ios: string; later: st
 
 /**
  * Registers the service worker and, on a second visit, offers to install the site as an app
- * (Android/desktop Chrome: the browser's own install dialog; iPhone: a one-line hint). Never shown again after "Not now".
+ * (Android Chrome: the browser's own install dialog; iPhone: a one-line hint). Not on desktop. Never shown again after "Not now".
  */
 export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
   const [evt, setEvt] = useState<BIP | null>(null);
@@ -29,7 +29,9 @@ export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
       ok = visits >= 3 && !localStorage.getItem("pr:installNo");
     } catch { /* storage blocked */ }
     const standalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone;
-    if (!ok || standalone) return;
+    // phones / tablets only (owner 13.11: no install banner on desktop)
+    const mobile = window.matchMedia("(pointer: coarse) and (max-width: 1024px)").matches;
+    if (!ok || standalone || !mobile) return;
     const onPrompt = (e: Event) => { e.preventDefault(); setEvt(e as BIP); setShow(true); };
     window.addEventListener("beforeinstallprompt", onPrompt);
     if (/iphone|ipad|ipod/i.test(navigator.userAgent) && /safari/i.test(navigator.userAgent) && !/crios|fxios/i.test(navigator.userAgent)) { setIos(true); setShow(true); }
@@ -40,7 +42,7 @@ export function InstallApp({ lang, base }: { lang: Locale; base: string }) {
   if (!show) return null;
   const T = TX[lang];
   return (
-    <div role="dialog" className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 md:bottom-4 animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
+    <div role="dialog" className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 md:bottom-4 lg:hidden animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl">
       <p className="text-sm font-semibold text-ink">{T.text}</p>
       {ios && <p className="mt-1 text-xs text-ink-2">{T.ios}</p>}
       <div className="mt-3 flex gap-2">
