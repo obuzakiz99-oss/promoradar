@@ -20,7 +20,7 @@ const GX: Record<Locale, {
   quick: Record<Quick, string>; perUser: string; minEntry: string;
 }> = {
   uk: { country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
-  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry ≤ $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
+  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
   ru: { country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
 };
 
@@ -157,7 +157,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   // tab counts follow the country / quick filters, so the numbers match the cards shown
   const quickOk = (p: Promo) => (!quick.has("noDeposit") || !!p.meta?.noDeposit)
-    && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
+    && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount < 100) || !!p.meta?.noDeposit)
     && (!quick.has("forNew") || !!p.meta?.forNew)
     && (!quick.has("cash") || isCash(p));
   const kindCounts = useMemo(() => {
@@ -180,7 +180,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const byKind = useMemo(
     () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
       && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
-      && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount <= 100) || !!p.meta?.noDeposit)
+      && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount < 100) || !!p.meta?.noDeposit)
       && (!quick.has("forNew") || !!p.meta?.forNew)
       && (!quick.has("cash") || isCash(p))),
     [geoOk, kind, saved, status, now, quick],
