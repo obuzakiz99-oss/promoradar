@@ -23,6 +23,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title: DROP_TEXT[lang].page.title, description: DROP_TEXT[lang].page.sub };
 }
 
+const FIRST = 8;
+const MORE = { uk: (n: number) => `Показати ще ${n}`, en: (n: number) => `Show ${n} more`, ru: (n: number) => `Показать ещё ${n}` } as const;
+const LESS = { uk: "Згорнути", en: "Show less", ru: "Свернуть" } as const;
+
 export default async function DropsPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -60,7 +64,7 @@ export default async function DropsPage({ params }: { params: Params }) {
           return (
             <section key={k} id={k} className={`mt-14 scroll-mt-20 ${lvl === "hard" ? "adv" : ""}`}>
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-display text-2xl font-semibold tracking-tight"><Icon name={icon} className="size-6 text-lime" /> {T.title}</h2>
+                <h2 className="font-display text-2xl font-semibold tracking-tight"><Icon name={icon} className="size-6 text-lime" /> {T.title} <span className="font-mono text-base text-ink-3">{list.length}</span></h2>
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
@@ -74,11 +78,11 @@ export default async function DropsPage({ params }: { params: Params }) {
                   </ol>
                   <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3"><Icon name="alert" /> <b className="text-ink-2">{P.risk}:</b> {T.risk}</p>
                 </div>
-                <div>
+                <div className="group">
                   {list.length === 0 ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.none}</p> : (
                     <ul className="space-y-2">
-                      {list.slice(0, 8).map((p) => (
-                        <li key={p.id}>
+                      {list.map((p, i) => (
+                        <li key={p.id} className={i >= FIRST ? "hidden group-has-[:checked]:block" : ""}>
                           <a href={withBase(`/${lang}/p/${slugOf(p)}/`)} className="card flex items-center gap-3 p-3.5">
                             <VenueLogo v={p.venue} size={32} rounded="rounded-lg" />
                             <span className="min-w-0 flex-1">
@@ -90,6 +94,14 @@ export default async function DropsPage({ params }: { params: Params }) {
                         </li>
                       ))}
                     </ul>
+                  )}
+                  {/* all of them, so the count in the jump link matches the list (owner 13.11); the rest open without JS */}
+                  {list.length > FIRST && (
+                    <label className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm">
+                      <input type="checkbox" className="sr-only" />
+                      <span className="group-has-[:checked]:hidden">{MORE[lang](list.length - FIRST)}</span>
+                      <span className="hidden group-has-[:checked]:inline">{LESS[lang]}</span>
+                    </label>
                   )}
                 </div>
               </div>
