@@ -598,9 +598,41 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
       const seen = new Set(blocks.map((b) => b.x));
       blocks = [...blocks, { t: "h", x: EX_HEAD }, ...page.filter((b) => !seen.has(b.x))];
     }
+    blocks = dropChrome(blocks);
+    if (blocks[blocks.length - 1]?.x === EX_HEAD) blocks = blocks.slice(0, -1);
     out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
   }
   return out;
+}
+
+/**
+ * Site chrome that appears only once (so the repeat filter in dropBoilerplate misses it): a product page's whole menu
+ * ("Buy Crypto / Buy instantly using Visa…", KuCoin Earn hub, PancakeSwap footer) and social-link lines ("Website🌐 |
+ * Twitter❌"). A menu is a long run of short labels without sentence punctuation or numbers; real rules break such a run
+ * within a few blocks. Checked 13.11 on all 244 live promo pages: ≥ 15 blocks at ≥ 90 % labels hits only menus
+ * (CandyBomb widget runs are 13 and keep "New futures traders only").
+ */
+const SOCIAL = /^(?:[^\p{L}\p{N}]*\b(?:telegram|whatsapp|facebook|instagram|discord|twitter|x|youtube|tiktok|reddit|website|linkedin|medium|download(?: \w+)?(?: app)?|join the \w+ community)\b[^\p{L}\p{N}]*)+$/iu;
+function chromeLabel(b: Block): boolean {
+  if (b.t === "tr") return false;
+  const x = b.x.trim();
+  if (/^[A-Z0-9]{2,20}(\/[A-Z]{3,5})?(\d+X)?$/.test(x)) return true;          // ticker lists "BTC/USDT10X", "1000BONKUSDT"
+  if (x.length > 90 || /[.!?。:：]$/.test(x)) return false;
+  return !/\d/.test(x) || /[a-z][A-Z][a-z]/.test(x);                           // label, or label glued to its text
+}
+function dropChrome(blocks: Block[]): Block[] {
+  const keep = blocks.map((b) => !SOCIAL.test(b.x.trim()));
+  const f = blocks.map(chromeLabel);
+  for (let i = 0; i < blocks.length;) {
+    if (!f[i]) { i++; continue; }
+    let end = i, bad = 0;
+    for (let j = i; j < blocks.length; j++) {
+      if (!f[j] && ++bad > 0.1 * (j - i + 1) + 0.5) break;
+      if (f[j]) end = j;
+    }
+    if (end - i + 1 >= 15) { for (let k = i; k <= end; k++) if (blocks[k].x !== "On the exchange page") keep[k] = false; i = end + 1; } else i++;
+  }
+  return blocks.filter((_, i) => keep[i]);
 }
 
 /**
