@@ -60,6 +60,7 @@ jobs:
           AZURE_TRANSLATOR_REGION: ${{ secrets.AZURE_TRANSLATOR_REGION }}   # e.g. westeurope (the resource's region)
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # AI-written FAQ on promo pages (src/lib/faq.ts); empty = no FAQ
           FAQ_MODEL: ${{ vars.FAQ_MODEL || 'claude-opus-5-5' }}
+          VALUE_MODEL: ${{ vars.VALUE_MODEL || 'claude-sonnet-5-5' }}   # reads each promo's rules once → expected $ per person, junk filter (src/lib/value.ts)
 
       # report only: broken text on pages, promo logic, untranslated uk/ru titles (warnings on the run, never blocks a deploy)
       - name: Content audit

@@ -10,6 +10,7 @@ import { translateAll } from "./translate";
 import { getFaqs } from "./faq";
 import { payoutOf } from "./payout";
 import { junkReason, type JunkReason } from "./junk";
+import { getAssessments, valueOf, valueJunk } from "./value";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -86,7 +87,7 @@ async function getPromosLive(): Promise<Collected> {
   const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
-  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason; perUserUsd?: number }> = [];
+  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news"; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
     // exchange rating then see coin pools too (audit 12.11)
@@ -142,10 +143,22 @@ async function getPromosLive(): Promise<Collected> {
     if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;
     if (thin) meta.thin = true;
     p.meta = Object.keys(meta).length ? meta : p.meta;
-    const junk = junkReason(p, d?.blocks, !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id));
-    if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd }); continue; }
     promos.push(p);
   }
+  // what one ordinary participant can really get (Claude reads the rules once per promo, then plain arithmetic) —
+  // junk is dropped: not a promo at all, social-only tasks, < $30 per person, or surely < $10 net
+  const facts = await getAssessments(promos, details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
+  const kept: Promo[] = [];
+  for (const p of promos) {
+    const handAdded = !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id);
+    const a = facts[p.id];
+    const v = p.category === "farming" ? undefined : valueOf(p, a, px);
+    if (v) p.meta = { ...(p.meta ?? {}), value: v };
+    const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
+    if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
+    kept.push(p);
+  }
+  promos.splice(0, promos.length, ...kept);
   // what the junk filter hid this build (data branch → reviewable history)
   try { if (fs.existsSync(path.join(process.cwd(), "data"))) fs.writeFileSync(path.join(process.cwd(), "data", "hidden-promos.json"), JSON.stringify({ at: now, items: hidden }, null, 1)); } catch { /* read-only */ }
   // translations (DeepL Free, cached in data/translations.json) — most visible texts first, full rules last

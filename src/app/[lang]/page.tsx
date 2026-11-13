@@ -1,3 +1,4 @@
+import { rankOf } from "@/lib/rank";
 import { notFound } from "next/navigation";
 import { PromoTabs } from "@/components/SectionTabs";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -26,10 +27,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id]).map((p) => ({
     id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
   }));
-  // first screen of the feed (newest, as the feed sorts by default); the rest is loaded from /api/promos.json
+  // first screen of the feed (best value first, as the feed sorts by default); the rest is loaded from /api/promos.json
   const pins = todayPins(promos, lang, fetchedAt);
   const pinned = promos.filter((p) => pins.some((x) => x.id === p.id));
-  const firstCards = [...pinned, ...[...promos].filter((p) => !pinned.includes(p)).sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt).slice(0, 24)];
+  const firstCards = [...pinned, ...[...promos].filter((p) => !pinned.includes(p)).sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || Number(!!b.sponsored) - Number(!!a.sponsored) || rankOf(b.meta?.value) - rankOf(a.meta?.value) || b.publishedAt - a.publishedAt).slice(0, 24)];
   // the hero's money figure: the most ONE person can get in a promo open to everyone (a prize-pool total says little)
   const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && p.category !== "competition").map((p) => p.meta?.perUser?.usd ?? 0));
   const newDay = promos.filter((p) => p.publishedAt > fetchedAt - 86400_000).length;

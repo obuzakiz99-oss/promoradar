@@ -12,6 +12,32 @@ import { LEVEL_CLS, LEVEL_TXT, promoLevel } from "@/lib/level";
 import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 import { titleOf } from "@/lib/titletpl";
 import { Badge, type Tone } from "./Badge";
+import type { Value } from "@/lib/value";
+
+/** "What you'd really get" line (value.ts): expected net $ for one ordinary participant, with how sure it is. */
+const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string; loss: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
+  uk: { high: "Реально", mid: "Очікувано", low: "Оцінка", apr: "на $1 000 понад звичайний earn", loss: "Витрати з'їдають бонус", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
+    why: { stated: "сума з правил для мінімальної участі", max: "лише «до …» з правил — більшість отримує менше", chance: "пул ÷ приблизна кількість учасників (шанс)", apr: "дохід за строк акції на $1 000 понад звичайні 5% річних", none: "" } },
+  en: { high: "Realistic", mid: "Expected", low: "Estimate", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", cost: (x) => `minus fees/lock-up ≈ ${x}`,
+    why: { stated: "amount from the rules for the minimum entry", max: "only an 'up to' figure — most people get less", chance: "pool ÷ rough number of participants (a chance)", apr: "income for the period on $1,000 above a regular 5% a year", none: "" } },
+  ru: { high: "Реально", mid: "Ожидаемо", low: "Оценка", apr: "на $1 000 сверх обычного earn", loss: "Расходы съедают бонус", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
+    why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
+};
+function ValueLine({ v, lang }: { v?: Value; lang: Locale }) {
+  if (!v || v.net === undefined || v.gross === undefined) return null;
+  const L = VAL[lang];
+  const usd = (x: number) => (x >= 1000 ? compactUsd(x) : `$${x >= 10 ? Math.round(x) : x.toFixed(x >= 1 ? 1 : 2)}`);
+  const title = [L.why[v.basis], v.cost ? L.cost(usd(v.cost)) : ""].filter(Boolean).join("; ");
+  if (v.net <= 0) return <div title={title} className="mb-2 text-xs font-bold text-amber">{L.loss}</div>;
+  const tone = v.conf === "high" ? "text-lime" : v.conf === "mid" ? "text-ink" : "text-ink-2";
+  return (
+    <div title={title} className="mb-2 flex items-baseline gap-1.5 text-xs font-semibold text-ink-3">
+      <span>{L[v.conf]}</span>
+      <span className={`font-mono text-sm font-bold ${tone}`}>{v.mech === "apr" ? "+" : "≈ "}{usd(v.net)}</span>
+      {v.mech === "apr" && <span>{L.apr}</span>}
+    </div>
+  );
+}
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
@@ -150,6 +176,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
 
       {/* footer */}
       <div className="mt-auto pt-5">
+        {!isFarm && <ValueLine v={m.value} lang={lang} />}
         <div className="flex items-end justify-between gap-3">
           {isFarm ? (
             <div>

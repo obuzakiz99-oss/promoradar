@@ -11,18 +11,19 @@ import { useSaved } from "./SaveButton";
 import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
+import { rankOf } from "@/lib/rank";
 
-type Sort = "newest" | "ending" | "biggest" | "perUser" | "minEntry";
+type Sort = "best" | "newest" | "ending" | "biggest" | "perUser" | "minEntry";
 type Country = "any" | "ua" | "eu";
 type Quick = "noDeposit" | "low" | "forNew" | "cash";
 
 const GX: Record<Locale, {
   country: string; any: string; ua: string; eu: string; hidden: (n: number) => string;
-  quick: Record<Quick, string>; perUser: string; minEntry: string;
+  quick: Record<Quick, string>; perUser: string; minEntry: string; best: string;
 }> = {
-  uk: { country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг" },
-  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry" },
-  ru: { country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог" },
+  uk: { country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг", best: "Найвигідніші" },
+  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry", best: "Best value" },
+  ru: { country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
 };
 
 /** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
@@ -38,7 +39,7 @@ type Kind = VenueKind | "all" | "saved" | "hidden";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];
 const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
-const SORTS: Sort[] = ["newest", "ending", "biggest", "perUser", "minEntry"];
+const SORTS: Sort[] = ["best", "newest", "ending", "biggest", "perUser", "minEntry"];
 const QUICKS: Quick[] = ["noDeposit", "low", "forNew", "cash"];
 const FILTER_KEYS = ["kind", "status", "cat", "sort", "venue", "quick", "q"];
 const FIRST = 9;   // cards shown before "show more" (user: keep the overview short)
@@ -92,7 +93,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const [venues, setVenues] = useState<Set<string>>(new Set());
   const [allVenues, setAllVenues] = useState(false);
   const [q, setQ] = useState("");
-  const [sort, setSort] = useState<Sort>("newest");
+  const [sort, setSort] = useState<Sort>("best");
   const [limit, setLimit] = useState(FIRST);
   const G = GX[lang];
   const [country, setCountryS] = useState<Country>(lang === "uk" ? "ua" : "any");
@@ -136,7 +137,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     if (kind !== "all") f.set("kind", kind);
     if (status !== "all") f.set("status", status);
     if (cat !== "all") f.set("cat", cat);
-    if (sort !== "newest") f.set("sort", sort);
+    if (sort !== "best") f.set("sort", sort);
     if (venues.size) f.set("venue", [...venues].join(","));
     if (quick.size) f.set("quick", [...quick].join(","));
     if (q.trim()) f.set("q", q.trim());
@@ -216,6 +217,8 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const l = base.filter((p) => cat === "all" || p.category === cat);
     const sponsored = l.filter((p) => p.sponsored);
     const rest = l.filter((p) => !p.sponsored);
+    // best first: expected net $ for one ordinary participant (value.ts), surer amounts ahead of estimates
+    if (sort === "best") rest.sort((a, b) => rankOf(b.meta?.value) - rankOf(a.meta?.value) || b.publishedAt - a.publishedAt);
     if (sort === "newest") rest.sort((a, b) => b.publishedAt - a.publishedAt || value(b) - value(a));
     if (sort === "ending") rest.sort((a, b) => (a.endsAt ?? Infinity) - (b.endsAt ?? Infinity) || b.publishedAt - a.publishedAt);
     if (sort === "biggest") rest.sort((a, b) => value(b) - value(a));
@@ -225,7 +228,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const full = rest.filter((p) => !p.meta?.thin), thin = rest.filter((p) => p.meta?.thin);
     const out = [...sponsored, ...full, ...thin];
     // today's top 3 lead the untouched list (no search, filters or other sort)
-    if (pinned.length && sort === "newest" && cat === "all" && !q && !venues.size && kind === "all" && status === "all" && !quick.size) {
+    if (pinned.length && sort === "best" && cat === "all" && !q && !venues.size && kind === "all" && status === "all" && !quick.size) {
       const ids = new Set(pinned.map((x) => x.id));
       const top = pinned.map((x) => out.find((p) => p.id === x.id)).filter((p): p is Promo => !!p);
       return [...top, ...out.filter((p) => !ids.has(p.id))];
@@ -235,7 +238,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const pinOf = useMemo(() => new Map(pinned.map((x) => [x.id, x])), [pinned]);
 
   const toggleVenue = (id: string) => setVenues((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
-  const dirty = kind !== "all" || cat !== "all" || venues.size > 0 || q !== "" || sort !== "newest" || status !== "all" || quick.size > 0;
+  const dirty = kind !== "all" || cat !== "all" || venues.size > 0 || q !== "" || sort !== "best" || status !== "all" || quick.size > 0;
   const shownVenues = allVenues ? venueList : venueList.slice(0, VENUE_CHIPS);
 
   return (
@@ -258,7 +261,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           <div className="min-w-0 flex-1 sm:w-56 sm:flex-none lg:ml-auto">
             <Select label={t.filters.sort} value={sort} onChange={setSort} align="right"
               className="h-11 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
-              options={(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
+              options={(["best", "newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "best" ? G.best : s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
           </div>
           <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
             className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border pl-4 pr-3 text-sm font-bold text-ink ${panel || activeN ? "border-lime/60 bg-lime/10" : "border-line bg-surface hover:border-line-2"}`}>
@@ -278,7 +281,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             </button>
           ))}
           {dirty && (
-            <button className="chip ml-auto border-dashed" onClick={() => { setKind("all"); setCat("all"); setVenues(new Set()); setQ(""); setSort("newest"); setStatus("all"); setQuick(new Set()); }}>
+            <button className="chip ml-auto border-dashed" onClick={() => { setKind("all"); setCat("all"); setVenues(new Set()); setQ(""); setSort("best"); setStatus("all"); setQuick(new Set()); }}>
               ✕ {t.filters.reset}
             </button>
           )}
