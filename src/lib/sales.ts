@@ -32,10 +32,11 @@ export interface Sale {
 export const SALES_SRC = "https://icodrops.com/category/active-ico/";
 
 // announcement titles that are a token sale / subscription (not a Launchpool, which is staking and has its own section)
-const SALE_RE = /\b(launchpad|token sale|ieo|ido|jumpstart|gate startup|startup (sale|project|subscription|mining)|kucoin spotlight|spotlight (sale|project|token)|launchx|prime sale|public sale|wallet (exclusive )?(tge|sale)|exclusive tge|buidlpad|coinlist|legion sale|sonar)\b/i;
-const NOT_SALE = /launchpool|poolx|gempool|airdrop hunter|trading competition/i;
+const SALE_RE = /\b(launchpad|token sale|ieo|ido|jumpstart|gate startup|startup (sale|project|subscription|mining)|kucoin spotlight|spotlight (sale|project|token)|launchx|prime sale|public sale|wallet (exclusive )?(tge|sale)|exclusive tge|buidlpad|coinlist|legion sale|sonar|ipo prime|ipo subscription|pre-?ipo (sale|subscription)|subscription (is )?(open|live))\b/i;
+// challenges / competitions / earn around a sale are promos, not the sale itself
+const NOT_SALE = /launchpool|poolx|gempool|airdrop hunter|trading competition|challenge|competition|carnival|free spins|welcome campaign|simple earn|earn up to|share your|is an? [^.]{0,40}launchpad/i;
 const PROGRAM: Array<[RegExp, string]> = [
-  [/jumpstart/i, "Jumpstart"], [/startup/i, "Startup"], [/spotlight/i, "Spotlight"], [/launchx/i, "LaunchX"],
+  [/ipo prime/i, "IPO Prime"], [/pre-?ipo|ipo subscription/i, "Pre-IPO"], [/jumpstart/i, "Jumpstart"], [/startup/i, "Startup"], [/spotlight/i, "Spotlight"], [/launchx/i, "LaunchX"],
   [/wallet.*tge|tge.*wallet/i, "Wallet TGE"], [/launchpad/i, "Launchpad"], [/\bieo\b/i, "IEO"], [/token sale|public sale|prime sale/i, "Token sale"],
 ];
 
@@ -46,7 +47,7 @@ function fromPromos(promos: Promo[], lang: string, now: number): Sale[] {
       const t = p.titleOrig ?? p.title;
       const prog = PROGRAM.find(([re]) => re.test(t))?.[1] ?? "Token sale";
       return {
-        id: `p:${p.id}`, name: p.title, where: `${p.venue.name} ${prog}`, kind: /wallet/i.test(prog) ? "wallet" : "exchange",
+        id: `p:${p.id}`, name: p.title, ticker: t.match(/\(\$([A-Z0-9]{2,10})\)/)?.[1], where: `${p.venue.name} ${prog}`, kind: /wallet/i.test(prog) ? "wallet" : "exchange",
         status: p.startsAt && p.startsAt > now ? "upcoming" : "active", startsAt: p.startsAt, endsAt: p.endsAt,
         href: withBase(`/${lang}/p/${slugOf(p)}/`), external: false, source: p.url, venueId: p.venue.id,
       };
