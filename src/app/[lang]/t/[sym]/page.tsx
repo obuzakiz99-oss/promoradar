@@ -74,10 +74,13 @@ export default async function TokenPage({ params }: { params: Params }) {
   const related = [...tokens.values()].filter((x) => x.sym !== sym).sort((a, b) => (b.promos.length + b.lpReward.length) - (a.promos.length + a.lpReward.length)).slice(0, 24);
 
   const Section = ({ title, children, n }: { title: string; children: React.ReactNode; n: number }) => (
-    <section className="mt-10">
-      <h2 className="font-display text-2xl font-semibold tracking-tight">{title} <span className="font-mono text-base text-ink-3">{n}</span></h2>
-      {n ? children : <p className="mt-3 text-sm text-ink-3">{T.none}</p>}
-    </section>
+    // empty sections are not shown at all (owner 13.11)
+    n ? (
+      <section className="mt-10">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">{title} <span className="font-mono text-base text-ink-3">{n}</span></h2>
+        {children}
+      </section>
+    ) : null
   );
 
   return (
