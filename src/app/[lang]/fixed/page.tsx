@@ -8,6 +8,7 @@ import { shortDate } from "@/lib/format";
 import { Term } from "@/components/Term";
 import { Footer } from "@/components/Sections";
 import Link from "next/link";
+import { TableTools } from "@/components/TableTools";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -19,6 +20,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 const usd = (x: number) => (x >= 1e9 ? `$${(x / 1e9).toFixed(1)}B` : `$${(x / 1e6).toFixed(1)}M`);
+
+// sort + filter (owner 13.11)
+const FT = {
+  uk: { sLiq: "Більша ліквідність", sApy: "Вищий APY", sExp: "Раніше погашення", chain: "Мережа", allChains: "Усі мережі", term: "Строк", anyTerm: "Будь-який строк", terms: ["До 30 днів", "30–90 днів", "Понад 90 днів"] },
+  en: { sLiq: "Most liquidity", sApy: "Highest APY", sExp: "Earliest maturity", chain: "Chain", allChains: "All chains", term: "Term", anyTerm: "Any term", terms: ["Under 30 days", "30–90 days", "Over 90 days"] },
+  ru: { sLiq: "Больше ликвидность", sApy: "Выше APY", sExp: "Раньше погашение", chain: "Сеть", allChains: "Все сети", term: "Срок", anyTerm: "Любой срок", terms: ["До 30 дней", "30–90 дней", "Более 90 дней"] },
+} as const;
+const termOf = (days: number) => (days < 30 ? 0 : days <= 90 ? 1 : 2);
 
 export default async function FixedPage({ params }: { params: Params }) {
   const { lang } = await params;
@@ -33,14 +42,22 @@ export default async function FixedPage({ params }: { params: Params }) {
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.fixSub}</p>
         <Link href={`/${lang}/learn/guide/pendle-pt`} className="btn btn-primary mt-5 inline-flex h-auto min-h-11 max-w-full whitespace-normal px-5 py-2 text-left text-sm">{P.fixGuide}</Link>
         {rows.length === 0 ? <p className="mt-8 text-ink-3">{P.noData}</p> : (
-          <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
+          <div className="mt-8">
+          <TableTools lang={lang} storeKey="fixed" sorts={[
+            { key: "liq", label: FT[lang].sLiq, desc: true }, { key: "apy", label: FT[lang].sApy, desc: true }, { key: "exp", label: FT[lang].sExp },
+          ]} filters={[
+            { key: "chain", label: FT[lang].chain, all: FT[lang].allChains, options: [...new Set(rows.map((r) => r.chain))].sort() },
+            { key: "term", label: FT[lang].term, all: FT[lang].anyTerm, options: [...FT[lang].terms] },
+          ]}>
+          <div className="overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                 <tr>{P.fixCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 2 ? "text-right" : ""}`}>{i === 2 ? <Term k="apy" lang={lang}>{c}</Term> : c}</th>)}</tr>
               </thead>
               <tbody className="divide-y divide-line">
                 {rows.map((r) => (
-                  <tr key={r.url} className="hover:bg-white/[0.02]">
+                  <tr key={r.url} className="hover:bg-white/[0.02]" data-row="" data-s-liq={r.liquidity} data-s-apy={r.apy} data-s-exp={r.expiry}
+                    data-f-chain={r.chain} data-f-term={FT[lang].terms[termOf((r.expiry - fetchedAt) / 86400_000)]} data-q={`pt-${r.name} ${r.chain}`}>
                     <td className="px-4 py-3 font-bold"><a href={r.url} target="_blank" rel="noopener" className="hover:text-lime">PT-{r.name} ↗</a></td>
                     <td className="px-4 py-3 text-ink-2">{r.chain}</td>
                     <td className="px-4 py-3 text-right font-mono font-bold text-lime">{r.apy.toFixed(2)}%</td>
@@ -50,6 +67,8 @@ export default async function FixedPage({ params }: { params: Params }) {
                 ))}
               </tbody>
             </table>
+          </div>
+          </TableTools>
           </div>
         )}
         <p className="mt-4 max-w-3xl text-xs leading-relaxed text-ink-3">{P.fixNote}</p>

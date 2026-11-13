@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TableTools } from "@/components/TableTools";
 import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -62,6 +63,13 @@ const fmtNum = (n: number) => (n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6
 const pressCls = (x: number) => (x >= 5 ? "bg-rose/15 text-rose" : x >= 1 ? "bg-amber/15 text-amber" : "bg-white/5 text-ink-2");
 const day = (ms: number, lang: Locale) => new Date(ms).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 
+// sort + filter over the full table (owner 13.11)
+const UT = {
+  uk: { sDate: "Найближчі", sUsd: "Більша сума", sPress: "Сильніший тиск", impact: "Вплив", anyImpact: "Будь-який вплив", kind: "Тип", anyKind: "Будь-який тип", who: "Кому", anyWho: "Усім" },
+  en: { sDate: "Soonest", sUsd: "Largest amount", sPress: "Strongest pressure", impact: "Impact", anyImpact: "Any impact", kind: "Type", anyKind: "Any type", who: "Recipient", anyWho: "Anyone" },
+  ru: { sDate: "Ближайшие", sUsd: "Больше сумма", sPress: "Сильнее давление", impact: "Влияние", anyImpact: "Любое влияние", kind: "Тип", anyKind: "Любой тип", who: "Кому", anyWho: "Всем" },
+} as const;
+
 export default async function UnlocksPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -116,7 +124,15 @@ export default async function UnlocksPage({ params }: { params: Params }) {
         {rows.length > 0 && (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.all}</h2>
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
+            <div className="mt-4">
+            <TableTools lang={lang} storeKey="unlocks" sorts={[
+              { key: "date", label: UT[lang].sDate }, { key: "usd", label: UT[lang].sUsd, desc: true }, { key: "press", label: UT[lang].sPress, desc: true },
+            ]} filters={[
+              { key: "impact", label: UT[lang].impact, all: UT[lang].anyImpact, options: [...new Set(rows.map((u) => LEVEL_TXT[lang][impactOf(u).level]))] },
+              { key: "kind", label: UT[lang].kind, all: UT[lang].anyKind, options: [...new Set(rows.map((u) => T.type[u.type]))] },
+              { key: "who", label: UT[lang].who, all: UT[lang].anyWho, options: [...new Set(rows.map((u) => (u.sale ? trs(u.sale) : "")).filter(Boolean))].sort() },
+            ]}>
+            <div className="overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
@@ -125,7 +141,8 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                   {rows.map((u) => {
                     const href = tokenHref(u);
                     return (
-                      <tr key={`${u.sym}${u.date}`} className="hover:bg-white/[0.02]">
+                      <tr key={`${u.sym}${u.date}`} className="hover:bg-white/[0.02]" data-row="" data-s-date={u.date} data-s-usd={u.usd} data-s-press={u.pctCap}
+                        data-f-impact={LEVEL_TXT[lang][impactOf(u).level]} data-f-kind={T.type[u.type]} data-f-who={u.sale ? trs(u.sale) : ""} data-q={`${u.sym} ${u.name ?? ""}`}>
                         <td className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-xs text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
@@ -148,6 +165,8 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                   })}
                 </tbody>
               </table>
+            </div>
+            </TableTools>
             </div>
           </section>
         )}
