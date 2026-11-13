@@ -23,6 +23,8 @@ const CAP_TX = {
   ru: { cap: (m: string) => `Лимит пула на одного человека ≈ ${m} — считаем от этой суммы`, risky: "Ликвидация слишком близко: цене хватит немного вырасти. Снизьте плечо." },
 } as const;
 
+const GEN = { uk: { coin: "монет", venue: "ф'ючерсній біржі" }, en: { coin: "coins", venue: "a futures exchange" }, ru: { coin: "монет", venue: "фьючерсной бирже" } } as const;
+
 export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lang: Locale }) {
   const T = TOOLS[lang];
   const { usd, num } = fmtOf(nfLocale(lang));
@@ -55,7 +57,9 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
     const total = c.capital + margin;
     return { c, qty, margin, liq, rewards, funding, costs, net, total, netApr: total > 0 && c.days > 0 ? (net / total) * (365 / c.days) * 100 : 0 };
   }, [v, preset?.maxUsd]);
-  const fill = (s: string) => s.replace("{q}", num(r.qty)).replace("{c}", v.coin).replace("{a}", usd(r.c.capital)).replace("{v}", v.venue).replace("{l}", String(r.c.leverage)).replace("{m}", usd(r.margin));
+  // own parameters: no pool's coin or exchange in the plan (owner 13.11: "KOR on MEXC" stayed after switching to custom)
+  const own = sel === "custom";
+  const fill = (s: string) => s.replace("{q}", num(r.qty)).replace("{c}", own ? GEN[lang].coin : v.coin).replace("{a}", usd(r.c.capital)).replace("{v}", own ? GEN[lang].venue : v.venue).replace("{l}", String(r.c.leverage)).replace("{m}", usd(r.margin));
 
   const field = (k: keyof typeof v, label: string, step = "any") => (
     <label className="block">
