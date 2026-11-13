@@ -326,7 +326,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   };
   const pu = m.perUser;
   // referral promos: is the bonus paid to both sides? (owner 13.11: Pump.fun pays the inviter too, the page didn't say so)
-  const refBoth = p.category === "referral" && /\b(both of you|for both|you and your friend|you and the friend|both the referrer|both parties|referrer and (the )?referee|each of you)\b|(вам|ви),? (і|й|та) (йому|другу|запрошеному)|і вам,? і (йому|другу)|обидва|вам и (ему|другу)|и вам,? и (ему|другу)/i.test(`${p.titleOrig ?? ""} ${p.title} ${JSON.stringify(det ?? "")}`);
+  const refBoth = p.category === "referral" && /\b(both of you|for both|you and your friend|you and the friend|both the referrer|both parties|referrer and (the )?referee|each of you)\b|for you\b.{0,40}\bfor (your|the) friends?|(вам|ви),? (і|й|та) (йому|другу|запрошеному)|і вам,? і (йому|другу)|обидва|вам и (ему|другу)|и вам,? и (ему|другу)/i.test(`${p.titleOrig ?? ""} ${p.title} ${JSON.stringify(det ?? "")}`);
   const puUsd = pu ? inUsd(pu.amount, pu.unit, pu.usd) : undefined;
   const perUserCell: React.ReactNode = pu ? (
     <span>
