@@ -9,6 +9,7 @@ import { prices } from "./pools";
 import { translateAll } from "./translate";
 import { getFaqs } from "./faq";
 import { payoutOf } from "./payout";
+import { junkReason, type JunkReason } from "./junk";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -85,6 +86,7 @@ async function getPromosLive(): Promise<Collected> {
   const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
+  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason; perUserUsd?: number }> = [];
   for (const p of all) {
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
     // exchange rating then see coin pools too (audit 12.11)
@@ -140,8 +142,12 @@ async function getPromosLive(): Promise<Collected> {
     if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;
     if (thin) meta.thin = true;
     p.meta = Object.keys(meta).length ? meta : p.meta;
+    const junk = junkReason(p, d?.blocks, !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id));
+    if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd }); continue; }
     promos.push(p);
   }
+  // what the junk filter hid this build (data branch → reviewable history)
+  try { if (fs.existsSync(path.join(process.cwd(), "data"))) fs.writeFileSync(path.join(process.cwd(), "data", "hidden-promos.json"), JSON.stringify({ at: now, items: hidden }, null, 1)); } catch { /* read-only */ }
   // translations (DeepL Free, cached in data/translations.json) — most visible texts first, full rules last
   const texts: string[] = [];
   for (const p of promos) texts.push(p.title);
