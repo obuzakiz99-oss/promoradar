@@ -216,7 +216,7 @@ const UI_TX: Record<Locale, {
   uk: {
     reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", allUsers: "Усі користувачі",
     cat: { competition: "Торгувати — рейтинг", referral: "Запросити друзів", airdrop: "Виконати завдання", listing: "Торгувати новим токеном", bonus: "Депозит або торгівля", earn: "Покласти в Earn", other: "Виконати умови" }, fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
-    left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна — можна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${r}`),
+    left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${r}`),
     todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
@@ -227,7 +227,7 @@ const UI_TX: Record<Locale, {
   en: {
     reward: "Reward", action: "What to do", time: "Time", who: "Who can join", allUsers: "All users",
     cat: { competition: "Trade — leaderboard", referral: "Invite friends", airdrop: "Do the tasks", listing: "Trade the new token", bonus: "Deposit or trade", earn: "Put in Earn", other: "Meet the conditions" }, fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
-    left: "left", startsIn: "starts in", noEnd: "no end date", forAll: "No restrictions found", uaOk: "Ukraine — OK", notUA: "Not for Ukraine", onlyNew: "New users only", kyc: "KYC", region: (r) => (r === "region" ? "Some regions" : `${r} only`),
+    left: "left", startsIn: "starts in", noEnd: "no end date", forAll: "No restrictions found", uaOk: "Ukraine", notUA: "Not for Ukraine", onlyNew: "New users only", kyc: "KYC", region: (r) => (r === "region" ? "Some regions" : `${r} only`),
     todo: "What to do", good: "Good to know", more: "Show the full conditions", ex: "Tasks on the exchange page", exTasks: "Each task is a separate reward", quote: "As written in the rules",
     s: {
       reg: (v, kyc, nw) => `Sign up on ${v}${nw ? " (new account)" : ""}${kyc ? " and pass KYC" : ""}`,
@@ -238,7 +238,7 @@ const UI_TX: Record<Locale, {
   ru: {
     reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", allUsers: "Все пользователи",
     cat: { competition: "Торговать — рейтинг", referral: "Пригласить друзей", airdrop: "Выполнить задания", listing: "Торговать новым токеном", bonus: "Депозит или торговля", earn: "Положить в Earn", other: "Выполнить условия" }, fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
-    left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина — можно", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${r}`),
+    left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${r}`),
     todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
