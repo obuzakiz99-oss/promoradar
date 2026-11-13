@@ -269,6 +269,13 @@ const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: s
     note: (v) => `Пояснение составил AI только по официальным правилам ${v}. Он может ошибаться — перед участием сверьте важное с условиями ниже.` },
 };
 
+// referral promos: the steps and the reward say who gets what (owner 13.11)
+const REF = {
+  uk: { both: (x: string) => `${x} вам і стільки ж другу`, link: "Візьміть своє реферальне посилання або код у розділі «Запросити друзів»", friend: (c: string) => `Друг реєструється за вашим посиланням${c ? ` і ${c}` : " і виконує умову акції"}`, paid: "Бонус нараховується вам після виконання умов другом", paidBoth: "Бонус отримуєте і ви, і друг — після виконання умов" },
+  en: { both: (x: string) => `${x} for you and the same for your friend`, link: "Get your referral link or code in “Invite friends”", friend: (c: string) => `Your friend signs up with your link${c ? ` and ${c}` : " and meets the promo condition"}`, paid: "You get the bonus once your friend meets the conditions", paidBoth: "Both you and your friend get the bonus once the conditions are met" },
+  ru: { both: (x: string) => `${x} вам и столько же другу`, link: "Возьмите свою реферальную ссылку или код в разделе «Пригласить друзей»", friend: (c: string) => `Друг регистрируется по вашей ссылке${c ? ` и ${c}` : " и выполняет условие акции"}`, paid: "Бонус начисляется вам после выполнения условий другом", paidBoth: "Бонус получаете и вы, и друг — после выполнения условий" },
+} as const;
+
 export default async function PromoPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
@@ -318,6 +325,8 @@ export default async function PromoPage({ params }: { params: Params }) {
     return text.split(re).map((part, i) => (i % 2 ? <Link key={i} href={`/${lang}/t/${part}`} className="underline decoration-line-2 decoration-2 underline-offset-4 hover:text-lime">{part}</Link> : part));
   };
   const pu = m.perUser;
+  // referral promos: is the bonus paid to both sides? (owner 13.11: Pump.fun pays the inviter too, the page didn't say so)
+  const refBoth = p.category === "referral" && /\b(both of you|for both|you and your friend|you and the friend|both the referrer|both parties|referrer and (the )?referee|each of you)\b|(вам|ви),? (і|й|та) (йому|другу|запрошеному)|і вам,? і (йому|другу)|обидва|вам и (ему|другу)|и вам,? и (ему|другу)/i.test(`${p.titleOrig ?? ""} ${p.title} ${JSON.stringify(det ?? "")}`);
   const puUsd = pu ? inUsd(pu.amount, pu.unit, pu.usd) : undefined;
   const perUserCell: React.ReactNode = pu ? (
     <span>
@@ -407,7 +416,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
-                value: <>{pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
+                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
                   {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}</>,
                 body: <>
                   {pu?.text && <p>“{clean(pu.text)}”</p>}
@@ -449,7 +458,12 @@ export default async function PromoPage({ params }: { params: Params }) {
           const kyc = !!m.requires?.includes("kyc") || !!det?.facts.some((f) => f.k === "kyc");
           const amt = m.minEntry ? money(m.minEntry.amount, m.minEntry.unit === "USD" ? "USD" : m.minEntry.unit, lang) : "";
           const needsJoin = !!det?.facts.some((f) => f.k === "how" && /register|join|sign ?up|opt.?in|зареєстр|приєдна|натисн|зарегистр|нажмите/i.test(f.text));
-          const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : [
+          const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : p.category === "referral" ? [
+            ["user", U.s.reg(p.venue.name, kyc, false)],
+            ["tag", REF[lang].link],
+            ["user", REF[lang].friend(m.minEntry ? U.s.act[m.minEntry.kind](amt, !!m.futures).toLowerCase() : "")],
+            ["gift", refBoth ? REF[lang].paidBoth : REF[lang].paid],
+          ] : [
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
             ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
@@ -510,7 +524,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         )}
 
         {/* "how much would I get" — only when the rules give something to calculate with */}
-        {p.category !== "farming" && p.category !== "competition" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
+        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
         )}
 
