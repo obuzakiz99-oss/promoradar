@@ -2,7 +2,7 @@ import { getJson } from "./sources/util";
 
 /** A savings/staking offer on a centralised exchange. APRs are in % per year. */
 export interface EarnOffer {
-  exchange: "binance" | "bybit" | "okx" | "gate" | "mexc";
+  exchange: "binance" | "bybit" | "okx" | "gate" | "mexc" | "bitget";
   coin: string;
   type: "flexible" | "fixed" | "onchain";
   apr: number;              // typical / base APR for any amount
@@ -106,8 +106,41 @@ async function mexc(): Promise<EarnOffer[]> {
   return out.filter((o) => o.apr > 0);
 }
 
+/* Bitget Savings (public web API used by the Earn page; one call returns every coin). Owner 13.11: more exchanges. */
+async function bitget(): Promise<EarnOffer[]> {
+  const j = await postJson("https://www.bitget.com/v1/finance/savings/product/list", { pageNo: 1, pageSize: 500, locale: "en_US" });
+  const out: EarnOffer[] = [];
+  for (const c of j?.data ?? []) for (const bl of c.bizLineProductList ?? []) for (const p of bl.productList ?? []) {
+    if (p.status !== 2 || p.visibleApy === false) continue;   // 2 = open; sold-out / upcoming are skipped
+    const tiers: Array<{ apy: number; max?: number }> = (p.apyList ?? []).map((t: any) => ({ apy: n(t.apy) ?? 0, max: n(t.maxStepValue) }));
+    const base = Math.min(...tiers.map((t) => t.apy).concat(n(p.minApy) ?? Infinity));
+    const best = Math.max(base, n(p.maxApy) ?? 0, ...tiers.map((t) => t.apy));
+    const fixed = p.periodType === 2 && Number(p.period) > 0;
+    const top = tiers.find((t) => t.apy === best);
+    out.push({
+      exchange: "bitget", coin: p.coinName, type: fixed ? "fixed" : "flexible", apr: +base.toFixed(2),
+      aprMax: best > base + 0.01 ? +best.toFixed(2) : undefined,
+      tierNote: best > base + 0.01 && top?.max ? `≤ ${fmtAmt(top.max)} ${p.coinName}` : undefined,
+      days: fixed ? Number(p.period) : undefined, url: "https://www.bitget.com/earning/savings",
+    });
+  }
+  // the same product is listed under several tabs — keep one
+  const seen = new Set<string>();
+  return out.filter((o) => Number.isFinite(o.apr) && o.apr > 0 && !seen.has(`${o.coin}|${o.type}|${o.days}|${o.apr}|${o.aprMax}`) && !!seen.add(`${o.coin}|${o.type}|${o.days}|${o.apr}|${o.aprMax}`));
+}
+
+async function postJson(url: string, body: unknown): Promise<any> {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 15_000);
+  try {
+    const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json", "user-agent": "Mozilla/5.0" }, body: JSON.stringify(body), signal: ctl.signal });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
 export async function getEarn(): Promise<EarnData> {
-  const src = { binance, bybit, okx, gate, mexc } as const;
+  const src = { binance, bybit, okx, gate, mexc, bitget } as const;
   const keys = Object.keys(src) as (keyof typeof src)[];
   const res = await Promise.allSettled(keys.map((k) => src[k]()));
   const status: EarnData["status"] = {};

@@ -31,7 +31,7 @@ export default async function EarnPage({ params }: { params: Params }) {
   // coin prices (Gate spot tickers) for the calculator: income in the coin and in dollars
   const px = await getPrices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const usedPx = Object.fromEntries(Object.entries(px).filter(([k]) => offers.some((o) => o.coin === k)));
-  const ids = ["binance", "bybit", "okx", "gate", "mexc"] as const;
+  const ids = ["binance", "bybit", "bitget", "okx", "gate", "mexc"] as const;
   const exchanges = Object.fromEntries(ids.map((id) => [id, venueOf(id)]));
   return (
     <>
