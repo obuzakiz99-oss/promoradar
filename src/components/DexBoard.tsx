@@ -12,6 +12,7 @@ import { dexHedge } from "@/lib/dexhedge";
 import { HedgeVenues } from "./HedgeVenues";
 import { Hint } from "./Hint";
 import { Select } from "./Select";
+import { ApyHistory } from "./ApyHistory";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
@@ -24,7 +25,6 @@ const HX: Record<Locale, { title: string; leg: (c: string, sh: number, usd: stri
 const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
 const RISKS: Record<Locale, string> = { uk: "Плюси й ризики", en: "Pros & risks", ru: "Плюсы и риски" };
-const STATS: Record<Locale, string> = { uk: "Історія APY (DefiLlama)", en: "APY history (DefiLlama)", ru: "История APY (DefiLlama)" };
 const WHAT: Record<Locale, (pr: string, s: string, ch: string) => string> = {
   uk: (pr, s, ch) => `Пул ${s} у протоколі ${pr} (мережа ${ch}). Ви вносите монети зі свого гаманця і отримуєте частку комісій та/або нагород протоколу. Дохідність змінюється щодня — нижче плюси, мінуси та ризики.`,
   en: (pr, s, ch) => `The ${s} pool on ${pr} (${ch}). You deposit coins from your own wallet and earn a share of fees and/or protocol rewards. The yield changes daily — pros, cons and risks below.`,
@@ -129,9 +129,9 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     <div className="flex flex-col gap-4 rounded-xl border border-line bg-white/[0.02] p-4">
       <div className="flex items-center gap-2 text-sm font-bold">{RISKS[lang]} <Hint lang={lang} align="right">{WHAT[lang](p.project, p.symbol, p.chain)}</Hint></div>
       <ProsCons lang={lang} pc={pc} max={10} />
+      <ApyHistory id={p.id} lang={lang} />
       <div className="mt-auto flex flex-wrap gap-2">
         {p.url && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{GO[lang](p.project)} ↗</a>}
-        <a href={`https://defillama.com/yields/pool/${p.id}`} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-4 text-sm">{STATS[lang]} ↗</a>
       </div>
     </div>
     </div>
