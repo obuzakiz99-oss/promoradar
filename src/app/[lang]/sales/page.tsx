@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CalendarTabs } from "@/components/SectionTabs";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
-import { getSales, SALES_SRC, type Sale } from "@/lib/sales";
+import { getSales, SALES_SRC, type Sale, type PreIpoVenue } from "@/lib/sales";
 import { duration } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { CalAdd } from "@/components/CalAdd";
@@ -46,6 +46,13 @@ const X: Record<Locale, {
 };
 const KIND_CLS: Record<Sale["kind"], string> = { exchange: "bg-lime/10 text-lime", wallet: "bg-amber/10 text-amber", launchpad: "bg-sky/10 text-sky" };
 
+const PRE: Record<Locale, { title: (c: string, t: string) => string; sub: string; risk: string; kind: Record<PreIpoVenue["kind"], string> }> = {
+  uk: { title: (c, t) => `Pre-IPO ${c} (${t}): де взяти`, sub: "Токени, прив'язані до акцій компанії до її виходу на біржу. Усі біржі, де вони є зараз: підписка за ціною розміщення, торгівля або акції з нагородою в цьому токені.", risk: "Це не самі акції компанії, а токен біржі, що відстежує їхню ціну: правила, ліміти й доступність для України залежать від біржі.", kind: { subscribe: "Підписка", trade: "Торгівля", promo: "Акція" } },
+  en: { title: (c, t) => `Pre-IPO ${c} (${t}): where to get it`, sub: "Tokens tied to the company's shares before it goes public. Every exchange that has one now: subscription at the offer price, trading, or promos paid in this token.", risk: "These are not the company's shares but an exchange token tracking their price: rules, limits and availability depend on the exchange.", kind: { subscribe: "Subscription", trade: "Trading", promo: "Promo" } },
+  ru: { title: (c, t) => `Pre-IPO ${c} (${t}): где взять`, sub: "Токены, привязанные к акциям компании до её выхода на биржу. Все биржи, где они есть сейчас: подписка по цене размещения, торговля или акции с наградой в этом токене.", risk: "Это не сами акции компании, а токен биржи, отслеживающий их цену: правила, лимиты и доступность зависят от биржи.", kind: { subscribe: "Подписка", trade: "Торговля", promo: "Акция" } },
+};
+const PI_CLS: Record<PreIpoVenue["kind"], string> = { subscribe: "bg-lime/15 text-lime", trade: "bg-sky/10 text-sky", promo: "bg-white/5 text-ink-2" };
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
@@ -56,7 +63,8 @@ export default async function SalesPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = X[lang];
-  const { sales, fetchedAt, icoOk } = await getSales(lang);
+  const { sales, preIpo, fetchedAt, icoOk } = await getSales(lang);
+  const PI = PRE[lang];
   const now = fetchedAt;
   const logoOf = (s: Sale) => (s.venueId && VENUES[s.venueId] ? venueOf(s.venueId) : { name: s.name, logo: s.logo, color: "#2a313b", ink: "#eef2f6", monogram: coinMonogram(s.ticker ?? s.name) });
 
@@ -108,6 +116,29 @@ export default async function SalesPage({ params }: { params: Params }) {
           </ol>
           <p className="rounded-2xl border border-amber/30 bg-amber/[0.05] p-5 text-sm leading-relaxed text-ink-2"><Icon name="alert" className="text-amber" /> {T.risk}</p>
         </div>
+
+        {/* pre-IPO tokens: one block per company, every exchange that has it (owner 13.11) */}
+        {preIpo.map((g) => (
+          <section key={g.company} className="mt-10 rounded-2xl border border-lime/25 bg-lime/[0.04] p-5">
+            <h2 className="font-display text-2xl font-semibold tracking-tight">{PI.title(g.company, g.ticker)} <span className="font-mono text-base text-ink-3">{g.venues.length}</span></h2>
+            <p className="mt-1 max-w-3xl text-sm text-ink-2">{PI.sub}</p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {g.venues.map((v) => (
+                <li key={v.venueId}>
+                  <a href={v.href} className="card flex h-full items-center gap-3 p-3.5">
+                    <VenueLogo v={venueOf(v.venueId)} size={34} rounded="rounded-lg" />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-center gap-2"><span className="font-bold">{v.venue}</span><span className={`rounded-md px-1.5 py-0.5 text-xs font-bold ${PI_CLS[v.kind]}`}>{PI.kind[v.kind]}</span></span>
+                      <span className="mt-0.5 line-clamp-2 block break-words text-xs text-ink-3">{v.title}</span>
+                    </span>
+                    {v.n > 1 && <span className="shrink-0 font-mono text-xs text-ink-3">+{v.n - 1}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-ink-3"><Icon name="alert" className="text-amber" /> {PI.risk}</p>
+          </section>
+        ))}
 
         {!icoOk && <p className="mt-6 text-xs text-ink-3">{T.noIco}</p>}
         {sales.length === 0 ? <p className="mt-10 rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{T.none}</p> : groups.filter(([, l]) => l.length).map(([h, l]) => (

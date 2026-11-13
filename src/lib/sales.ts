@@ -29,6 +29,35 @@ export interface Sale {
   venueId?: string;
 }
 
+/** Pre-IPO tokens of private companies (owner 13.11: "where can I get ANT") — every exchange that has one, grouped by company. */
+export interface PreIpoVenue { venueId: string; venue: string; kind: "subscribe" | "trade" | "promo"; title: string; href: string; endsAt?: number; n: number }
+export interface PreIpo { company: string; ticker: string; venues: PreIpoVenue[] }
+const COMPANIES: Array<[RegExp, string, string]> = [
+  [/anthropic/i, "Anthropic", "ANT"], [/spacex/i, "SpaceX", "SPACEX"], [/openai/i, "OpenAI", "OPENAI"], [/\bxai\b/i, "xAI", "XAI"],
+  [/stripe/i, "Stripe", "STRIPE"], [/databricks/i, "Databricks", "DBX"], [/kraken ipo|payward/i, "Kraken", "KRAKEN"],
+];
+const KIND_ORDER: Record<PreIpoVenue["kind"], number> = { subscribe: 0, trade: 1, promo: 2 };
+
+function preIpo(promos: Promo[], lang: string, now: number): PreIpo[] {
+  const map = new Map<string, PreIpo>();
+  for (const p of promos) {
+    const t = `${p.titleOrig ?? ""} ${p.title}`;
+    const co = COMPANIES.find(([re]) => re.test(t));
+    // a private company named in an exchange promo is its pre-IPO token (ANTHROPIC, ANT, bStocks…)
+    if (!co || (p.endsAt && p.endsAt < now)) continue;
+    const kind: PreIpoVenue["kind"] = /ipo prime|subscri|launchpad|sale\b/i.test(t) && !/share your|sharing challenge/i.test(t) ? "subscribe"
+      : /trad|futures|perp|spot|listing|pre-?ipo (carnival|challenge)|kraken pro|bstocks?/i.test(t) && p.category !== "referral" ? "trade" : "promo";
+    const g = map.get(co[1]) ?? { company: co[1], ticker: co[2], venues: [] };
+    const v = g.venues.find((x) => x.venueId === p.venue.id);
+    const row: PreIpoVenue = { venueId: p.venue.id, venue: p.venue.name, kind, title: p.title, href: withBase(`/${lang}/p/${slugOf(p)}/`), endsAt: p.endsAt, n: 1 };
+    if (!v) g.venues.push(row);
+    else { v.n++; if (KIND_ORDER[kind] < KIND_ORDER[v.kind]) Object.assign(v, { ...row, n: v.n }); }
+    map.set(co[1], g);
+  }
+  return [...map.values()].map((g) => ({ ...g, venues: g.venues.sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind] || b.n - a.n) }))
+    .sort((a, b) => b.venues.length - a.venues.length);
+}
+
 export const SALES_SRC = "https://icodrops.com/category/active-ico/";
 
 // announcement titles that are a token sale / subscription (not a Launchpool, which is staking and has its own section)
@@ -87,10 +116,11 @@ export function parseIcoDrops(html: string, status: Sale["status"], now: number)
   return out;
 }
 
-export async function getSales(lang: string): Promise<{ sales: Sale[]; fetchedAt: number; icoOk: boolean }> {
+export async function getSales(lang: string): Promise<{ sales: Sale[]; preIpo: PreIpo[]; fetchedAt: number; icoOk: boolean }> {
   const now = Date.now();
   const { promos, fetchedAt } = await getPromos(lang);
-  const ex = fromPromos(promos, lang, now);
+  // pre-IPO companies get their own block (all exchanges together), not a row each
+  const ex = fromPromos(promos, lang, now).filter((x) => !COMPANIES.some(([re]) => re.test(x.name)));
   let ico: Sale[] = [];
   let icoOk = true;
   try {
@@ -101,5 +131,5 @@ export async function getSales(lang: string): Promise<{ sales: Sale[]; fetchedAt
   const seen = new Set(ex.map((s) => s.name.toLowerCase()));
   const sales = [...ex, ...ico.filter((s) => !seen.has(s.name.toLowerCase()) && !!seen.add(s.name.toLowerCase()))]
     .sort((a, b) => (a.status === b.status ? (a.startsAt ?? a.endsAt ?? Infinity) - (b.startsAt ?? b.endsAt ?? Infinity) : a.status === "active" ? -1 : 1));
-  return { sales, fetchedAt, icoOk };
+  return { sales, preIpo: preIpo(promos, lang, now), fetchedAt, icoOk };
 }
