@@ -1,5 +1,5 @@
 {
- "at": 1794608624915,
+ "at": 1794610045847,
  "items": [
   {
    "id": "gate:102768",
@@ -14,7 +14,8 @@
    "venue": "Gate",
    "title": "Gate Square Anthropic IPO Challenge: Share Your Subscription, Win 150 USDT in ANT Shares",
    "url": "https://www.gate.com/announcements/article/102761",
-   "why": "social"
+   "why": "social",
+   "netUsd": 0.01
   },
   {
    "id": "biconomy:64240938144281",
@@ -29,7 +30,8 @@
    "venue": "Coinstore",
    "title": "Coinstore Telegram Community Growth Challenge!",
    "url": "https://t.me/coinstore_global/10361",
-   "why": "social"
+   "why": "social",
+   "netUsd": -0.96
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15806",
@@ -44,7 +46,8 @@
    "venue": "Bitbase",
    "title": "Bitbase Community Growth Program: Unlock a 4,000 USDT Tiered Prize Pool — Every Move Counts!",
    "url": "https://bitbase-support.zendesk.com/hc/en-us/articles/5792472385182-Bitbase-Community-Growth-Program-Unlock-a-4-000-USDT-Tiered-Prize-Pool-Every-Move-Counts",
-   "why": "social"
+   "why": "social",
+   "netUsd": 0.4
   },
   {
    "id": "binance:0ea740cbfca045ed935964f4555dc689",
@@ -52,7 +55,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 6.3
+   "perUserUsd": 6.31
   },
   {
    "id": "biconomy:64106346149913",
@@ -90,7 +93,8 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 9.39
+   "perUserUsd": 9.38,
+   "netUsd": 4.11
   },
   {
    "id": "kucoin:351781",
@@ -98,7 +102,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 14.95
+   "perUserUsd": 15.25
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
