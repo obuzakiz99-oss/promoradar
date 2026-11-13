@@ -17,6 +17,14 @@ interface Track { status: Status; earned?: number; note?: string; title?: string
 const KEY = "pr:track";
 const CAL_T: Record<Locale, string> = { uk: "Дедлайн акції", en: "Promo deadline", ru: "Дедлайн акции" };
 const CAL_ALL: Record<Locale, string> = { uk: "Дедлайни в календар (.ics) — нагадування за день", en: "Deadlines to calendar (.ics) — a day-before reminder", ru: "Дедлайны в календарь (.ics) — напоминание за день" };
+type Sort = "deadline" | "recent" | "earned" | "venue";
+type Show = "all" | Status | "ended";
+const F: Record<Locale, { all: string; ended: string; sort: string; venue: string; anyVenue: string; search: string; sorts: Record<Sort, string>; empty: string }> = {
+  uk: { all: "Усі", ended: "Завершились", sort: "Сортування", venue: "Біржа", anyVenue: "Усі біржі", search: "Пошук у моїх акціях", sorts: { deadline: "Скоро дедлайн", recent: "Нещодавно збережені", earned: "Більше заробив", venue: "За біржею" }, empty: "Нічого не знайдено — змініть фільтр" },
+  en: { all: "All", ended: "Ended", sort: "Sort", venue: "Exchange", anyVenue: "All exchanges", search: "Search my promos", sorts: { deadline: "Deadline soon", recent: "Recently saved", earned: "Most earned", venue: "By exchange" }, empty: "Nothing found — change the filter" },
+  ru: { all: "Все", ended: "Завершились", sort: "Сортировка", venue: "Биржа", anyVenue: "Все биржи", search: "Поиск в моих акциях", sorts: { deadline: "Скоро дедлайн", recent: "Недавно сохранённые", earned: "Больше заработал", venue: "По бирже" }, empty: "Ничего не найдено — измените фильтр" },
+};
+const PREF = "pr:my:view";
 const load = (): Record<string, Track> => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } };
 
 export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
@@ -33,6 +41,33 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
   const rows = saved.map((id) => ({ id, p: byId.get(id), tr: track[id] ?? { status: "saved" as Status } }));
   const total = Object.values(track).reduce((s, x) => s + (x.earned ?? 0), 0);
   const activeN = rows.filter((r) => r.tr.status === "joined").length;
+
+  // filter + sort (owner 13.11): status chips with counts, exchange, search; the choice is remembered in this browser
+  const L = F[lang];
+  const [show, setShow] = useState<Show>("all");
+  const [sort, setSort] = useState<Sort>("deadline");
+  const [venue, setVenue] = useState("all");
+  const [q, setQ] = useState("");
+  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(PREF) || "{}"); if (v.show) setShow(v.show); if (v.sort) setSort(v.sort); } catch {} }, []);
+  useEffect(() => { try { localStorage.setItem(PREF, JSON.stringify({ show, sort })); } catch {} }, [show, sort]);
+  const ended = (r: (typeof rows)[number]) => !r.p || (!!r.p.endsAt && r.p.endsAt <= now);
+  const venueOf = (r: (typeof rows)[number]) => r.p?.venue.name ?? r.tr.venue ?? "";
+  const counts: Record<string, number> = { all: rows.length, ended: rows.filter(ended).length };
+  rows.forEach((r) => (counts[r.tr.status] = (counts[r.tr.status] ?? 0) + 1));
+  const venues = [...new Set(rows.map(venueOf).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const view = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    const order = new Map(saved.map((id, i) => [id, i]));
+    const list = rows.filter((r) => (show === "all" || (show === "ended" ? ended(r) : r.tr.status === show))
+      && (venue === "all" || venueOf(r) === venue)
+      && (!s || `${r.p?.title ?? r.tr.title ?? ""} ${venueOf(r)} ${r.tr.note ?? ""}`.toLowerCase().includes(s)));
+    const end = (r: (typeof rows)[number]) => (r.p?.endsAt && r.p.endsAt > now ? r.p.endsAt : Infinity);
+    return list.sort((a, b) => sort === "deadline" ? end(a) - end(b) || (order.get(b.id)! - order.get(a.id)!)
+      : sort === "recent" ? order.get(b.id)! - order.get(a.id)!
+      : sort === "earned" ? (b.tr.earned ?? 0) - (a.tr.earned ?? 0)
+      : venueOf(a).localeCompare(venueOf(b)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows.length, saved, track, show, sort, venue, q, now]);
 
   const exportCsv = () => {
     const lines = [["title", "venue", "status", "earned_usd", "note", "url"], ...rows.map((r) => [r.p?.title ?? r.tr.title ?? r.id, r.p?.venue.name ?? r.tr.venue ?? "", r.tr.status, String(r.tr.earned ?? ""), r.tr.note ?? "", r.p?.url ?? ""])];
@@ -63,8 +98,32 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>
         <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">{withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>
       </div>
-      <ul className="mt-6 space-y-2">
-        {rows.map(({ id, p, tr }) => {
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        <div className="scroll-x -mx-1 flex min-w-0 flex-1 gap-2 px-1" role="tablist" aria-label={L.all}>
+          {(["all", "joined", "saved", "done", "skipped", "ended"] as Show[]).filter((k) => k === "all" || counts[k] || show === k).map((k) => (
+            <button key={k} type="button" className="chip" data-on={show === k} role="tab" aria-selected={show === k} onClick={() => setShow(k)}>
+              {k === "all" ? L.all : k === "ended" ? L.ended : T.status[k]} <span className="chip-count">{counts[k] ?? 0}</span>
+            </button>
+          ))}
+        </div>
+        {rows.length > 5 && (
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L.search} aria-label={L.search}
+            className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
+        )}
+        {venues.length > 1 && (
+          <div className="min-w-40">
+            <Select label={L.venue} value={venue} onChange={setVenue} align="right" className="h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
+              options={[{ value: "all", label: L.anyVenue }, ...venues.map((v) => ({ value: v, label: v }))]} />
+          </div>
+        )}
+        <div className="min-w-48">
+          <Select label={L.sort} value={sort} onChange={setSort} align="right" className="h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
+            options={(["deadline", "recent", "earned", "venue"] as Sort[]).map((k) => ({ value: k, label: L.sorts[k] }))} />
+        </div>
+      </div>
+      {!view.length && <div className="mt-4 rounded-3xl border border-dashed border-line-2 px-6 py-10 text-center text-sm text-ink-2">{L.empty}</div>}
+      <ul className="mt-4 space-y-2">
+        {view.map(({ id, p, tr }) => {
           const left = p?.endsAt ? p.endsAt - now : undefined;
           const soon = left !== undefined && left > 0 && left < 2 * 86400_000;
           return (
