@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-// self-hosted variable fonts (Latin + Cyrillic) — no network calls at build time
-import "@fontsource-variable/unbounded";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/jetbrains-mono";
+// self-hosted variable fonts (Latin + Cyrillic), preloaded — see lib/fonts.ts
+import { FONT_CSS, fontPreloads } from "@/lib/fonts";
 import "../globals.css";
 import { LOCALES, getDict, isLocale } from "@/lib/i18n";
 import { SITE } from "@/config/site";
@@ -45,6 +43,8 @@ export default async function LangLayout({ children, params }: { children: React
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
+        {fontPreloads(lang).map((href) => <link key={href} rel="preload" href={href} as="font" type="font/woff2" crossOrigin="anonymous" />)}
+        <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
         {/* beginner mode was removed 06.11 — this clears it for visitors who had switched it on */}
         <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
       </head>
