@@ -51,7 +51,9 @@ function personAmounts(s: string, headline: boolean): number[] {
 export function junkReason(p: Promo, blocks: Block[] | undefined, handAdded = false): JunkReason | undefined {
   if (p.sponsored || handAdded) return undefined;
   const lines = (blocks ?? []).map((b) => (b.t === "tr" ? (b.cells ?? []).join(" · ") : b.x));
-  if (SOCIAL_TITLE.test(p.title) || lines.some((x) => SOCIAL_TASK.test(x) && !SOCIAL_FOOTER.test(x))) return "social";
+  // a social task found only in the rules hides the promo when nothing else is asked; a trading / deposit campaign
+  // with an extra social giveaway inside (Toobit Thanksgiving: 350K USDT for trading + 1K "quote our post") stays
+  if (SOCIAL_TITLE.test(p.title) || (!p.meta?.minEntry && lines.some((x) => SOCIAL_TASK.test(x) && !SOCIAL_FOOTER.test(x)))) return "social";
   const pu = p.meta?.perUser?.usd;
   if (p.category === "competition" || pu === undefined || pu >= MIN_PER_USER_USD) return undefined;
   // the per-person figure read from the rules is sometimes one task of several ("Earn 5 USDT: …" in a package worth
