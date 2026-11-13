@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { TableTools } from "@/components/TableTools";
+import { CalAdd } from "@/components/CalAdd";
+import { SITE } from "@/config/site";
 import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -8,6 +10,7 @@ import { trList } from "@/lib/translate";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
 import { compactUsd, duration } from "@/lib/format";
+import { deadlineReminder } from "@/lib/ics";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { impactOf, impactText, LEVEL_CLS, LEVEL_TXT } from "@/lib/unlock-impact";
@@ -62,6 +65,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const fmtNum = (n: number) => (n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
 const pressCls = (x: number) => (x >= 5 ? "bg-rose/15 text-rose" : x >= 1 ? "bg-amber/15 text-amber" : "bg-white/5 text-ink-2");
 const day = (ms: number, lang: Locale) => new Date(ms).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+
+// add an unlock to the calendar: a reminder a day before (owner 13.11)
+const CAL = {
+  uk: { col: "Календар", title: (s: string, a: string, d: string) => `Розблокування ${s}: ${a} (${d})` },
+  en: { col: "Calendar", title: (s: string, a: string, d: string) => `${s} unlock: ${a} (${d})` },
+  ru: { col: "Календарь", title: (s: string, a: string, d: string) => `Разблокировка ${s}: ${a} (${d})` },
+} as const;
 
 // sort + filter over the full table (owner 13.11)
 const UT = {
@@ -135,7 +145,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
             <div className="overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
-                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
+                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact, ""].map((h, i) => <th key={i} className="px-4 py-3">{h || <span className="sr-only">{CAL[lang].col}</span>}</th>)}</tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {rows.map((u) => {
@@ -159,6 +169,14 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
                         <td className="px-4 py-3">
                           <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
+                        </td>
+                        <td className="px-2 py-3 text-right">
+                          {u.date > fetchedAt && <CalAdd lang={lang} file={`unlock-${u.sym}`} ev={{
+                            uid: `unlock-${u.sym}-${u.date}`, at: deadlineReminder(u.date, fetchedAt),
+                            title: CAL[lang].title(u.sym, compactUsd(u.usd), day(u.date, lang)),
+                            description: `${u.sale ? `${trs(u.sale)} · ` : ""}${u.pctCap.toFixed(2)}% · ${LEVEL_TXT[lang][impactOf(u).level]}`,
+                            url: `https://${SITE.domain}/${lang}/${tokens.has(u.sym) ? `t/${u.sym}` : "unlocks"}/`,
+                          }} />}
                         </td>
                       </tr>
                     );
