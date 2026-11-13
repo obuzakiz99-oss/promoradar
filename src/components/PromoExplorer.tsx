@@ -33,7 +33,7 @@ export function geoAllowed(p: Promo, c: Country): boolean {
   if (c === "eu" && g.noEU) return false;
   return !g.only || OK_FOR[c].test(g.only);
 }
-type Kind = VenueKind | "all" | "saved";
+type Kind = VenueKind | "all" | "saved" | "hidden";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];
 const KINDS: Kind[] = ["all", "cex", "dex", "defi", "airdrop"];
@@ -49,6 +49,7 @@ const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: s
   ru: { n: (n) => `Вы скрыли: ${n}`, show: "показать", hideAgain: "снова скрыть", reset: "вернуть все" },
 };
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
+const HID_TAB: Record<Locale, string> = { uk: "Приховані", en: "Hidden", ru: "Скрытые" };
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
 const SYN: Array<[RegExp, string[]]> = [
@@ -117,7 +118,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     if (![...src.keys()].some((k) => FILTER_KEYS.includes(k))) { try { src = new URLSearchParams(localStorage.getItem(key) ?? ""); } catch { /* blocked */ } }
     const one = <T extends string>(k: string, ok: readonly T[]) => { const v = src.get(k); return v && (ok as readonly string[]).includes(v) ? (v as T) : undefined; };
     const many = (k: string) => (src.get(k) ?? "").split(",").map((x) => x.trim()).filter(Boolean);
-    const k = one("kind", [...KINDS, "saved"] as Kind[]); if (k && showKinds) setKind(k);
+    const k = one("kind", [...KINDS, "saved", "hidden"] as Kind[]); if (k && showKinds) setKind(k);
     const st = one("status", STATUSES); if (st) setStatus(st);
     const c = one("cat", CATS); if (c) setCat(c);
     const so = one("sort", SORTS); if (so) setSort(so);
@@ -160,30 +161,30 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount < 100) || !!p.meta?.noDeposit)
     && (!quick.has("forNew") || !!p.meta?.forNew)
     && (!quick.has("cash") || isCash(p));
+  // promos the reader hid with the eye button stay out of the feed (but not out of "Saved"), unless they ask to see them
+  const hiddenIds = useHidden();
   const kindCounts = useMemo(() => {
-    const vis = promos.filter((p) => geoAllowed(p, country) && quickOk(p));
-    const c: Record<string, number> = { all: vis.length, saved: vis.filter((p) => saved.includes(p.id)).length };
+    const all = promos.filter((p) => geoAllowed(p, country) && quickOk(p));
+    const vis = all.filter((p) => !hiddenIds.includes(p.id));
+    const c: Record<string, number> = { all: vis.length, saved: all.filter((p) => saved.includes(p.id)).length, hidden: all.filter((p) => hiddenIds.includes(p.id)).length };
     vis.forEach((p) => (c[p.venue.kind] = (c[p.venue.kind] ?? 0) + 1));
     return c;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promos, saved, country, quick]);
-
-  // promos the reader hid with the eye button stay out of the feed (but not out of "Saved"), unless they ask to see them
-  const hiddenIds = useHidden();
+  }, [promos, saved, hiddenIds, country, quick]);
   const [showHidden, setShowHidden] = useState(false);
   const geoAll = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
   const geoHidden = promos.length - geoAll.length;
   const userHidden = geoAll.filter((p) => hiddenIds.includes(p.id)).length;
   // how many other live promos each one stacks with (same exchange, same action, same time)
   const combos = useMemo(() => new Map(promos.map((p) => [p.id, combosFor(p, promos, serverNow)])), [promos, serverNow]);
-  const geoOk = useMemo(() => (showHidden || kind === "saved" ? geoAll : geoAll.filter((p) => !hiddenIds.includes(p.id))), [geoAll, hiddenIds, showHidden, kind]);
+  const geoOk = useMemo(() => (showHidden || kind === "saved" || kind === "hidden" ? geoAll : geoAll.filter((p) => !hiddenIds.includes(p.id))), [geoAll, hiddenIds, showHidden, kind]);
   const byKind = useMemo(
-    () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
+    () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : kind === "hidden" ? hiddenIds.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
       && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
       && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount < 100) || !!p.meta?.noDeposit)
       && (!quick.has("forNew") || !!p.meta?.forNew)
       && (!quick.has("cash") || isCash(p))),
-    [geoOk, kind, saved, status, now, quick],
+    [geoOk, kind, saved, hiddenIds, status, now, quick],
   );
 
   const venueList = useMemo(() => {
@@ -287,16 +288,16 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
         {/* kind tabs */}
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="tablist" aria-label="Type">
-            {(showKinds ? KINDS.filter((k) => k === "all" || kindCounts[k]) : (["all"] as Kind[])).map((k) => (
+            {[...(showKinds ? KINDS.filter((k) => k === "all" || kindCounts[k]) : (["all"] as Kind[])), ...(["saved", "hidden"] as Kind[]).filter((k) => kindCounts[k] || kind === k)].map((k) => (
               <button
                 key={k}
                 role="tab"
                 aria-selected={kind === k}
                 onClick={() => { setKind(k); setVenues(new Set()); setCat("all"); }}
-                className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-on-accent" : "bg-lime text-on-accent") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
+                className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-on-accent" : k === "hidden" ? "bg-white/15 text-ink" : "bg-lime text-on-accent") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
               >
-                {k === "saved" ? <>★ {t.saved.tab}</> : t.kinds[k as Exclude<Kind, "saved">]}
-                <span className={`font-mono text-xs ${kind === k ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
+                {k === "saved" ? <>★ {t.saved.tab}</> : k === "hidden" ? HID_TAB[lang] : t.kinds[k as Exclude<Kind, "saved" | "hidden">]}
+                <span className={`font-mono text-xs ${kind === k && k !== "hidden" ? "text-black/60" : "text-ink-3"}`}>{kindCounts[k] ?? 0}</span>
               </button>
             ))}
           </div>
