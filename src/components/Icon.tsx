@@ -42,13 +42,14 @@ const P: Record<IconName, string> = {
   ticket: "M3 7a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-3a2 2 0 0 0 0-4V7Zm10-2v2m0 4v2m0 4v2",
   tag: "M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4l-8.7-8.7ZM7.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1Z",
   box: "M21 8 12 3 3 8v8l9 5 9-5V8Zm-18 0 9 5 9-5m-9 5v8",
+  chevronDown: "m6 9 6 6 6-6",
   camera: "M14.5 4h-5L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3.5l-2-3ZM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
 };
 export type IconName =
   | "alert" | "check" | "checkCircle" | "help" | "shield" | "shieldAlert" | "gift" | "clock" | "hourglass" | "globe" | "calendar"
   | "user" | "cash" | "id" | "flame" | "coins" | "bulb" | "inbox" | "pin" | "scroll" | "flag"
   | "target" | "star" | "trend" | "chart" | "search" | "sprout" | "compass" | "book" | "unlock" | "rocket" | "bank" | "layers"
-  | "parachute" | "wallet" | "graduation" | "ticket" | "tag" | "box" | "camera";
+  | "parachute" | "wallet" | "graduation" | "ticket" | "tag" | "box" | "camera" | "chevronDown";
 
 export function Icon({ name, className = "", label }: { name: IconName; className?: string; label?: string }) {
   // a class without a size used to drop the default and blow the icon up to its container (audit 12.11)

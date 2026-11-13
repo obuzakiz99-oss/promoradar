@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { COMBO_UI, COMBO_WHY, type ComboWhy } from "@/lib/combos";
+import { Icon } from "./Icon";
 
 export interface ComboItem { id: string; href: string; title: string; usd?: number; left?: string }
 
@@ -20,7 +21,7 @@ export function ComboPanel({ items, why, ownUsd, lang }: { items: ComboItem[]; w
         className={`inline-flex min-h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors ${open ? "border-teal/50 bg-teal/10 text-teal" : "border-teal/30 text-teal hover:bg-teal/10"}`}>
         <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7l10-5Zm-10 10 10 5 10-5M2 17l10 5 10-5" /></svg>
         {U.btn(items.length)}
-        <span aria-hidden="true" className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
+        <Icon name="chevronDown" className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="mt-2 rounded-xl border border-teal/25 bg-teal/[0.05] p-3">

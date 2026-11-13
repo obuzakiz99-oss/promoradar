@@ -33,7 +33,7 @@ export function SummaryTiles({ tiles, lang }: { tiles: TileData[]; lang: "uk" | 
       {any && (
         <button type="button" onClick={() => setOpen((x) => !x)} aria-expanded={open}
           className="mt-2 inline-flex min-h-8 items-center gap-1 rounded-lg px-2 text-xs font-semibold text-ink-3 hover:bg-white/5 hover:text-ink">
-          {MORE[lang][open ? 1 : 0]} <span aria-hidden="true" className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
+          {MORE[lang][open ? 1 : 0]} <Icon name="chevronDown" className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
       )}
     </div>

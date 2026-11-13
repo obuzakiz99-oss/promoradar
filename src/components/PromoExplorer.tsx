@@ -6,6 +6,7 @@ import { PromoCard, CAT_STYLE } from "./PromoCard";
 import { PROX } from "@/lib/i18n-pro";
 import { VenueLogo } from "./VenueLogo";
 import { Select } from "./Select";
+import { Icon } from "./Icon";
 import { useSaved } from "./SaveButton";
 import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
@@ -260,8 +261,9 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
               options={(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
           </div>
           <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
-            className={`h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
-            {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
+            className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border pl-4 pr-3 text-sm font-bold text-ink ${panel || activeN ? "border-lime/60 bg-lime/10" : "border-line bg-surface hover:border-line-2"}`}>
+            {FILT[lang]}{activeN ? <span className="rounded-md bg-lime/20 px-1.5 font-mono text-xs text-lime">{activeN}</span> : null}
+            <Icon name="chevronDown" className={`size-4 text-ink-3 transition-transform ${panel ? "rotate-180" : ""}`} />
           </button>
         </div>
 
@@ -315,7 +317,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             {t.filters.venues}
             {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}
             {venues.size > 0 && <span className="font-mono text-xs text-lime">{venues.size}</span>}
-            <span className="text-ink-3 transition-transform group-open:rotate-180">▾</span>
+            <Icon name="chevronDown" className="size-4 text-ink-3 transition-transform group-open:rotate-180" />
           </summary>
           <div className="absolute left-0 top-11 z-30 grid w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
             {venueList.map(({ v, n }) => (

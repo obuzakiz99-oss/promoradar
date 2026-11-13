@@ -170,7 +170,7 @@ function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
       {groups.slice(0, cut).map(render)}
       {cut < groups.length && (
         <details className="group">
-          <summary className="cursor-pointer list-none pt-2 text-sm font-bold text-lime group-open:hidden">▾ {more}</summary>
+          <summary className="inline-flex cursor-pointer list-none items-center gap-1 pt-2 text-sm font-bold text-lime group-open:hidden [&::-webkit-details-marker]:hidden"><Icon name="chevronDown" className="size-4" /> {more}</summary>
           <div className="space-y-2">{groups.slice(cut).map((g, i) => render(g, cut + i))}</div>
         </details>
       )}
@@ -518,7 +518,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         <details className="group mt-6 rounded-2xl border border-line bg-white/[0.015]">
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-sm font-bold text-ink-2 hover:text-ink [&::-webkit-details-marker]:hidden">
             <span className="flex items-center gap-2"><Icon name="scroll" className="size-5 text-lime" /> {UI_TX[lang].more}</span>
-            <span aria-hidden="true" className="transition-transform group-open:rotate-180">▾</span>
+            <Icon name="chevronDown" className="size-4 transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-1 pb-1 sm:px-2 sm:pb-2">
             <p className="px-4 pt-1 text-sm text-ink-2"><span className="text-ink-3">{p.venue.name}:</span> {sentenceCase(p.title)}</p>
