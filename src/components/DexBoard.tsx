@@ -11,6 +11,7 @@ import type { Hedge } from "@/lib/pools";
 import { dexHedge } from "@/lib/dexhedge";
 import { HedgeVenues } from "./HedgeVenues";
 import { Hint } from "./Hint";
+import { Select } from "./Select";
 
 type Sort = "apy" | "tvl" | "reward";
 const PAGE = 40;
@@ -136,7 +137,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     </div>
   );
 
-  const sel = "h-10 appearance-none rounded-xl border border-line bg-surface pl-3 pr-8 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none";
+  const sel = "h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink";
   const toggle = (on: boolean) => `h-10 rounded-xl border px-3 text-sm font-bold transition-colors ${on ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:text-ink"}`;
 
   return (
@@ -152,19 +153,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       <div className="z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={A.searchPool}
           className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
-        <label className="relative">
-          <span className="sr-only">{A.chain}</span>
-          <select value={chain} onChange={(e) => setChain(e.target.value)} className={sel}>
-            <option value="all">{A.chain}: {A.all}</option>
-            {chains.slice(0, 60).map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </label>
-        <label className="relative">
-          <span className="sr-only">{A.minTvl}</span>
-          <select value={minTvl} onChange={(e) => setMinTvl(Number(e.target.value))} className={sel}>
-            {TVLS.map((v) => <option key={v} value={v}>{A.minTvl} {compactUsd(v)}</option>)}
-          </select>
-        </label>
+        <Select label={A.chain} value={chain} onChange={setChain} className={sel}
+          options={[{ value: "all", label: `${A.chain}: ${A.all}` }, ...chains.slice(0, 60).map((c) => ({ value: c, label: c }))]} />
+        <Select label={A.minTvl} value={String(minTvl)} onChange={(v) => setMinTvl(Number(v))} className={sel}
+          options={TVLS.map((v) => ({ value: String(v), label: `${A.minTvl} ${compactUsd(v)}` }))} />
         <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           {C.amount}
           <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal" placeholder="1000" aria-label={C.amount}

@@ -5,6 +5,7 @@ import type { Dict, Locale } from "@/lib/i18n";
 import { PromoCard, CAT_STYLE } from "./PromoCard";
 import { PROX } from "@/lib/i18n-pro";
 import { VenueLogo } from "./VenueLogo";
+import { Select } from "./Select";
 import { useSaved } from "./SaveButton";
 import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
@@ -252,16 +253,11 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             />
             {q && <button onClick={() => setQ("")} className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-ink" aria-label={t.filters.reset}>✕</button>}
           </label>
-          <label className="relative min-w-0 flex-1 sm:flex-none lg:ml-auto">
-            <span className="sr-only">{t.filters.sort}</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}
-              className="h-11 w-full appearance-none rounded-xl border border-line bg-surface pl-3 pr-9 text-xs font-bold text-ink focus:border-lime/50 focus:outline-none">
-              {(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => (
-                <option key={s} value={s}>↕ {s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s]}</option>
-              ))}
-            </select>
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
-          </label>
+          <div className="min-w-0 flex-1 sm:w-56 sm:flex-none lg:ml-auto">
+            <Select label={t.filters.sort} value={sort} onChange={setSort} align="right"
+              className="h-11 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
+              options={(["newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
+          </div>
           <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
             className={`h-11 shrink-0 rounded-xl border px-4 text-sm font-bold ${panel || activeN ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.03] text-ink-2 hover:text-ink"}`}>
             {FILT[lang]}{activeN ? ` (${activeN})` : ""} <span className="text-ink-3">{panel ? "▴" : "▾"}</span>
@@ -304,17 +300,11 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
               </button>
             ))}
           </div>
-          <label className="relative sm:ml-auto">
-            <span className="sr-only">{t.status.all}</span>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as Status | "all")}
-              className="h-10 w-full appearance-none rounded-xl border border-line bg-surface pl-4 pr-10 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none sm:w-auto"
-            >
-              {STATUSES.map((s) => <option key={s} value={s}>{s === "all" ? t.status.all : t.status[s]}</option>)}
-            </select>
-            <svg className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.2 7.6a.75.75 0 0 1 1.06 0L10 11.3l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.66a.75.75 0 0 1 0-1.06Z" /></svg>
-          </label>
+          <div className="sm:ml-auto sm:min-w-44">
+            <Select label={t.status.all} value={status} onChange={setStatus} align="right"
+              className="h-10 rounded-xl border border-line bg-surface pl-4 pr-3 text-sm font-bold text-ink"
+              options={STATUSES.map((s) => ({ value: s, label: s === "all" ? t.status.all : t.status[s] }))} />
+          </div>
         </div>
   
   
@@ -338,14 +328,9 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </div>
         </details>
       )}
-        <label className="relative">
-          <span className="sr-only">{G.country}</span>
-          <select value={country} onChange={(e) => setCountry(e.target.value as Country)} title={G.country}
-            className={`h-11 appearance-none rounded-xl border pl-3 pr-8 text-[13px] sm:h-9 font-bold focus:outline-none ${country !== "any" ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-surface text-ink-2"}`}>
-            {(["any", "ua", "eu"] as Country[]).map((c) => <option key={c} value={c}>{G[c]}</option>)}
-          </select>
-          <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-3">▾</span>
-        </label>
+        <Select label={G.country} title={G.country} value={country} onChange={setCountry}
+          className={`h-11 rounded-xl border pl-3 pr-2.5 text-[13px] font-bold sm:h-9 ${country !== "any" ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-surface text-ink-2"}`}
+          options={(["any", "ua", "eu"] as Country[]).map((c) => ({ value: c, label: G[c] }))} />
         {(["noDeposit", "low", "forNew", "cash"] as Quick[]).map((k) => (
           <button key={k} type="button" onClick={() => toggleQuick(k)} aria-pressed={quick.has(k)}
             className={`h-11 rounded-xl border px-3 text-[13px] font-bold transition-colors sm:h-9 ${quick.has(k) ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>

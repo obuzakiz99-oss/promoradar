@@ -7,6 +7,7 @@ import { getDict } from "@/lib/i18n";
 import { duration, money } from "@/lib/format";
 import { useSaved, toggleSaved } from "./SaveButton";
 import { VenueLogo } from "./VenueLogo";
+import { Select } from "./Select";
 import { deadlineReminder, icsFile } from "@/lib/ics";
 
 export interface MyPromo { id: string; title: string; venue: Venue; url: string; href: string; endsAt?: number; category: string; reward?: string }
@@ -78,9 +79,9 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
                   </div>
                 </div>
               </div>
-              <select value={tr.status} onChange={(e) => update(id, { status: e.target.value as Status }, p)} className="h-10 rounded-xl border border-line bg-surface px-3 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none">
-                {(["saved", "joined", "done", "skipped"] as Status[]).map((s) => <option key={s} value={s}>{T.status[s]}</option>)}
-              </select>
+              <Select label={T.status[tr.status]} value={tr.status} onChange={(v) => update(id, { status: v }, p)}
+                className="h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
+                options={(["saved", "joined", "done", "skipped"] as Status[]).map((s) => ({ value: s, label: T.status[s] }))} />
               <label className="flex items-center gap-2 text-xs font-semibold text-ink-3">{T.earned}
                 <input inputMode="decimal" defaultValue={tr.earned ?? ""} onBlur={(e) => update(id, { earned: Number(e.target.value.replace(",", ".")) || 0 }, p)}
                   className="h-10 w-24 rounded-xl border border-line bg-white/[0.03] px-3 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />

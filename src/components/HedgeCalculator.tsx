@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 
 import type { HedgeOption } from "@/lib/hedge-options";
+import { Select } from "./Select";
 
 // number format follows the page language (audit 12.11)
 const fmtOf = (lc: string) => ({
@@ -67,13 +68,14 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
   return (
     <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.1fr]">
       <div className="card p-5 hover:transform-none sm:p-6">
-        <label className="block">
+        <div>
           <span className="text-xs font-semibold text-ink-3">{T.pickPool}</span>
-          <select value={sel} onChange={(e) => pick(e.target.value)} className="mt-1 h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm font-bold text-ink focus:border-lime/50 focus:outline-none">
-            {options.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
-            <option value="custom">{T.custom}</option>
-          </select>
-        </label>
+          <div className="mt-1">
+            <Select label={T.pickPool} value={sel} onChange={pick} className="h-11 rounded-xl border border-line bg-surface px-3 text-sm font-bold text-ink"
+              menuClassName="w-full [&_li]:whitespace-normal [&_li]:py-1.5"
+              options={[...options.map((o) => ({ value: o.key, label: o.label })), { value: "custom", label: T.custom }]} />
+          </div>
+        </div>
         <div className="mt-4 grid grid-cols-2 gap-3">
           {field("capital", T.capital, "100")}
           {field("price", T.price)}
