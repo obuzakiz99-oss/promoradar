@@ -28,7 +28,12 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
     const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); btn.current?.focus(); } };
     document.addEventListener("pointerdown", off);
     // page scroll closes the fixed menu (it would float away); tabbing inside the menu must not
-    const close = () => { if (!root.current?.contains(document.activeElement)) setOpen(false); };
+    const close = () => {
+      const r = btn.current?.getBoundingClientRect();
+      if (!r || r.bottom < 0 || r.top > window.innerHeight) { setOpen(false); return; }   // button scrolled away: close
+      const left = Math.max(8, Math.min(r.right - 224, window.innerWidth - 232));
+      setPos(window.innerHeight - r.bottom > 120 ? { top: r.bottom + 4, left } : { bottom: window.innerHeight - r.top + 4, left });
+    };
     document.addEventListener("keydown", esc);
     window.addEventListener("scroll", close, { passive: true, capture: true });
     return () => { document.removeEventListener("pointerdown", off); document.removeEventListener("keydown", esc); window.removeEventListener("scroll", close, { capture: true }); };

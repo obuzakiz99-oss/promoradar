@@ -92,6 +92,9 @@ async function getPromosLive(): Promise<Collected> {
   const promos: Promo[] = [];
   const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news"; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
+    // links scraped from HTML / Telegram keep "&amp;" — the second parameter (inviteCode, rcode…) was lost (audit 14.11)
+    p.url = p.url.replace(/&amp;/g, "&");
+    if (p.joinUrl) p.joinUrl = p.joinUrl.replace(/&amp;/g, "&");
     // the venue registry is the source of logos (audit 14.11: one Phemex card had the logo, its twin a monogram)
     if (!p.venue.logo && VENUES[p.venue.id]?.logo) p.venue = { ...p.venue, logo: venueOf(p.venue.id).logo };
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
@@ -175,7 +178,7 @@ async function getPromosLive(): Promise<Collected> {
   const seenUrl = new Set<string>(), dups = new Set<string>();
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
-    try { const x = new URL(p.url); u = x.pathname.length > 1 ? `${p.venue.id}${x.host}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
+    try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
     // same venue + same tickers + same numbers in the headline = the same offer
     const head = p.titleOrig ?? p.title;
@@ -183,6 +186,8 @@ async function getPromosLive(): Promise<Collected> {
     const GENERIC = /^(APR|APY|USDT|USDC|USD|VIP|TGE|NEW|LIVE|UTC|KYC|AI|CEX|DEX|NFT|P2P|FAQ|AMA)$/;
     const sig = toks.some((x) => /\d/.test(x) && !/^20\d\d$/.test(x)) && toks.some((x) => /^[A-Z]/.test(x) && !GENERIC.test(x)) ? `${p.venue.id}|${p.category}|${toks.filter((x) => !/^20\d\d$/.test(x)).join(",")}` : "";
     if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dups.add(p.id); else seenUrl.add(sig); }
+    const lead = head.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().slice(0, 32);
+    if (lead.length >= 24 && !p.sponsored && !p.evergreen && !dups.has(p.id)) { const k = `${p.venue.id}|lead|${lead}`; if (seenUrl.has(k)) dups.add(p.id); else seenUrl.add(k); }
     const tag = (head.match(/\b[A-Z][A-Z0-9]{2,9}\b/g) ?? []).find((x) => !GENERIC.test(x));
     const big = p.reward?.usd !== undefined && p.reward.usd >= 100_000 && tag ? `${p.venue.id}|${p.category}|${tag}|${Math.round(p.reward.usd)}` : "";
     if (big && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(big)) dups.add(p.id); else seenUrl.add(big); }

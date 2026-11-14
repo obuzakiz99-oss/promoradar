@@ -12,6 +12,7 @@ import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
 import { rankOf } from "@/lib/rank";
+import { titleOf } from "@/lib/titletpl";
 import { plural } from "@/lib/format";
 
 type Sort = "best" | "newest" | "ending" | "biggest" | "perUser" | "minEntry";
@@ -173,19 +174,20 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     if (!words.length) return () => true;
     const alts = words.map((w) => [w, ...SYN.filter(([re]) => re.test(w)).flatMap(([, ws]) => ws)]);
     return (p: Promo) => {
-      const hay = `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.category} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase();
-      return alts.every((a) => a.some((x) => hay.includes(x)));
+      const hay = `${titleOf(p, lang) ?? ""} ${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.category} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase().replace(/[’ʼ`]/g, "'");
+      return alts.every((a) => a.some((x) => hay.includes(x.replace(/[’ʼ`]/g, "'"))));
     };
-  }, [q, t]);
+  }, [q, t, lang]);
   const kindCounts = useMemo(() => {
     const st = (p: Promo) => status === "all" || statusOf(p, now) === status || (status === "live" && statusOf(p, now) === "ongoing");
-    const all = promos.filter((p) => geoAllowed(p, country) && quickOk(p) && st(p) && qOk(p) && (cat === "all" || p.category === cat) && (!venues.size || venues.has(p.venue.id)));
+    // a tab click keeps status and search but resets category and venues — the counts work the same way
+    const all = promos.filter((p) => geoAllowed(p, country) && quickOk(p) && st(p) && qOk(p));
     const vis = all.filter((p) => !hiddenIds.includes(p.id));
     const c: Record<string, number> = { all: vis.length, saved: all.filter((p) => saved.includes(p.id)).length, hidden: all.filter((p) => hiddenIds.includes(p.id)).length };
     vis.forEach((p) => (c[p.venue.kind] = (c[p.venue.kind] ?? 0) + 1));
     return c;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promos, saved, hiddenIds, country, quick, status, now, qOk, cat, venues]);
+  }, [promos, saved, hiddenIds, country, quick, status, now, qOk]);
   const [showHidden, setShowHidden] = useState(false);
   const geoAll = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
   const geoHidden = promos.length - geoAll.length;

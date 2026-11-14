@@ -36,7 +36,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   // a per-person figure counts only when it is below the promo's pool, or the promo has no pool and is a bonus/referral)
   const perPersonOk = (p: (typeof promos)[number]) => {
     const pu = p.meta?.perUser?.usd ?? 0, pool = p.reward?.usd;
-    return pu > 0 && !p.meta?.thin && !/\bwin|\bwon|вигра|выигра/i.test(p.meta?.perUser?.text ?? "") && (pool !== undefined ? pu < pool : p.category === "bonus" || p.category === "referral");
+    return pu > 0 && !p.meta?.thin && !/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") && (pool !== undefined ? pu < pool : p.category === "bonus" || p.category === "referral");
   };
   const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && p.category !== "competition" && perPersonOk(p)).map((p) => p.meta!.perUser!.usd!));
   const newDay = promos.filter((p) => p.publishedAt > fetchedAt - 86400_000).length;

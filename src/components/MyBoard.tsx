@@ -142,7 +142,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
                 className="h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
                 options={(["saved", "joined", "done", "skipped"] as Status[]).map((s) => ({ value: s, label: T.status[s] }))} />
               <label className="flex items-center gap-2 text-xs font-semibold text-ink-3">{T.earned}
-                <input inputMode="decimal" defaultValue={tr.earned ?? ""} onBlur={(e) => update(id, { earned: Number(e.target.value.replace(",", ".")) || 0 }, p)}
+                <input inputMode="decimal" defaultValue={tr.earned ?? ""} onBlur={(e) => update(id, { earned: Number(e.target.value.replace(/[^\d.,-]/g, "").replace(",", ".")) || 0 }, p)}
                   className="h-10 w-24 rounded-xl border border-line bg-white/[0.03] px-3 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
               </label>
               <input placeholder={T.note} defaultValue={tr.note ?? ""} onBlur={(e) => update(id, { note: e.target.value.slice(0, 200) }, p)}

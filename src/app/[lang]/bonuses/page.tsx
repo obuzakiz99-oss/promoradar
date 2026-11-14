@@ -32,7 +32,7 @@ const isNewUser = (p: Promo) => !p.meta?.geo?.only && !NOT_NEW.test(p.titleOrig 
   p.category === "bonus" || !!p.meta?.forNew
   || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
-const perHead = (p: Promo) => (/\bwin|\bwon|вигра|выигра/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);   // "win $30,000" is a prize, not a bonus
+const perHead = (p: Promo) => (/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);   // "win $30,000" is a prize, not a bonus
 
 export default async function Bonuses({ params }: { params: Params }) {
   const { lang } = await params;

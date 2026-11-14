@@ -61,6 +61,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
   const C = CALC[lang];
   const [q, setQ] = useState("");
   const [hi, setHi] = useState(0);
+  useEffect(() => { document.getElementById(`earn-coin-${hi}`)?.scrollIntoView({ block: "nearest" }); }, [hi]);
   // the list closes on a click outside, not on blur (blur fired before a keyboard/mouse pick could land)
   const searchBox = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -123,7 +124,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
               <div className="absolute left-0 right-0 top-11 z-20 rounded-xl border border-line-2 bg-surface p-3 text-sm text-ink-3 shadow-2xl">{({ uk: `Для ${q} зараз немає продуктів Earn`, en: `No Earn products for ${q} right now`, ru: `Для ${q} сейчас нет продуктов Earn` } as const)[lang]}</div>
             )}
             {matches.length > 0 && (
-              <div id="earn-coins" role="listbox" className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
+              <div id="earn-coins" role="listbox" tabIndex={-1} className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
                 {matches.map((c, i) => (
                   <button key={c} id={`earn-coin-${i}`} role="option" aria-selected={i === hi} tabIndex={-1} onMouseDown={(e) => e.preventDefault()} onClick={() => { setCoin(c); setQ(""); }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5 ${i === hi ? "bg-white/[0.07]" : ""}`}>
                     {c}<span className="font-mono text-xs text-ink-3">{byCoin.get(c)?.length ?? ""}</span>
@@ -214,7 +215,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                 {o.newUsers && <span className="rounded bg-amber/10 px-1 text-xs font-bold text-amber">{A.newUsers}</span>}
               </div>
               <div className="text-xs font-semibold text-ink-3">
-                <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}
+                <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang} up>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}
               </div>
             </div>
           </div>

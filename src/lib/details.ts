@@ -662,6 +662,8 @@ function dropTail(blocks: Block[], head: string): Block[] {
     if (/^©|^\d+D\s*\d+H\s*\d+M\s*\d+S$/i.test(x)) continue;                                       // copyright, frozen countdowns
     if ((x.match(/\|/g) ?? []).length >= 3 && /telegram|discord|twitter|reddit|website|download/i.test(x)) continue;   // social bars
     if (/^(download|завантаження)\s*[:：]?\s*$/i.test(x)) continue;
+    if (/^(trending|in trend|hot now|popular)\s*[:：]/i.test(x) || /\byou are (about to|going to) (leave|go to|open)\b|\bthird[- ]party (app|application|website|site)\b/i.test(x)) continue;
+    if (b.t !== "tr" && x.length <= 16 && /^[+\-–]?[\d\s,.+\-–/]+$/.test(x)) continue;   // stray counters ("+1-284", "+0")
     out.push(b);
   }
   return out;

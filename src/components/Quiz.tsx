@@ -24,7 +24,8 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
   // keyboard / screen-reader users land on the new question and on the result (audit 14.11: focus fell to <body>)
   const head = useRef<HTMLHeadingElement>(null);
   const answered = Object.keys(ans).length;
-  useEffect(() => { if (answered > 0) head.current?.focus(); }, [answered]);
+  const first = useRef(true);
+  useEffect(() => { if (first.current) { first.current = false; return; } head.current?.focus(); }, [answered]);
 
   const picks = useMemo(() => {
     if (!done) return [];
