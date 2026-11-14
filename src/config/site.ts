@@ -34,7 +34,7 @@ export const CEX: Record<string, V> = {
   xt:       cex("xt",       "XT.com",   "#F9C846", "#15120A", "XT", "https://coin-images.coingecko.com/markets/images/404/small/xt_logo_%E7%BB%BF.png?1761205934",     "https://www.xt.com"),
   bitunix:  cex("bitunix",  "Bitunix",  "#B9F641", "#0E1404", "Bu", "bitunix",     "https://www.bitunix.com"),
   weex:     cex("weex",     "WEEX",     "#E6E9EE", "#0B0D10", "W",  "weex",        "https://www.weex.com"),
-  bitbase:  cex("bitbase",  "Bitbase",  "#3D7BFF", "#FFFFFF", "Bb", undefined,     "https://www.bitbase.com"),
+  bitbase:  cex("bitbase",  "Bitbase",  "#3D7BFF", "#06080B", "Bb", undefined,     "https://www.bitbase.com"),
   // 08.11 "all exchanges": CoinGecko-listed (trust ≥ 6) with an honest official source; logos from CoinGecko
   biconomy: cex("biconomy", "Biconomy.com", "#1E6BFF", "#FFFFFF", "Bi", "https://coin-images.coingecko.com/markets/images/633/small/logo_B._200x200.png?1723787144", "https://www.biconomy.com/en"),
   hibt:     cex("hibt",     "Hibt",     "#F5B300", "#141005", "Hb", "https://coin-images.coingecko.com/markets/images/11765/small/1000125652.jpg?1732085736", "https://hibt.com"),

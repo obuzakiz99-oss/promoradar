@@ -45,7 +45,7 @@ export function Select<V extends string>({ value, onChange, options, label, clas
 
   const show = () => {
     const r = btn.current?.getBoundingClientRect();
-    if (r) setUp(window.innerHeight - r.bottom < Math.min(320, options.length * 40 + 16) && r.top > window.innerHeight - r.bottom);
+    if (r) { const below = window.innerHeight - r.bottom - (window.innerWidth < 768 ? 72 : 8); setUp(below < Math.min(320, options.length * 40 + 24) && r.top > below); }
     setAct(cur);
     setOpen(true);
   };

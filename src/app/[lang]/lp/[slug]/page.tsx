@@ -294,7 +294,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {!ended && (
           <section className="mt-12">
             <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{T.calcTitle} <Hint lang={lang}>{T.calcSub}</Hint></h2>
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
+            <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[520px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr><th className="px-4 py-3">{T.stake}</th><th className="px-4 py-3">{T.with("$100")}</th><th className="px-4 py-3">{T.with(`$${num(1000, lang, 0)}`)}</th><th className="px-4 py-3">{T.withMax}</th></tr>

@@ -23,7 +23,7 @@ export function VenueLogo({ v, size = 36, rounded = "rounded-xl", alts = [] }: {
       style={{ width: size, height: size, background: v.color, color: v.ink, fontSize: Math.max(12, size * 0.32) }}
       aria-hidden="true"
     >
-      {v.monogram}
+      {size < 28 ? v.monogram.slice(0, 2) : v.monogram}
       {src && state !== "fail" && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

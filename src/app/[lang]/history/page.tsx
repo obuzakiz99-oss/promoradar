@@ -105,7 +105,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
           {S.drop.length === 0 ? <p className="mt-6 rounded-2xl border border-dashed border-line-2 px-6 py-10 text-center text-ink-2">{X.dropNone}</p> : (
             <>
               <div className="card mt-5 p-5 hover:transform-none"><ChartPicker series={dropSeries} lang={lang} locale={locale} height={260} signed /></div>
-              <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
+              <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-4 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[620px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.dropCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
                   <tbody className="divide-y divide-line">
@@ -182,7 +182,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
           {/* per exchange */}
           <h3 className="mt-10 text-lg font-bold">{X.exTitle}</h3>
-          <div className="mt-3 overflow-x-auto rounded-2xl border border-line">
+          <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[600px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.exCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">
@@ -202,7 +202,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
           {/* every pool */}
           <h3 className="mt-10 text-lg font-bold">{X.list}</h3>
-          <div className="mt-3 overflow-x-auto rounded-2xl border border-line">
+          <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 4 ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">

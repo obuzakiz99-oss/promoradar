@@ -37,7 +37,7 @@ export default async function DocPage({ params }: { params: Params }) {
           <>
             <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{API_DOC[lang].title}</h1>
             <p className="mt-3 text-ink-2 sm:text-lg">{API_DOC[lang].sub}</p>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
+            <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-8 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{API_DOC[lang].cols.map((c) => <th key={c} className="px-4 py-3">{c}</th>)}</tr></thead>
                 <tbody className="divide-y divide-line">
@@ -50,7 +50,7 @@ export default async function DocPage({ params }: { params: Params }) {
                 </tbody>
               </table>
             </div>
-            <pre className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white/[0.02] p-4 font-mono text-xs text-ink-2">{`curl ${base}/api/funding.json`}</pre>
+            <pre tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white/[0.02] p-4 font-mono text-xs text-ink-2">{`curl ${base}/api/funding.json`}</pre>
             <p className="mt-4 text-sm text-ink-3">{API_DOC[lang].note}</p>
           </>
         ) : (

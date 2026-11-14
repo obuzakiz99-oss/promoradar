@@ -42,6 +42,7 @@ export default async function GuidePage({ params }: { params: Params }) {
         <h1 className="mt-4 max-w-4xl font-display text-3xl font-semibold tracking-tight sm:text-5xl">{g.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{g.sub}</p>
 
+        {g.steps.length > 0 && <h2 className="sr-only">{({ uk: "Кроки", en: "Steps", ru: "Шаги" } as const)[lang]}</h2>}
         {g.steps.length > 0 && <div className="mt-10"><CheckSteps id={`guide-${g.id}`} lang={lang} big cols={2} steps={g.steps.map((s) => ({ ...s, img: s.img ? withBase(s.img) : undefined }))} /></div>}
 
         {g.sections?.map((s) => (

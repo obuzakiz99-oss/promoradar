@@ -134,7 +134,7 @@ export function factsOf(blocks: Block[]): Fact[] {
   for (const b of blocks) {
     if (b.x.length < 25 || b.t === "tr") continue;                       // "Join Now" buttons, table rows
     if (b.t === "h" && !FACT_RE[0][1].test(b.x)) continue;                // headings only count as a period line
-    const text = b.x;   // full line — never cut (user: text must be readable to the end)
+    const text = b.x.replace(/^\s*\(?\d{1,2}[.)]\s+(?=\S)/, "");   // full line — never cut; raw source numbering dropped (audit 14.11)
     for (const [k, re] of FACT_RE) {
       if ((count[k] ?? 0) >= 2 || !re.test(b.x)) continue;
       if (out.some((f) => f.text === text)) continue;

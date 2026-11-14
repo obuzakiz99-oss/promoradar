@@ -51,7 +51,7 @@ export function HideButton({ id, lang, size = "sm" }: { id: string; lang: "uk" |
       aria-pressed={hidden}
       title={label}
       aria-label={label}
-      className={`relative z-10 grid ${size === "lg" ? "size-12" : "size-8"} place-items-center rounded-lg border transition-colors after:absolute after:-inset-1 after:content-[''] ${hidden ? "border-line-2 bg-white/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
+      className={`relative z-10 grid ${size === "lg" ? "size-12" : "size-10"} place-items-center rounded-lg border transition-colors after:absolute after:-inset-1 after:content-[''] ${hidden ? "border-line-2 bg-white/10 text-ink" : "border-line bg-white/[0.02] text-ink-3 hover:border-line-2 hover:text-ink"}`}
     >
       <svg className={size === "lg" ? "size-5" : "size-4"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {hidden

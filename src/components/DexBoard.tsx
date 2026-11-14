@@ -49,10 +49,10 @@ function logo(p: DexPool) {
 
 export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl, hedge = {} }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string; hedge?: Record<string, Hedge> }) {
   // the page ships only the top pools (light HTML); the full list (~1500) loads right after from the static JSON
-  const [pools, setPools] = useState(initial);
+  const [full, setFull] = useState<DexPool[] | null>(null);
   useEffect(() => {
     if (!fullUrl) return;
-    fetch(fullUrl).then((r) => r.json()).then((j) => Array.isArray(j?.pools) && j.pools.length > initial.length && setPools(j.pools)).catch(() => {});
+    fetch(fullUrl).then((r) => r.json()).then((j) => Array.isArray(j?.pools) && j.pools.length > initial.length && setFull(j.pools)).catch(() => {});
   }, [fullUrl, initial.length]);
   const A = t.aprHub;
   const [openId, setOpenId] = useState<string | null>(null);
@@ -70,6 +70,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   const C = CALC[lang];
   const money = usdFmt(lang);
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
+  // the full list replaces the shipped rows only once the visitor changes something (audit 14.11: swapping it in on
+  // load re-sorted the table under the reader, CLS 0.24); the count already uses it
+  const touched = cat !== "all" || chain !== "all" || stable || noIl || minTvl !== TVLS[0] || q !== "" || sort !== "apy" || limit > PAGE;
+  const pools = touched && full ? full : initial;
 
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -80,6 +84,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     if (sort === "reward") l.sort((a, b) => (b.apyReward ?? 0) - (a.apyReward ?? 0));
     return l;
   }, [pools, cat, chain, stable, noIl, minTvl, q, sort]);
+  const total = useMemo(() => (full && !touched ? full.filter((p) => p.tvl >= minTvl).length : list.length), [full, touched, minTvl, list.length]);
 
   const reset = () => { setCat("all"); setChain("all"); setStable(false); setNoIl(false); setMinTvl(TVLS[0]); setQ(""); };
   const pcButton = (p: DexPool, pc: ReturnType<typeof dexPC>, open: boolean, cls = "") => (
@@ -271,8 +276,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
         </table>
       </div>
       <div className="mt-4 flex items-center justify-between gap-3 text-xs text-ink-3">
-        <span className="font-mono">{Math.min(limit, list.length)} {A.shown} {A.of} {list.length}</span>
-        {list.length > limit && <button onClick={() => setLimit((l) => l + PAGE)} className="btn btn-ghost h-10 px-5 text-sm">{A.more}</button>}
+        <span className="font-mono">{A.shown.charAt(0).toUpperCase()}{A.shown.slice(1)} {Math.min(limit, list.length)} {A.of} {total.toLocaleString(lang === "en" ? "en-US" : "uk-UA")}{minTvl > 0 ? ` · TVL ≥ $${minTvl >= 1e6 ? `${minTvl / 1e6}M` : `${minTvl / 1e3}K`}` : ""}</span>
+        {(list.length > limit || (!touched && total > list.length)) && <button onClick={() => setLimit((l) => l + PAGE)} className="btn btn-ghost h-10 px-5 text-sm">{A.more}</button>}
       </div>
     </div>
   );

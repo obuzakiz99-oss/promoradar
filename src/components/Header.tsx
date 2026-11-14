@@ -22,10 +22,10 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block", match: ["pro"] }] : []),
   ];
   return (
-    <header className="sticky top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-line/60 bg-bg/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 md:gap-6">
         <Link href={`/${lang}`} aria-label={SITE.name}><Logo name={SITE.name} /></Link>
-        <nav className="hidden items-center gap-0.5 whitespace-nowrap text-sm font-semibold text-ink-2 md:flex">
+        <nav aria-label={({ uk: "Розділи", en: "Sections", ru: "Разделы" } as Record<string, string>)[lang] ?? "Sections"} className="hidden items-center gap-0.5 whitespace-nowrap text-sm font-semibold text-ink-2 md:flex">
           <NavLinks items={items} />
         </nav>
         <div className="ml-auto flex items-center gap-2 sm:gap-3">

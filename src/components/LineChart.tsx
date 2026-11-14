@@ -19,7 +19,7 @@ export const seriesColor = (i: number) => PALETTE[i % PALETTE.length];
 export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", signed = false, legend = true, kind = "pct" }: { series: Series[]; height?: number; unit?: string; locale?: string; signed?: boolean; legend?: boolean; kind?: "pct" | "num" | "usd" }) {
   const all = series.flatMap((s) => s.points);
   if (all.length < 2) return null;
-  const W = 720, H = height, L = 60, R = 12, Tp = 12, B = 26;
+  const W = 720, H = height, L = 4, R = 12, Tp = 16, B = 8;   // labels are HTML now: the plot takes the full width
   const xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
   let y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -37,24 +37,26 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
   const dates = [x0, x0 + (x1 - x0) / 2, x1];
   return (
     <figure>
+      {/* axis labels are HTML over the SVG (audit 14.11: SVG text scaled with the chart and was ~5 px on phones) */}
+      <div className="relative">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={series.map((s) => s.name).join(", ")}>
         {ticks.map((v) => (
-          <g key={v}>
-            <line x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="rgb(255 255 255 / 0.07)" />
-            <text x={L - 6} y={Y(v) + 4} textAnchor="end" fontSize="12" fill="var(--color-ink-3)" fontFamily="var(--font-mono)">{fmt(v)}{unit}</text>
-          </g>
+          <line key={v} x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="rgb(255 255 255 / 0.07)" />
         ))}
         {signed && <line x1={L} x2={W - R} y1={Y(0)} y2={Y(0)} stroke="rgb(255 255 255 / 0.35)" strokeDasharray="4 4" />}
-        {dates.map((t, i) => (
-          <text key={t} x={X(t)} y={H - 6} textAnchor={i === 0 ? "start" : i === 2 ? "end" : "middle"} fontSize="12" fill="var(--color-ink-3)">
-            {new Date(t).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}
-          </text>
-        ))}
+
         {series.map((s) => (
           <polyline key={s.name} fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
             points={s.points.map(([t, v]) => `${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")} />
         ))}
       </svg>
+        {ticks.map((v) => (
+          <span key={v} aria-hidden="true" className="absolute -translate-y-full pb-0.5 pl-1 font-mono text-xs leading-none text-ink-3" style={{ top: `${(Y(v) / H) * 100}%`, left: `${(L / W) * 100}%` }}>{fmt(v)}{unit}</span>
+        ))}
+      </div>
+      <div aria-hidden="true" className="mt-1 flex justify-between gap-2 text-xs text-ink-3" style={{ paddingLeft: `${(L / W) * 100}%`, paddingRight: `${(R / W) * 100}%` }}>
+        {dates.map((t) => <span key={t}>{new Date(t).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</span>)}
+      </div>
       {legend && <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-2">
         {series.map((s) => {
           const last = s.points[s.points.length - 1]?.[1];

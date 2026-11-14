@@ -363,7 +363,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
-        <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink-3">
+        <nav aria-label={({ uk: "Навігація", en: "Breadcrumbs", ru: "Навигация" } as const)[lang]} className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink-3">
           <Link href={`/${lang}#promos`} className="inline-flex min-h-8 items-center hover:text-ink">← {t.detail.back}</Link>
           <span>/</span>
           {venueCfg ? <Link href={`/${lang}/v/${p.venue.id}`} className="hover:text-ink">{p.venue.name}</Link> : <span>{p.venue.name}</span>}

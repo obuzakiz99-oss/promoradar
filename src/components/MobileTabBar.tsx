@@ -20,7 +20,7 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
   const seg = (usePathname() ?? "").split("/").filter(Boolean)[1] ?? "";
   const saved = useSaved().length;
   useEffect(() => {
-    document.querySelectorAll<HTMLElement>(".scroll-x [aria-current='page']").forEach((el) => el.scrollIntoView({ block: "nearest", inline: "center" }));
+    document.querySelectorAll<HTMLElement>(".scroll-x [aria-current='page']").forEach((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
   }, [seg]);
   const items: Array<{ href: string; label: string; icon: React.ReactNode; on: boolean; badge?: number }> = [
     { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "t", "bonuses"].includes(seg) },

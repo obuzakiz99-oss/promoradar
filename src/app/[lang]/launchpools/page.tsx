@@ -95,7 +95,7 @@ export default async function Launchpools({ params }: { params: Params }) {
             <span className="mt-2 block text-[0.55em] font-medium leading-tight text-ink-2">{L.title}</span>
           </h1>
           <p className="mt-5 max-w-2xl text-ink-2 sm:text-lg">{L.sub}</p>
-          <dl className="mt-6 grid max-w-3xl grid-cols-4 gap-2 sm:gap-3">
+          <dl className="mt-6 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
             {[
               [String(livePools.length), L.statLive],
               [rewardsUsd ? compactUsd(rewardsUsd) : "—", L.statRewards],
@@ -207,7 +207,7 @@ export default async function Launchpools({ params }: { params: Params }) {
           <p className="mt-1.5 text-sm text-ink-3">{L.archiveSub}</p>
           {(() => {
             const tableOf = (rows: typeof archive) => (
-            <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+            <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-6 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[L.colToken, L.colEx, L.colDate, L.colStake, L.colApr, L.colReward, L.colUsers].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>

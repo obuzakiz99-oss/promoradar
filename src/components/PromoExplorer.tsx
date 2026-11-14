@@ -264,7 +264,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
               className="h-11 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
               options={(["best", "newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "best" ? G.best : s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
           </div>
-          <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel}
+          <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel} aria-controls="promo-filters"
             className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border pl-4 pr-3 text-sm font-bold text-ink ${panel || activeN ? "border-lime/60 bg-lime/10" : "border-line bg-surface hover:border-line-2"}`}>
             {FILT[lang]}{activeN ? <span className="rounded-md bg-lime/20 px-1.5 font-mono text-xs text-lime">{activeN}</span> : null}
             <Icon name="chevronDown" className={`size-4 text-ink-3 transition-transform ${panel ? "rotate-180" : ""}`} />
@@ -290,7 +290,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       </div>
 
       {/* everything else folds under "Filters (N)" — two rows stay visible (audit 08.11) */}
-      {panel && <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] p-3">
+      {panel && <div id="promo-filters" className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] p-3">
         {/* kind tabs */}
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="group" aria-label={lang === "en" ? "Type" : "Тип"}>

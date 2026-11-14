@@ -13,7 +13,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
   const list = s ? rows.filter((r) => r.sym.includes(s)).sort((a, b) => Number(b.sym === s) - Number(a.sym === s) || Number(b.sym.startsWith(s)) - Number(a.sym.startsWith(s)) || b.score - a.score) : rows;
   return (
     <>
-      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={labels.search} autoFocus
+      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={labels.search}
         className="mt-6 h-12 w-full max-w-md rounded-xl border border-line bg-white/[0.03] px-4 text-base font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
       {list.length ? (
         <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">

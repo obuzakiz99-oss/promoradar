@@ -58,7 +58,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
               </dl>
               {/* up to 2 years of pools: the first rows show, the rest open with a CSS-only toggle (no JS) */}
               <div className="group">
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+              <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-6 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[720px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                     <tr>{[...P.listCols.slice(0, 5), D90[lang], P.listCols[5]].map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 3 ? "text-right" : ""}`}>{c}</th>)}</tr>
@@ -101,7 +101,7 @@ export default async function InsightsPage({ params }: { params: Params }) {
                   <div className="mt-1 text-xs font-semibold text-ink-3">{P.median} · {P.decayCols[3]}</div>
                 </div>
               )}
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+              <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-6 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[520px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                     <tr>{P.decayCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 1 ? "text-right" : ""}`}>{c}</th>)}</tr>

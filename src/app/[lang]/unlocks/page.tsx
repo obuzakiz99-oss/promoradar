@@ -146,7 +146,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
             <div className="overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
-                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact, ""].map((h, i) => <th key={i} className="px-4 py-3">{h || <span className="sr-only">{CAL[lang].col}</span>}</th>)}</tr>
+                  <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact, ""].map((h, i) => <th key={i} className="relative px-4 py-3">{h || <span className="sr-only">{CAL[lang].col}</span>}</th>)}</tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {rows.map((u) => {

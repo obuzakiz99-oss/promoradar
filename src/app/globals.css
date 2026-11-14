@@ -129,12 +129,16 @@ body {
 
 .scroll-x { overflow-x: auto; scrollbar-width: none; }
 .scroll-x::-webkit-scrollbar { display: none; }
-@media (max-width: 767px) { .scroll-x { mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); } }
+@media (max-width: 767px) { .scroll-x { mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); padding-block: 3px; } }
 }
 
 html, body { overflow-x: clip; }
 
-:focus-visible { outline: 2px solid var(--color-lime); outline-offset: 2px; border-radius: var(--radius-sm); }
+/* base layer: Tailwind focus utilities can override it; no forced radius (it turned round chips into rectangles) */
+@layer base { :focus-visible { outline: 2px solid var(--color-lime); outline-offset: 2px; } }
+/* a focused control never ends up under the sticky header or the phone tab bar (WCAG 2.4.11) */
+html { scroll-padding-top: 72px; }
+@media (max-width: 767px) { html { scroll-padding-bottom: 84px; } .scroll-x { scroll-padding-inline: 12px; } }
 /* every control has a visible disabled state */
 .btn:disabled, button:disabled, input:disabled, select:disabled, .btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 

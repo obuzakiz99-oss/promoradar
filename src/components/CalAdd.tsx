@@ -42,12 +42,12 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
   };
   return (
     <div ref={root} className={`relative inline-block ${open ? "z-30" : ""}`}>
-      <button ref={btn} type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={TX[lang].add} title={TX[lang].add}
+      <button ref={btn} type="button" onClick={toggle} aria-expanded={open} aria-label={TX[lang].add} title={TX[lang].add}
         className={`grid size-9 place-items-center rounded-lg border transition ${open ? "border-lime/50 text-lime" : "border-line text-ink-3 hover:border-line-2 hover:text-ink"}`}>
         <Icon name="calendar" className="size-4" />
       </button>
       {open && (
-        <div style={pos} className="fixed z-50 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1.5 shadow-2xl">
+        <div style={pos} className="fixed z-50 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1.5 text-left shadow-2xl">
           <a href={googleCalUrl(ev)} target="_blank" rel="noopener" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
           <button type="button" onClick={ics} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{TX[lang].ics}</button>
         </div>

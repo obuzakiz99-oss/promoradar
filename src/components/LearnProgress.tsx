@@ -46,7 +46,7 @@ export function LearnCards({ cards, lang, startTotal, promosHref }: { cards: Lea
       <div className="mt-8 flex flex-wrap items-center gap-3 text-sm font-semibold text-ink-3">
         <div className="h-2 w-48 overflow-hidden rounded-full bg-white/5"><div className="h-full rounded-full bg-lime transition-all" style={{ width: `${(n / cards.length) * 100}%` }} /></div>
         <span className="text-ink-2">{L.progress(n, cards.length)}</span>
-        <span className="font-normal">· {next ? L.hint : <Link href={promosHref} className="font-bold text-lime hover:underline">{L.all} →</Link>}</span>
+        <span className="font-normal">{next ? L.hint : <Link href={promosHref} className="font-bold text-lime hover:underline">{L.all} →</Link>}</span>
       </div>
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c, i) => {

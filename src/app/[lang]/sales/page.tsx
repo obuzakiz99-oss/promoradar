@@ -17,40 +17,40 @@ export const revalidate = 3600;
 type Params = Promise<{ lang: string }>;
 
 const X: Record<Locale, {
-  title: string; sub: string; how: string[]; risk: string; active: string; upcoming: string; none: string; noIco: string;
+  title: string; sub: string; how: string[]; risk: string; active: string; undated: string; upcoming: string; none: string; noIco: string;
   kind: Record<Sale["kind"], string>; starts: string; ends: string; noDate: string; raised: string; val: string; open: string; src: string; cal: (n: string) => string;
 }> = {
   uk: {
     title: "Токен-сейли: де і коли", sub: "Публічні продажі нових токенів — Launchpad бірж, Binance Wallet, IDO на лаунчпадах. Що йде зараз і що стартує найближчим часом.",
     how: ["Відкрийте сейл і перевірте умови: хто може брати участь, KYC, мінімальна і максимальна сума, як рахують розподіл.", "Підготуйте гроші заздалегідь: на біржі — USDT або токен біржі на спот-рахунку; для IDO — гаманець і стейблкоїни в потрібній мережі.", "Подайте заявку у вікно підписки, потім отримайте токени й дочекайтеся лістингу."],
     risk: "Сейл — це не гарантований дохід: після лістингу ціна може впасти нижче ціни сейлу. Приватні раунди та «пресейли» ми не показуємо — серед них багато скаму.",
-    active: "Ідуть зараз", upcoming: "Скоро", none: "Зараз немає публічних сейлів.", noIco: "Список з ICO Drops зараз не завантажився — показані лише анонси бірж.",
+    active: "Ідуть зараз", undated: "Оголошені, дата ще не відома", upcoming: "Скоро", none: "Зараз немає публічних сейлів.", noIco: "Список з ICO Drops зараз не завантажився — показані лише анонси бірж.",
     kind: { exchange: "Біржа", wallet: "Гаманець", launchpad: "Лаунчпад" }, starts: "старт через", ends: "кінець через", noDate: "дату ще не оголосили",
-    raised: "Збирають", val: "Оцінка", open: "Деталі", src: "Список IDO / IEO: ICO Drops", cal: (n) => `Сейл ${n}`,
+    raised: "Збирають", val: "Оцінка проєкту (FDV)", open: "Деталі", src: "Список IDO / IEO: ICO Drops", cal: (n) => `Сейл ${n}`,
   },
   en: {
     title: "Token sales: where and when", sub: "Public sales of new tokens — exchange launchpads, Binance Wallet, IDOs on launchpads. What is live now and what starts soon.",
     how: ["Open the sale and check the rules: who can join, KYC, minimum and maximum amount, how the allocation works.", "Prepare the money in advance: on an exchange — USDT or the exchange token on spot; for an IDO — a wallet and stablecoins on the right chain.", "Subscribe in the window, then receive the tokens and wait for the listing."],
     risk: "A sale is not guaranteed profit: after the listing the price can fall below the sale price. We leave out private rounds and \"presales\" — many of them are scams.",
-    active: "Live now", upcoming: "Coming up", none: "No public sales right now.", noIco: "The ICO Drops list did not load — only exchange announcements are shown.",
+    active: "Live now", undated: "Announced, date not known yet", upcoming: "Coming up", none: "No public sales right now.", noIco: "The ICO Drops list did not load — only exchange announcements are shown.",
     kind: { exchange: "Exchange", wallet: "Wallet", launchpad: "Launchpad" }, starts: "starts in", ends: "ends in", noDate: "date not announced yet",
-    raised: "Raising", val: "Valuation", open: "Details", src: "IDO / IEO list: ICO Drops", cal: (n) => `${n} sale`,
+    raised: "Raising", val: "Project valuation (FDV)", open: "Details", src: "IDO / IEO list: ICO Drops", cal: (n) => `${n} sale`,
   },
   ru: {
     title: "Токен-сейлы: где и когда", sub: "Публичные продажи новых токенов — Launchpad бирж, Binance Wallet, IDO на лаунчпадах. Что идёт сейчас и что стартует в ближайшее время.",
     how: ["Откройте сейл и проверьте условия: кто может участвовать, KYC, минимальная и максимальная сумма, как считают распределение.", "Подготовьте деньги заранее: на бирже — USDT или токен биржи на спот-счёте; для IDO — кошелёк и стейблкоины в нужной сети.", "Подайте заявку в окно подписки, затем получите токены и дождитесь листинга."],
     risk: "Сейл — не гарантированный доход: после листинга цена может упасть ниже цены сейла. Приватные раунды и «пресейлы» мы не показываем — среди них много скама.",
-    active: "Идут сейчас", upcoming: "Скоро", none: "Сейчас нет публичных сейлов.", noIco: "Список с ICO Drops сейчас не загрузился — показаны только анонсы бирж.",
+    active: "Идут сейчас", undated: "Объявлены, дата ещё не известна", upcoming: "Скоро", none: "Сейчас нет публичных сейлов.", noIco: "Список с ICO Drops сейчас не загрузился — показаны только анонсы бирж.",
     kind: { exchange: "Биржа", wallet: "Кошелёк", launchpad: "Лаунчпад" }, starts: "старт через", ends: "конец через", noDate: "дату ещё не объявили",
-    raised: "Собирают", val: "Оценка", open: "Детали", src: "Список IDO / IEO: ICO Drops", cal: (n) => `Сейл ${n}`,
+    raised: "Собирают", val: "Оценка проекта (FDV)", open: "Детали", src: "Список IDO / IEO: ICO Drops", cal: (n) => `Сейл ${n}`,
   },
 };
 const KIND_CLS: Record<Sale["kind"], string> = { exchange: "bg-lime/10 text-lime", wallet: "bg-amber/10 text-amber", launchpad: "bg-sky/10 text-sky" };
 
 const PRE: Record<Locale, { title: (c: string, t: string) => string; sub: string; risk: string; kind: Record<PreIpoVenue["kind"], string> }> = {
-  uk: { title: (c, t) => `Pre-IPO ${c} (${t}): де взяти`, sub: "Токени, прив'язані до акцій компанії до її виходу на біржу. Усі біржі, де вони є зараз: підписка за ціною розміщення, торгівля або акції з нагородою в цьому токені.", risk: "Це не самі акції компанії, а токен біржі, що відстежує їхню ціну: правила, ліміти й доступність для України залежать від біржі.", kind: { subscribe: "Підписка", trade: "Торгівля", promo: "Акція" } },
+  uk: { title: (c, t) => `Pre-IPO ${c} (${t}): де взяти`, sub: "Токени, прив'язані до акцій компанії до її виходу на біржу. Усі біржі, де вони є зараз: підписка за ціною розміщення, торгівля або промоакції з нагородою в цьому токені.", risk: "Це не самі акції компанії, а токен біржі, що відстежує їхню ціну: правила, ліміти й доступність для України залежать від біржі.", kind: { subscribe: "Підписка", trade: "Торгівля", promo: "Акція" } },
   en: { title: (c, t) => `Pre-IPO ${c} (${t}): where to get it`, sub: "Tokens tied to the company's shares before it goes public. Every exchange that has one now: subscription at the offer price, trading, or promos paid in this token.", risk: "These are not the company's shares but an exchange token tracking their price: rules, limits and availability depend on the exchange.", kind: { subscribe: "Subscription", trade: "Trading", promo: "Promo" } },
-  ru: { title: (c, t) => `Pre-IPO ${c} (${t}): где взять`, sub: "Токены, привязанные к акциям компании до её выхода на биржу. Все биржи, где они есть сейчас: подписка по цене размещения, торговля или акции с наградой в этом токене.", risk: "Это не сами акции компании, а токен биржи, отслеживающий их цену: правила, лимиты и доступность зависят от биржи.", kind: { subscribe: "Подписка", trade: "Торговля", promo: "Акция" } },
+  ru: { title: (c, t) => `Pre-IPO ${c} (${t}): где взять`, sub: "Токены, привязанные к акциям компании до её выхода на биржу. Все биржи, где они есть сейчас: подписка по цене размещения, торговля или промоакции с наградой в этом токене.", risk: "Это не сами акции компании, а токен биржи, отслеживающий их цену: правила, лимиты и доступность зависят от биржи.", kind: { subscribe: "Подписка", trade: "Торговля", promo: "Акция" } },
 };
 const PI_CLS: Record<PreIpoVenue["kind"], string> = { subscribe: "bg-lime/15 text-lime", trade: "bg-sky/10 text-sky", promo: "bg-white/5 text-ink-2" };
 
@@ -101,7 +101,12 @@ export default async function SalesPage({ params }: { params: Params }) {
     );
   };
 
-  const groups: Array<[string, Sale[]]> = [[T.active, sales.filter((s) => s.status === "active")], [T.upcoming, sales.filter((s) => s.status === "upcoming")]];
+  // audit 14.11: "Live now 7" held 6 rows without any date — those are announcements, listed separately
+  const groups: Array<[string, Sale[]]> = [
+    [T.active, sales.filter((s) => s.status === "active" && s.endsAt)],
+    [T.upcoming, sales.filter((s) => s.status === "upcoming")],
+    [T.undated, sales.filter((s) => s.status === "active" && !s.endsAt)],
+  ];
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
@@ -121,7 +126,7 @@ export default async function SalesPage({ params }: { params: Params }) {
         {/* pre-IPO tokens: one block per company, every exchange that has it (owner 13.11) */}
         {preIpo.map((g) => (
           <section key={g.company} className="mt-10 rounded-2xl border border-lime/25 bg-lime/[0.04] p-5">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">{PI.title(g.company, g.ticker)} <span className="font-mono text-base text-ink-3">{g.venues.length}</span></h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">{PI.title(g.company, g.ticker)} <span className="font-mono text-base text-ink-3">· {g.venues.length} {({ uk: g.venues.length === 1 ? "біржа" : g.venues.length < 5 ? "біржі" : "бірж", en: g.venues.length === 1 ? "exchange" : "exchanges", ru: g.venues.length === 1 ? "биржа" : g.venues.length < 5 ? "биржи" : "бирж" } as const)[lang]}</span></h2>
             <p className="mt-1 max-w-3xl text-sm text-ink-2">{PI.sub}</p>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {g.venues.map((v) => (

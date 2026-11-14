@@ -45,10 +45,11 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
     </section>
   );
   const Row = ({ v, title, sub, right, rightSub, href }: { v: Venue; title: string; sub: string; right: string; rightSub?: string; href: string }) => (
-    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" className="card grid grid-cols-[auto_1fr_auto] items-center gap-4 p-4" style={{ ["--tint" as string]: v.color }}>
+    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" className="card grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 p-4 sm:grid-cols-[auto_1fr_auto]" style={{ ["--tint" as string]: v.color }}>
       <VenueLogo v={v} size={40} />
-      <div className="min-w-0"><div className="break-words font-bold">{title}</div><div className="break-words text-xs font-semibold text-ink-3">{sub}</div></div>
-      <div className="text-right"><div className="font-mono text-xl font-bold text-ink">{right}</div>{rightSub && <div className="font-mono text-xs font-bold text-lime">{rightSub}</div>}</div>
+      <div className="min-w-0"><div className="font-bold [overflow-wrap:anywhere]">{title}</div><div className="text-xs font-semibold text-ink-3 [overflow-wrap:anywhere]">{sub}</div></div>
+      {/* phones: the money line goes under the title (audit 14.11: the title was squeezed to ~60 px and broke mid-word) */}
+      <div className="col-start-2 sm:col-start-auto sm:text-right"><div className="font-mono text-xl font-bold text-ink">{right}</div>{rightSub && <div className="font-mono text-xs font-bold text-lime">{rightSub}</div>}</div>
     </a>
   );
 

@@ -52,7 +52,7 @@ export default async function DropsPage({ params }: { params: Params }) {
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.sub}</p>
         <div className="mt-4"><Updated at={fetchedAt} lang={lang} /></div>
         {/* jump links */}
-        <nav className="mt-6 flex flex-wrap gap-2">
+        <nav aria-label={({ uk: "На цій сторінці", en: "On this page", ru: "На этой странице" } as const)[lang]} className="mt-6 flex flex-wrap gap-2">
           {sections.filter((s) => s.list.length).map((s) => (
             <a key={s.id} href={`#${s.id}`} className={`${s.level === "hard" ? "adv " : ""}flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink`}>
               <Icon name={s.icon} /> {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>

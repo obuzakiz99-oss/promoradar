@@ -127,7 +127,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-2.5">
           <HideButton id={p.id} lang={lang} />
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
