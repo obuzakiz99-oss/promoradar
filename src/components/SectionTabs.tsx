@@ -61,7 +61,7 @@ function Row({ tabs, active, lang, small, label }: { tabs: Tab[]; active: string
 }
 
 export function PromoTabs({ lang, active }: { lang: L; active: "all" | "drops" | "tokens" }) {
-  return <Row tabs={PROMO} active={active} lang={lang} label="Promos" />;
+  return <Row tabs={PROMO} active={active} lang={lang} label={({ uk: "Акції", en: "Promos", ru: "Акции" } as const)[lang]} />;
 }
 
 export type YieldTab = "lp" | "earn" | "dex" | "fixed" | "history" | "insights" | "hedge";
@@ -70,7 +70,7 @@ export function YieldTabs({ lang, active, updated }: { lang: L; active: YieldTab
   return (
     <div>
       <div className="flex flex-wrap items-center gap-3">
-        <Row tabs={YIELD} active={lpGroup ? "lp" : active} lang={lang} label="Yield" />
+        <Row tabs={YIELD} active={lpGroup ? "lp" : active} lang={lang} label={({ uk: "Дохідність", en: "Yield", ru: "Доходность" } as const)[lang]} />
         {updated ? <Updated at={updated} lang={lang} /> : null}
       </div>
       {lpGroup && <Row tabs={LP} active={active} lang={lang} small label="Launchpool" />}
@@ -81,7 +81,7 @@ export function YieldTabs({ lang, active, updated }: { lang: L; active: YieldTab
 export function CalendarTabs({ lang, active, updated }: { lang: L; active: "calendar" | "unlocks" | "sales"; updated?: number }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Row tabs={CAL} active={active} lang={lang} label="Calendar" />
+      <Row tabs={CAL} active={active} lang={lang} label={({ uk: "Календар", en: "Calendar", ru: "Календарь" } as const)[lang]} />
       {updated ? <Updated at={updated} lang={lang} /> : null}
     </div>
   );

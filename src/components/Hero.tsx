@@ -41,10 +41,10 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
             [poolsUsd > 0 ? compactUsd(poolsUsd) : "—", poolsLabel ?? t.hero.statPools],
             [String(sources), t.hero.statSources],
           ].map(([v, l]) => (
-            <div key={l} className="min-w-0 rounded-2xl border border-line bg-white/[0.02] px-3 py-3 sm:px-4 sm:py-3.5">
-              <dt className="sr-only">{l}</dt>
+            <div key={l} className="flex min-w-0 flex-col rounded-2xl border border-line bg-white/[0.02] px-3 py-3 sm:px-4 sm:py-3.5">
+              {/* one label, read once (audit 14.11: an sr-only dt + the visible label were both announced) */}
+              <dt className="order-last mt-1 text-xs font-semibold leading-tight text-ink-3 sm:text-sm">{l}</dt>
               <dd className="font-display text-xl font-semibold tracking-tight sm:text-3xl">{v}</dd>
-              <dd className="mt-1 text-xs font-semibold leading-tight text-ink-3 sm:text-sm">{l}</dd>
             </div>
           ))}
         </dl>

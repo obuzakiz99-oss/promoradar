@@ -30,7 +30,7 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
     { href: `${base}/${lang}/my/`, label: { uk: "Мої", en: "Saved", ru: "Мои" }[lang], icon: I.star, on: seg === "my", badge: saved },
   ];
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Sections">
+    <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label={({ uk: "Розділи", en: "Sections", ru: "Разделы" } as const)[lang]}>
       {items.map((x) => (
         <a key={x.href} href={x.href} aria-current={x.on ? "page" : undefined}
           className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${x.on ? "text-lime" : "text-ink-3 hover:text-ink"}`}>

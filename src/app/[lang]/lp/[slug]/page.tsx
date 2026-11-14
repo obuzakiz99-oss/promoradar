@@ -253,7 +253,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
                     <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
-                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants, lang, "participant")}` : ""}</dd></div>
+                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants >= 1000 ? 5 : x.participants, lang, "participant")   /* shown as "2.3K" → «учасників» */}` : ""}</dd></div>
                 </dl>
                 {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
                   <div className="mt-3 flex flex-col gap-1.5">
