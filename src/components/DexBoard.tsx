@@ -150,7 +150,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       </div>
 
       {/* filters */}
-      <div className="z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
+      <div className="relative z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={A.searchPool}
           className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
         <Select label={A.chain} value={chain} onChange={setChain} className={sel}

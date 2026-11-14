@@ -245,7 +245,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     <div>
       {/* toolbar */}
       {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
-      <div className="z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
+      <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
           <label className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
             <span className="sr-only">{t.filters.search}</span>
