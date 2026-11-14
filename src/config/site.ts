@@ -112,6 +112,7 @@ export const DEX_FEEDS: Array<{ venue: keyof typeof DEX; feed: string }> = [
   { venue: "bluefin",   feed: "https://medium.com/feed/@bluefinapp" },
   { venue: "edgex",     feed: "https://medium.com/feed/@edgex" },
   { venue: "aerodrome", feed: "https://medium.com/feed/@aerodromefi" },
+  { venue: "paradex",   feed: "https://www.paradex.trade/blog/rss.xml" },   // 14.11 official blog
 ];
 
 /** Official public Telegram announcement channels (read via the public t.me/s/<channel> preview). */
@@ -126,7 +127,6 @@ export const TELEGRAM: Array<{ venue: string; channel: string }> = [
   { venue: "htx",         channel: "HTXGlobalAnnouncementChannel" },
   { venue: "bingx",       channel: "BingXAnnouncement" },
   { venue: "whitebit",    channel: "WhiteBIT" },
-  { venue: "coinex",      channel: "coinex_announcement" },
   { venue: "bitrue",      channel: "bitrue_official" },
   { venue: "hyperliquid", channel: "hyperliquid_announcements" },
   { venue: "pancakeswap", channel: "PancakeSwapAnn" },
@@ -141,7 +141,11 @@ export const TELEGRAM: Array<{ venue: string; channel: string }> = [
   { venue: "ourbit",      channel: "ourbitofficial" },
   { venue: "kcex",        channel: "kcex_announcements" },
   { venue: "cexio",       channel: "CEXIO_Announcements" },
-  { venue: "poloniex",    channel: "poloniexannouncements" },
+  // 14.11 more official channels. Poloniex's channel says "not in use" → its API in cex.ts.
+  // Not collected: CoinEx (announced an orderly wind-down 14.09.2026), BitMart (restructuring, "do not deposit").
+  { venue: "lbank",       channel: "LBankNews" },
+  { venue: "phemex",      channel: "phemex_announcements" },
+  { venue: "hashkey",     channel: "HashKeyGlobal_Announcement" },
 ];
 
 /** Venues we never show. Matched against ids/slugs/names, lower-case. */
