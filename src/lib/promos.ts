@@ -31,10 +31,12 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
   const tr = (s: string) => dict[s.trim()] ?? s;
   const promos = c.promos.map((p) => {
     // DeFi pool names ("USDS · GROVE Farming Pool", "USDE · Plus") are names, not sentences (audit 14.11: «Сільськогосподарський пул»)
-    const t = p.category === "farming" ? undefined : dict[p.title.trim()];
+    const t = p.id.startsWith("llama:") ? undefined : dict[p.title.trim()];
     const m = p.meta;
+    // leftovers of the post body in a headline: "2. …", "@wanchain_org", lowercase stablecoin tickers (audit 14.11)
+    const tidy = (x: string) => x.replace(/^\s*\d{1,2}\.\s+/, "").replace(/\s*@[A-Za-z0-9_]{3,}\b/g, "").replace(/\b(usdt|usdc|btc|eth|sol)\b/g, (m) => m.toUpperCase()).trim();
     return {
-      ...p, ...(t ? { title: t, titleOrig: p.title } : {}),
+      ...p, ...(t ? { title: tidy(t), titleOrig: p.title } : {}),
       meta: m && {
         ...m,
         actions: m.actions && tr(m.actions),
@@ -182,7 +184,7 @@ async function getPromosLive(): Promise<Collected> {
   try { if (fs.existsSync(path.join(process.cwd(), "data"))) fs.writeFileSync(path.join(process.cwd(), "data", "hidden-promos.json"), JSON.stringify({ at: now, items: hidden }, null, 1)); } catch { /* read-only */ }
   // translations (DeepL Free, cached in data/translations.json) — most visible texts first, full rules last
   const texts: string[] = [];
-  for (const p of promos) if (p.category !== "farming") texts.push(p.title);
+  for (const p of promos) if (!p.id.startsWith("llama:")) texts.push(p.title);
   for (const p of promos) {
     const d = details[p.id];
     if (p.meta?.perUser) texts.push(p.meta.perUser.text);

@@ -13,6 +13,7 @@ import { FORM_BADGE, FORM_CLS } from "@/lib/payout-i18n";
 import { titleOf } from "@/lib/titletpl";
 import { Badge, type Tone } from "./Badge";
 import type { Value } from "@/lib/value";
+import { regionName } from "@/lib/regions";
 
 /** "What you'd really get" line (value.ts): expected net $ for one ordinary participant, with how sure it is. */
 const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string; loss: string; flat: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
@@ -72,7 +73,7 @@ const FRESH: Record<Locale, string> = { uk: "нове для вас", en: "new f
 const MORE: Record<Locale, string> = { uk: "Умови та як взяти участь", en: "Rules & how to join", ru: "Условия и как участвовать" };
 const PER: Record<Locale, (v: string) => string> = { uk: (v) => `до ${v} на 1 людину`, en: (v) => `up to ${v} per person`, ru: (v) => `до ${v} на 1 человека` };
 const GEO_ONLY: Record<Locale, (r: string) => string> = {
-  uk: (r) => (r === "region" ? "Лише для окремих регіонів" : `Лише ${r}`), en: (r) => (r === "region" ? "Selected regions only" : `${r} only`), ru: (r) => (r === "region" ? "Только для отдельных регионов" : `Только ${r}`),
+  uk: (r) => (r === "region" ? "Лише для окремих регіонів" : `Лише ${regionName(r, "uk")}`), en: (r) => (r === "region" ? "Selected regions only" : `${r} only`), ru: (r) => (r === "region" ? "Только для отдельных регионов" : `Только ${regionName(r, "ru")}`),
 };
 const NO_UA: Record<Locale, string> = { uk: "Обмеження для України", en: "Not for Ukraine", ru: "Ограничение для Украины" };
 const FOR_NEW: Record<Locale, string> = { uk: "Для нових користувачів", en: "New users", ru: "Для новых пользователей" };

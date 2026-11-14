@@ -51,7 +51,7 @@ const uk = {
     grid: "Найкраща ставка по популярних монетах", exchanges: "бірж", offers: "пропозицій",
     note: "Ставки — оцінка бірж на момент оновлення і можуть змінитися. Підвищений APR зазвичай діє лише на невелику суму (рівні) або для нових користувачів.",
     dexTitle: "APR пулів DEX і DeFi", dexSub: "Пули ліквідності, лендинг і фарми з усіх мереж за відкритими даними DefiLlama: TVL, базовий APY і винагороди.",
-    all: "Усі", chain: "Мережа", category: "Тип", stable: "Лише стейбли", noIl: "Без IL-ризику", minTvl: "Мін. TVL", searchPool: "Токен або протокол…",
+    all: "Усі", chain: "Мережа", category: "Тип", stable: "Лише стейблкоїни", noIl: "Без ризику IL", minTvl: "Мін. TVL", searchPool: "Токен або протокол…",
     sortApy: "За APY", sortTvl: "За TVL", sortReward: "За винагородами",
     colPool: "Пул", colProto: "Протокол", colChain: "Мережа", colTvl: "TVL", colApy: "APY", colSplit: "База + винагороди", colAvg: "Сер. 30д",
     il: "Ризик непостійних втрат (IL)", stableTag: "стейбл", more: "Показати ще", shown: "показано", of: "з",
@@ -207,7 +207,7 @@ const en: Dict = {
   how: {
     title: "How to earn from promos",
     steps: [
-      ["Pick a promo", "Filter by type, venue and reward size. Freshest first."],
+      ["Pick a promo", "Filter by type, venue and reward size. Best value first; you can change the sort."],
       ["Read the rules", "“Rules” opens the official announcement: dates, requirements, caps, risks."],
       ["Complete the tasks", "Deposit, trade, stake, provide liquidity or do quests — and collect the reward."],
     ],
@@ -315,7 +315,7 @@ const ru: Dict = {
   how: {
     title: "Как заработать на акциях",
     steps: [
-      ["Выберите акцию", "Фильтруйте по типу, площадке и размеру награды. Самые свежие — сверху."],
+      ["Выберите акцию", "Фильтруйте по типу, площадке и размеру награды. Сначала — самые выгодные; сортировку можно изменить."],
       ["Прочитайте условия", "«Условия» открывают официальное объявление: сроки, требования, лимиты, риски."],
       ["Выполните задания", "Депозит, торговля, стейкинг, ликвидность или квесты — и получите награду."],
     ],

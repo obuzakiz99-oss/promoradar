@@ -43,7 +43,7 @@ const D = {
     volatileCoin: "Монета волатильна — дохід у {c}, ціна може впасти",
     // dex
     stablePool: "Пул стейблкоїнів — без цінового ризику",
-    noIl: "Без IL-ризику",
+    noIl: "Без ризику непостійних втрат (IL)",
     bigTvl: "Великий TVL {x} — перевірений пул",
     feeYield: "Дохід переважно з комісій, а не з емісії",
     stableApy: "APY стабільний (сер. 30д {x})",
@@ -230,7 +230,7 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
     const depth = ctx.hedge[pool.stake]?.spotDepthUsd;
     if (depth !== undefined && depth < 20_000 && !BIG.has(pool.stake) && !STABLE.has(pool.stake)) cons.push(f("thinBook", usd(depth), pool.stake));
   }
-  if (pool.stake === p.token) cons.push(f("buyToken", "", p.token));
+  if (pool.stake === p.token && !BIG.has(p.token)) cons.push(f("buyToken", "", p.token));
   if ((ctx.chgReward ?? 0) <= -10) cons.push(f("dump", sign(ctx.chgReward!), p.token));
   else if (!STABLE.has(p.token) && !BIG.has(p.token) && pool.stake !== p.token && (ctx.chgReward ?? 0) < 0) cons.push(f("rewardNew", "", p.token));
   if (pool.aprStart && apr && pool.aprStart > apr * 1.3) cons.push(f("aprFalling", pct(pool.aprStart)));

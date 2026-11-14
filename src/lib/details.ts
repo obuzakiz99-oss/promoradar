@@ -643,8 +643,8 @@ function dropChrome(blocks: Block[]): Block[] {
  * promo's "up to $15,000 per person"), and everything after the "Team" signature of an announcement. Applied per
  * segment: the post, then the exchange page appended under `head`.
  */
-const AD = /(casino|казино|gambling|sportsbook|betting|slots?|18\+)\b/i;
-const SALES = /\b(sign up (now |today )?(and|&) (get|claim|receive)|register now|download the [\w.]+ app|scan to download|welcome rewards? worth|user-centric|leading (crypto(currency)? )?(exchange|platform|futures platform)|trade (over|more than) [\d,]+\+? (crypto|cryptocurrenc)|invite friends (and|to) (earn|get) \d+% commission|get your referral link|new user registration|app link|start your crypto journey)\b/i;
+const AD = /\b(casino|казино|gambling|sportsbook|betting|slots?|18\+)\b/i;
+const SALES = /\b(sign up (now |today )?(and|&) (get|claim|receive)|register now|download the [\w.]+ app|scan to download|welcome rewards? worth|user-centric|leading (crypto(currency)? )?(exchange|platform|futures platform)|trade (over|more than) [\d,]+\+? (crypto|cryptocurrenc)|invite friends (and|to) (earn|get) \d+% commission|get your referral link|new user registration|app link|start your crypto journey|sign up to (get|claim|receive|unlock)|welcome (rewards?|bonus(es)?|gifts?|package)s? (of|worth|up to)|\$[\d,]+\+? (in )?welcome (rewards?|bonus)|scan (the )?qr code|click here to (get|obtain) (your )?referral|not (affiliated|sponsored|endorsed|associated) (with|by) apple|all rights reserved)\b/i;
 const SIGN = /^(?:the\s+)?[\p{L}\d.]{2,20}(?:\s+[\p{L}\d.]{2,20})?\s+team\.?$|^(?:команда|команда)\s+\S+/iu;
 function dropTail(blocks: Block[], head: string): Block[] {
   const out: Block[] = [];
@@ -656,6 +656,10 @@ function dropTail(blocks: Block[], head: string): Block[] {
     if (out.length >= 3 && x.length <= 40 && SIGN.test(x)) { cut = true; continue; }
     if (AD.test(x) && !/\b(reward|prize|usdt|campaign)\b/i.test(x)) continue;
     if (b.t !== "tr" && x.length <= 220 && SALES.test(x)) continue;
+    if (/^(#[\p{L}\d_]+[\s,]*)+$/u.test(x)) continue;                                             // hashtag lines
+    if (/^©|^\d+D\s*\d+H\s*\d+M\s*\d+S$/i.test(x)) continue;                                       // copyright, frozen countdowns
+    if ((x.match(/\|/g) ?? []).length >= 3 && /telegram|discord|twitter|reddit|website|download/i.test(x)) continue;   // social bars
+    if (/^(download|завантаження)\s*[:：]?\s*$/i.test(x)) continue;
     out.push(b);
   }
   return out;

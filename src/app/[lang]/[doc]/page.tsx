@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -19,7 +19,7 @@ type Params = Promise<{ lang: string; doc: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, doc } = await params;
   if (!isLocale(lang) || !DOCS.includes(doc as DocId)) return {};
-  return doc === "api" ? { alternates: alt(lang, `/${doc}`), title: API_DOC[lang].title, description: API_DOC[lang].sub } : { alternates: alt(lang, `/${doc}`), title: LEGAL[lang][doc as Exclude<DocId, "api">].title };
+  return withOg(doc === "api" ? { alternates: alt(lang, `/${doc}`), title: API_DOC[lang].title, description: API_DOC[lang].sub } : { alternates: alt(lang, `/${doc}`), title: LEGAL[lang][doc as Exclude<DocId, "api">].title, description: ({ uk: "PromoRadar: як ми збираємо акції бірж, що робимо з даними і правила користування.", en: "PromoRadar: how we collect exchange promos, what we do with data and the terms of use.", ru: "PromoRadar: как мы собираем акции бирж, что делаем с данными и правила пользования." } as const)[lang] });
 }
 
 const linkify = (s: string) => s.split(/(https?:\/\/\S+)/).map((x, i) => (x.startsWith("http") ? <a key={i} href={x} target="_blank" rel="noopener" className="font-semibold text-lime hover:underline">{x.replace(/^https:\/\//, "")}</a> : x));

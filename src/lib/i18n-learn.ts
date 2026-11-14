@@ -51,7 +51,7 @@ const uk: LearnDict = {
         steps: [["Відкрийте сторінку Launchpool біржі", "Кнопка «Стейкати» на нашому сайті веде одразу туди."], ["Оберіть пул зі стейком USDT", "Це найпростіше: ціна USDT не змінюється. Пули зі стейком нового токена — для досвідчених."], ["Натисніть «Stake» і введіть суму", "Не більше «Макс.» — понад ліміт винагорода не нараховується."], ["Забирайте нагороду", "Токени нараховуються щогодини або щодня. Наприкінці пулу заберіть стейк назад (Redeem/Unstake)."]],
         watch: "Зверніть увагу: APR падає, коли приходить більше учасників, а новий токен може подешевшати." },
       { id: "earn", title: "Earn (депозит на біржі)", level: "easy",
-        steps: [["Розділ Earn / Simple Earn / Заощадження", "Знайдіть USDT або USDC."], ["Гнучкий або фіксований", "Гнучкий — забрати будь-коли; фіксований — вища ставка, але гроші заблоковані на строк."], ["Subscribe і сума", "Підвищена ставка часто діє лише на першу невелику суму (наприклад, до 500 USDT) — це видно в описі."], ["Відсотки щодня", "Їх видно в історії Earn. Забрати — кнопка Redeem."]],
+        steps: [["Розділ Earn / Simple Earn / Заощадження", "Знайдіть USDT або USDC."], ["Гнучкий або фіксований", "Гнучкий — забрати будь-коли; фіксований — вища ставка, але гроші заблоковані на строк."], ["Натисніть Subscribe і введіть суму", "Підвищена ставка часто діє лише на першу невелику суму (наприклад, до 500 USDT) — це видно в описі."], ["Відсотки щодня", "Їх видно в історії Earn. Забрати — кнопка Redeem."]],
         watch: "Зверніть увагу: «до 600% APR» — зазвичай лише для нових користувачів і на $100–200." },
       { id: "bonus", title: "Бонуси новачкам", level: "easy",
         steps: [["Зареєструйтеся за посиланням акції", "Бонуси дають лише новим акаунтам на цій біржі."], ["Виконайте завдання", "Зазвичай: KYC, перший депозит, перша угода на певну суму."], ["Заберіть бонус у «Центрі нагород»", "Часто це купон на оплату комісій, а не живі гроші — читайте умови."]],
@@ -126,7 +126,7 @@ const en: LearnDict = {
         steps: [["Open the exchange's Launchpool page", "The 'Stake' button on our site goes straight there."], ["Pick a pool with USDT stake", "Simplest: USDT doesn't change price. Pools staking the new token are for advanced users."], ["Press 'Stake' and enter an amount", "No more than 'Max' — nothing is paid above the cap."], ["Collect rewards", "Tokens accrue hourly or daily. When the pool ends, take your stake back (Redeem/Unstake)."]],
         watch: "Note: APR falls as more people join, and the new token can drop in price." },
       { id: "earn", title: "Earn (exchange deposit)", level: "easy",
-        steps: [["Earn / Simple Earn / Savings", "Find USDT or USDC."], ["Flexible or fixed", "Flexible — withdraw any time; fixed — higher rate, locked for a term."], ["Subscribe and amount", "Boosted rates often apply only to a small first amount (e.g. up to 500 USDT) — check the description."], ["Daily interest", "See it in Earn history. Withdraw with Redeem."]],
+        steps: [["Earn / Simple Earn / Savings", "Find USDT or USDC."], ["Flexible or fixed", "Flexible — withdraw any time; fixed — higher rate, locked for a term."], ["Press Subscribe and enter the amount", "Boosted rates often apply only to a small first amount (e.g. up to 500 USDT) — check the description."], ["Daily interest", "See it in Earn history. Withdraw with Redeem."]],
         watch: "Note: 'up to 600% APR' is usually new users only and on $100–200." },
       { id: "bonus", title: "New-user bonuses", level: "easy",
         steps: [["Sign up via the promo link", "Bonuses only go to new accounts on that exchange."], ["Complete the tasks", "Usually: KYC, first deposit, first trade of a certain size."], ["Claim in the Rewards Center", "Often it's a fee voucher, not cash — read the terms."]],
@@ -138,7 +138,7 @@ const en: LearnDict = {
     links: "Exchange Launchpool pages",
   },
   safety: {
-    title: "Safety", sub: "Beginners lose money to scammers more often than to the market. These rules cover 95% of the risk.",
+    title: "Safety", sub: "Beginners lose money to scammers more often than to the market. These rules protect you from the most common scams.",
     rules: [
       ["Never share your seed phrase or passwords", "No exchange, 'support' or 'admin' ever asks for them. Whoever asks is a scammer."],
       ["Open exchanges only from bookmarks", "Phishing sites copy the design and use look-alike addresses. Links on our site go to official domains."],
@@ -173,7 +173,7 @@ const ru: LearnDict = {
   bannerLink: "С чего начать →", bannerOff: "Выключить",
   hubTitle: "Новичкам", hubSub: "Всё, чтобы заработать на акциях бирж, даже если вы никогда не покупали криптовалюту.",
   cards: {
-    start: ["Старт с нуля", "От обычных денег до первого заработка за 15 минут"],
+    start: ["Старт с нуля", "От обычных денег до первого дохода — пошагово, за один вечер"],
     how: ["Как участвовать", "Launchpool, Earn, бонусы и соревнования — пошагово"],
     safety: ["Безопасность", "10 правил, чтобы не потерять деньги из-за мошенников"],
     quiz: ["Подобрать мне", "Сумма и опыт → 3 конкретных варианта именно для вас"],
@@ -232,7 +232,7 @@ const ru: LearnDict = {
     q: [
       { id: "amount", text: "Какую сумму готовы вложить?", opts: [["100", "До $100"], ["1000", "$100–1 000"], ["5000", "Больше $1 000"]] },
       { id: "term", text: "На какой срок?", opts: [["short", "Хочу забрать когда угодно"], ["month", "Месяц-два"], ["long", "Полгода и больше"]] },
-      { id: "risk", text: "Как относитесь к риску?", opts: [["none", "Не хочу терять даже немного"], ["some", "Готов к небольшим колебаниям"], ["high", "Готов рисковать ради большего"]] },
+      { id: "risk", text: "Как относитесь к риску?", opts: [["none", "Не хочу терять даже немного"], ["some", "Готовы к небольшим колебаниям"], ["high", "Готовы рисковать ради большего"]] },
       { id: "account", text: "У вас уже есть аккаунт на бирже?", opts: [["no", "Нет, ещё нет"], ["yes", "Да, есть"]] },
     ],
     result: "Вам подходит", again: "Пройти ещё раз", perMonth: "в месяц", perDays: "за {d} дн.", noAccount: "Сначала: Старт с нуля →",

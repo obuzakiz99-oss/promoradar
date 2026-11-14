@@ -40,6 +40,7 @@ import { titleOf } from "@/lib/titletpl";
 import { combosFor, type ComboWhy } from "@/lib/combos";
 import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
 import { withBase } from "@/lib/base";
+import { regionName } from "@/lib/regions";
 import { getTokens, isStableSym } from "@/lib/tokens";
 import { prices } from "@/lib/pools";
 
@@ -92,7 +93,7 @@ const RULES_TX: Record<Locale, {
 }> = {
   uk: {
     coinMore: "усі акції та стейкінг", calTitle: "Дедлайн акції", calIcs: "iPhone / Outlook", calNote: "нагадування за день до кінця",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону ${r}`), geoNoUA: "В умовах Україна серед обмежених країн", geoNoEU: "В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "Лише для нових користувачів",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону: ${regionName(r, "uk")}`), geoNoUA: "В умовах Україна серед обмежених країн", geoNoEU: "В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "Лише для нових користувачів",
     noteTr: (v) => `Машинний переклад (DeepL) офіційних умов ${v}. Якщо щось незрозуміло або розходиться — діє оригінал на сайті біржі.`,
     keySubTr: "Ключові рядки з офіційних правил біржі (машинний переклад). Повний текст — нижче.",
     minTitle: "Щоб отримати хоч щось", from: "від", kind: { trade: "Торгівля", deposit: "Депозит", stake: "Стейк", hold: "Тримати", buy: "Купівля" },
@@ -124,17 +125,17 @@ const RULES_TX: Record<Locale, {
   },
   ru: {
     coinMore: "все акции и стейкинг", calTitle: "Дедлайн акции", calIcs: "iPhone / Outlook", calNote: "напоминание за день до конца",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона ${r}`), geoNoUA: "В условиях Украина среди ограниченных стран", geoNoEU: "В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "Только для новых пользователей",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона: ${regionName(r, "ru")}`), geoNoUA: "В условиях Украина среди ограниченных стран", geoNoEU: "В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "Только для новых пользователей",
     noteTr: (v) => `Машинный перевод (DeepL) официальных условий ${v}. Если что-то непонятно или расходится — действует оригинал на сайте биржи.`,
     keySubTr: "Ключевые строки из официальных правил биржи (машинный перевод). Полный текст — ниже.",
     minTitle: "Чтобы получить хоть что-то", from: "от", kind: { trade: "Торговля", deposit: "Депозит", stake: "Стейк", hold: "Держать", buy: "Покупка" },
     published: "опубликовано", noEnd: "Биржа не указала дату окончания", left: "осталось", poolShared: "Максимум на человека не указан · общий фонд", noCapShort: "Максимум на одного человека биржа не указала — смотрите условия ниже",
     perUser: "Можно заработать (1 человек)", upTo: "до", noCap: "Биржа не указывает максимум на одного человека — награда делится между участниками по правилам акции (см. ниже).",
     title: "Условия и правила", keyTitle: "Главное из правил", keySub: "Ключевые строки из официальных правил биржи (на языке оригинала). Полный текст — ниже.",
-    translate: "Перевести на русский", original: (v) => `Оригинал на ${v}`,
+    translate: "Google-перевод оригинала", original: (v) => `Оригинал на ${v}`,
     note: (v) => `Полный текст условий из официального объявления ${v}, на языке оригинала. Если что-то расходится — действуют правила на сайте биржи.`,
     partial: "Биржа публикует здесь только краткое описание — полные правила по ссылке «Оригинал».",
-    none: (v) => `Полный текст условий этой акции опубликован только на странице ${v} — нажмите «Оригинал» или «Перевести на русский» выше.`,
+    none: (v) => `Полный текст условий этой акции опубликован только на странице ${v} — нажмите «Оригинал» или «Google-перевод оригинала» выше.`,
     more: "Показать все условия", signup: (v) => `Регистрация на ${v}`,
     fact: { period: "Период", who: "Кто может участвовать", min: "Минимальные требования", how: "Как участвовать", payout: "Когда выдадут награды", kyc: "Верификация (KYC)", region: "Ограничения по странам" },
   },
@@ -194,9 +195,9 @@ const dateFull = (ts: number, lang: Locale) =>
 const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string; remind: string; calTitle: string; calDesc: (claim?: number) => string }> = {
   uk: { title: "Що ви реально отримаєте", unknown: "Тип нагороди не вказано", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
     remind: "Нагадати забрати нагороду:", calTitle: "🎁 Забрати нагороду", calDesc: (c) => `Перевірте Центр нагород на біржі й заберіть нагороду${c ? ` — на це є ${c} дн., потім вона згорає` : ""}.` },
-  en: { title: "What you actually get", unknown: "Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
+  en: { title: "What you actually get", unknown: "Reward type not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
     remind: "Remind me to claim the reward:", calTitle: "🎁 Claim your reward", calDesc: (c) => `Check the exchange's rewards center and claim your reward${c ? ` — you have ${c} days before it expires` : ""}.` },
-  ru: { title: "Что вы реально получите", unknown: "Форма не указана", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →",
+  ru: { title: "Что вы реально получите", unknown: "Тип награды не указан", quote: "Что сказано в правилах:", more: "Что такое ваучеры, бонусы и баллы →",
     remind: "Напомнить забрать награду:", calTitle: "🎁 Забрать награду", calDesc: (c) => `Проверьте Центр наград на бирже и заберите награду${c ? ` — на это есть ${c} дн., потом она сгорит` : ""}.` },
 };
 
@@ -226,7 +227,7 @@ const UI_TX: Record<Locale, {
   uk: {
     reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", allUsers: "Усі користувачі",
     cat: { competition: "Торгувати — рейтинг", referral: "Запросити друзів", airdrop: "Виконати завдання", listing: "Торгувати новим токеном", bonus: "Депозит або торгівля", earn: "Покласти в Earn", other: "Виконати умови" }, fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
-    left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${r}`),
+    left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${regionName(r, "uk")}`),
     todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
@@ -248,7 +249,7 @@ const UI_TX: Record<Locale, {
   ru: {
     reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", allUsers: "Все пользователи",
     cat: { competition: "Торговать — рейтинг", referral: "Пригласить друзей", airdrop: "Выполнить задания", listing: "Торговать новым токеном", bonus: "Депозит или торговля", earn: "Положить в Earn", other: "Выполнить условия" }, fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
-    left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${r}`),
+    left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${regionName(r, "ru")}`),
     todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
@@ -306,8 +307,9 @@ export default async function PromoPage({ params }: { params: Params }) {
   const det = details?.[p.id];
   // locked / fixed-term products and Dual Investment carry more than price risk (audit 14.11: "the only risk is the price")
   const ruleText = `${p.titleOrig ?? p.title} ${(det?.blocks ?? []).slice(0, 60).map((b) => b.x).join(" ")}`;
+  const flexible = /\b(no|without|zero)[- ]lock(ed)?(-?up| period)?\b|\bflexible\b|без (блокування|періоду блокування|блокировки)/i.test(`${p.titleOrig ?? p.title} ${p.title}`);
   const lock: "lock" | "dual" | undefined = /\bdual (investment|asset|currency)|двовалют|двухвалют/i.test(ruleText) ? "dual"
-    : /\b(locked|fixed[- ]term|lock[- ]?up|lock period|\d+[- ]day (fixed|locked|term)|early redemption|redeem(ed)? early|достроков|заблоков)/i.test(ruleText) ? "lock" : undefined;
+    : !flexible && /\b(locked|fixed[- ]term|lock[- ]?up|lock period|\d+[- ]day (fixed|locked|term)|early redemption|redeem(ed)? early|достроков|заблоков)/i.test(ruleText) ? "lock" : undefined;
   const ex = faqs?.[p.id]?.[lang];
   const faq = ex?.faq ?? [];
   const FQ = FAQ_TX[lang];
@@ -348,7 +350,8 @@ export default async function PromoPage({ params }: { params: Params }) {
       {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd)})</span>}
       {pu.text.trim() && <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>}
     </span>
-  ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
+  ) : <span className="font-normal text-ink-2">{p.category === "earn" ? ({ uk: "Дохід залежить від суми й ставки — див. калькулятор нижче.", en: "Income depends on the amount and the rate — see the calculator below.", ru: "Доход зависит от суммы и ставки — см. калькулятор ниже." } as const)[lang]
+    : p.category === "referral" ? ({ uk: "Нагорода — за кожного друга, який виконав умову.", en: "The reward is per friend who meets the condition.", ru: "Награда — за каждого друга, выполнившего условие." } as const)[lang] : R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
     [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
@@ -437,7 +440,8 @@ export default async function PromoPage({ params }: { params: Params }) {
           const actIcon: Record<string, IconName> = { trade: "trend", deposit: "cash", stake: "bank", hold: "wallet", buy: "cash" };
           // no threshold in the rules → say what kind of thing it is instead of "see the rules"
           const byCat: Partial<Record<string, [IconName, string]>> = { competition: ["trend", U.cat.competition], referral: ["user", U.cat.referral], airdrop: ["checkCircle", U.cat.airdrop], listing: ["trend", U.cat.listing], bonus: ["cash", U.cat.bonus], earn: ["bank", U.cat.earn] };
-          const act: [IconName, string, string] = m.noDeposit ? ["checkCircle", U.noDeposit, "text-teal"]
+          const act: [IconName, string, string] = p.category === "referral" ? ["user", ({ uk: "Запросити друга", en: "Invite a friend", ru: "Пригласить друга" } as const)[lang], "text-ink"]
+            : m.noDeposit ? ["checkCircle", U.noDeposit, "text-teal"]
             : m.minEntry ? [actIcon[m.minEntry.kind], `${R.kind[m.minEntry.kind]} ${R.from} ${amt}`, "text-amber"]
             : [...(byCat[p.category] ?? (["checkCircle", U.cat.other] as [IconName, string])), "text-ink"];
           const ending = p.endsAt && p.endsAt - now < 3 * 86400_000;
@@ -454,7 +458,9 @@ export default async function PromoPage({ params }: { params: Params }) {
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
                 value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
-                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}</>,
+                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}
+                  {/* the maximum is the top tier, not what the minimum entry gets (audit 14.11: "до 500 USDT" next to "від 50 USDT") */}
+                  {pu && (m.tiers?.length ?? 0) > 1 && <span className="block text-sm font-normal text-ink-3">{({ uk: "за найвищий рівень; поріг входу дає менше", en: "for the top tier; the entry threshold pays less", ru: "за высший уровень; порог входа даёт меньше" } as const)[lang]}</span>}</>,
                 body: <>
                   {pu?.text && <p>“{clean(pu.text)}”</p>}
                   {!pu && p.reward && <p>{R.poolShared} {p.reward.label}</p>}
@@ -494,7 +500,10 @@ export default async function PromoPage({ params }: { params: Params }) {
           const U = UI_TX[lang];
           const kyc = !!m.requires?.includes("kyc") || !!det?.facts.some((f) => f.k === "kyc");
           const amt = m.minEntry ? money(m.minEntry.amount, m.minEntry.unit === "USD" ? "USD" : m.minEntry.unit, lang) : "";
-          const needsJoin = !!det?.facts.some((f) => f.k === "how" && /register|join|sign ?up|opt.?in|зареєстр|приєдна|натисн|зарегистр|нажмите/i.test(f.text));
+          const needsJoin = p.category !== "earn" && (!!det?.facts.some((f) => f.k === "how" && /register|join|sign ?up|opt.?in|зареєстр|приєдна|натисн|зарегистр|нажмите/i.test(f.text))
+            || !!det?.blocks.slice(0, 80).some((b) => /\b(after|once you)\b[^.]{0,40}\b(click|press|tap)(ing|ed)?\b[^.]{0,20}\[?(join|register|sign up)|\[(join|register)( now)?\]/i.test(b.x)));
+          // a competition that is not about trading (creators, predictions, demo, chat guesses) gets a neutral step
+          const notTrading = /\b(creator|prediction|predict|pick|demo|guess|quiz|meme contest|post|chat)\b/i.test(p.titleOrig ?? p.title);
           const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : p.category === "referral" ? [
             ["user", U.s.reg(p.venue.name, kyc, false)],
             ["tag", REF[lang].link],
@@ -504,7 +513,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
             // join before trading: volume before the "Join" press does not count (audit 14.11)
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
-            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
+            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", notTrading ? ({ uk: "Виконуйте умови змагання — переможців визначає рейтинг", en: "Meet the contest's conditions — the ranking decides the winners", ru: "Выполняйте условия соревнования — победителей определяет рейтинг" } as const)[lang] : U.s.rank] as [IconName, string]] : []),
             ["gift", m.payout?.manual ? U.s.manual : m.payout?.auto ? U.s.auto : U.s.unknown],
           ];
           const tasks = det ? tasksOf(det.blocks) : [];
