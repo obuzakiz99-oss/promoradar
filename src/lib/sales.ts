@@ -116,7 +116,7 @@ export function parseIcoDrops(html: string, status: Sale["status"], now: number)
   return out;
 }
 
-export async function getSales(lang: string): Promise<{ sales: Sale[]; preIpo: PreIpo[]; fetchedAt: number; icoOk: boolean }> {
+export async function getSales(lang: string): Promise<{ sales: Sale[]; preIpo: PreIpo[]; fetchedAt: number; icoOk: boolean; now: number }> {
   const now = Date.now();
   const { promos, fetchedAt } = await getPromos(lang);
   // pre-IPO companies get their own block (all exchanges together), not a row each
@@ -128,8 +128,13 @@ export async function getSales(lang: string): Promise<{ sales: Sale[]; preIpo: P
     ico = [...parseIcoDrops(act, "active", now), ...parseIcoDrops(up, "upcoming", now)];
   } catch { icoOk = false; }
   // one row per project: exchange announcements win over the listing
-  const seen = new Set(ex.map((s) => s.name.toLowerCase()));
-  const sales = [...ex, ...ico.filter((s) => !seen.has(s.name.toLowerCase()) && !!seen.add(s.name.toLowerCase()))]
-    .sort((a, b) => (a.status === b.status ? (a.startsAt ?? a.endsAt ?? Infinity) - (b.startsAt ?? b.endsAt ?? Infinity) : a.status === "active" ? -1 : 1));
-  return { sales, preIpo: preIpo(promos, lang, now), fetchedAt, icoOk };
+  // (exchange rows carry the full announcement title, ICO Drops the bare project name → match by ticker or name in title)
+  const dup = (s: Sale, list: Sale[]) => list.some((e) => (s.ticker && e.ticker && s.ticker.toUpperCase() === e.ticker.toUpperCase())
+    || (s.name.length >= 3 && new RegExp(`\\b${s.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(e.name)));
+  const kept: Sale[] = [...ex];
+  for (const s of ico) if (!dup(s, kept)) kept.push(s);
+  // running sales by deadline, upcoming ones by start
+  const key = (s: Sale) => (s.status === "active" ? s.endsAt : s.startsAt) ?? Infinity;
+  const sales = kept.sort((a, b) => (a.status === b.status ? key(a) - key(b) : a.status === "active" ? -1 : 1));
+  return { sales, preIpo: preIpo(promos, lang, now), fetchedAt, icoOk, now };
 }

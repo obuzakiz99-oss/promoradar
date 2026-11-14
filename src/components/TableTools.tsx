@@ -25,9 +25,9 @@ export function TableTools({ lang, sorts, filters = [], search = true, storeKey,
   const [f, setF] = useState<Record<string, string>>({});
   const [q, setQ] = useState("");
   const [count, setCount] = useState<[number, number]>([0, 0]);
-  const key = `pr:table:${storeKey}`;
+  const key = `pr:table:${storeKey}:${lang}`;
 
-  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "{}"); if (sorts.some((s) => s.key === v.sort)) setSort(v.sort); if (v.f) setF(v.f); } catch {} }, [key, sorts]);
+  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "{}"); if (sorts.some((s) => s.key === v.sort)) setSort(v.sort); if (v.f) setF(Object.fromEntries(Object.entries(v.f as Record<string, string>).filter(([k, x]) => filters.some((d) => d.key === k && d.options.includes(x))))); } catch {} }, [key, sorts, filters]);
   useEffect(() => { try { localStorage.setItem(key, JSON.stringify({ sort, f })); } catch {} }, [key, sort, f]);
 
   useEffect(() => {

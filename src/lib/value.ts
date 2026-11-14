@@ -34,6 +34,7 @@ export interface Assess {
 }
 export type Conf = "high" | "mid" | "low";
 export interface Value {
+  max?: number;          // the most one person can get, $ (when known)
   net?: number;          // expected $ for a typical participant after costs (undefined = can't say: points, APR without cap…)
   gross?: number;
   cost?: number;
@@ -186,12 +187,13 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
     : kind === "deposit" || kind === "stake" || kind === "hold" ? need * IDLE_APR * (lock / 365) : 0;
   const ai = !!a;
   const out = (gross: number | undefined, conf: Conf, basis: Value["basis"]): Value => ({
-    gross: gross === undefined ? undefined : round(gross), cost: round(cost), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai,
+    gross: gross === undefined ? undefined : round(gross), cost: round(cost), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai,
   });
 
   switch (mech) {
     case "fixed": case "tiers": case "referral":
-      if (typical !== undefined) return out(typical, "high", "stated");
+      // the smallest tier is certain, but the bigger tiers are within reach too → not "surely small"
+      if (typical !== undefined) return out(typical, mech === "tiers" || (max !== undefined && max > typical * 2) ? "mid" : "high", "stated");
       // only an "up to" figure: the top tier / an affiliate's best month is not what a typical person gets
       if (max !== undefined) return out(mech === "tiers" ? max / 4 : max, mech === "fixed" && a ? "high" : "low", "max");
       return out(undefined, "low", "none");
@@ -214,7 +216,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       const apr = a?.aprPct ?? m.aprPct;
       if (apr === undefined) return out(undefined, "low", "none");
       // extra over idle money on $1,000 (or the cap) for the period (30 days when not stated)
-      const base = Math.min(1000, need || 1000);
+      const cap = usd(a?.max) ?? m.perUser?.usd;
+      const base = Math.max(need, Math.min(1000, cap !== undefined && cap > 0 && a?.max ? cap : 1000));
       const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * ((a?.days ?? 30) / 365));
       return { gross: g, cost: 0, net: g, conf: "mid", mech, basis: "apr", ai };
     }
@@ -228,6 +231,6 @@ const round = (x: number) => Math.round(x * 100) / 100;
 export function valueJunk(a: Assess | undefined, v: Value): "news" | "social" | "small" | undefined {
   if (a && !a.isPromo) return "news";
   if (a?.socialOnly) return "social";
-  if (v.net !== undefined && v.conf === "high" && v.net < MIN_NET_USD && v.mech !== "apr" && v.mech !== "referral") return "small";
+  if (v.net !== undefined && v.conf === "high" && v.net < MIN_NET_USD && v.mech !== "apr" && v.mech !== "referral" && !(v.max !== undefined && v.max >= 30)) return "small";
   return undefined;
 }

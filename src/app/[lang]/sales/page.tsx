@@ -63,9 +63,9 @@ export default async function SalesPage({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = X[lang];
-  const { sales, preIpo, fetchedAt, icoOk } = await getSales(lang);
+  // countdowns from the same moment the ICO Drops "N days left" were read
+  const { sales, preIpo, fetchedAt, icoOk, now } = await getSales(lang);
   const PI = PRE[lang];
-  const now = fetchedAt;
   const logoOf = (s: Sale) => (s.venueId && VENUES[s.venueId] ? venueOf(s.venueId) : { name: s.name, logo: s.logo, color: "#2a313b", ink: "#eef2f6", monogram: coinMonogram(s.ticker ?? s.name) });
 
   const Row = ({ s }: { s: Sale }) => {

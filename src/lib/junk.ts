@@ -11,7 +11,7 @@ import type { Promo } from "./types";
 export type JunkReason = "social" | "small";
 export const MIN_PER_USER_USD = 30;
 
-const NET = String.raw`(?:X|Twitter|Telegram|Discord|YouTube|Instagram|TikTok|Facebook|Reddit|social (?:media|platforms?|accounts?))`;
+const NET = String.raw`(?:X(?!\s*Layer)|Twitter|Telegram|Discord|YouTube|Instagram|TikTok|Facebook|Reddit|social (?:media|platforms?|accounts?))`;
 const SOCIAL_TITLE = new RegExp(
   String.raw`\b(follow|retweet|repost|like|subscribe)\b.{0,40}\b${NET}\b` +
   String.raw`|\b(retweet|repost|like (?:&|and) RT)\b` +

@@ -147,7 +147,8 @@ async function getPromosLive(): Promise<Collected> {
   }
   // what one ordinary participant can really get (Claude reads the rules once per promo, then plain arithmetic) —
   // junk is dropped: not a promo at all, social-only tasks, < $30 per person, or surely < $10 net
-  const facts = await getAssessments(promos, details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
+  // newest real promos first: the first builds read up to VALUE_PER_BUILD of them
+  const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
   for (const p of promos) {
     const handAdded = !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id);
