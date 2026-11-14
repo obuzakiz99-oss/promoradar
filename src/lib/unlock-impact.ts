@@ -68,11 +68,8 @@ const WHO_TXT: Record<L, Record<Who, string>> = {
 export function impactText(u: Unlock, lang: L): string {
   const { who } = impactOf(u);
   const pct = u.pctCap >= 0.1 ? u.pctCap.toFixed(1) : "<0.1";
-  const size = {
-    uk: u.pctCap >= 5 ? `Дуже великий: ${pct}% капіталізації` : u.pctCap >= 1 ? `Великий: ${pct}% капіталізації` : u.pctCap >= 0.3 ? `Середній: ${pct}% капіталізації` : `Малий: ${pct}% капіталізації`,
-    en: u.pctCap >= 5 ? `Very large: ${pct}% of market cap` : u.pctCap >= 1 ? `Large: ${pct}% of market cap` : u.pctCap >= 0.3 ? `Medium: ${pct}% of market cap` : `Small: ${pct}% of market cap`,
-    ru: u.pctCap >= 5 ? `Очень большой: ${pct}% капитализации` : u.pctCap >= 1 ? `Большой: ${pct}% капитализации` : u.pctCap >= 0.3 ? `Средний: ${pct}% капитализации` : `Малый: ${pct}% капитализации`,
-  }[lang];
+  // one scale only (audit 14.11): the badge grades the impact; the sentence just states the size
+  const size = { uk: `Розмір: ${pct}% капіталізації`, en: `Size: ${pct}% of market cap`, ru: `Размер: ${pct}% капитализации` }[lang];
   const sched = u.type === "linear"
     ? { uk: "розтягнуто в часі, тисне м'якше", en: "spread over time, so softer", ru: "растянуто во времени, давит мягче" }[lang]
     : { uk: "усе одразу в один день", en: "all at once on one day", ru: "всё сразу в один день" }[lang];

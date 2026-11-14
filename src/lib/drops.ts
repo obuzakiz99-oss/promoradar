@@ -66,7 +66,7 @@ const STABLE_UNIT = /^(USDT|USDC|USD1|FDUSD|USD)$/i;
 /** Needs money or trading to qualify → not "free". */
 const COSTS = /deposit|trade|trading|futures|volume|stake|staking|hold|subscribe|lock|invest|buy|convert|p2p|copy|vip|leverage|margin|transfer|swap|торг|депозит|ф'?ючерс|фьючерс|стейк|переказ|перевод|купі|купи|обмін|обмен/i;
 /** Stablecoin rewards you can get without putting money in: quizzes, tasks, social, referrals-free giveaways. */
-const NOT_FREE_CAT = new Set(["competition", "earn", "bonus", "farming"]);
+const NOT_FREE_CAT = new Set(["competition", "earn", "bonus", "farming", "referral"]);
 const NOT_FOR_ALL = /exclusive|exclucsive|region|south asia|mena|cis|latam|wsot|compete|jackpot|spin|mining/i;
 // checked on the original (English) headline too: translated titles ("Наторгуйте $100…") slipped through (audit 14.11)
 export const isFreeStable = (p: { title: string; titleOrig?: string; category?: string; reward?: { unit?: string }; meta?: { minEntry?: unknown } }) =>
