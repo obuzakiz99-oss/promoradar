@@ -90,7 +90,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                       </summary>
                       <div className="absolute right-0 top-12 z-40 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
                         <a href={gcal(e, label, lang)} target="_blank" rel="noopener" onClick={(ev) => ev.currentTarget.closest("details")?.removeAttribute("open")} className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
-                        <button type="button" onClick={(ev) => { downloadIcs([[e, label]], `promoradar-${e.id}`, lang); ev.currentTarget.closest("details")?.removeAttribute("open"); }} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
+                        <button type="button" onClick={(ev) => { downloadIcs([[e, label]], `promoradar-${e.id}`, lang); const d = ev.currentTarget.closest("details"); d?.removeAttribute("open"); d?.querySelector<HTMLElement>("summary")?.focus(); }} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
                       </div>
                     </details>
                   </li>

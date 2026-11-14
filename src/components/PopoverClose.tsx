@@ -10,7 +10,7 @@ export function PopoverClose() {
     const open = () => [...document.querySelectorAll<HTMLDetailsElement>("details[data-pop][open]")];
     const down = (e: PointerEvent) => { const t = e.target as Node; open().forEach((d) => { if (!d.contains(t)) d.open = false; }); };
     // Esc also hides a glossary tooltip (WCAG 1.4.13); it shows again on the next hover / focus
-    const key = (e: KeyboardEvent) => { if (e.key === "Escape") { open().forEach((d) => { d.open = false; }); document.querySelectorAll<HTMLElement>(".term").forEach((t) => t.setAttribute("data-off", "")); } };
+    const key = (e: KeyboardEvent) => { if (e.key === "Escape") { open().forEach((d) => { const inside = d.contains(document.activeElement); d.open = false; if (inside) d.querySelector<HTMLElement>("summary")?.focus(); }); document.querySelectorAll<HTMLElement>(".term").forEach((t) => t.setAttribute("data-off", "")); } };
     const on = (e: Event) => { const t = (e.target as HTMLElement)?.closest?.(".term"); if (t) t.removeAttribute("data-off"); };
     document.addEventListener("pointerover", on);
     document.addEventListener("focusin", on);

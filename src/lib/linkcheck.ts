@@ -39,6 +39,11 @@ export function checkLink(raw: string, off: Official): Verdict {
   if (!/^https?:$/.test(u.protocol) || !u.hostname.includes(".")) return { kind: "invalid" };
   const host = u.hostname.toLowerCase();
   const http = u.protocol === "http:";
+  // "https://www.binance.com@evil.com/" opens evil.com — the part before "@" is only a disguise (audit 14.11)
+  if (u.username || u.password) {
+    const fake = off.domains.find((d) => `${u.username}`.toLowerCase().includes(base(d.domain).toLowerCase()));
+    return { kind: "lookalike", venue: fake?.venue ?? "?", domain: fake?.domain ?? "", why: "contains", host };
+  }
 
   // Telegram channel
   if (/^(t\.me|telegram\.me|telegram\.dog)$/.test(host)) {

@@ -104,6 +104,20 @@ async function getPromosLive(): Promise<Collected> {
       const meta = { ...(p.meta ?? {}) };
       if (!p.startsAt && tm.start && tm.start > now - 400 * 86400_000) { p.startsAt = tm.start; meta.datesFromRules = true; }
       if (!p.endsAt && tm.end) { p.endsAt = tm.end; meta.datesFromRules = true; }
+      // "2026.10.20 00:00:00 - 2026.10.27 23:59:59 (UTC+8)" — a dotted range the terms parser misses (audit 14.11: an
+      // ended BingX promo showed as running); only the end matters here, read in the stated offset
+      if (!p.endsAt) {
+        const R = /(\d{4})[./](\d{1,2})[./](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./](\d{1,2})[./](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*\(?UTC\s*([+-]\d{1,2})?/i;
+        for (const b of d.blocks.slice(0, 40)) {
+          const r = b.x.match(R);
+          if (!r) continue;
+          const end = Date.UTC(+r[4], +r[5] - 1, +r[6], +r[7], +r[8]) - (r[9] ? +r[9] * 3600_000 : 0);
+          if (Number.isFinite(end) && end > Date.UTC(2020, 0, 1)) { p.endsAt = end; meta.datesFromRules = true; }
+          break;
+        }
+      }
+      // "Bitbase Points is live" with a start months ahead: the parser took the end / verification date as the start
+      if (p.startsAt && p.startsAt > now && meta.datesFromRules && /\b(is (now )?live|now live|kicks? off|has (started|begun|launched)|is here|are live|is on)\b/i.test(p.titleOrig ?? p.title)) p.startsAt = undefined;
       if (tm.perUser) {
         const rate = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/.test(tm.perUser.unit) ? 1 : px[tm.perUser.unit];
         meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
@@ -170,6 +184,9 @@ async function getPromosLive(): Promise<Collected> {
     const GENERIC = /^(APR|APY|USDT|USDC|USD|VIP|TGE|NEW|LIVE|UTC|KYC|AI|CEX|DEX|NFT|P2P|FAQ|AMA)$/;
     const sig = toks.some((x) => /\d/.test(x) && !/^20\d\d$/.test(x)) && toks.some((x) => /^[A-Z]/.test(x) && !GENERIC.test(x)) ? `${p.venue.id}|${p.category}|${toks.filter((x) => !/^20\d\d$/.test(x)).join(",")}` : "";
     if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dups.add(p.id); else seenUrl.add(sig); }
+    const tag = (head.match(/\b[A-Z][A-Z0-9]{2,9}\b/g) ?? []).find((x) => !GENERIC.test(x));
+    const big = p.reward?.usd !== undefined && p.reward.usd >= 100_000 && tag ? `${p.venue.id}|${p.category}|${tag}|${Math.round(p.reward.usd)}` : "";
+    if (big && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(big)) dups.add(p.id); else seenUrl.add(big); }
   }
   for (const p of promos) {
     if (dups.has(p.id)) continue;

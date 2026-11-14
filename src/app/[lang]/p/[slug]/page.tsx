@@ -440,7 +440,9 @@ export default async function PromoPage({ params }: { params: Params }) {
           const actIcon: Record<string, IconName> = { trade: "trend", deposit: "cash", stake: "bank", hold: "wallet", buy: "cash" };
           // no threshold in the rules → say what kind of thing it is instead of "see the rules"
           const byCat: Partial<Record<string, [IconName, string]>> = { competition: ["trend", U.cat.competition], referral: ["user", U.cat.referral], airdrop: ["checkCircle", U.cat.airdrop], listing: ["trend", U.cat.listing], bonus: ["cash", U.cat.bonus], earn: ["bank", U.cat.earn] };
-          const act: [IconName, string, string] = p.category === "referral" ? ["user", ({ uk: "Запросити друга", en: "Invite a friend", ru: "Пригласить друга" } as const)[lang], "text-ink"]
+          const notTradingC = p.category === "competition" && /\b(creator|prediction|predict|pick|demo|guess|quiz|meme contest|post|chat)\b/i.test(p.titleOrig ?? p.title);
+          const act: [IconName, string, string] = notTradingC ? ["trend", ({ uk: "Змагання — рейтинг", en: "Contest — leaderboard", ru: "Соревнование — рейтинг" } as const)[lang], "text-ink"]
+            : p.category === "referral" ? ["user", ({ uk: "Запросити друга", en: "Invite a friend", ru: "Пригласить друга" } as const)[lang], "text-ink"]
             : m.noDeposit ? ["checkCircle", U.noDeposit, "text-teal"]
             : m.minEntry ? [actIcon[m.minEntry.kind], `${R.kind[m.minEntry.kind]} ${R.from} ${amt}`, "text-amber"]
             : [...(byCat[p.category] ?? (["checkCircle", U.cat.other] as [IconName, string])), "text-ink"];
@@ -513,7 +515,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
             // join before trading: volume before the "Join" press does not count (audit 14.11)
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
-            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", notTrading ? ({ uk: "Виконуйте умови змагання — переможців визначає рейтинг", en: "Meet the contest's conditions — the ranking decides the winners", ru: "Выполняйте условия соревнования — победителей определяет рейтинг" } as const)[lang] : U.s.rank] as [IconName, string]] : []),
+            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "earn" ? [["bank", ({ uk: "Підпишіться на продукт у розділі Earn біржі (Subscribe) і вкажіть суму", en: "Subscribe to the product in the exchange's Earn section and enter the amount", ru: "Подпишитесь на продукт в разделе Earn биржи (Subscribe) и укажите сумму" } as const)[lang]] as [IconName, string]]
+              : p.category === "airdrop" || p.category === "bonus" || p.category === "other" || p.category === "listing" ? [["checkCircle", ({ uk: "Виконайте умови акції — вони нижче, у розділі «Умови»", en: "Meet the promo's conditions — listed below under “Rules”", ru: "Выполните условия акции — они ниже, в разделе «Условия»" } as const)[lang]] as [IconName, string]]
+              : p.category === "competition" ? [["trend", notTrading ? ({ uk: "Виконуйте умови змагання — переможців визначає рейтинг", en: "Meet the contest's conditions — the ranking decides the winners", ru: "Выполняйте условия соревнования — победителей определяет рейтинг" } as const)[lang] : U.s.rank] as [IconName, string]] : []),
             ["gift", m.payout?.manual ? U.s.manual : m.payout?.auto ? U.s.auto : U.s.unknown],
           ];
           const tasks = det ? tasksOf(det.blocks) : [];
@@ -572,7 +576,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* "how much would I get" — only when the amount you put in changes the result (audit 14.11: a calculator on fixed
             vouchers and points airdrops said "✓ threshold passed" for any number) */}
-        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry) && (
+        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || (m.tiers?.length ?? 0) > 1 || (m.minEntry?.amount ?? 0) > 0) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} />
         )}
 

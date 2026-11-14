@@ -39,7 +39,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
 
   const byId = useMemo(() => new Map(promos.map((p) => [p.id, p])), [promos]);
   const rows = saved.map((id) => ({ id, p: byId.get(id), tr: track[id] ?? { status: "saved" as Status } }));
-  const total = Object.values(track).reduce((s, x) => s + (x.earned ?? 0), 0);
+  const total = saved.reduce((s, id) => s + (track[id]?.earned ?? 0), 0);   // removed rows no longer count (audit 14.11)
   const activeN = rows.filter((r) => r.tr.status === "joined").length;
 
   // filter + sort (owner 13.11): status chips with counts, exchange, search; the choice is remembered in this browser

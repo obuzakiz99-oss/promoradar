@@ -22,7 +22,7 @@ export function ago(ms: number, t: Dict["time"]): string {
 }
 
 export function shortDate(ts: number, locale: string): string {
-  return new Date(ts).toLocaleDateString(locale === "uk" ? "uk-UA" : locale === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short" });
+  return new Date(ts).toLocaleDateString(locale === "uk" ? "uk-UA" : locale === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 }
 
 /** Word forms after a number: uk/ru [1, 2–4, 5+], en [1, many]. */

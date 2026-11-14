@@ -40,9 +40,10 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     setOpen(false);
+    btn.current?.focus();
   };
   return (
-    <div ref={root} className={`relative inline-block ${open ? "z-30" : ""}`}>
+    <div ref={root} className={`relative inline-block ${open ? "z-30" : ""}`} onBlur={(e) => { if (open && !root.current?.contains(e.relatedTarget as Node | null)) setOpen(false); }}>
       <button ref={btn} type="button" onClick={toggle} aria-expanded={open} aria-label={TX[lang].add} title={TX[lang].add}
         className={`grid size-9 place-items-center rounded-lg border transition ${open ? "border-lime/50 text-lime" : "border-line text-ink-3 hover:border-line-2 hover:text-ink"}`}>
         <Icon name="calendar" className="size-4" />

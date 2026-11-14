@@ -166,14 +166,26 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     && (!quick.has("cash") || isCash(p));
   // promos the reader hid with the eye button stay out of the feed (but not out of "Saved"), unless they ask to see them
   const hiddenIds = useHidden();
+  // search: every word must match (in any order); each word also matches its Ukrainian / Russian / English spellings
+  // ("аірдроп" finds "айрдроп" and "airdrop") — audit 14.11: "бонус bybit" returned every exchange's bonuses
+  const qOk = useMemo(() => {
+    const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return () => true;
+    const alts = words.map((w) => [w, ...SYN.filter(([re]) => re.test(w)).flatMap(([, ws]) => ws)]);
+    return (p: Promo) => {
+      const hay = `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.category} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase();
+      return alts.every((a) => a.some((x) => hay.includes(x)));
+    };
+  }, [q, t]);
   const kindCounts = useMemo(() => {
-    const all = promos.filter((p) => geoAllowed(p, country) && quickOk(p));
+    const st = (p: Promo) => status === "all" || statusOf(p, now) === status || (status === "live" && statusOf(p, now) === "ongoing");
+    const all = promos.filter((p) => geoAllowed(p, country) && quickOk(p) && st(p) && qOk(p) && (cat === "all" || p.category === cat) && (!venues.size || venues.has(p.venue.id)));
     const vis = all.filter((p) => !hiddenIds.includes(p.id));
     const c: Record<string, number> = { all: vis.length, saved: all.filter((p) => saved.includes(p.id)).length, hidden: all.filter((p) => hiddenIds.includes(p.id)).length };
     vis.forEach((p) => (c[p.venue.kind] = (c[p.venue.kind] ?? 0) + 1));
     return c;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promos, saved, hiddenIds, country, quick]);
+  }, [promos, saved, hiddenIds, country, quick, status, now, qOk, cat, venues]);
   const [showHidden, setShowHidden] = useState(false);
   const geoAll = useMemo(() => promos.filter((p) => geoAllowed(p, country)), [promos, country]);
   const geoHidden = promos.length - geoAll.length;
@@ -190,23 +202,14 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     [geoOk, kind, saved, hiddenIds, status, now, quick],
   );
 
+
+  const base = useMemo(() => byKind.filter((p) => (!venues.size || venues.has(p.venue.id)) && qOk(p)), [byKind, venues, qOk]);
+
   const venueList = useMemo(() => {
     const m = new Map<string, { v: Venue; n: number }>();
-    byKind.forEach((p) => { if (p.venue.kind === "airdrop") return; const e = m.get(p.venue.id); e ? e.n++ : m.set(p.venue.id, { v: p.venue, n: 1 }); });
+    byKind.forEach((p) => { if (p.venue.kind === "airdrop" || !qOk(p) || (cat !== "all" && p.category !== cat)) return; const e = m.get(p.venue.id); e ? e.n++ : m.set(p.venue.id, { v: p.venue, n: 1 }); });
     return [...m.values()].sort((a, b) => b.n - a.n);
-  }, [byKind]);
-
-  const base = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    // the same word in Ukrainian / Russian / English spellings ("аірдроп" finds "айрдроп" and "airdrop")
-    const alts = s ? [s, ...SYN.filter(([re]) => re.test(s)).flatMap(([, words]) => words)] : [];
-    return byKind.filter((p) => {
-      if (venues.size && !venues.has(p.venue.id)) return false;
-      if (!s) return true;
-      const hay = `${p.title} ${p.titleOrig ?? ""} ${p.venue.name} ${t.cat[p.category]} ${p.category} ${p.reward?.unit ?? ""} ${p.meta?.chain ?? ""} ${p.meta?.actions ?? ""}`.toLowerCase();
-      return alts.some((a) => hay.includes(a));
-    });
-  }, [byKind, venues, q, t]);
+  }, [byKind, qOk, cat]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: base.length };
@@ -374,7 +377,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           )}
         </>
       ) : (
-        <div className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{kind === "saved" && !q ? t.saved.empty : t.filters.empty}</div>
+        <div className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{kind === "saved" && !q ? t.saved.empty : !dirty && userHidden > 0 && userHidden >= geoAll.length ? ({ uk: "Ви приховали всі акції — натисніть «показати» або «повернути всі» вище.", en: "You hid every promo — press “show them” or “restore all” above.", ru: "Вы скрыли все акции — нажмите «показать» или «вернуть все» выше." } as const)[lang] : t.filters.empty}</div>
       )}
     </div>
   );
