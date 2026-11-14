@@ -68,8 +68,10 @@ def prepare_repo():
     # the same author as the owner's working folder (no global git identity on this laptop)
     run([GIT, "config", "user.name", "obuzakiz99-oss"])
     run([GIT, "config", "user.email", "320042687+obuzakiz99-oss@users.noreply.github.com"])
+    # a run killed mid-rebase (laptop asleep, conflict) must not block every later run
+    run([GIT, "rebase", "--abort"], check=False)
     run([GIT, "fetch", "-q", "origin", "main", "data"])
-    run([GIT, "checkout", "-q", "-B", "main", "origin/main"])
+    run([GIT, "checkout", "-q", "-f", "-B", "main", "origin/main"])
     run([GIT, "reset", "-q", "--hard", "origin/main"])
 
 
@@ -153,7 +155,9 @@ def main():
             if run([GIT, "push", "-q", "origin", "HEAD:main"], check=False).returncode == 0:
                 log(f"pushed {len(good)} of {len(src)} (todo was {len(items)})")
                 return
-            run([GIT, "pull", "-q", "--rebase", "origin", "main"], check=False)
+            # one big JSON: never auto-resolve a clash (could break the JSON) — give up, the next run redoes it
+            if run([GIT, "pull", "-q", "--rebase", "origin", "main"], check=False).returncode != 0:
+                run([GIT, "rebase", "--abort"], check=False)
         log("push failed 3 times")
     except Exception as e:
         log(f"error: {e}")

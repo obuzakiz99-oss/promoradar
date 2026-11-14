@@ -68,8 +68,10 @@ def prepare_repo():
         run([GIT, "clone", "-q", REPO_URL, REPO], cwd=WORK, timeout=900)
     run([GIT, "config", "user.name", "obuzakiz99-oss"])
     run([GIT, "config", "user.email", "320042687+obuzakiz99-oss@users.noreply.github.com"])
+    # a run killed mid-rebase (laptop asleep, conflict) must not block every later run
+    run([GIT, "rebase", "--abort"], check=False)
     run([GIT, "fetch", "-q", "origin", "main", "data"])
-    run([GIT, "checkout", "-q", "-B", "main", "origin/main"])
+    run([GIT, "checkout", "-q", "-f", "-B", "main", "origin/main"])
     run([GIT, "reset", "-q", "--hard", "origin/main"])
 
 
@@ -237,7 +239,9 @@ def main():
             if run([GIT, "push", "-q", "origin", "HEAD:main"], check=False).returncode == 0:
                 log(f"pushed {nv} facts, {nf} faq")
                 return
-            run([GIT, "pull", "-q", "--rebase", "origin", "main"], check=False)
+            # one small file per promo: a clash means another run wrote the same promo — keep ours
+            if run([GIT, "pull", "-q", "--rebase", "-X", "theirs", "origin", "main"], check=False).returncode != 0:
+                run([GIT, "rebase", "--abort"], check=False)
         log("push failed 3 times")
     except Exception as e:
         log(f"error: {e}")
