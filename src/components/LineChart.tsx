@@ -1,6 +1,18 @@
 /** Minimal multi-series SVG line chart (server-rendered, theme-aware via CSS variables). */
 export interface Series { name: string; color: string; points: Array<[number, number]> } // [time ms, value]
 
+/**
+ * Fewer points for a chart (audit 14.11: snapshots every few minutes made /history/ 515 KB): values rounded to 2 decimals,
+ * runs of the same value collapsed to their ends, then at most `max` points spread evenly (first and last kept).
+ */
+export function thinPoints(pts: Array<[number, number]>, max = 160): Array<[number, number]> {
+  const r = pts.map(([t, v]) => [t, Math.round(v * 100) / 100] as [number, number]);
+  const k = r.filter((p, i) => i === 0 || i === r.length - 1 || p[1] !== r[i - 1][1] || p[1] !== r[i + 1][1]);
+  if (k.length <= max) return k;
+  const step = (k.length - 1) / (max - 1);
+  return Array.from({ length: max }, (_, i) => k[Math.round(i * step)]);
+}
+
 const PALETTE = ["#c8ff3d", "#3de0c8", "#5ab8ff", "#ffb547", "#a38bff", "#ff6b8b", "#7ee787", "#f2c67c"];
 export const seriesColor = (i: number) => PALETTE[i % PALETTE.length];
 

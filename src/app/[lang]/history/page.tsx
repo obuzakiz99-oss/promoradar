@@ -9,7 +9,7 @@ import { getPools } from "@/lib/pools";
 import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
-import { LineChart, seriesColor, type Series } from "@/components/LineChart";
+import { LineChart, seriesColor, thinPoints, type Series } from "@/components/LineChart";
 import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
@@ -81,12 +81,12 @@ export default async function HistoryPage({ params }: { params: Params }) {
     const exs = [...new Set(snaps.flatMap((s) => Object.keys(s.earn?.[coin] ?? {})))];
     const series: Series[] = exs.map((ex, i) => ({
       name: venueOf(ex)?.name ?? ex, color: seriesColor(i),
-      points: snaps.filter((s) => s.earn?.[coin]?.[ex] !== undefined).map((s) => [s.t, s.earn[coin][ex]] as [number, number]),
+      points: thinPoints(snaps.filter((s) => s.earn?.[coin]?.[ex] !== undefined).map((s) => [s.t, s.earn[coin][ex]] as [number, number])),
     })).filter((s) => s.points.length > 1);
     return { coin, series };
   }).filter((c) => c.series.length);
 
-  const dropSeries: Series[] = S.drop.slice(0, 8).map((d, i) => ({ name: `${d.name} · ${exName(d.exchange)}`, color: seriesColor(i), points: d.points }));
+  const dropSeries: Series[] = S.drop.slice(0, 8).map((d, i) => ({ name: `${d.name} · ${exName(d.exchange)}`, color: seriesColor(i), points: thinPoints(d.points) }));
   const exList = [...new Set(S.past.map((r) => r.exchange))];
   const maxMonth = Math.max(1, ...S.byMonth.map((m) => m.pools));
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
-import { getTokens } from "@/lib/tokens";
+import { getTokens, isStableSym } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
 import { TokenIndex, type TokenRow } from "@/components/TokenIndex";
 import { Footer } from "@/components/Sections";
@@ -28,10 +28,14 @@ export default async function Tokens({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TX[lang];
   const { tokens, fetchedAt } = await getTokens(lang);
-  const rows: TokenRow[] = [...tokens.values()].map((x) => ({
-    sym: x.sym, logo: x.logo, href: withBase(`/${lang}/t/${x.sym}/`), promos: x.promos.length, lp: x.lpReward.length + x.lpStake.length,
-    earnMax: x.earn.find((o) => !o.newUsers && o.apr <= 100)?.apr, score: x.promos.length * 3 + x.lpReward.length * 5 + x.lpStake.length + Math.min(x.earn.length, 5),
-  })).sort((a, b) => b.score - a.score);
+  // stablecoin pages show no promo list (nearly every promo pays USDT/USDC), so the index must not promise "105 promos" (audit 14.11)
+  const rows: TokenRow[] = [...tokens.values()].map((x) => {
+    const promos = isStableSym(x.sym) ? 0 : x.promos.length;
+    return {
+      sym: x.sym, logo: x.logo, href: withBase(`/${lang}/t/${x.sym}/`), promos, lp: x.lpReward.length + x.lpStake.length,
+      earnMax: x.earn.find((o) => !o.newUsers && o.apr <= 100)?.apr, score: promos * 3 + x.lpReward.length * 5 + x.lpStake.length + Math.min(x.earn.length, 5),
+    };
+  }).sort((a, b) => b.score - a.score);
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">

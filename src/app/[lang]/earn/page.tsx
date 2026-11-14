@@ -8,6 +8,7 @@ import { getHedges, prices as getPrices } from "@/lib/pools";
 import { venueOf } from "@/config/site";
 import { EarnBoard } from "@/components/EarnBoard";
 import { Footer } from "@/components/Sections";
+import { withBase } from "@/lib/base";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -51,7 +52,8 @@ export default async function EarnPage({ params }: { params: Params }) {
           </div>
         </header>
         <div className="mt-8">
-          <EarnBoard offers={offers} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} hedge={hedge} prices={usedPx} />
+          {/* popular coins in the HTML, the rest from the cached JSON right after load (the page was 550 KB) */}
+          <EarnBoard offers={offers.filter((o) => POPULAR.includes(o.coin))} allCoins={[...byCount.keys()]} src={withBase("/api/earn.json")} popular={POPULAR} exchanges={exchanges} t={t} lang={lang} hedge={hedge} prices={usedPx} />
         </div>
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.note}</p>
       </main>

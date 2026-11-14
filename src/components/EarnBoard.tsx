@@ -2,7 +2,7 @@
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
 import type { Venue } from "@/lib/types";
@@ -36,7 +36,18 @@ const STABLE = /^(USDT|USDC|FDUSD|USD1|DAI|USDS|USDE|PYUSD|TUSD)$/;
 const fmtCoin = (n: number) => (n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
 const fmtUsd = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
 
-export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, prices = {} }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge>; prices?: Record<string, number> }) {
+/**
+ * `offers` may be only the popular coins (the page ships those in its HTML, audit 14.11: all ~2,100 offers made /earn/
+ * 550 KB); `allCoins` lists every coin for the search box and `src` is the full list, loaded right after the page appears.
+ */
+export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge = {}, prices = {}, allCoins, src }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge>; prices?: Record<string, number>; allCoins?: string[]; src?: string }) {
+  const [offers, setOffers] = useState(initial);
+  useEffect(() => {
+    if (!src) return;
+    let live = true;
+    fetch(src).then((r) => (r.ok ? r.json() : Promise.reject(r.status))).then((j: { offers?: EarnOffer[] }) => { if (live && j.offers?.length) setOffers(j.offers); }).catch(() => {});
+    return () => { live = false; };
+  }, [src]);
   const A = t.aprHub;
   const [coinPick, setCoin] = useState("USDT");
   const novice = useNovice();
@@ -58,7 +69,7 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
     for (const o of offers) m.set(o.coin, [...(m.get(o.coin) ?? []), o]);
     return m;
   }, [offers]);
-  const coins = useMemo(() => [...byCoin.keys()].sort(), [byCoin]);
+  const coins = useMemo(() => [...new Set([...(allCoins ?? []), ...byCoin.keys()])].sort(), [byCoin, allCoins]);
   const matches = q ? coins.filter((c) => c.toLowerCase().startsWith(q.toLowerCase())).slice(0, 12) : [];
 
   // regular offers ranked by base APR; new-user promos listed after them (they're capped and not for everyone)
