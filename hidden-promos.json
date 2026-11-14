@@ -1,6 +1,14 @@
 {
- "at": 1794668236082,
+ "at": 1794668487277,
  "items": [
+  {
+   "id": "tg:HTXGlobalAnnouncementChannel/15834",
+   "venue": "HTX",
+   "title": "The SPCX airdrop is live, and over 13,000 users have already participated!",
+   "url": "https://www.htx.com/en-us/mars/activity-center?callId=179395001871350",
+   "why": "small",
+   "perUserUsd": 2
+  },
   {
    "id": "gate:102768",
    "venue": "Gate",
@@ -63,7 +71,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 6
+   "perUserUsd": 6.01
   },
   {
    "id": "biconomy:64106346149913",
@@ -126,7 +134,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.29
+   "perUserUsd": 10.13
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
