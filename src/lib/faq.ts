@@ -1,4 +1,5 @@
 import { readStore, writeStore } from "./store";
+import { readHand, writeTodo } from "./ai-hand";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -144,7 +145,16 @@ export async function getFaqs(promos: Promo[], details: Record<string, PromoDeta
     for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
     writeStore(FILE(), store, READ_OK);
   }
+  // FAQs written on the owner's laptop by Claude Code under the owner's plan (no API key) — see ai-hand.ts
+  const hand = readHand<Faq>("faq");
+  const fresh = (p: Promo) => { const e = hand.get(p.id); return !!e && e.v === VER && e.h === hashOf(p, details[p.id]); };
+  writeTodo("faq", eligible.filter((p) => !fresh(p) && !(store[p.id]?.v === VER && store[p.id]?.h === hashOf(p, details[p.id])))
+    .map((p) => ({ id: p.id, h: hashOf(p, details[p.id]), text: rulesText(p, details[p.id]) })), 40);
   const out: Record<string, Faq> = {};
-  for (const p of eligible) if (store[p.id]) out[p.id] = store[p.id].faq;
+  for (const p of eligible) {
+    const e = hand.get(p.id);
+    if (e && e.v === VER) out[p.id] = e.data;
+    else if (store[p.id]) out[p.id] = store[p.id].faq;
+  }
   return out;
 }

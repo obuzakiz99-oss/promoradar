@@ -1,4 +1,5 @@
 import { readStore, writeStore } from "./store";
+import { readHand, writeTodo } from "./ai-hand";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -154,8 +155,17 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
     for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
     writeStore(FILE(), store, READ_OK);
   }
+  // facts written on the owner's laptop by Claude Code under the owner's plan (no API key) — see ai-hand.ts
+  const hand = readHand<Assess>("value");
+  const fresh = (id: string, text: string) => { const e = hand.get(id); return !!e && e.v === VER && e.h === hashOf(text); };
+  writeTodo("value", items.filter(({ p, text }) => !fresh(p.id, text) && !(store[p.id]?.v === VER && store[p.id]?.h === hashOf(text)))
+    .map(({ p, text }) => ({ id: p.id, h: hashOf(text), text })), 120);
   const out: Record<string, Assess> = {};
-  for (const { p } of items) if (store[p.id]) out[p.id] = store[p.id].a;
+  for (const { p } of items) {
+    const e = hand.get(p.id);
+    if (e && e.v === VER) out[p.id] = e.data;          // a slightly older reading beats none while the new one waits
+    else if (store[p.id]) out[p.id] = store[p.id].a;
+  }
   return out;
 }
 

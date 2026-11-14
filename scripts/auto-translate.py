@@ -164,5 +164,17 @@ def main():
             pass
 
 
+def run_assess():
+    """Promo facts + FAQ by Claude Code under the owner's plan (scripts/auto-assess.py, from the fresh clone)."""
+    script = os.path.join(REPO, "scripts", "auto-assess.py")
+    if not os.path.exists(script):
+        return
+    try:
+        subprocess.run([sys.executable, script], cwd=WORK, timeout=3600, creationflags=NOWIN)
+    except Exception as e:
+        log(f"auto-assess: {e}")
+
+
 if __name__ == "__main__":
     main()
+    run_assess()
