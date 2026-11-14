@@ -13,11 +13,12 @@ const TX = {
 export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "ru"; file: string }) {
   const [open, setOpen] = useState(false);
   // the menu is fixed to the viewport: tables scroll sideways (overflow), which would clip an absolute menu
-  const [pos, setPos] = useState<{ top?: number; bottom?: number; right: number }>({ right: 0 });
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number }>({ left: 0 });
   const btn = useRef<HTMLButtonElement>(null);
   const toggle = () => {
     const r = btn.current?.getBoundingClientRect();
-    if (r) setPos(window.innerHeight - r.bottom > 120 ? { top: r.bottom + 4, right: window.innerWidth - r.right } : { bottom: window.innerHeight - r.top + 4, right: window.innerWidth - r.right });
+    // right-aligned to the button, clamped to the screen (audit 14.11: at 360 px it opened off the left edge)
+    if (r) { const left = Math.max(8, Math.min(r.right - 224, window.innerWidth - 232)); setPos(window.innerHeight - r.bottom > 120 ? { top: r.bottom + 4, left } : { bottom: window.innerHeight - r.top + 4, left }); }
     setOpen((x) => !x);
   };
   const root = useRef<HTMLDivElement>(null);

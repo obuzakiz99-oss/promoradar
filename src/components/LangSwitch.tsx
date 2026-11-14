@@ -14,7 +14,11 @@ export function LangSwitch({ current }: { current: Locale }) {
         <Link
           key={l}
           href={`/${l}${rest}`}
-          onClick={() => { try { localStorage.setItem("pr:lang", l); } catch {} }}
+          onClick={(e) => {
+            try { localStorage.setItem("pr:lang", l); } catch {}
+            // keep filters / anchors (audit 14.11: switching language dropped the home filters)
+            if (location.search || location.hash) { e.preventDefault(); location.assign(`${e.currentTarget.href.split(/[?#]/)[0]}${location.search}${location.hash}`); }
+          }}
           aria-current={l === current ? "true" : undefined}
           className={`inline-flex min-h-8 items-center rounded-full px-2.5 py-1.5 transition-colors ${l === current ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}
         >

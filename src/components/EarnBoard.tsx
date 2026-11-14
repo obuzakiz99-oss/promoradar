@@ -101,13 +101,16 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             ))}
           </div>
           <div className="adv relative lg:ml-auto lg:w-56">
-            <input value={q} onChange={(e) => setQ(e.target.value.toUpperCase())} placeholder={A.search}
+            <input value={q} onChange={(e) => setQ(e.target.value.toUpperCase())} placeholder={A.search} onKeyDown={(e) => { if (e.key === "Escape") setQ(""); }} onBlur={() => setTimeout(() => setQ(""), 150)}
               className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-semibold text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
+            {q.length >= 2 && matches.length === 0 && (
+              <div className="absolute left-0 right-0 top-11 z-20 rounded-xl border border-line-2 bg-surface p-3 text-sm text-ink-3 shadow-2xl">{({ uk: `Для ${q} зараз немає продуктів Earn`, en: `No Earn products for ${q} right now`, ru: `Для ${q} сейчас нет продуктов Earn` } as const)[lang]}</div>
+            )}
             {matches.length > 0 && (
               <div className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
                 {matches.map((c) => (
                   <button key={c} onClick={() => { setCoin(c); setQ(""); }} className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5">
-                    {c}<span className="font-mono text-xs text-ink-3">{byCoin.get(c)!.length}</span>
+                    {c}<span className="font-mono text-xs text-ink-3">{byCoin.get(c)?.length ?? ""}</span>
                   </button>
                 ))}
               </div>

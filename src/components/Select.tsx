@@ -43,8 +43,10 @@ export function Select<V extends string>({ value, onChange, options, label, clas
     list.current?.querySelector<HTMLElement>(`[data-i="${act}"]`)?.scrollIntoView({ block: "nearest" });
   }, [open, act]);
 
+  const [flipL, setFlipL] = useState(false);
   const show = () => {
     const r = btn.current?.getBoundingClientRect();
+    if (r) setFlipL(align === "right" && r.right < 280);   // audit 14.11: the /my/ sort menu stuck out past the left edge
     if (r) { const below = window.innerHeight - r.bottom - (window.innerWidth < 768 ? 72 : 8); setUp(below < Math.min(320, options.length * 40 + 24) && r.top > below); }
     setAct(cur);
     setOpen(true);
@@ -85,7 +87,7 @@ export function Select<V extends string>({ value, onChange, options, label, clas
       </button>
       {open && (
         <ul ref={list} id={id} role="listbox" tabIndex={-1} aria-label={label} aria-activedescendant={`${id}-${act}`} onKeyDown={onListKey}
-          className={`absolute z-50 max-h-80 min-w-full overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-1.5 shadow-2xl focus:outline-none ${up ? "bottom-full mb-1.5" : "top-full mt-1.5"} ${align === "right" ? "right-0" : "left-0"} ${menuClassName}`}>
+          className={`absolute z-50 max-h-80 min-w-full overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-1.5 shadow-2xl focus:outline-none ${up ? "bottom-full mb-1.5" : "top-full mt-1.5"} ${align === "right" && !flipL ? "right-0" : "left-0"} ${menuClassName}`}>
           {options.map((o, i) => {
             const sel = i === cur;
             return (

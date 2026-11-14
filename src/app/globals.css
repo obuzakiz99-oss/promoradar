@@ -133,6 +133,8 @@ body {
 }
 
 html, body { overflow-x: clip; }
+/* a card with an open menu / popover sits above its neighbours (audit 14.11: on /my/ the next row covered "Беру участь") */
+.card:has([aria-expanded="true"], details[open]) { position: relative; z-index: 30; transform: none; }
 
 /* base layer: Tailwind focus utilities can override it; no forced radius (it turned round chips into rectangles) */
 @layer base { :focus-visible { outline: 2px solid var(--color-lime); outline-offset: 2px; } }

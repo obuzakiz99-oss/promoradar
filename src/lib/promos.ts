@@ -138,7 +138,10 @@ async function getPromosLive(): Promise<Collected> {
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
-    if (!meta.minEntry && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)) meta.noDeposit = true;
+    // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
+    const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
+    if (!meta.minEntry && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)
+      && !costs.test(p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x))) meta.noDeposit = true;
     const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
     // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
     if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;
@@ -157,6 +160,12 @@ async function getPromosLive(): Promise<Collected> {
     let u = "";
     try { const x = new URL(p.url); u = x.pathname.length > 1 ? `${p.venue.id}${x.host}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
+    // same venue + same tickers + same numbers in the headline = the same offer
+    const head = p.titleOrig ?? p.title;
+    const toks = [...new Set([...(head.match(/\$?\b[A-Z][A-Z0-9]{1,9}\b/g) ?? []).map((x) => x.replace("$", "")), ...(head.match(/\d+(?:[.,]\d+)?\s?%?/g) ?? []).map((x) => x.replace(/\s/g, ""))])].sort();
+    const GENERIC = /^(APR|APY|USDT|USDC|USD|VIP|TGE|NEW|LIVE|UTC|KYC|AI|CEX|DEX|NFT|P2P|FAQ|AMA)$/;
+    const sig = toks.some((x) => /\d/.test(x) && !/^20\d\d$/.test(x)) && toks.some((x) => /^[A-Z]/.test(x) && !GENERIC.test(x)) ? `${p.venue.id}|${p.category}|${toks.filter((x) => !/^20\d\d$/.test(x)).join(",")}` : "";
+    if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dups.add(p.id); else seenUrl.add(sig); }
   }
   for (const p of promos) {
     if (dups.has(p.id)) continue;

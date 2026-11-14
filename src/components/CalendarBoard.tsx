@@ -87,8 +87,8 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5" /></svg>
                       </summary>
                       <div className="absolute right-0 top-12 z-40 flex w-56 flex-col rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
-                        <a href={gcal(e, label, lang)} target="_blank" rel="noopener" className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
-                        <button type="button" onClick={() => downloadIcs([[e, label]], `promoradar-${e.id}`, lang)} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
+                        <a href={gcal(e, label, lang)} target="_blank" rel="noopener" onClick={(ev) => ev.currentTarget.closest("details")?.removeAttribute("open")} className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-white/5">Google Calendar</a>
+                        <button type="button" onClick={(ev) => { downloadIcs([[e, label]], `promoradar-${e.id}`, lang); ev.currentTarget.closest("details")?.removeAttribute("open"); }} className="rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-white/5">{T.addIcs}</button>
                       </div>
                     </details>
                   </li>

@@ -182,7 +182,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const combos = useMemo(() => new Map(promos.map((p) => [p.id, combosFor(p, promos, serverNow)])), [promos, serverNow]);
   const geoOk = useMemo(() => (showHidden || kind === "saved" || kind === "hidden" ? geoAll : geoAll.filter((p) => !hiddenIds.includes(p.id))), [geoAll, hiddenIds, showHidden, kind]);
   const byKind = useMemo(
-    () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : kind === "hidden" ? hiddenIds.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status)
+    () => geoOk.filter((p) => (kind === "all" || (kind === "saved" ? saved.includes(p.id) : kind === "hidden" ? hiddenIds.includes(p.id) : p.venue.kind === kind)) && (status === "all" || statusOf(p, now) === status || (status === "live" && statusOf(p, now) === "ongoing"))
       && (!quick.has("noDeposit") || !!p.meta?.noDeposit)
       && (!quick.has("low") || (p.meta?.minEntry !== undefined && p.meta.minEntry.amount < 100) || !!p.meta?.noDeposit)
       && (!quick.has("forNew") || !!p.meta?.forNew)
@@ -275,10 +275,10 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} aria-pressed={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>
-          {CATS.filter((c) => counts[c]).map((c) => (
+          {CATS.filter((c) => counts[c] || cat === c).map((c) => (
             <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)} aria-pressed={cat === c}>
               <span className="size-2 rounded-full" style={{ background: CAT_STYLE[c].dot }} />
-              {t.cat[c]} <span className="chip-count">{counts[c]}</span>
+              {t.cat[c]} <span className="chip-count">{counts[c] ?? 0}</span>
             </button>
           ))}
           {dirty && (

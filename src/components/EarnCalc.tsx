@@ -120,7 +120,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <label className="flex h-12 items-center gap-2 rounded-xl border border-line bg-white/[0.03] px-3 focus-within:border-sky/50">
           <span className="text-sm font-semibold text-ink-3">{T.input[kind]}</span>
-          <input type="number" min={0} step={50} value={v} onChange={(e) => setV(Math.max(0, Number(e.target.value) || 0))}
+          <input type="number" min={0} step={50} value={v || ""} placeholder="0" onChange={(e) => setV(Math.max(0, Number(e.target.value) || 0))}
             className="w-28 bg-transparent font-mono text-xl font-bold text-ink focus:outline-none" />
         </label>
         <div className="flex gap-1.5">
