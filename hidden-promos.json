@@ -1,5 +1,5 @@
 {
- "at": 1794660411398,
+ "at": 1794660869435,
  "items": [
   {
    "id": "gate:102768",
@@ -23,7 +23,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.17
+   "perUserUsd": 2.18
   },
   {
    "id": "tg:coinstore_global/10361",
@@ -32,6 +32,14 @@
    "url": "https://t.me/coinstore_global/10361",
    "why": "social",
    "netUsd": -0.96
+  },
+  {
+   "id": "tg:Phemex_Announcements/7959",
+   "venue": "Phemex",
+   "title": "$100 USDT Bonus Giveaway",
+   "url": "https://phemex.com/?group=8156&amp;referralCode=BG79H9",
+   "why": "social",
+   "perUserUsd": 20
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15806",
@@ -93,8 +101,16 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.81,
+   "perUserUsd": 8.8,
    "netUsd": 4.11
+  },
+  {
+   "id": "tg:Phemex_Announcements/7938",
+   "venue": "Phemex",
+   "title": "Phemex Card Giveaway — Round 2 Is Here!",
+   "url": "https://phemex.com/cards/management?group=8402&amp;referralCode=BG79H9",
+   "why": "social",
+   "perUserUsd": 20
   },
   {
    "id": "kucoin:351781",
@@ -102,7 +118,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 11.48
+   "perUserUsd": 11.22
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
