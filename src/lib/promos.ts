@@ -144,7 +144,10 @@ async function getPromosLive(): Promise<Collected> {
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
       if (!p.reward && p.category !== "farming") {
         const pool = poolOf([p.title, ...d.blocks.map((b) => b.x)]);
-        if (pool) p.reward = parseReward(pool.unit === "USD" ? `$${pool.amount.toLocaleString("en-US")}` : `${pool.amount.toLocaleString("en-US")} ${pool.unit}`);
+        // a "pool" 1,000x the per-person prize is another campaign's cross-promo in the rules (audit 14.11: a MENA demo
+        // contest with 500 USDT prizes showed WSOT's 10M)
+        const tooBig = !!pool && !!meta.perUser?.usd && /^(USD|USDT|USDC)$/.test(pool.unit) && pool.amount > 1000 * meta.perUser.usd;
+        if (pool && !tooBig) p.reward = parseReward(pool.unit === "USD" ? `$${pool.amount.toLocaleString("en-US")}` : `${pool.amount.toLocaleString("en-US")} ${pool.unit}`);
       }
       p.meta = meta;
     }

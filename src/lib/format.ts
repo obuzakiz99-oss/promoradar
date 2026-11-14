@@ -75,3 +75,6 @@ function sentenceCase1(s: string, min: number): string {
   const low = s.replace(/\p{L}+/gu, (w) => (/^[A-Z0-9]{2,5}$/.test(w) ? w : w.toLowerCase()));
   return low.replace(/\p{L}/u, (c) => c.toUpperCase());
 }
+
+/** A source label in the reader's number format: "5,000 USDT" → "5 000 USDT" on uk/ru (audit 14.11: mixed formats). */
+export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s.replace(/\d{1,3}(?:,\d{3})+(?:\.\d+)?/g, (m) => Number(m.replace(/,/g, "")).toLocaleString(nfLocale(lang))));

@@ -47,7 +47,14 @@ export function HideButton({ id, lang, size = "sm" }: { id: string; lang: "uk" |
   return (
     <button
       type="button"
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleHidden(id); }}
+      onClick={(e) => {
+        e.preventDefault(); e.stopPropagation();
+        // the card disappears: keep keyboard focus in the list (next card's link, else the previous one)
+        const card = e.currentTarget.closest("article");
+        const near = (card?.nextElementSibling ?? card?.previousElementSibling)?.querySelector<HTMLElement>("h3 a, a");
+        toggleHidden(id);
+        if (!hidden && near) setTimeout(() => near.focus(), 0);
+      }}
       aria-pressed={hidden}
       title={label}
       aria-label={label}

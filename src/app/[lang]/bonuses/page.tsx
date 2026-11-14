@@ -7,7 +7,7 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { getPromos } from "@/lib/promos";
 import { VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
-import { compactUsd, money, noEmoji } from "@/lib/format";
+import { compactUsd, fmtLabel, money, noEmoji } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PageHeader } from "@/components/PageHeader";
 import { withBase } from "@/lib/base";
@@ -69,7 +69,7 @@ export default async function Bonuses({ params }: { params: Params }) {
                     {list.slice(0, 5).map((p) => (
                       <li key={p.id} className="flex gap-2">
                         <span className="text-lime">•</span>
-                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words font-semibold text-ink underline decoration-line-2 underline-offset-4 hover:text-lime hover:decoration-lime/60">{noEmoji(p.title)}{p.meta?.perUser ? <span className="ml-1.5 font-mono text-xs font-bold text-lime">({({ uk: "до", en: "up to", ru: "до" } as const)[lang]} {money(p.meta.perUser.amount, p.meta.perUser.unit, lang)})</span> : p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({({ uk: "фонд", en: "pool", ru: "фонд" } as const)[lang]} {p.reward.label})</span> : null}</Link>
+                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words font-semibold text-ink underline decoration-line-2 underline-offset-4 hover:text-lime hover:decoration-lime/60">{noEmoji(p.title)}{p.meta?.perUser ? <span className="ml-1.5 font-mono text-xs font-bold text-lime">({({ uk: "до", en: "up to", ru: "до" } as const)[lang]} {money(p.meta.perUser.amount, p.meta.perUser.unit, lang)})</span> : p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({({ uk: "фонд", en: "pool", ru: "фонд" } as const)[lang]} {fmtLabel(p.reward.label, lang)})</span> : null}</Link>
                       </li>
                     ))}
                   </ul>

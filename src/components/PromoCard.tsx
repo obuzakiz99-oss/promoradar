@@ -1,6 +1,6 @@
 import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
-import { ago, compactUsd, duration, money, num, shortDate } from "@/lib/format";
+import { ago, compactUsd, duration, fmtLabel, money, num, shortDate } from "@/lib/format";
 import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
@@ -191,13 +191,13 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
-              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>
+              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{p.reward.label}{p.reward.usd && !/^USD/.test(p.reward.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(p.reward.usd)}</span> : null}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(p.reward.usd)}</span> : null}</div>
               {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](money(m.perUser.amount, m.perUser.unit, lang))}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>

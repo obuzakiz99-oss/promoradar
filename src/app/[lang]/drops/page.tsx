@@ -1,6 +1,6 @@
 import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
-import { noEmoji } from "@/lib/format";
+import { fmtLabel, noEmoji } from "@/lib/format";
 import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -91,7 +91,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                               <span className="block text-xs font-bold text-ink-3">{p.venue.name}</span>
                               <span className="block break-words text-sm font-semibold">{noEmoji(p.title)}</span>
                             </span>
-                            {p.reward?.label && <span className="shrink-0 font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
+                            {p.reward?.label && <span className="shrink-0 font-mono text-xs font-bold text-lime">{fmtLabel(p.reward.label, lang)}</span>}
                           </a>
                         </li>
                       ))}

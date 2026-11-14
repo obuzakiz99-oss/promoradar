@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, money, nfLocale, noEmoji, sentenceCase } from "@/lib/format";
+import { compactUsd, duration, fmtLabel, money, nfLocale, noEmoji, sentenceCase } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -460,13 +460,13 @@ export default async function PromoPage({ params }: { params: Params }) {
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
-                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${p.reward.label}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
+                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
                   {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}
                   {/* the maximum is the top tier, not what the minimum entry gets (audit 14.11: "до 500 USDT" next to "від 50 USDT") */}
                   {pu && (m.tiers?.length ?? 0) > 1 && <span className="block text-sm font-normal text-ink-3">{({ uk: "за найвищий рівень; поріг входу дає менше", en: "for the top tier; the entry threshold pays less", ru: "за высший уровень; порог входа даёт меньше" } as const)[lang]}</span>}</>,
                 body: <>
                   {pu?.text && <p>“{clean(pu.text)}”</p>}
-                  {!pu && p.reward && <p>{R.poolShared} {p.reward.label}</p>}
+                  {!pu && p.reward && <p>{R.poolShared} {fmtLabel(p.reward.label, lang)}</p>}
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {po?.form ? <span className={`rounded-md px-2 py-0.5 font-bold ${FORM_CLS[po.form]}`}>{FORM_BADGE[lang][po.form]}</span> : null}
                     {po ? timingChips(po, lang).map((c) => <span key={c} className="rounded-md bg-white/5 px-2 py-0.5 font-semibold">{c}</span>) : null}
