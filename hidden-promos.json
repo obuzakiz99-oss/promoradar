@@ -1,13 +1,29 @@
 {
- "at": 1794617790565,
+ "at": 1794619628130,
  "items": [
+  {
+   "id": "gate:102768",
+   "venue": "Gate",
+   "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
+   "url": "https://www.gate.com/announcements/article/102768",
+   "why": "social",
+   "perUserUsd": 50
+  },
+  {
+   "id": "gate:102761",
+   "venue": "Gate",
+   "title": "Gate Square Anthropic IPO Challenge: Share Your Subscription, Win 150 USDT in ANT Shares",
+   "url": "https://www.gate.com/announcements/article/102761",
+   "why": "social",
+   "netUsd": 0.01
+  },
   {
    "id": "biconomy:64240938144281",
    "venue": "Biconomy.com",
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.15
+   "perUserUsd": 2.17
   },
   {
    "id": "tg:coinstore_global/10361",
@@ -39,7 +55,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 6.31
+   "perUserUsd": 6.32
   },
   {
    "id": "biconomy:64106346149913",
@@ -47,7 +63,7 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.17
+   "perUserUsd": 2.16
   },
   {
    "id": "tg:Kucoin_News/37053",
@@ -77,7 +93,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 9.33,
+   "perUserUsd": 9.37,
    "netUsd": 4.11
   },
   {
@@ -86,7 +102,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 13.78
+   "perUserUsd": 13.99
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -94,15 +110,6 @@
    "title": "Explore Dual Investment on PancakeSwap, share your subscription & get a shot at our $1,200 BONUS POOL! 🔥",
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social"
-  },
-  {
-   "id": "gate:102590",
-   "venue": "Gate",
-   "title": "Gate Square Comment Challenge: First-Comment Rewards & a 20,000 USDT Weekly Pool",
-   "url": "https://www.gate.com/announcements/article/102590",
-   "why": "social",
-   "perUserUsd": 10,
-   "netUsd": 0.67
   },
   {
    "id": "tg:MEXCofficialNews/38778",
