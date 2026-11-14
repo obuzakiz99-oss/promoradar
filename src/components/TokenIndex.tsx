@@ -7,7 +7,7 @@ import { coinLogos, coinMonogram } from "@/lib/coinlogo";
 export interface TokenRow { sym: string; logo?: string; href: string; promos: number; lp: number; earnMax?: number; score: number }
 
 /** Searchable grid of all token pages. */
-export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { search: string; promos: string; lp: string; earn: string; empty: string; gPromos: string; gLp: string; gEarn: string; more: (n: number) => string } }) {
+export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { search: string; promos: string; lp: string; earn: string; empty: string; gPromos: string; gLp: string; gEarn: string; more: string /* "{n}" = hidden count; only data can cross to a client component */ } }) {
   const [q, setQ] = useState("");
   const s = q.trim().toUpperCase();
   const list = s ? rows.filter((r) => r.sym.includes(s)).sort((a, b) => Number(b.sym === s) - Number(a.sym === s) || Number(b.sym.startsWith(s)) - Number(a.sym.startsWith(s)) || b.score - a.score) : rows;
@@ -38,7 +38,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
         <section key={h || "search"} className="mt-8">
           {h && <h2 className="font-display text-xl font-semibold tracking-tight">{h} <span className="font-mono text-base text-ink-3">{g.length}</span></h2>}
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">{(s || all[h] ? g : g.slice(0, 30)).map(tile)}</div>
-          {!s && !all[h] && g.length > 30 && <button type="button" onClick={() => setAll((x) => ({ ...x, [h]: true }))} className="btn btn-ghost mt-3 h-10 px-4 text-sm">{labels.more(g.length - 30)}</button>}
+          {!s && !all[h] && g.length > 30 && <button type="button" onClick={() => setAll((x) => ({ ...x, [h]: true }))} className="btn btn-ghost mt-3 h-10 px-4 text-sm">{labels.more.replace("{n}", String(g.length - 30))}</button>}
         </section>
       )) : <p className="mt-8 text-ink-3">{labels.empty}</p>}
     </>
