@@ -133,6 +133,18 @@ body {
 }
 
 html, body { overflow-x: clip; }
+/* Stack tables (class "rt") become cards on phones (audit 14.11: key columns were off-screen in 358 px scrollers).
+   Each <td data-l="…"> shows its column name above the value; .rt-wide spans both columns. */
+@media (max-width: 639px) {
+  table.rt { min-width: 0 !important; display: block; }
+  table.rt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  table.rt tbody { display: block; }
+  table.rt tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 14px; padding: 14px 16px; }
+  table.rt tr[hidden] { display: none; }
+  table.rt td { display: block; padding: 0 !important; text-align: left !important; white-space: normal; }
+  table.rt td.rt-wide { grid-column: 1 / -1; }
+  table.rt td[data-l]::before { content: attr(data-l); display: block; margin-bottom: 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink-3); }
+}
 /* a card with an open menu / popover sits above its neighbours (audit 14.11: on /my/ the next row covered "Беру участь") */
 .card:has([aria-expanded="true"], details[open]) { position: relative; z-index: 30; transform: none; }
 

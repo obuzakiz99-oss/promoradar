@@ -24,9 +24,9 @@ const HX: Record<Locale, { title: string; leg: (c: string, sh: number, usd: stri
 };
 // DefiLlama categories, named for the reader (audit 14.11: English labels on uk pages)
 const CAT_L: Record<Locale, Record<string, string>> = {
-  uk: { Dexs: "Біржі (DEX)", Lending: "Кредитування", Yield: "Дохідність", Derivatives: "Деривативи", "Liquid Staking": "Ліквідний стейкінг", CDP: "CDP (стейблкоїни під заставу)", "Yield Aggregator": "Агрегатори дохідності", "Liquidity manager": "Керування ліквідністю", Restaking: "Рестейкінг", "Basis Trading": "Базисна торгівля", RWA: "RWA (реальні активи)", Farm: "Фарм" },
+  uk: { DEX: "Біржі (DEX)", Lending: "Кредитування", Yield: "Дохідність", Derivatives: "Деривативи", "Liquid Staking": "Ліквідний стейкінг", CDP: "CDP (стейблкоїни під заставу)", "Yield Aggregator": "Агрегатори дохідності", "Liquidity manager": "Керування ліквідністю", Restaking: "Рестейкінг", "Basis Trading": "Базисна торгівля", RWA: "RWA (реальні активи)", Farm: "Фарм" },
   en: {},
-  ru: { Dexs: "Биржи (DEX)", Lending: "Кредитование", Yield: "Доходность", Derivatives: "Деривативы", "Liquid Staking": "Ликвидный стейкинг", CDP: "CDP (стейблкоины под залог)", "Yield Aggregator": "Агрегаторы доходности", "Liquidity manager": "Управление ликвидностью", Restaking: "Рестейкинг", "Basis Trading": "Базисная торговля", RWA: "RWA (реальные активы)", Farm: "Фарм" },
+  ru: { DEX: "Биржи (DEX)", Lending: "Кредитование", Yield: "Доходность", Derivatives: "Деривативы", "Liquid Staking": "Ликвидный стейкинг", CDP: "CDP (стейблкоины под залог)", "Yield Aggregator": "Агрегаторы доходности", "Liquidity manager": "Управление ликвидностью", Restaking: "Рестейкинг", "Basis Trading": "Базисная торговля", RWA: "RWA (реальные активы)", Farm: "Фарм" },
 };
 const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };

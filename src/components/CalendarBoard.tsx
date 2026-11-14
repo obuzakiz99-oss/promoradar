@@ -63,8 +63,11 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
   const all = [...groups];
 
   if (!groups.size) return <p className="mt-10 text-ink-3">{T.noEvents}</p>;
+  // times are shown in the visitor's own time zone — say so (audit 14.11: "23:59" without a zone was misread)
+  const tz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return ""; } })();
   return (
     <div className="mt-8">
+      <p suppressHydrationWarning className="mb-4 text-xs text-ink-3">{({ uk: "Час — за вашим часовим поясом", en: "Times are in your time zone", ru: "Время — по вашему часовому поясу" } as const)[lang]}{tz ? ` (${tz})` : ""}</p>
       <div className="space-y-8">
         {all.slice(0, days).map(([d, list]) => (
           <section key={d}>

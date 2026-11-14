@@ -144,7 +144,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
               { key: "who", label: UT[lang].who, all: UT[lang].anyWho, options: [...new Set(rows.map((u) => (u.sale ? trs(u.sale) : "")).filter(Boolean))].sort() },
             ]}>
             <div className="overflow-x-auto rounded-2xl border border-line">
-              <table className="w-full min-w-[860px] text-left text-sm">
+              <table className="rt w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact, ""].map((h, i) => <th key={i} className="relative px-4 py-3">{h || <span className="sr-only">{CAL[lang].col}</span>}</th>)}</tr>
                 </thead>
@@ -154,8 +154,8 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                     return (
                       <tr key={`${u.sym}${u.date}`} className="hover:bg-white/[0.02]" data-row="" data-s-date={u.date} data-s-usd={u.usd} data-s-press={u.pctCap}
                         data-f-impact={LEVEL_TXT[lang][impactOf(u).level]} data-f-kind={T.type[u.type]} data-f-who={u.sale ? trs(u.sale) : ""} data-q={`${u.sym} ${u.name ?? ""}`}>
-                        <td className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-xs text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
-                        <td className="px-4 py-3">
+                        <td data-l={T.date} className="whitespace-nowrap px-4 py-3"><div className="font-mono font-bold">{day(u.date, lang)}</div><div className="text-xs text-ink-3">{T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)}</div></td>
+                        <td data-l={T.token} className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
                             <VenueLogo v={logo(u)} alts={coinLogos(u.sym)} size={28} rounded="rounded-full" />
                             <div className="min-w-0">
@@ -164,11 +164,11 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
-                        <td className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
-                        <td className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
-                        <td className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
-                        <td className="px-4 py-3">
+                        <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
+                        <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
+                        <td data-l={T.who} className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
+                        <td data-l={T.kind} className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
+                        <td data-l={T.impact} className="px-4 py-3">
                           <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
                         </td>
                         <td className="px-2 py-3 text-right">

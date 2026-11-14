@@ -51,9 +51,10 @@ export default async function Best({ params }: { params: Params }) {
   }
   const lpSafe: SafeItem[] = pools.projects.filter((p) => p.status === "live").flatMap((p) => p.pools.filter((x) => SAFE.test(x.stake) && (x.apr ?? 0) > 0).map((x) => ({
     key: `lp:${p.id}:${x.stake}`, venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`,
-    sub: `${venueOf(p.exchange).name}${x.minStake ? ` · min ${x.minStake} ${x.stake}` : ""}${x.newUsers ? " · *" : ""}`, apr: x.apr!, capUsd: x.maxStake, url: withBase(`/${lang}/lp/${lpSlug(p)}/`),
+    sub: `${venueOf(p.exchange).name}${x.minStake ? ` · min ${x.minStake} ${x.stake}` : ""}${x.newUsers ? ` · ${({ uk: "лише для нових", en: "new users only", ru: "только для новых" } as const)[lang]}` : ""}`, apr: x.apr!, capUsd: x.maxStake, url: withBase(`/${lang}/lp/${lpSlug(p)}/`),
   })));
-  const dexSafe: SafeItem[] = dex.pools.filter((p) => p.stable && !p.il && p.tvl >= 50e6 && p.apy <= 30 && p.symbol.split(/[-/ ]+/).every((s) => SAFE.test(s))).sort((a, b) => Math.min(b.apy, b.apy30d ?? b.apy) - Math.min(a.apy, a.apy30d ?? a.apy)).slice(0, 4).map((p) => ({
+  // trading vaults (Hyperliquid HLP…) can lose money in a bad month — not "no price risk" (audit 14.11)
+  const dexSafe: SafeItem[] = dex.pools.filter((p) => p.stable && !p.il && p.tvl >= 50e6 && p.apy <= 30 && !/\b(HLP|vault)\b/i.test(`${p.project} ${p.meta ?? ""} ${p.symbol}`) && p.category !== "Basis Trading" && p.symbol.split(/[-/ ]+/).every((s) => SAFE.test(s))).sort((a, b) => Math.min(b.apy, b.apy30d ?? b.apy) - Math.min(a.apy, a.apy30d ?? a.apy)).slice(0, 4).map((p) => ({
     key: `dex:${p.id}`, venue: dexVenue(p.project, p.slug, p.logo), title: `${p.symbol} · ${p.project}`, sub: `${p.chain} · TVL $${Math.round(p.tvl / 1e6)}M`, apr: p.apy, url: p.url ?? `https://defillama.com/yields/pool/${p.id}`,
   }));
   const safe = [...bestEarn.values(), ...lpSafe, ...dexSafe].sort((a, b) => b.apr - a.apr).slice(0, 10);

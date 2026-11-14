@@ -52,7 +52,12 @@ export function buildTokens(promos: Promo[], projects: PoolProject[], offers: Ea
     const head = p.titleOrig ?? p.title;
     const letters = head.replace(/[^A-Za-z]/g, "");
     const shouty = letters.length > 12 && (letters.match(/[A-Z]/g)?.length ?? 0) / letters.length > 0.6;
-    if (!shouty) for (const m of head.matchAll(/(?:\$|\(|\b)([A-Z][A-Z0-9]{1,9})\b\)?/g)) if (!NOT_TICKER.has(m[1])) syms.add(m[1]);
+    // the page is "promos giving away X": a headline naming several coins ("stake ETH, ADA…", "trade BTC, ETH futures")
+    // says nothing about which one is paid — only a single named coin counts (audit 14.11: ADA Earn listed under ETH)
+    if (!shouty) {
+      const named = [...new Set([...head.matchAll(/(?:\$|\(|\b)([A-Z][A-Z0-9]{1,9})\b\)?/g)].map((m) => m[1]).filter((x) => !NOT_TICKER.has(x)))];
+      if (named.length === 1) syms.add(named[0]);
+    }
     for (const s of syms) { if (!s || NOT_TICKER.has(s)) continue; const t = get(s); t?.promos.push(p); }
   }
 

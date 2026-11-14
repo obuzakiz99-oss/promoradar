@@ -51,7 +51,7 @@ export default async function FixedPage({ params }: { params: Params }) {
             { key: "term", label: FT[lang].term, all: FT[lang].anyTerm, options: [...FT[lang].terms] },
           ]}>
           <div className="overflow-x-auto rounded-2xl border border-line">
-            <table className="w-full min-w-[640px] text-left text-sm">
+            <table className="rt w-full min-w-[640px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                 <tr>{P.fixCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 2 ? "text-right" : ""}`}>{i === 2 ? <Term k="apy" lang={lang}>{c}</Term> : c}</th>)}</tr>
               </thead>
@@ -59,11 +59,11 @@ export default async function FixedPage({ params }: { params: Params }) {
                 {rows.map((r) => (
                   <tr key={r.url} className="hover:bg-white/[0.02]" data-row="" data-s-liq={r.liquidity} data-s-apy={r.apy} data-s-exp={r.expiry}
                     data-f-chain={r.chain} data-f-term={FT[lang].terms[termOf((r.expiry - fetchedAt) / 86400_000)]} data-q={`pt-${r.name} ${r.chain}`}>
-                    <td className="px-4 py-3 font-bold"><a href={r.url} target="_blank" rel="noopener" className="hover:text-lime">PT-{r.name} ↗</a></td>
-                    <td className="px-4 py-3 text-ink-2">{r.chain}</td>
-                    <td className="px-4 py-3 text-right font-mono font-bold text-lime">{r.apy.toFixed(2)}%</td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">{shortDate(r.expiry, lang)} {new Date(r.expiry).getFullYear()} · {Math.round((r.expiry - fetchedAt) / 86400_000)} {P.days}</td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-ink-3">{usd(r.liquidity)}</td>
+                    <td className="rt-wide px-4 py-3 font-bold"><a href={r.url} target="_blank" rel="noopener" className="hover:text-lime">PT-{r.name} ↗</a></td>
+                    <td data-l={P.fixCols[1]} className="px-4 py-3 text-ink-2">{r.chain}</td>
+                    <td data-l={P.fixCols[2]} className="px-4 py-3 text-right font-mono font-bold text-lime">{r.apy.toFixed(2)}%</td>
+                    <td data-l={P.fixCols[3]} className="px-4 py-3 text-right font-mono text-xs text-ink-2">{shortDate(r.expiry, lang)} {new Date(r.expiry).getFullYear()} · {Math.round((r.expiry - fetchedAt) / 86400_000)} {P.days}</td>
+                    <td data-l={P.fixCols[4]} className="px-4 py-3 text-right font-mono text-xs text-ink-3">{usd(r.liquidity)}</td>
                   </tr>
                 ))}
               </tbody>

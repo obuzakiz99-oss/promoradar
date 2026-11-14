@@ -405,6 +405,29 @@ export default async function PromoPage({ params }: { params: Params }) {
           <HideButton id={p.id} lang={lang} size="lg" />
         </div>
 
+        {/* DeFi pool pages had only "Open ↗" (audit 14.11): what it is, what can go wrong, how to join */}
+        {p.category === "farming" && (() => {
+          const F = ({
+            uk: { what: "Що це", whatT: `Пул ліквідності / депозит у протоколі ${p.venue.name}${m.chain ? ` (мережа ${m.chain})` : ""}. Ви вносите монети зі свого гаманця — протокол платить відсоток${m.apr !== undefined ? ` (зараз ≈ ${m.apr}% річних, ставка змінюється щодня)` : ""}.`,
+              risk: "Ризики", risks: ["Ставка плаває: показаний APR — це «зараз», а не обіцянка.", "Ризик смарт-контракту: збій чи злам протоколу може коштувати вкладу.", "Якщо в пулі не лише стейблкоїни — можливі непостійні втрати (IL) через зміну ціни.", "Комісія мережі (газ) за вхід і вихід."],
+              how: "Як взяти участь", hows: ["Потрібен гаманець (MetaMask, Rabby) з монетами в потрібній мережі.", `Відкрийте пул на сайті ${p.venue.name} кнопкою вище, підключіть гаманець і внесіть суму.`, "Почніть з невеликої суми й перевірте, що депозит видно в протоколі."], more: "Порівняти з іншими DeFi-пулами →" },
+            en: { what: "What it is", whatT: `A liquidity pool / deposit in ${p.venue.name}${m.chain ? ` (${m.chain} chain)` : ""}. You deposit coins from your own wallet and the protocol pays interest${m.apr !== undefined ? ` (≈ ${m.apr}% a year right now; the rate changes daily)` : ""}.`,
+              risk: "Risks", risks: ["The rate floats: the APR shown is “now”, not a promise.", "Smart-contract risk: a bug or hack can cost the deposit.", "If the pool holds more than stablecoins, price moves cause impermanent loss (IL).", "Network fees (gas) to enter and exit."],
+              how: "How to join", hows: ["You need a wallet (MetaMask, Rabby) with coins on the right chain.", `Open the pool on ${p.venue.name} with the button above, connect the wallet and deposit.`, "Start small and check that the deposit shows up in the protocol."], more: "Compare with other DeFi pools →" },
+            ru: { what: "Что это", whatT: `Пул ликвидности / депозит в протоколе ${p.venue.name}${m.chain ? ` (сеть ${m.chain})` : ""}. Вы вносите монеты со своего кошелька — протокол платит процент${m.apr !== undefined ? ` (сейчас ≈ ${m.apr}% годовых, ставка меняется ежедневно)` : ""}.`,
+              risk: "Риски", risks: ["Ставка плавает: показанный APR — это «сейчас», а не обещание.", "Риск смарт-контракта: сбой или взлом протокола может стоить вклада.", "Если в пуле не только стейблкоины — возможны непостоянные потери (IL) из-за изменения цены.", "Комиссия сети (газ) за вход и выход."],
+              how: "Как участвовать", hows: ["Нужен кошелёк (MetaMask, Rabby) с монетами в нужной сети.", `Откройте пул на сайте ${p.venue.name} кнопкой выше, подключите кошелёк и внесите сумму.`, "Начните с небольшой суммы и проверьте, что депозит виден в протоколе."], more: "Сравнить с другими DeFi-пулами →" },
+          } as const)[lang];
+          return (
+            <section className="card mt-6 grid gap-6 p-6 hover:transform-none md:grid-cols-3">
+              <div><h2 className="font-bold">{F.what}</h2><p className="mt-2 text-sm leading-relaxed text-ink-2">{F.whatT}</p></div>
+              <div><h2 className="font-bold">{F.risk}</h2><ul className="mt-2 space-y-1.5 text-sm text-ink-2">{F.risks.map((x) => <li key={x} className="flex gap-2"><span className="text-amber">•</span>{x}</li>)}</ul></div>
+              <div><h2 className="font-bold">{F.how}</h2><ol className="mt-2 space-y-1.5 text-sm text-ink-2">{F.hows.map((x, i) => <li key={x} className="flex gap-2"><span className="font-mono text-lime">{i + 1}.</span>{x}</li>)}</ol>
+                <a href={withBase(`/${lang}/dex/`)} className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-lime hover:underline">{F.more}</a></div>
+            </section>
+          );
+        })()}
+
         {/* the four answers people look for, 2–4 words each; one click opens all four (audit 12.11) */}
         {p.category !== "farming" && (() => {
           const U = UI_TX[lang];
@@ -538,8 +561,9 @@ export default async function PromoPage({ params }: { params: Params }) {
           </section>
         )}
 
-        {/* "how much would I get" — only when the rules give something to calculate with */}
-        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
+        {/* "how much would I get" — only when the amount you put in changes the result (audit 14.11: a calculator on fixed
+            vouchers and points airdrops said "✓ threshold passed" for any number) */}
+        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry) && (
           <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} />
         )}
 
@@ -674,7 +698,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           <aside className="flex flex-col gap-4">
             <div className={`card p-6 hover:transform-none ${isAggregator ? "ring-1 ring-amber/30" : "ring-1 ring-lime/20"}`}>
               <div className={`text-sm font-bold ${isAggregator ? "text-amber" : "text-lime"}`}>{isAggregator ? <><Icon name="alert" /> {t.detail.aggregator}</> : <><Icon name="check" /> {t.detail.official}</>}</div>
-              <p className="mt-2 text-sm leading-relaxed text-ink-2">{isAggregator ? t.detail.aggregatorNote : t.detail.officialNote}</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-2">{p.category === "farming" ? ({ uk: "Дані DefiLlama — відкрита статистика пулів, не оголошення протоколу. Ставку й умови звіряйте на сайті протоколу.", en: "DefiLlama data — open pool statistics, not the protocol’s announcement. Check the rate and terms on the protocol’s site.", ru: "Данные DefiLlama — открытая статистика пулов, не объявление протокола. Ставку и условия сверяйте на сайте протокола." } as const)[lang] : isAggregator ? t.detail.aggregatorNote : t.detail.officialNote}</p>
             </div>
           </aside>
         </div>
