@@ -107,13 +107,12 @@ async function getPromosLive(): Promise<Collected> {
       // "2026.10.20 00:00:00 - 2026.10.27 23:59:59 (UTC+8)" — a dotted range the terms parser misses (audit 14.11: an
       // ended BingX promo showed as running); only the end matters here, read in the stated offset
       if (!p.endsAt) {
-        const R = /(\d{4})[./](\d{1,2})[./](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./](\d{1,2})[./](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*\(?UTC\s*([+-]\d{1,2})?/i;
-        for (const b of d.blocks.slice(0, 40)) {
-          const r = b.x.match(R);
-          if (!r) continue;
+        const R = /(\d{4})[./](\d{1,2})[./](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./](\d{1,2})[./](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*[(（]?\s*UTC\s*([+-]\d{1,2})?/i;
+        // the range is often split over two lines ("⏰ 2026.10.20 00:00:00 -" / "2026.10.27 23:59:59（UTC+8）")
+        const r = d.blocks.slice(0, 40).map((b) => b.x).join(" ").match(R);
+        if (r) {
           const end = Date.UTC(+r[4], +r[5] - 1, +r[6], +r[7], +r[8]) - (r[9] ? +r[9] * 3600_000 : 0);
           if (Number.isFinite(end) && end > Date.UTC(2020, 0, 1)) { p.endsAt = end; meta.datesFromRules = true; }
-          break;
         }
       }
       // "Bitbase Points is live" with a start months ahead: the parser took the end / verification date as the start
@@ -159,7 +158,7 @@ async function getPromosLive(): Promise<Collected> {
     // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
     const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
     if (!meta.minEntry && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)
-      && !costs.test(p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x))) meta.noDeposit = true;
+      && !costs.test(p.title) && !/\b(trade|trading|swap|deposit|stake|buy)\b/i.test(p.titleOrig ?? p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x))) meta.noDeposit = true;
     const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
     // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
     if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;

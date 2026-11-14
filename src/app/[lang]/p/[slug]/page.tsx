@@ -308,7 +308,8 @@ export default async function PromoPage({ params }: { params: Params }) {
   // locked / fixed-term products and Dual Investment carry more than price risk (audit 14.11: "the only risk is the price")
   const ruleText = `${p.titleOrig ?? p.title} ${(det?.blocks ?? []).slice(0, 60).map((b) => b.x).join(" ")}`;
   const flexible = /\b(no|without|zero)[- ]lock(ed)?(-?up| period)?\b|\bflexible\b|без (блокування|періоду блокування|блокировки)/i.test(`${p.titleOrig ?? p.title} ${p.title}`);
-  const lock: "lock" | "dual" | undefined = /\bdual (investment|asset|currency)|двовалют|двухвалют/i.test(ruleText) ? "dual"
+  const lock: "lock" | "dual" | "futures" | undefined = m.futures || /\b(futures|perps?|perpetual|leverage)\b/i.test(p.titleOrig ?? p.title) ? "futures"
+    : /\bdual (investment|asset|currency)|двовалют|двухвалют/i.test(ruleText) ? "dual"
     : !flexible && /\b(locked|fixed[- ]term|lock[- ]?up|lock period|\d+[- ]day (fixed|locked|term)|early redemption|redeem(ed)? early|достроков|заблоков)/i.test(ruleText) ? "lock" : undefined;
   const ex = faqs?.[p.id]?.[lang];
   const faq = ex?.faq ?? [];
@@ -515,7 +516,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
             // join before trading: volume before the "Join" press does not count (audit 14.11)
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
-            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "earn" ? [["bank", ({ uk: "Підпишіться на продукт у розділі Earn біржі (Subscribe) і вкажіть суму", en: "Subscribe to the product in the exchange's Earn section and enter the amount", ru: "Подпишитесь на продукт в разделе Earn биржи (Subscribe) и укажите сумму" } as const)[lang]] as [IconName, string]]
+            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "earn" && !/\b(loan|borrow|perp|futures|bot|grid|leverage|margin|copy)/i.test(p.titleOrig ?? p.title) ? [["bank", ({ uk: "Підпишіться на продукт у розділі Earn біржі (Subscribe) і вкажіть суму", en: "Subscribe to the product in the exchange's Earn section and enter the amount", ru: "Подпишитесь на продукт в разделе Earn биржи (Subscribe) и укажите сумму" } as const)[lang]] as [IconName, string]]
               : p.category === "airdrop" || p.category === "bonus" || p.category === "other" || p.category === "listing" ? [["checkCircle", ({ uk: "Виконайте умови акції — вони нижче, у розділі «Умови»", en: "Meet the promo's conditions — listed below under “Rules”", ru: "Выполните условия акции — они ниже, в разделе «Условия»" } as const)[lang]] as [IconName, string]]
               : p.category === "competition" ? [["trend", notTrading ? ({ uk: "Виконуйте умови змагання — переможців визначає рейтинг", en: "Meet the contest's conditions — the ranking decides the winners", ru: "Выполняйте условия соревнования — победителей определяет рейтинг" } as const)[lang] : U.s.rank] as [IconName, string]] : []),
             ["gift", m.payout?.manual ? U.s.manual : m.payout?.auto ? U.s.auto : U.s.unknown],
