@@ -9,3 +9,6 @@ data
 /relay/
 /data/
 build.log
+
+__pycache__/
+*.pyc
