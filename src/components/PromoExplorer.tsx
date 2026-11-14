@@ -270,12 +270,12 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
         </div>
 
-        <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1 md:flex-wrap" role="tablist" aria-label="Category">
-          <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} role="tab" aria-selected={cat === "all"}>
+        <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1 md:flex-wrap" role="group" aria-label={({ uk: "Категорія", en: "Category", ru: "Категория" } as const)[lang]}>
+          <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} aria-pressed={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>
           {CATS.filter((c) => counts[c]).map((c) => (
-            <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)} role="tab" aria-selected={cat === c}>
+            <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)} aria-pressed={cat === c}>
               <span className="size-2 rounded-full" style={{ background: CAT_STYLE[c].dot }} />
               {t.cat[c]} <span className="chip-count">{counts[c]}</span>
             </button>
@@ -292,12 +292,11 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       {panel && <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/[0.02] p-3">
         {/* kind tabs */}
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
-          <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="tablist" aria-label="Type">
+          <div className="scroll-x flex gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" role="group" aria-label={lang === "en" ? "Type" : "Тип"}>
             {[...(showKinds ? KINDS.filter((k) => k === "all" || kindCounts[k]) : (["all"] as Kind[])), ...(["saved", "hidden"] as Kind[]).filter((k) => kindCounts[k] || kind === k)].map((k) => (
               <button
                 key={k}
-                role="tab"
-                aria-selected={kind === k}
+                aria-pressed={kind === k}
                 onClick={() => { setKind(k); setVenues(new Set()); setCat("all"); }}
                 className={`flex h-10 shrink-0 items-center gap-2 rounded-xl px-4 text-sm font-bold transition-colors ${kind === k ? (k === "saved" ? "bg-amber text-on-accent" : k === "hidden" ? "bg-white/15 text-ink" : "bg-lime text-on-accent") : "text-ink-2 hover:bg-white/5 hover:text-ink"}`}
               >

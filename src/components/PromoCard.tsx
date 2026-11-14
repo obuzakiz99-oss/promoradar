@@ -100,7 +100,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
 
   return (
     <article
-      className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
+      className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-lime ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
       {/* solid backing under the tinted badge (owner 13.11: the card border showed through it) */}

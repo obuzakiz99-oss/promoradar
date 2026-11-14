@@ -97,7 +97,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                   )}
                   {/* all of them, so the count in the jump link matches the list (owner 13.11); the rest open without JS */}
                   {list.length > FIRST && (
-                    <label className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm">
+                    <label className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-lime">
                       <input type="checkbox" className="sr-only" />
                       <span className="group-has-[:checked]:hidden">{MORE[lang](list.length - FIRST)}</span>
                       <span className="hidden group-has-[:checked]:inline">{LESS[lang]}</span>

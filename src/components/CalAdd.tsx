@@ -24,9 +24,10 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
   useEffect(() => {
     if (!open) return;
     const off = (e: PointerEvent) => { if (!root.current?.contains(e.target as Node)) setOpen(false); };
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); btn.current?.focus(); } };
     document.addEventListener("pointerdown", off);
-    const close = () => setOpen(false);
+    // page scroll closes the fixed menu (it would float away); tabbing inside the menu must not
+    const close = () => { if (!root.current?.contains(document.activeElement)) setOpen(false); };
     document.addEventListener("keydown", esc);
     window.addEventListener("scroll", close, { passive: true, capture: true });
     return () => { document.removeEventListener("pointerdown", off); document.removeEventListener("keydown", esc); window.removeEventListener("scroll", close, { capture: true }); };
@@ -41,7 +42,7 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
   };
   return (
     <div ref={root} className={`relative inline-block ${open ? "z-30" : ""}`}>
-      <button ref={btn} type="button" onClick={toggle} aria-expanded={open} aria-label={TX[lang].add} title={TX[lang].add}
+      <button ref={btn} type="button" onClick={toggle} aria-haspopup="menu" aria-expanded={open} aria-label={TX[lang].add} title={TX[lang].add}
         className={`grid size-9 place-items-center rounded-lg border transition ${open ? "border-lime/50 text-lime" : "border-line text-ink-3 hover:border-line-2 hover:text-ink"}`}>
         <Icon name="calendar" className="size-4" />
       </button>

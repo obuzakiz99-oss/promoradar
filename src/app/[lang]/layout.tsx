@@ -49,9 +49,10 @@ export default async function LangLayout({ children, params }: { children: React
         <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
       </head>
       <body className="min-h-dvh pb-16 md:pb-0">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-lime focus:px-4 focus:py-2 focus:font-bold focus:text-on-accent">{({ uk: "До вмісту", en: "Skip to content", ru: "К содержимому" } as const)[lang]}</a>
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
-        {children}
+        <div id="main" tabIndex={-1} className="focus:outline-none">{children}</div>
         {/* outside the header: its backdrop-filter would trap position:fixed */}
         <InstallApp lang={lang} base={withBase("")} />
         <PopoverClose />

@@ -66,7 +66,7 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
           return (
             <button key={id} type="button" onClick={() => setSel(id)} title={`${v.name} · ${list.length}`}
               aria-pressed={on} aria-label={`${v.name}: ${list.length} ${plural(list.length, langOf(labels.promos), "promo")}`}
-              className="group absolute -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 focus:outline-none" style={{ left: `${x}%`, top: `${y}%` }}>
+              className="group absolute -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 focus:outline-none focus-visible:scale-110 focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-lime" style={{ left: `${x}%`, top: `${y}%` }}>
               <span className="absolute inset-0 animate-ping-slow rounded-full" style={{ background: v.color, animationDelay: `${(i * 0.7) % 6}s`, opacity: 0.3 }} />
               <span className={`relative block rounded-full ring-4 transition ${on ? "ring-lime" : "ring-bg group-hover:ring-line-2"}`}><VenueLogo v={v} size={i < 5 ? 44 : 36} rounded="rounded-full" /></span>
               <span className="absolute -right-1.5 -top-1.5 grid min-w-5 place-items-center rounded-full bg-surface px-1 font-mono text-xs font-bold text-ink ring-1 ring-line-2">{list.length}</span>

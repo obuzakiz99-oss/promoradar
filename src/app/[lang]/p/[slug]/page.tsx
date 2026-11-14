@@ -367,7 +367,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               {(m.hot ?? 0) >= 60 && <span className="rounded-md bg-amber/10 px-2 py-1 text-amber"><Icon name="flame" /> {m.hot}°</span>}
             </div>
             {/* H1 = our short title; the exchange's own headline is in the rules below (audit 12.11: less text up top) */}
-            <h1 className={`mt-3 leading-tight tracking-tight ${own ? "font-display text-2xl font-semibold sm:text-4xl" : "text-2xl font-bold sm:text-3xl"}`} title={own ? p.title : undefined}>
+            <h1 className={`mt-3 break-words leading-tight tracking-tight ${own ? "font-display text-2xl font-semibold sm:text-4xl" : "text-2xl font-bold sm:text-3xl"}`} title={own ? p.title : undefined}>
               {own ? linkCoins(own) : sentenceCase(noEmoji(isAggregator ? `${p.title} — Airdrop` : p.title))}
             </h1>
             {coins.length > 0 && (

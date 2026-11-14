@@ -54,6 +54,7 @@
 :root { color-scheme: dark; }
 
 html { background: var(--color-bg); scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   background: var(--color-bg);
   color: var(--color-ink);

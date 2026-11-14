@@ -79,7 +79,7 @@ export function Select<V extends string>({ value, onChange, options, label, clas
       <button ref={btn} type="button" title={title} aria-label={label} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? id : undefined}
         onClick={() => (open ? setOpen(false) : show())}
         onKeyDown={(e) => { if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); show(); } }}
-        className={`flex w-full items-center gap-2 text-left focus:outline-none focus-visible:border-lime/60 ${className}`}>
+        className={`flex w-full items-center gap-2 text-left focus:outline-none focus-visible:border-lime/60 focus-visible:ring-2 focus-visible:ring-lime/50 ${className}`}>
         <span className="min-w-0 flex-1 truncate">{options[cur]?.label}</span>
         <svg className={`size-4 shrink-0 text-ink-3 transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.2 7.6a.75.75 0 0 1 1.06 0L10 11.3l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.66a.75.75 0 0 1 0-1.06Z" /></svg>
       </button>

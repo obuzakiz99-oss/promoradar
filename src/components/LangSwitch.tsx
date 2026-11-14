@@ -9,7 +9,7 @@ export function LangSwitch({ current }: { current: Locale }) {
   const path = usePathname() || "/";
   const rest = path.replace(/^\/(uk|en|ru)(?=\/|$)/, "");
   return (
-    <div className="flex items-center rounded-full border border-line bg-white/[0.02] p-0.5 text-xs font-bold" role="group" aria-label="Language">
+    <div className="flex items-center rounded-full border border-line bg-white/[0.02] p-0.5 text-xs font-bold" role="group" aria-label="Мова / Language">
       {LOCALES.map((l) => (
         <Link
           key={l}
