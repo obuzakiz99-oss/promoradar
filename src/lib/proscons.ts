@@ -234,7 +234,7 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
   if (pool.minStake && ctx.price && pool.minStake * ctx.price >= 1000) cons.push(f("highMin", `${pool.minStake.toLocaleString("en-US")} ${pool.stake}`));
   if (pool.maxStake && ctx.price && pool.maxStake * ctx.price < 1000) cons.push(f("smallMax", usd(pool.maxStake * ctx.price)));
   if (pool.newUsers) cons.push(f("special"));
-  if (p.status === "live" && left < 48) cons.push(f("endsSoon", left < 24 ? `${Math.max(1, Math.round(left))} h` : "2 d"));
+  if (p.status === "live" && left < 48) cons.push(f("endsSoon", left < 24 ? `${Math.max(1, Math.round(left))} ${({ uk: "год", en: "h", ru: "ч" } as const)[lang]}` : ({ uk: "2 дні", en: "2 days", ru: "2 дня" } as const)[lang]));
   if (stableStake && apr < 5) cons.push(f("lowApr"));
   return { pros, cons };
 }

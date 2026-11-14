@@ -75,7 +75,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
 
       <Section title={`${T.hedged}`} sub={T.hedgedSub}>
         {hedged.length ? hedged.map((h) => (
-          <Row key={h.key} v={exchanges[h.p.exchange]} title={`${h.p.name}: ${h.stake} → ${h.p.token}`} sub={`APR ${pct(h.apr)} · short ${h.stake} @ ${h.venue} · ${T.est}`} href={withBase(`/${lang}/lp/${lpSlug(h.p)}/`)}
+          <Row key={h.key} v={exchanges[h.p.exchange]} title={`${h.p.name}: ${h.stake} → ${h.p.token}`} sub={`APR ${pct(h.apr)} · ${lang === "en" ? `short ${h.stake} on ${h.venue}` : lang === "ru" ? `шорт ${h.stake} на ${h.venue}` : `шорт ${h.stake} на ${h.venue}`} · ${T.est}`} href={withBase(`/${lang}/lp/${lpSlug(h.p)}/`)}
             right={`≈${pct(h.hedged)}`} rightSub={`${usd(month(h.hedged, h.capUsd))} ${T.perMonth}`} />
         )) : <p className="text-ink-3">{T.none}</p>}
       </Section>

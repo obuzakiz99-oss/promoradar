@@ -9,6 +9,7 @@ import { venueOf } from "@/config/site";
 import { EarnBoard } from "@/components/EarnBoard";
 import { Footer } from "@/components/Sections";
 import { withBase } from "@/lib/base";
+import { plural } from "@/lib/format";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -46,7 +47,7 @@ export default async function EarnPage({ params }: { params: Params }) {
             {ids.map((id) => (
               <span key={id} className="flex h-9 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2">
                 <span className={`size-1.5 rounded-full ${status[id]?.ok ? "bg-lime" : "bg-rose"}`} />
-                {exchanges[id].name}<span className="font-mono text-xs text-ink-3">{status[id]?.count ?? 0} {({ uk: "продуктів", en: "products", ru: "продуктов" } as const)[lang]}</span>
+                {exchanges[id].name}<span className="font-mono text-xs text-ink-3">{status[id]?.count ?? 0} {plural(status[id]?.count ?? 0, lang, "product")}</span>
               </span>
             ))}
           </div>

@@ -31,7 +31,7 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
 // tiny amounts keep 2 significant digits ("0.000031 XAUT"), never round down to a bare "0"
 const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : n >= 0.01 || n <= 0 ? `${+n.toFixed(n < 1 ? 4 : 2)}` : n < 1e-6 ? "<0.000001" : (+n.toPrecision(2)).toFixed(Math.min(8, 1 - Math.floor(Math.log10(n)))));
 const UNIT: Record<Locale, { label: string; hint: string }> = {
-  uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку праворуч — і суму можна буде ввести в ній (наприклад, 0.05 BTC)." },
+  uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку — і суму можна буде ввести в ній (наприклад, 0.05 BTC)." },
   en: { label: "Amount unit", hint: "Pick a stake coin on the right — then you can enter the amount in it (e.g. 0.05 BTC)." },
   ru: { label: "Единица суммы", hint: "Выберите монету для стейка справа — и сумму можно будет ввести в ней (например, 0.05 BTC)." },
 };

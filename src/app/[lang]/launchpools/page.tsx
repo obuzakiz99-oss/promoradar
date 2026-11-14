@@ -1,4 +1,5 @@
 import { alt, withOg } from "@/lib/seo";
+import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -39,7 +40,7 @@ function period(p: PoolProject, lang: Locale) {
   return `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`;
 }
 
-const MORE_TX = { uk: "Глянути більше", en: "Show more", ru: "Показать больше" } as const;
+const MORE_TX = { uk: "Показати ще", en: "Show more", ru: "Показать ещё" } as const;
 const LESS_TX = { uk: "Згорнути", en: "Show less", ru: "Свернуть" } as const;
 // archive cells the exchange never published: a muted "no data" with an explanation instead of a bare dash
 const NO_DATA = { uk: ["н/д", "Біржа не публікувала цей показник"], en: ["n/a", "The exchange did not publish this figure"], ru: ["н/д", "Биржа не публиковала этот показатель"] } as const;
@@ -114,16 +115,16 @@ export default async function Launchpools({ params }: { params: Params }) {
               const by = (ok: (x: { ok: boolean; live: number }) => boolean) => Object.entries(status).filter(([, x]) => ok(x)).map(([id]) => venueOf(id).name);
               const live = by((x) => x.ok && x.live > 0), idle = by((x) => x.ok && x.live === 0), down = by((x) => !x.ok);
               const S = ({
-                uk: { live: "Активні пули зараз", idle: "без активних пулів", down: "тимчасово без даних", ann: "ще з оголошень" },
-                en: { live: "Live pools now", idle: "no live pools", down: "data temporarily unavailable", ann: "plus from announcements" },
-                ru: { live: "Активные пулы сейчас", idle: "без активных пулов", down: "временно без данных", ann: "ещё из объявлений" },
+                uk: { live: "Пули зараз є на", idle: "без активних пулів", down: "тимчасово без даних", ann: "також стежимо за оголошеннями" },
+                en: { live: "Live pools now on", idle: "no live pools", down: "data temporarily unavailable", ann: "also watching announcements from" },
+                ru: { live: "Пулы сейчас есть на", idle: "без активных пулов", down: "временно без данных", ann: "также следим за объявлениями" },
               } as const)[lang];
               return [
-                `${S.live}: ${live.join(", ") || "—"}`,
-                idle.length ? `${idle.join(", ")} — ${S.idle}` : "",
-                down.length ? `${down.join(", ")} — ${S.down}` : "",
-                ANN_IDS.length ? `${S.ann}: ${ANN_IDS.map((id) => venueOf(id).name).join(", ")}` : "",
-              ].filter(Boolean).join(" · ");
+                `${S.live} ${live.join(", ") || "—"}.`,
+                idle.length ? `${S.idle.charAt(0).toUpperCase()}${S.idle.slice(1)}: ${idle.join(", ")}.` : "",
+                down.length ? `${S.down.charAt(0).toUpperCase()}${S.down.slice(1)}: ${down.join(", ")}.` : "",
+                ANN_IDS.length ? `${S.ann.charAt(0).toUpperCase()}${S.ann.slice(1)}: ${ANN_IDS.map((id) => venueOf(id).name).join(", ")}.` : "",
+              ].filter(Boolean).join(" ");
             })()}
           </p>
         </section>
@@ -191,7 +192,7 @@ export default async function Launchpools({ params }: { params: Params }) {
                   <span className={`ml-auto size-2 rounded-full ${s.ok ? "bg-lime" : "bg-rose"}`} />
                 </div>
                 <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
-                  <div><dd className="font-mono text-lg font-bold">{s.count}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsCount}</dt></div>
+                  <div><dd className="font-mono text-lg font-bold">{s.count}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{lang === "en" ? "" : `${plural(s.count, lang, "pool")} `}{L.statsCount}</dt></div>
                   <div><dd className="font-mono text-lg font-bold">{s.avgDays ? s.avgDays.toFixed(0) : "—"}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsAvgDays}</dt></div>
                   <div><dd className="font-mono text-lg font-bold">{s.last ? shortDate(s.last, lang) : "—"}</dd><dt className="text-xs font-semibold leading-tight text-ink-3">{L.statsLast}</dt></div>
                 </dl>

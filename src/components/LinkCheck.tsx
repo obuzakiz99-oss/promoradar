@@ -55,7 +55,10 @@ function Result({ v, lang }: { v: Verdict; lang: L }) {
     case "official": return box("border-lime/40 bg-lime/[0.06] [&>div>svg]:text-lime", "checkCircle", T.official(v.venue, v.domain), v.http && T.http);
     case "officialTg": return box("border-lime/40 bg-lime/[0.06] [&>div>svg]:text-lime", "checkCircle", T.officialTg(v.venue, v.channel));
     case "lookalike": return box("border-rose/50 bg-rose/[0.08] [&>div>svg]:text-rose", "shieldAlert", (v.venue === "?" ? ({ uk: "Підозріла адреса — схожа на підробку", en: "Suspicious address — looks like a fake", ru: "Подозрительный адрес — похоже на подделку" } as const)[lang] : T.look(v.venue, v.domain)), T.why[v.why], T.lookNote);
-    case "unknownTg": return box("border-amber/40 bg-amber/[0.06] [&>div>svg]:text-amber", "help", T.unknownTg(v.channel), v.like && T.likeTg(v.like), T.unknownNote);
+    case "unknownTg": if (/(support|help|admin|service|care|helpdesk|team)/i.test(v.channel) && /(binance|bybit|okx|bitget|kucoin|gate|mexc|htx|bingx|kraken|coinbase|whitebit)/i.test(v.channel))
+      return box("border-rose/50 bg-rose/[0.08] [&>div>svg]:text-rose", "shieldAlert", ({ uk: `@${v.channel} — схоже на підробку`, en: `@${v.channel} looks like a fake`, ru: `@${v.channel} — похоже на подделку` } as const)[lang],
+        ({ uk: "Біржі не ведуть «support»-каналів і не пишуть першими в Telegram. Не пишіть туди й нічого не вводьте.", en: "Exchanges don't run “support” channels and never message first on Telegram. Don't write there or enter anything.", ru: "Биржи не ведут «support»-каналов и не пишут первыми в Telegram. Не пишите туда и ничего не вводите." } as const)[lang]);
+      return box("border-amber/40 bg-amber/[0.06] [&>div>svg]:text-amber", "help", T.unknownTg(v.channel), v.like && T.likeTg(v.like), T.unknownNote);
     case "unknown": return box("border-amber/40 bg-amber/[0.06] [&>div>svg]:text-amber", "help", T.unknown(v.host), T.unknownNote, v.http && T.http);
     default: return box("border-line bg-white/[0.02]", "alert", T.invalid);
   }

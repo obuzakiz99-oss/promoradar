@@ -44,7 +44,7 @@ export default async function LearnQuiz({ params }: { params: Params }) {
   for (const o of stableEarn) {
     const kind = o.newUsers ? "newEarn" : o.type === "fixed" ? "fixed" : o.type === "flexible" ? "earn" : null;
     if (!kind || (!o.newUsers && o.apr > 30)) continue;
-    items.push({ key: `e:${o.exchange}:${o.coin}:${o.type}:${o.apr}`, kind, venue: venueOf(o.exchange), title: `${o.coin} · ${venueOf(o.exchange).name} Earn (${TYPE[lang][o.type]}${o.days ? `, ${o.days}d` : ""})`, apr: o.apr, capUsd: o.maxAmount, days: o.type === "fixed" ? o.days : undefined, url: o.url, external: true });
+    items.push({ key: `e:${o.exchange}:${o.coin}:${o.type}:${o.apr}`, kind, venue: venueOf(o.exchange), title: `${o.coin} · ${venueOf(o.exchange).name} Earn (${TYPE[lang][o.type]}${o.days ? `, ${o.days} ${lang === "en" ? "d" : lang === "ru" ? "дн." : "дн."}` : ""})`, apr: o.apr, capUsd: o.maxAmount, days: o.type === "fixed" ? o.days : undefined, url: o.url, external: true });
   }
   // live Launchpools: stablecoin stake (easy) and big-coin stake (medium)
   const live = pools.projects.filter((p) => p.status === "live");

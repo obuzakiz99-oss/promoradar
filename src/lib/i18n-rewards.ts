@@ -10,7 +10,7 @@ export const REWARDS: Record<"uk" | "en" | "ru", RewardsPage> = {
   uk: {
     title: "Типи нагород",
     sub: "«Отримай 50 USDT» не завжди означає 50 доларів, які можна вивести. Пояснюємо, що біржі реально дають, що з цим можна робити і як не втратити нагороду.",
-    yes: "Можна вивести", no: "Вивести не можна", profit: "Тільки прибуток", canT: "Можна", cannotT: "Не можна",
+    yes: "Можна вивести", no: "Вивести не можна", profit: "Тільки прибуток", canT: "Можна", cannotT: "Обмеження й ризики",
     types: [
       { id: "cash", icon: "cash", name: "Монети на рахунок", alias: "USDT, USDC, токени у Spot / Funding", cash: "yes",
         what: "Звичайні монети, які біржа зараховує на ваш спотовий або фінансовий рахунок. Те саме, що купити їх самому.",
@@ -59,7 +59,7 @@ export const REWARDS: Record<"uk" | "en" | "ru", RewardsPage> = {
   en: {
     title: "Reward types",
     sub: "“Get 50 USDT” doesn't always mean 50 dollars you can withdraw. Here's what exchanges really pay, what you can do with it, and how not to lose it.",
-    yes: "Withdrawable", no: "Not withdrawable", profit: "Profit only", canT: "You can", cannotT: "You can't",
+    yes: "Withdrawable", no: "Not withdrawable", profit: "Profit only", canT: "You can", cannotT: "Limits and risks",
     types: [
       { id: "cash", icon: "cash", name: "Coins to your account", alias: "USDT, USDC, tokens in Spot / Funding", cash: "yes",
         what: "Regular coins credited to your spot or funding account — the same as if you bought them.",
@@ -108,7 +108,7 @@ export const REWARDS: Record<"uk" | "en" | "ru", RewardsPage> = {
   ru: {
     title: "Типы наград",
     sub: "«Получи 50 USDT» не всегда значит 50 долларов, которые можно вывести. Объясняем, что биржи реально дают, что с этим можно делать и как не потерять награду.",
-    yes: "Можно вывести", no: "Вывести нельзя", profit: "Только прибыль", canT: "Можно", cannotT: "Нельзя",
+    yes: "Можно вывести", no: "Вывести нельзя", profit: "Только прибыль", canT: "Можно", cannotT: "Ограничения и риски",
     types: [
       { id: "cash", icon: "cash", name: "Монеты на счёт", alias: "USDT, USDC, токены в Spot / Funding", cash: "yes",
         what: "Обычные монеты, которые биржа зачисляет на спотовый или финансовый счёт. То же, что купить их самому.",

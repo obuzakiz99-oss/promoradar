@@ -99,10 +99,10 @@ const RULES_TX: Record<Locale, {
     published: "опубліковано", noEnd: "Біржа не вказала дату завершення", left: "залишилось", poolShared: "Максимум на людину не вказано · спільний фонд", noCapShort: "Максимум на одну людину біржа не вказала — дивіться умови нижче",
     perUser: "Можна заробити (1 людина)", upTo: "до", noCap: "Біржа не вказує максимум на одну людину — нагорода ділиться між учасниками за правилами акції (див. нижче).",
     title: "Умови та правила", keyTitle: "Головне з правил", keySub: "Ключові рядки з офіційних правил біржі (мовою оригіналу). Повний текст — нижче.",
-    translate: "Перекласти українською", original: (v) => `Оригінал на ${v}`,
+    translate: "Google-переклад оригіналу", original: (v) => `Оригінал на ${v}`,
     note: (v) => `Повний текст умов з офіційного оголошення ${v}, мовою оригіналу. Якщо щось розходиться — діють правила на сайті біржі.`,
     partial: "Біржа публікує тут лише короткий опис — повні правила за посиланням «Оригінал».",
-    none: (v) => `Повний текст умов цієї акції опубліковано лише на сторінці ${v} — натисніть «Оригінал» або «Перекласти українською» вище.`,
+    none: (v) => `Повний текст умов цієї акції опубліковано лише на сторінці ${v} — натисніть «Оригінал» або «Google-переклад оригіналу» вище.`,
     more: "Показати всі умови", signup: (v) => `Реєстрація на ${v}`,
     fact: { period: "Період", who: "Хто може брати участь", min: "Мінімальні вимоги", how: "Як взяти участь", payout: "Коли видадуть нагороди", kyc: "Верифікація (KYC)", region: "Обмеження по країнах" },
   },
@@ -192,7 +192,7 @@ const dateFull = (ts: number, lang: Locale) =>
   new Date(ts).toLocaleString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
 
 const PAY_TX: Record<Locale, { title: string; unknown: string; quote: string; more: string; remind: string; calTitle: string; calDesc: (claim?: number) => string }> = {
-  uk: { title: "Що ви реально отримаєте", unknown: "Форма не вказана", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
+  uk: { title: "Що ви реально отримаєте", unknown: "Тип нагороди не вказано", quote: "Що сказано в правилах:", more: "Що таке ваучери, бонуси й бали →",
     remind: "Нагадати забрати нагороду:", calTitle: "🎁 Забрати нагороду", calDesc: (c) => `Перевірте Центр нагород на біржі й заберіть нагороду${c ? ` — на це є ${c} дн., потім вона згорає` : ""}.` },
   en: { title: "What you actually get", unknown: "Form not stated", quote: "What the rules say:", more: "Vouchers, bonuses and points explained →",
     remind: "Remind me to claim the reward:", calTitle: "🎁 Claim your reward", calDesc: (c) => `Check the exchange's rewards center and claim your reward${c ? ` — you have ${c} days before it expires` : ""}.` },
@@ -230,7 +230,7 @@ const UI_TX: Record<Locale, {
     todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
-      act: { trade: (a, f) => `Наторгуйте від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a) => `Внесіть депозит від ${a}`, stake: (a) => `Застейкайте від ${a}`, hold: (a) => `Тримайте на рахунку від ${a}`, buy: (a) => `Купіть на суму від ${a}` },
+      act: { trade: (a, f) => `Торгуйте на суму від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a) => `Внесіть депозит від ${a}`, stake: (a) => `Застейкайте від ${a}`, hold: (a) => `Тримайте на рахунку від ${a}`, buy: (a) => `Купіть на суму від ${a}` },
       free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Register / Join» на сторінці акції", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення", unknown: "Як отримати нагороду — дивіться в умовах (часто треба натиснути «Забрати»)",
     },
   },
@@ -252,7 +252,7 @@ const UI_TX: Record<Locale, {
     todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
     s: {
       reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
-      act: { trade: (a, f) => `Наторгуйте от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a) => `Внесите депозит от ${a}`, stake: (a) => `Застейкайте от ${a}`, hold: (a) => `Держите на счёте от ${a}`, buy: (a) => `Купите на сумму от ${a}` },
+      act: { trade: (a, f) => `Торгуйте на сумму от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a) => `Внесите депозит от ${a}`, stake: (a) => `Застейкайте от ${a}`, hold: (a) => `Держите на счёте от ${a}`, buy: (a) => `Купите на сумму от ${a}` },
       free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Register / Join» на странице акции", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания", unknown: "Как получить награду — смотрите в условиях (часто нужно нажать «Забрать»)",
     },
   },
@@ -281,9 +281,9 @@ const FAQ_TX: Record<Locale, { how: string; steps: string; when: string; form: s
 
 // referral promos: the steps and the reward say who gets what (owner 13.11)
 const REF = {
-  uk: { both: (x: string) => `${x} вам і стільки ж другу`, link: "Візьміть своє реферальне посилання або код у розділі «Запросити друзів»", friend: (c: string) => `Друг реєструється за вашим посиланням${c ? ` і ${c}` : " і виконує умову акції"}`, paid: "Бонус нараховується вам після виконання умов другом", paidBoth: "Бонус отримуєте і ви, і друг — після виконання умов" },
-  en: { both: (x: string) => `${x} for you and the same for your friend`, link: "Get your referral link or code in “Invite friends”", friend: (c: string) => `Your friend signs up with your link${c ? ` and ${c}` : " and meets the promo condition"}`, paid: "You get the bonus once your friend meets the conditions", paidBoth: "Both you and your friend get the bonus once the conditions are met" },
-  ru: { both: (x: string) => `${x} вам и столько же другу`, link: "Возьмите свою реферальную ссылку или код в разделе «Пригласить друзей»", friend: (c: string) => `Друг регистрируется по вашей ссылке${c ? ` и ${c}` : " и выполняет условие акции"}`, paid: "Бонус начисляется вам после выполнения условий другом", paidBoth: "Бонус получаете и вы, и друг — после выполнения условий" },
+  uk: { both: (x: string) => `${x} вам і стільки ж другу`, link: "Візьміть своє реферальне посилання або код у розділі «Запросити друзів»", friend: (c: string) => `Друг реєструється за вашим посиланням${c ? ` і ${c}` : " і виконує умову акції"}`, does: { trade: (a: string, f: boolean) => `торгує на суму від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a: string) => `вносить депозит від ${a}`, stake: (a: string) => `стейкає від ${a}`, hold: (a: string) => `тримає від ${a}`, buy: (a: string) => `купує на суму від ${a}` }, paid: "Бонус нараховується вам після виконання умов другом", paidBoth: "Бонус отримуєте і ви, і друг — після виконання умов" },
+  en: { both: (x: string) => `${x} for you and the same for your friend`, link: "Get your referral link or code in “Invite friends”", friend: (c: string) => `Your friend signs up with your link${c ? ` and ${c}` : " and meets the promo condition"}`, does: { trade: (a: string, f: boolean) => `trades ${a} or more${f ? " in futures" : ""}`, deposit: (a: string) => `deposits ${a} or more`, stake: (a: string) => `stakes ${a} or more`, hold: (a: string) => `holds ${a} or more`, buy: (a: string) => `buys ${a} or more` }, paid: "You get the bonus once your friend meets the conditions", paidBoth: "Both you and your friend get the bonus once the conditions are met" },
+  ru: { both: (x: string) => `${x} вам и столько же другу`, link: "Возьмите свою реферальную ссылку или код в разделе «Пригласить друзей»", friend: (c: string) => `Друг регистрируется по вашей ссылке${c ? ` и ${c}` : " и выполняет условие акции"}`, does: { trade: (a: string, f: boolean) => `торгует на сумму от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a: string) => `вносит депозит от ${a}`, stake: (a: string) => `стейкает от ${a}`, hold: (a: string) => `держит от ${a}`, buy: (a: string) => `покупает на сумму от ${a}` }, paid: "Бонус начисляется вам после выполнения условий другом", paidBoth: "Бонус получаете и вы, и друг — после выполнения условий" },
 } as const;
 
 export default async function PromoPage({ params }: { params: Params }) {
@@ -475,7 +475,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : p.category === "referral" ? [
             ["user", U.s.reg(p.venue.name, kyc, false)],
             ["tag", REF[lang].link],
-            ["user", REF[lang].friend(m.minEntry ? U.s.act[m.minEntry.kind](amt, !!m.futures).toLowerCase() : "")],
+            ["user", REF[lang].friend(m.minEntry ? REF[lang].does[m.minEntry.kind](amt, !!m.futures) : "")],
             ["gift", refBoth ? REF[lang].paidBoth : REF[lang].paid],
           ] : [
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],

@@ -12,18 +12,19 @@ import { combosFor } from "@/lib/combos";
 import { clearHidden, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
 import { rankOf } from "@/lib/rank";
+import { plural } from "@/lib/format";
 
 type Sort = "best" | "newest" | "ending" | "biggest" | "perUser" | "minEntry";
 type Country = "any" | "ua" | "eu";
 type Quick = "noDeposit" | "low" | "forNew" | "cash";
 
 const GX: Record<Locale, {
-  country: string; any: string; ua: string; eu: string; hidden: (n: number) => string;
+  country: string; any: string; showAll: string; ua: string; eu: string; hidden: (n: number) => string;
   quick: Record<Quick, string>; perUser: string; minEntry: string; best: string;
 }> = {
-  uk: { country: "Країна", any: "Будь-яка", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} акцій лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг", best: "Найвигідніші" },
-  en: { country: "Country", any: "Any", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry", best: "Best value" },
-  ru: { country: "Страна", any: "Любая", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} акций только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
+  uk: { country: "Країна", any: "Будь-яка", showAll: "Показати всі", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} ${plural(n, "uk", "promo")} лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг", best: "Найвигідніші" },
+  en: { country: "Country", any: "Any", showAll: "Show all", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry", best: "Best value" },
+  ru: { country: "Страна", any: "Любая", showAll: "Показать все", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} ${plural(n, "ru", "promo")} только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
 };
 
 /** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
@@ -352,7 +353,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
         </p>
       )}
       {geoHidden > 0 && (
-        <p className="mt-2 text-xs text-ink-3">{G.hidden(geoHidden)} · <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setCountry("any")}>{G.any}</button></p>
+        <p className="mt-2 text-xs text-ink-3">{G.hidden(geoHidden)} · <button type="button" className="font-semibold text-ink-2 underline-offset-2 hover:underline" onClick={() => setCountry("any")}>{G.showAll}</button></p>
       )}
 
       {/* grid */}
@@ -367,7 +368,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           {list.length > limit && (
             <div className="mt-8 flex justify-center">
               <button onClick={() => setLimit((l) => l + PAGE)} className="btn btn-ghost h-12 px-6">
-                {t.filters.more} · {list.length - limit}
+                {({ uk: "Показати ще", en: "Show", ru: "Показать ещё" } as const)[lang]} {Math.min(PAGE, list.length - limit)}{list.length - limit > PAGE ? ` ${({ uk: "з", en: "of", ru: "из" } as const)[lang]} ${list.length - limit}` : ""}
               </button>
             </div>
           )}

@@ -32,6 +32,7 @@ export const WORDS = {
   pool: { uk: ["пул", "пули", "пулів"], ru: ["пул", "пула", "пулов"], en: ["pool", "pools", "pools"] },
   protocol: { uk: ["протокол", "протоколи", "протоколів"], ru: ["протокол", "протокола", "протоколов"], en: ["protocol", "protocols", "protocols"] },
   chain: { uk: ["мережа", "мережі", "мереж"], ru: ["сеть", "сети", "сетей"], en: ["chain", "chains", "chains"] },
+  product: { uk: ["продукт", "продукти", "продуктів"], ru: ["продукт", "продукта", "продуктов"], en: ["product", "products", "products"] },
 } as const;
 /** "2 акції", "5 акцій", "21 акція"; non-integers (3.5K) take the "many"/"few" form like Ukrainian grammar does. */
 export function plural(n: number, lang: string, w: keyof typeof WORDS): string {

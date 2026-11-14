@@ -32,7 +32,7 @@ const TOKEN_TX: Record<Locale, {
   uk: {
     title: (s) => `${s}: акції, Launchpool і стейкінг`, desc: (s) => `Де зараз роздають ${s}, де його застейкати під найвищий відсоток і в яких Launchpool його можна отримати — з усіх бірж в одному місці.`,
     back: "Усі токени", price: "Ціна", promos: (s) => `Акції, де роздають ${s}`, lpReward: (s) => `Launchpool: застейкайте — отримайте ${s}`, lpStake: (s) => `Launchpool, де можна застейкати ${s}`,
-    earn: (s) => `Найкращі ставки Earn на ${s}`, none: "Зараз немає.", stake: "Стейк", apr: "APR", ends: "кінець через", starts: "старт через", flexible: "гнучкий", fixed: (d) => `фікс. ${d} дн.`, onchain: "on-chain",
+    earn: (s) => `Найкращі ставки Earn на ${s}`, none: "Зараз немає.", stake: "Стейк", apr: "APR", ends: "кінець через", starts: "старт через", flexible: "гнучкий", fixed: (d) => `фікс. ${d} дн.`, onchain: "ончейн",
     open: "Відкрити", newUsers: "для нових", cap: "ліміт", all: "Усі токени", perPerson: "на 1 людину",
   },
   en: {
@@ -44,7 +44,7 @@ const TOKEN_TX: Record<Locale, {
   ru: {
     title: (s) => `${s}: акции, Launchpool и стейкинг`, desc: (s) => `Где сейчас раздают ${s}, где его застейкать под самый высокий процент и в каких Launchpool его можно получить — все биржи в одном месте.`,
     back: "Все токены", price: "Цена", promos: (s) => `Акции, где раздают ${s}`, lpReward: (s) => `Launchpool: застейкайте — получите ${s}`, lpStake: (s) => `Launchpool, где можно застейкать ${s}`,
-    earn: (s) => `Лучшие ставки Earn на ${s}`, none: "Сейчас нет.", stake: "Стейк", apr: "APR", ends: "конец через", starts: "старт через", flexible: "гибкий", fixed: (d) => `фикс. ${d} дн.`, onchain: "on-chain",
+    earn: (s) => `Лучшие ставки Earn на ${s}`, none: "Сейчас нет.", stake: "Стейк", apr: "APR", ends: "конец через", starts: "старт через", flexible: "гибкий", fixed: (d) => `фикс. ${d} дн.`, onchain: "ончейн",
     open: "Открыть", newUsers: "для новых", cap: "лимит", all: "Все токены", perPerson: "на 1 человека",
   },
 };
@@ -98,7 +98,7 @@ export default async function TokenPage({ params }: { params: Params }) {
             <div className="text-right">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.price}</div>
               <div className="font-mono text-2xl font-bold">{fmtPrice(tk.price, nfLocale(lang))}</div>
-              {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{tk.change.toFixed(1)}% · 24h</div>}
+              {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{tk.change.toFixed(1)}% · {lang === "en" ? "24h" : lang === "ru" ? "24 ч" : "24 год"}</div>}
             </div>
           )}
         </header>
