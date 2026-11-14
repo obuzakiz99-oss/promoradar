@@ -1,5 +1,5 @@
 {
- "at": 1794699756523,
+ "at": 1794700017330,
  "items": [
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15834",
@@ -23,7 +23,14 @@
    "title": "Gate Square Anthropic IPO Challenge: Share Your Subscription, Win 150 USDT in ANT Shares",
    "url": "https://www.gate.com/announcements/article/102761",
    "why": "social",
-   "netUsd": 0.01
+   "netUsd": 0.03
+  },
+  {
+   "id": "binance:d55c2b2278034806ae44967fa7a2e62c",
+   "venue": "Binance",
+   "title": "Binance Lite Loan Promotion Extended: Enjoy Simple Borrowing with 50% Off Service Fee! (2026-11-13)",
+   "url": "https://www.binance.com/en/support/announcement/detail/d55c2b2278034806ae44967fa7a2e62c",
+   "why": "news"
   },
   {
    "id": "biconomy:64240938144281",
@@ -31,7 +38,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.15
+   "perUserUsd": 2.16,
+   "netUsd": -0.07
   },
   {
    "id": "tg:coinstore_global/10361",
@@ -39,7 +47,15 @@
    "title": "Coinstore Telegram Community Growth Challenge!",
    "url": "https://t.me/coinstore_global/10361",
    "why": "social",
-   "netUsd": -0.96
+   "netUsd": 0.2
+  },
+  {
+   "id": "tg:KCEX_announcements/5687",
+   "venue": "KCEX",
+   "title": "FIND KCEX & WIN REWARDS! 🎁 — It's time for a little hide-and-seek!",
+   "url": "https://t.me/KCEX_announcements/5687",
+   "why": "social",
+   "netUsd": 0.03
   },
   {
    "id": "tg:Phemex_Announcements/7959",
@@ -47,7 +63,8 @@
    "title": "$100 USDT Bonus Giveaway",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
    "why": "social",
-   "perUserUsd": 20
+   "perUserUsd": 20,
+   "netUsd": 0.05
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15806",
@@ -63,7 +80,7 @@
    "title": "Bitbase Community Growth Program: Unlock a 4,000 USDT Tiered Prize Pool — Every Move Counts!",
    "url": "https://bitbase-support.zendesk.com/hc/en-us/articles/5792472385182-Bitbase-Community-Growth-Program-Unlock-a-4-000-USDT-Tiered-Prize-Pool-Every-Move-Counts",
    "why": "social",
-   "netUsd": 0.4
+   "netUsd": 2
   },
   {
    "id": "binance:0ea740cbfca045ed935964f4555dc689",
@@ -71,7 +88,8 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.76
+   "perUserUsd": 5.81,
+   "netUsd": 0.27
   },
   {
    "id": "biconomy:64106346149913",
@@ -79,7 +97,16 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.01
+   "perUserUsd": 2.03,
+   "netUsd": -0.09
+  },
+  {
+   "id": "tg:Kucoin_News/37079",
+   "venue": "KuCoin",
+   "title": "The Trail Gate Is Closing — Claim Your Bonus Today! 📲",
+   "url": "https://www.kucoin.com/campaigns/Prepare_For_Winter_Bootcamp?utm_source=Bootcamp&utm_medium=Community&utm_campaign=Bootcamp",
+   "why": "small",
+   "netUsd": 5
   },
   {
    "id": "tg:LBanknews/20773",
@@ -117,7 +144,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.31,
+   "perUserUsd": 8.35,
    "netUsd": 4.11
   },
   {
@@ -134,7 +161,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 11.03
+   "perUserUsd": 10.82
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
