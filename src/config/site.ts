@@ -31,7 +31,7 @@ export const CEX: Record<string, V> = {
   mexc:     cex("mexc",     "MEXC",     "#1E6AF6", "#FFFFFF", "MX", "mexc",        "https://www.mexc.com"),
   htx:      cex("htx",      "HTX",      "#2C8CFF", "#FFFFFF", "HTX","htx",         "https://www.htx.com"),
   bingx:    cex("bingx",    "BingX",    "#2A54FF", "#FFFFFF", "Bx", "bingx",       "https://bingx.com"),
-  xt:       cex("xt",       "XT.com",   "#F9C846", "#15120A", "XT", undefined,     "https://www.xt.com"),
+  xt:       cex("xt",       "XT.com",   "#F9C846", "#15120A", "XT", "https://coin-images.coingecko.com/markets/images/404/small/xt_logo_%E7%BB%BF.png?1761205934",     "https://www.xt.com"),
   bitunix:  cex("bitunix",  "Bitunix",  "#B9F641", "#0E1404", "Bu", "bitunix",     "https://www.bitunix.com"),
   weex:     cex("weex",     "WEEX",     "#E6E9EE", "#0B0D10", "W",  "weex",        "https://www.weex.com"),
   bitbase:  cex("bitbase",  "Bitbase",  "#3D7BFF", "#FFFFFF", "Bb", undefined,     "https://www.bitbase.com"),
@@ -66,8 +66,8 @@ export const CEX: Record<string, V> = {
   kraken:   cex("kraken",   "Kraken",   "#7B61FF", "#FFFFFF", "Kr", "kraken",      "https://www.kraken.com"),
   cryptocom: cex("cryptocom", "Crypto.com", "#103F68", "#FFFFFF", "Cr", "crypto-com", "https://crypto.com"),
   gemini:   cex("gemini",   "Gemini",   "#00DCFA", "#04141A", "Ge", "gemini",      "https://www.gemini.com"),
-  lbank:    cex("lbank",    "LBank",    "#F6C946", "#15120A", "LB", undefined,     "https://www.lbank.com"),
-  phemex:   cex("phemex",   "Phemex",   "#E6E9EE", "#0B0D10", "Ph", undefined,     "https://phemex.com"),
+  lbank:    cex("lbank",    "LBank",    "#F6C946", "#15120A", "LB", "https://coin-images.coingecko.com/markets/images/118/small/LBank_200_200.png?1757347528",     "https://www.lbank.com"),
+  phemex:   cex("phemex",   "Phemex",   "#E6E9EE", "#0B0D10", "Ph", "https://coin-images.coingecko.com/markets/images/564/small/phemex-exchange-new-logo.png?1763018222",     "https://phemex.com"),
   bitmart:  cex("bitmart",  "BitMart",  "#22C2A8", "#04140F", "BM", undefined,     "https://www.bitmart.com"),
 };
 
