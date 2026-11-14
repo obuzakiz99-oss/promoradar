@@ -226,7 +226,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             ) : coin === "all" ? <div className="mt-1.5 text-xs text-ink-3">{UNIT[lang].hint}</div> : null}
             <div className="mt-2 flex gap-2">
               {PRESETS.map((v) => (
-                <button key={v} onClick={() => setAmount(v)} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>{money(v, "USD", lang)}</button>
+                <button key={v} onClick={() => setAmount(v)} aria-pressed={amount === v} className={`h-8 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${amount === v ? "bg-lime text-on-accent" : "bg-white/5 text-ink-2 hover:text-ink"}`}>{money(v, "USD", lang)}</button>
               ))}
             </div>
           </div>
@@ -234,7 +234,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             <div className="text-sm font-semibold text-ink-2">{L.coin}</div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {["all", ...coins].map((c) => (
-                <button key={c} onClick={() => setCoin(c)} className={`h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-white/15 text-ink ring-1 ring-white/20" : "bg-white/[0.04] text-ink-3 hover:text-ink"}`}>{c === "all" ? L.any : c}</button>
+                <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-white/15 text-ink ring-1 ring-white/20" : "bg-white/[0.04] text-ink-3 hover:text-ink"}`}>{c === "all" ? L.any : c}</button>
               ))}
             </div>
           </div>

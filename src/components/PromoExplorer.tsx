@@ -246,7 +246,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     <div>
       {/* toolbar */}
       {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
-      <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
+      <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
           <label className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
             <span className="sr-only">{t.filters.search}</span>
@@ -322,7 +322,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             {venues.size > 0 && <span className="font-mono text-xs text-lime">{venues.size}</span>}
             <Icon name="chevronDown" className="size-4 text-ink-3 transition-transform group-open:rotate-180" />
           </summary>
-          <div className="absolute left-0 top-11 z-30 grid w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
+          <div className="absolute left-0 top-11 z-30 grid max-h-[60vh] w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
             {venueList.map(({ v, n }) => (
               <button key={v.id} type="button" onClick={() => toggleVenue(v.id)} aria-pressed={venues.has(v.id)}
                 className={`flex min-h-9 items-center gap-2 rounded-xl border py-1 pl-1.5 pr-3 text-left text-[13px] font-bold leading-tight transition-all ${venues.has(v.id) ? "border-lime/60 bg-lime/10 text-ink" : "border-transparent text-ink-2 hover:bg-white/5 hover:text-ink"}`}>

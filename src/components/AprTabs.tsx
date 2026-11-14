@@ -19,7 +19,7 @@ export function AprTabs({ t, lang, active, updated }: { t: Dict; lang: Locale; a
   ];
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <nav className="scroll-x flex max-w-full gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" aria-label="APR Radar">
+      <nav className="scroll-x flex max-w-full gap-1 rounded-2xl border border-line bg-white/[0.02] p-1 sm:w-fit" aria-label="APR">
         {tabs.map((x) => (
           <Link
             key={x.id}

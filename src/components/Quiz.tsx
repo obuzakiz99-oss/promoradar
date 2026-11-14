@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import { LEARN } from "@/lib/i18n-learn";
@@ -21,6 +21,10 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
   const done = step === -1;
   // the beginner hub counts the quiz as passed once it has a result
   useEffect(() => { if (done) { try { localStorage.setItem("pr:learn:quiz", "1"); } catch { /* blocked storage */ } } }, [done]);
+  // keyboard / screen-reader users land on the new question and on the result (audit 14.11: focus fell to <body>)
+  const head = useRef<HTMLHeadingElement>(null);
+  const answered = Object.keys(ans).length;
+  useEffect(() => { if (answered > 0) head.current?.focus(); }, [answered]);
 
   const picks = useMemo(() => {
     if (!done) return [];
@@ -43,8 +47,8 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
     const q = Q.q[step];
     return (
       <div className="card mt-8 p-6 hover:transform-none sm:p-8">
-        <div className="flex gap-1.5">{Q.q.map((x, i) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-lime" : "bg-white/10"}`} />)}</div>
-        <h2 className="mt-6 text-xl font-bold sm:text-2xl">{q.text}</h2>
+        <div className="flex gap-1.5" aria-hidden="true">{Q.q.map((x, i) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-lime" : "bg-white/10"}`} />)}</div>
+        <h2 ref={head} tabIndex={-1} className="mt-6 text-xl font-bold focus:outline-none sm:text-2xl"><span className="sr-only">{({ uk: `Питання ${step + 1} з ${Q.q.length}: `, en: `Question ${step + 1} of ${Q.q.length}: `, ru: `Вопрос ${step + 1} из ${Q.q.length}: ` } as const)[lang]}</span>{q.text}</h2>
         <div className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {q.opts.map(([v, label]) => (
             <button key={v} type="button" onClick={() => setAns((s) => ({ ...s, [q.id]: v }))}
@@ -59,20 +63,20 @@ export function Quiz({ lang, items, startHref }: { lang: Locale; items: QuizItem
 
   return (
     <div className="mt-8">
-      <h2 className="font-display text-2xl font-semibold tracking-tight">{Q.result}</h2>
+      <h2 ref={head} tabIndex={-1} className="font-display text-2xl font-semibold tracking-tight focus:outline-none">{Q.result}</h2>
       {ans.account === "no" && <a href={startHref} className="mt-3 inline-block text-sm font-bold text-lime hover:underline">{Q.noAccount}</a>}
       {picks.length === 0 ? <p className="mt-4 text-ink-3">{Q.empty}</p> : (
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
           {picks.map((it) => {
             const m = income(it);
             return (
-              <a key={it.key} href={it.url} {...(it.external ? { target: "_blank", rel: "noopener" } : {})} className="card flex items-center gap-4 p-5">
+              <a key={it.key} href={it.url} {...(it.external ? { target: "_blank", rel: "noopener" } : {})} className="card flex flex-wrap items-center gap-x-4 gap-y-2 p-5 sm:flex-nowrap">
                 <VenueLogo v={it.venue} size={42} />
                 <div className="min-w-0 flex-1">
                   <div className="font-bold">{it.title}</div>
                   <div className="mt-0.5 text-sm text-ink-2">{Q.why[it.kind === "newEarn" ? "bonus" : it.kind]}</div>
                 </div>
-                <div className="shrink-0 text-right">
+                <div className="w-full pl-[58px] sm:w-auto sm:shrink-0 sm:pl-0 sm:text-right">
                   {it.apr !== undefined && <div className="font-mono text-xl font-bold text-lime">{it.apr >= 100 ? Math.round(it.apr) : it.apr.toFixed(1)}%</div>}
                   {m !== undefined && <div className="font-mono text-xs text-ink-2">≈ +{money(m)} {it.days && it.days < 30 ? Q.perDays.replace("{d}", String(it.days)) : Q.perMonth}</div>}
                 </div>

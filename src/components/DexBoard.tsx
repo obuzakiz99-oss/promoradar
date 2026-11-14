@@ -161,8 +161,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       </div>
 
       {/* filters */}
-      <div className="relative z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl sm:sticky sm:top-16 sm:-mx-6 sm:px-6">
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={A.searchPool}
+      <div className="relative z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
+        <input value={q} onChange={(e) => setQ(e.target.value)} aria-label={A.search} placeholder={A.searchPool}
           className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
         <Select label={A.chain} value={chain} onChange={setChain} className={sel}
           options={[{ value: "all", label: `${A.chain}: ${A.all}` }, ...chains.slice(0, 60).map((c) => ({ value: c, label: c }))]} />
@@ -177,7 +177,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
         <button className={toggle(noIl)} onClick={() => setNoIl((x) => !x)} aria-pressed={noIl}>{A.noIl}</button>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1 sm:ml-auto">
           {(["apy", "tvl", "reward"] as Sort[]).map((s) => (
-            <button key={s} onClick={() => setSort(s)} className={`h-full rounded-lg px-3 text-xs font-bold ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
+            <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s} className={`h-full rounded-lg px-3 text-xs font-bold ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
               {s === "apy" ? A.sortApy : s === "tvl" ? A.sortTvl : A.sortReward}
             </button>
           ))}

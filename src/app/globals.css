@@ -135,11 +135,11 @@ body {
 html, body { overflow-x: clip; }
 /* Stack tables (class "rt") become cards on phones (audit 14.11: key columns were off-screen in 358 px scrollers).
    Each <td data-l="…"> shows its column name above the value; .rt-wide spans both columns. */
-@media (max-width: 639px) {
+@media (max-width: 1023px) {
   table.rt { min-width: 0 !important; display: block; }
   table.rt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   table.rt tbody { display: block; }
-  table.rt tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 14px; padding: 14px 16px; }
+  table.rt tr { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 14px; padding: 14px 16px; }
   table.rt tr[hidden] { display: none; }
   table.rt td { display: block; padding: 0 !important; text-align: left !important; white-space: normal; }
   table.rt td.rt-wide { grid-column: 1 / -1; }
@@ -149,7 +149,17 @@ html, body { overflow-x: clip; }
 .card:has([aria-expanded="true"], details[open]) { position: relative; z-index: 30; transform: none; }
 
 /* base layer: Tailwind focus utilities can override it; no forced radius (it turned round chips into rectangles) */
-@layer base { :focus-visible { outline: 2px solid var(--color-lime); outline-offset: 2px; } }
+@layer base {
+  :focus-visible { outline: 2px solid var(--color-lime); outline-offset: 2px; }
+  /* sr-only text inside a control stays inside it (audit 14.11: "(плюсів: n, ризиків: m)" escaped the /dex/ table and
+     widened the page to 880 px); utilities (absolute, sticky…) still override this */
+  button, th, td, label { position: relative; }
+}
+/* Windows High Contrast: selected states and button edges keep a visible cue (audit 14.11) */
+@media (forced-colors: active) {
+  .chip[data-on="true"], [aria-pressed="true"], [aria-current="page"], [aria-current="true"], [aria-selected="true"] { outline: 2px solid Highlight; outline-offset: 1px; }
+  .btn, .chip { border: 1px solid ButtonText; }
+}
 /* a focused control never ends up under the sticky header or the phone tab bar (WCAG 2.4.11) */
 html { scroll-padding-top: 72px; }
 @media (max-width: 767px) { html { scroll-padding-bottom: 84px; } .scroll-x { scroll-padding-inline: 12px; } }

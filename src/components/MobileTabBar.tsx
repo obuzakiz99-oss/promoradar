@@ -25,7 +25,7 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
   const items: Array<{ href: string; label: string; icon: React.ReactNode; on: boolean; badge?: number }> = [
     { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "t", "bonuses"].includes(seg) },
     { href: `${base}/${lang}/launchpools/`, label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], icon: I.yield, on: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"].includes(seg) },
-    { href: `${base}/${lang}/calendar/`, label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], icon: I.cal, on: ["calendar", "unlocks"].includes(seg) },
+    { href: `${base}/${lang}/calendar/`, label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], icon: I.cal, on: ["calendar", "unlocks", "sales"].includes(seg) },
     { href: `${base}/${lang}/learn/`, label: { uk: "Новачкам", en: "Beginners", ru: "Новичкам" }[lang], icon: I.learn, on: ["learn", "best", "check"].includes(seg) },
     { href: `${base}/${lang}/my/`, label: { uk: "Мої", en: "Saved", ru: "Мои" }[lang], icon: I.star, on: seg === "my", badge: saved },
   ];

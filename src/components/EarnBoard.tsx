@@ -2,7 +2,7 @@
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
 import type { Venue } from "@/lib/types";
@@ -60,6 +60,15 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
   const qty = unit === "usd" ? (price ? typed / price : 0) : typed;
   const C = CALC[lang];
   const [q, setQ] = useState("");
+  const [hi, setHi] = useState(0);
+  // the list closes on a click outside, not on blur (blur fired before a keyboard/mouse pick could land)
+  const searchBox = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!q) return;
+    const off = (e: PointerEvent) => { if (!searchBox.current?.contains(e.target as Node)) setQ(""); };
+    document.addEventListener("pointerdown", off);
+    return () => document.removeEventListener("pointerdown", off);
+  }, [q]);
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
   const [exPick, setEx] = useState("all");
   const [openId, setOpenId] = useState<string | null>(null);   // exchange filter (chips + clickable exchange names)
@@ -97,19 +106,26 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <div className="flex flex-wrap gap-1.5">
             {popular.filter((c) => byCoin.has(c)).map((c) => (
-              <button key={c} onClick={() => setCoin(c)} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
+              <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
             ))}
           </div>
-          <div className="adv relative lg:ml-auto lg:w-56">
-            <input value={q} onChange={(e) => setQ(e.target.value.toUpperCase())} placeholder={A.search} onKeyDown={(e) => { if (e.key === "Escape") setQ(""); }} onBlur={() => setTimeout(() => setQ(""), 150)}
+          <div ref={searchBox} className="adv relative lg:ml-auto lg:w-56">
+            <input value={q} onChange={(e) => { setQ(e.target.value.toUpperCase()); setHi(0); }} placeholder={A.search} aria-label={A.search}
+              role="combobox" aria-expanded={matches.length > 0} aria-controls="earn-coins" aria-autocomplete="list" aria-activedescendant={matches.length ? `earn-coin-${hi}` : undefined}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setQ("");
+                else if (e.key === "ArrowDown" && matches.length) { e.preventDefault(); setHi((i) => Math.min(matches.length - 1, i + 1)); }
+                else if (e.key === "ArrowUp" && matches.length) { e.preventDefault(); setHi((i) => Math.max(0, i - 1)); }
+                else if (e.key === "Enter" && matches[hi]) { e.preventDefault(); setCoin(matches[hi]); setQ(""); }
+              }}
               className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-semibold text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
             {q.length >= 2 && matches.length === 0 && (
               <div className="absolute left-0 right-0 top-11 z-20 rounded-xl border border-line-2 bg-surface p-3 text-sm text-ink-3 shadow-2xl">{({ uk: `Для ${q} зараз немає продуктів Earn`, en: `No Earn products for ${q} right now`, ru: `Для ${q} сейчас нет продуктов Earn` } as const)[lang]}</div>
             )}
             {matches.length > 0 && (
-              <div className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
-                {matches.map((c) => (
-                  <button key={c} onClick={() => { setCoin(c); setQ(""); }} className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5">
+              <div id="earn-coins" role="listbox" className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
+                {matches.map((c, i) => (
+                  <button key={c} id={`earn-coin-${i}`} role="option" aria-selected={i === hi} tabIndex={-1} onClick={() => { setCoin(c); setQ(""); }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5 ${i === hi ? "bg-white/[0.07]" : ""}`}>
                     {c}<span className="font-mono text-xs text-ink-3">{byCoin.get(c)?.length ?? ""}</span>
                   </button>
                 ))}
@@ -124,14 +140,14 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         <h2 className="font-display text-2xl font-semibold tracking-tight">{coin} <span className="text-ink-3">· {list.length} {A.offers}</span></h2>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1">
           {(["all", "flexible", "fixed", "onchain"] as const).map((x) => (
-            <button key={x} onClick={() => setType(x)} className={`h-full rounded-lg px-3 text-xs font-bold ${type === x ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>{x === "all" ? A.all : A.type[x]}</button>
+            <button key={x} onClick={() => setType(x)} aria-pressed={type === x} className={`h-full rounded-lg px-3 text-xs font-bold ${type === x ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>{x === "all" ? A.all : A.type[x]}</button>
           ))}
         </div>
       </div>
       {/* exchange chips — tap to see only that exchange */}
       {coinExchanges.length > 1 && (
         <div className="scroll-x mt-3 flex gap-1.5 md:flex-wrap">
-          <button onClick={() => setEx("all")} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
+          <button onClick={() => setEx("all")} aria-pressed={ex === "all"} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
           {coinExchanges.map((id) => (
             <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
               className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>

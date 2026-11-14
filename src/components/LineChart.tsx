@@ -51,7 +51,7 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
         ))}
       </svg>
         {ticks.map((v) => (
-          <span key={v} aria-hidden="true" className="absolute -translate-y-full pb-0.5 pl-1 font-mono text-xs leading-none text-ink-3" style={{ top: `${(Y(v) / H) * 100}%`, left: `${(L / W) * 100}%` }}>{fmt(v)}{unit}</span>
+          <span key={v} aria-hidden="true" className="absolute -translate-y-full rounded bg-bg/80 px-1 py-0.5 font-mono text-xs leading-none text-ink-3" style={{ top: `${(Y(v) / H) * 100}%`, left: `${(L / W) * 100}%` }}>{fmt(v)}{unit}</span>
         ))}
       </div>
       <div aria-hidden="true" className="mt-1 flex justify-between gap-2 text-xs text-ink-3" style={{ paddingLeft: `${(L / W) * 100}%`, paddingRight: `${(R / W) * 100}%` }}>
