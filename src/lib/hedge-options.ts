@@ -16,5 +16,8 @@ export function hedgeOptions(pools: PoolProject[], hedge: Record<string, Hedge>,
       feesPct: +(2 * Math.min(slip, 25) + 0.3).toFixed(2), maxUsd: x.maxStake ? x.maxStake * price : undefined,
     });
   }
-  return out.sort((a, b) => b.apr - a.apr);
+  // best net result first (pool APR + short funding over the pool's days, minus entry/exit costs) — the page opens on a
+  // preset that makes money, not on a high-APR pool whose hedge loses (audit 14.11: the first view was −47 %)
+  const net = (o: HedgeOption) => ((o.apr + o.fundingApr) * o.days) / 365 - o.feesPct;
+  return out.sort((a, b) => net(b) - net(a));
 }

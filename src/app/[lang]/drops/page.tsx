@@ -70,7 +70,8 @@ export default async function DropsPage({ params }: { params: Params }) {
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
               <div className="mt-5 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)]">
-                <div className="card p-5 hover:transform-none lg:sticky lg:top-24">
+                {/* phones: the promos come first, the how-to after them (audit 14.11: ~80 % explanation before 1–2 items) */}
+                <div className="card p-5 hover:transform-none max-lg:order-2 lg:sticky lg:top-24">
                   <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
                   <ol className="mt-3 space-y-2.5 text-sm">
                     {T.how.map((s, i) => (
@@ -79,7 +80,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                   </ol>
                   <p className="mt-4 border-t border-line pt-3 text-xs leading-relaxed text-ink-3"><Icon name="alert" /> <b className="text-ink-2">{P.risk}:</b> {T.risk}</p>
                 </div>
-                <div className="group">
+                <div className="group max-lg:order-1">
                   {list.length === 0 ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.none}</p> : (
                     <ul className="space-y-2">
                       {list.map((p, i) => (
