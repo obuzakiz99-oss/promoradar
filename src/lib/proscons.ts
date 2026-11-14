@@ -151,6 +151,9 @@ const usd = (n: number) => (n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ?
 const pct = (n: number) => { const a = Math.abs(n); return `${a >= 100 ? Math.round(n) : a >= 10 ? n.toFixed(1) : n.toFixed(2)}%`; };
 const sign = (n: number) => `${n > 0 ? "+" : ""}${pct(n)}`;
 
+/** Coins with deep books everywhere and long histories: no "thin order book", not "a new token" (audit 14.11: BTC, ETH, XAUT). */
+const BIG = new Set(["BTC", "ETH", "BNB", "SOL", "XRP", "TRX", "TON", "DOGE", "ADA", "XAUT", "PAXG", "WBTC", "WETH", "LTC", "BCH", "DOT", "AVAX", "LINK"]);
+
 function make(lang: Locale) {
   const d = D[lang];
   return (k: Key, x?: string | number, c?: string) => d[k].replace("{x}", String(x ?? "")).replace("{c}", c ?? "");
@@ -225,11 +228,11 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
       if ((hc.hedgedApr ?? 0) > 5) pros.push(f("hedgedPos", pct(hc.hedgedApr!)));
     } else cons.push(f("noPerp", "", pool.stake));
     const depth = ctx.hedge[pool.stake]?.spotDepthUsd;
-    if (depth !== undefined && depth < 20_000) cons.push(f("thinBook", usd(depth), pool.stake));
+    if (depth !== undefined && depth < 20_000 && !BIG.has(pool.stake) && !STABLE.has(pool.stake)) cons.push(f("thinBook", usd(depth), pool.stake));
   }
   if (pool.stake === p.token) cons.push(f("buyToken", "", p.token));
   if ((ctx.chgReward ?? 0) <= -10) cons.push(f("dump", sign(ctx.chgReward!), p.token));
-  else if (!STABLE.has(p.token) && pool.stake !== p.token && (ctx.chgReward ?? 0) < 0) cons.push(f("rewardNew", "", p.token));
+  else if (!STABLE.has(p.token) && !BIG.has(p.token) && pool.stake !== p.token && (ctx.chgReward ?? 0) < 0) cons.push(f("rewardNew", "", p.token));
   if (pool.aprStart && apr && pool.aprStart > apr * 1.3) cons.push(f("aprFalling", pct(pool.aprStart)));
   if (pool.minStake && ctx.price && pool.minStake * ctx.price >= 1000) cons.push(f("highMin", `${pool.minStake.toLocaleString("en-US")} ${pool.stake}`));
   if (pool.maxStake && ctx.price && pool.maxStake * ctx.price < 1000) cons.push(f("smallMax", usd(pool.maxStake * ctx.price)));

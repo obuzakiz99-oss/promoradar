@@ -54,7 +54,7 @@ const uk = {
     all: "Усі", chain: "Мережа", category: "Тип", stable: "Лише стейбли", noIl: "Без IL-ризику", minTvl: "Мін. TVL", searchPool: "Токен або протокол…",
     sortApy: "За APY", sortTvl: "За TVL", sortReward: "За винагородами",
     colPool: "Пул", colProto: "Протокол", colChain: "Мережа", colTvl: "TVL", colApy: "APY", colSplit: "База + винагороди", colAvg: "Сер. 30д",
-    il: "IL-ризик", stableTag: "стейбл", more: "Показати ще", shown: "показано", of: "з",
+    il: "Ризик непостійних втрат (IL)", stableTag: "стейбл", more: "Показати ще", shown: "показано", of: "з",
     dexNote: "APY змінюється щохвилини; високий APY часто тримається недовго. Пули з IL-ризиком можуть втратити вартість при русі ціни. Перевіряйте протокол самостійно.",
   },
   lp: {
@@ -272,7 +272,7 @@ const ru: Dict = {
     all: "Все", chain: "Сеть", category: "Тип", stable: "Только стейблы", noIl: "Без IL-риска", minTvl: "Мин. TVL", searchPool: "Токен или протокол…",
     sortApy: "По APY", sortTvl: "По TVL", sortReward: "По наградам",
     colPool: "Пул", colProto: "Протокол", colChain: "Сеть", colTvl: "TVL", colApy: "APY", colSplit: "База + награды", colAvg: "Ср. 30д",
-    il: "IL-риск", stableTag: "стейбл", more: "Показать ещё", shown: "показано", of: "из",
+    il: "Риск непостоянных потерь (IL)", stableTag: "стейбл", more: "Показать ещё", shown: "показано", of: "из",
     dexNote: "APY меняется каждую минуту; высокий APY редко держится долго. Пулы с IL-риском могут потерять стоимость при движении цены. Проверяйте протокол сами.",
   },
   lp: {

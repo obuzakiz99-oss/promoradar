@@ -22,6 +22,12 @@ const HX: Record<Locale, { title: string; leg: (c: string, sh: number, usd: stri
   en: { title: "Price hedge", leg: (c, sh, usd) => `Short ${c} for ${sh}% of the amount (${usd})`, apy: "APY with hedge", none: (c) => `No futures for ${c} — the price risk can't be hedged`, note: "Hedged APY is on all the money used: the deposit + margin for the short (2× leverage — half the short again). The short is opened once at entry: it removes the price direction, not impermanent loss if prices move far apart. Funding changes every hour; sell protocol-token rewards as they come.", short: "hedged" },
   ru: { title: "Хедж цены", leg: (c, sh, usd) => `Шорт ${c} на ${sh}% суммы (${usd})`, apy: "APY с хеджем", none: (c) => `На ${c} нет фьючерса — ценовой риск не захеджировать`, note: "APY с хеджем считается на весь капитал: взнос + маржа для шорта (плечо 2x — ещё половина суммы шорта). Шорт ставится один раз на входе: он снимает риск падения цены, но не непостоянную потерю, если цены сильно разойдутся. Фандинг меняется каждый час; награды в токене протокола лучше продавать сразу.", short: "с хеджем" },
 };
+// DefiLlama categories, named for the reader (audit 14.11: English labels on uk pages)
+const CAT_L: Record<Locale, Record<string, string>> = {
+  uk: { Dexs: "Біржі (DEX)", Lending: "Кредитування", Yield: "Дохідність", Derivatives: "Деривативи", "Liquid Staking": "Ліквідний стейкінг", CDP: "CDP (стейблкоїни під заставу)", "Yield Aggregator": "Агрегатори дохідності", "Liquidity manager": "Керування ліквідністю", Restaking: "Рестейкінг", "Basis Trading": "Базисна торгівля", RWA: "RWA (реальні активи)", Farm: "Фарм" },
+  en: {},
+  ru: { Dexs: "Биржи (DEX)", Lending: "Кредитование", Yield: "Доходность", Derivatives: "Деривативы", "Liquid Staking": "Ликвидный стейкинг", CDP: "CDP (стейблкоины под залог)", "Yield Aggregator": "Агрегаторы доходности", "Liquidity manager": "Управление ликвидностью", Restaking: "Рестейкинг", "Basis Trading": "Базисная торговля", RWA: "RWA (реальные активы)", Farm: "Фарм" },
+};
 const PC_SR: Record<Locale, (p: number, c: number) => string> = { uk: (p, c) => `плюсів: ${p}, ризиків: ${c}`, en: (p, c) => `pros: ${p}, risks: ${c}`, ru: (p, c) => `плюсов: ${p}, рисков: ${c}` };
 const GO: Record<Locale, (x: string) => string> = { uk: (x) => `Перейти на ${x}`, en: (x) => `Go to ${x}`, ru: (x) => `Перейти на ${x}` };
 const RISKS: Record<Locale, string> = { uk: "Плюси й ризики", en: "Pros & risks", ru: "Плюсы и риски" };
@@ -150,7 +156,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       {/* category tabs */}
       <div className="scroll-x flex gap-1.5 md:flex-wrap">
         {["all", "DEX", ...categories.filter((c) => c !== "DEX")].map((c) => (
-          <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : c}</button>
+          <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : (CAT_L[lang][c] ?? c)}</button>
         ))}
       </div>
 

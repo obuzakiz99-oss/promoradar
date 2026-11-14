@@ -231,7 +231,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
       act: { trade: (a, f) => `Торгуйте на суму від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a) => `Внесіть депозит від ${a}`, stake: (a) => `Застейкайте від ${a}`, hold: (a) => `Тримайте на рахунку від ${a}`, buy: (a) => `Купіть на суму від ${a}` },
-      free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Register / Join» на сторінці акції", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення", unknown: "Як отримати нагороду — дивіться в умовах (часто треба натиснути «Забрати»)",
+      free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Приєднатися» (Join / Register) на сторінці акції — обсяг до цього не рахується", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення", unknown: "Як отримати нагороду — дивіться в умовах (часто треба натиснути «Забрати»)",
     },
   },
   en: {
@@ -242,7 +242,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Sign up on ${v}${nw ? " (new account)" : ""}${kyc ? " and pass KYC" : ""}`,
       act: { trade: (a, f) => `Trade from ${a}${f ? " in futures" : ""}`, deposit: (a) => `Deposit from ${a}`, stake: (a) => `Stake from ${a}`, hold: (a) => `Hold from ${a} on your account`, buy: (a) => `Buy for ${a} or more` },
-      free: "Do the promo's tasks — no deposit", rank: "Trade: your leaderboard place decides the reward", join: "Press “Register / Join” on the promo page", auto: "The reward is credited automatically", manual: "Claim the reward by hand after the end", unknown: "How the reward is paid — see the rules (often you must press “Claim”)",
+      free: "Do the promo's tasks — no deposit", rank: "Trade: your leaderboard place decides the reward", join: "Press “Join / Register” on the promo page — volume before that does not count", auto: "The reward is credited automatically", manual: "Claim the reward by hand after the end", unknown: "How the reward is paid — see the rules (often you must press “Claim”)",
     },
   },
   ru: {
@@ -253,7 +253,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
       act: { trade: (a, f) => `Торгуйте на сумму от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a) => `Внесите депозит от ${a}`, stake: (a) => `Застейкайте от ${a}`, hold: (a) => `Держите на счёте от ${a}`, buy: (a) => `Купите на сумму от ${a}` },
-      free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Register / Join» на странице акции", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания", unknown: "Как получить награду — смотрите в условиях (часто нужно нажать «Забрать»)",
+      free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Участвовать» (Join / Register) на странице акции — объём до этого не учитывается", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания", unknown: "Как получить награду — смотрите в условиях (часто нужно нажать «Забрать»)",
     },
   },
 };
@@ -346,7 +346,7 @@ export default async function PromoPage({ params }: { params: Params }) {
     <span>
       <span className="text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}</span>
       {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd)})</span>}
-      <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>
+      {pu.text.trim() && <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>}
     </span>
   ) : <span className="font-normal text-ink-2">{R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
@@ -479,8 +479,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             ["gift", refBoth ? REF[lang].paidBoth : REF[lang].paid],
           ] : [
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
-            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
+            // join before trading: volume before the "Join" press does not count (audit 14.11)
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
+            ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
             ["gift", m.payout?.manual ? U.s.manual : m.payout?.auto ? U.s.auto : U.s.unknown],
           ];
           const tasks = det ? tasksOf(det.blocks) : [];
