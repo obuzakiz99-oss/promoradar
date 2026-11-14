@@ -143,6 +143,10 @@ html, body { overflow-x: clip; }
   table.rt tr[hidden] { display: none; }
   table.rt td { display: block; padding: 0 !important; text-align: left !important; white-space: normal; }
   table.rt td.rt-wide { grid-column: 1 / -1; }
+  table.rt tr { position: relative; }
+  table.rt td:first-child { position: static !important; background: none !important; box-shadow: none !important; }
+  .overflow-x-auto:has(> table.rt) { mask-image: none; -webkit-mask-image: none; }
+  table.rt td.rt-act { position: absolute; top: 10px; right: 10px; }
   table.rt td[data-l]::before { content: attr(data-l); display: block; margin-bottom: 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink-3); }
 }
 /* a card with an open menu / popover sits above its neighbours (audit 14.11: on /my/ the next row covered "Беру участь") */

@@ -171,7 +171,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td data-l={T.impact} className="px-4 py-3">
                           <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
                         </td>
-                        <td className="px-2 py-3 text-right">
+                        <td className="rt-act px-2 py-3 text-right">
                           {u.date > fetchedAt && <CalAdd lang={lang} file={`unlock-${u.sym}`} ev={{
                             uid: `unlock-${u.sym}-${u.date}`, at: deadlineReminder(u.date, fetchedAt),
                             title: CAL[lang].title(u.sym, compactUsd(u.usd), day(u.date, lang)),

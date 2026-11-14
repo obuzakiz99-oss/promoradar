@@ -38,7 +38,7 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
   return (
     <figure>
       {/* axis labels are HTML over the SVG (audit 14.11: SVG text scaled with the chart and was ~5 px on phones) */}
-      <div className="relative">
+      <div className="relative pl-12">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={series.map((s) => s.name).join(", ")}>
         {ticks.map((v) => (
           <line key={v} x1={L} x2={W - R} y1={Y(v)} y2={Y(v)} stroke="rgb(255 255 255 / 0.07)" />
@@ -51,10 +51,10 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
         ))}
       </svg>
         {ticks.map((v) => (
-          <span key={v} aria-hidden="true" className="absolute -translate-y-full rounded bg-bg/80 px-1 py-0.5 font-mono text-xs leading-none text-ink-3" style={{ top: `${(Y(v) / H) * 100}%`, left: `${(L / W) * 100}%` }}>{fmt(v)}{unit}</span>
+          <span key={v} aria-hidden="true" className="absolute left-0 w-11 -translate-y-1/2 text-right font-mono text-xs leading-none text-ink-3" style={{ top: `${(Y(v) / H) * 100}%` }}>{fmt(v)}{unit}</span>
         ))}
       </div>
-      <div aria-hidden="true" className="mt-1 flex justify-between gap-2 text-xs text-ink-3" style={{ paddingLeft: `${(L / W) * 100}%`, paddingRight: `${(R / W) * 100}%` }}>
+      <div aria-hidden="true" className="mt-1 flex justify-between gap-2 pl-12 text-xs text-ink-3">
         {dates.map((t) => <span key={t}>{new Date(t).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</span>)}
       </div>
       {legend && <figcaption className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-2">

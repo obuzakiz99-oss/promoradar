@@ -425,7 +425,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <section className="card mt-6 grid gap-6 p-6 hover:transform-none md:grid-cols-3">
               <div><h2 className="font-bold">{F.what}</h2><p className="mt-2 text-sm leading-relaxed text-ink-2">{F.whatT}</p></div>
               <div><h2 className="font-bold">{F.risk}</h2><ul className="mt-2 space-y-1.5 text-sm text-ink-2">{F.risks.map((x) => <li key={x} className="flex gap-2"><span className="text-amber">•</span>{x}</li>)}</ul></div>
-              <div><h2 className="font-bold">{F.how}</h2><ol className="mt-2 space-y-1.5 text-sm text-ink-2">{F.hows.map((x, i) => <li key={x} className="flex gap-2"><span className="font-mono text-lime">{i + 1}.</span>{x}</li>)}</ol>
+              <div><h2 className="font-bold">{F.how}</h2><ol className="mt-2 space-y-1.5 text-sm text-ink-2">{F.hows.map((x, i) => <li key={x} className="flex gap-2"><span className="shrink-0 whitespace-nowrap font-mono text-lime">{i + 1}.</span>{x}</li>)}</ol>
                 <a href={withBase(`/${lang}/dex/`)} className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-lime hover:underline">{F.more}</a></div>
             </section>
           );

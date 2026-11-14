@@ -109,7 +109,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
               <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
             ))}
           </div>
-          <div ref={searchBox} className="adv relative lg:ml-auto lg:w-56">
+          <div ref={searchBox} className="adv relative lg:ml-auto lg:w-56" onBlur={(e) => { if (!searchBox.current?.contains(e.relatedTarget as Node | null)) setQ(""); }}>
             <input value={q} onChange={(e) => { setQ(e.target.value.toUpperCase()); setHi(0); }} placeholder={A.search} aria-label={A.search}
               role="combobox" aria-expanded={matches.length > 0} aria-controls="earn-coins" aria-autocomplete="list" aria-activedescendant={matches.length ? `earn-coin-${hi}` : undefined}
               onKeyDown={(e) => {
@@ -125,7 +125,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             {matches.length > 0 && (
               <div id="earn-coins" role="listbox" className="absolute left-0 right-0 top-11 z-20 max-h-64 overflow-auto rounded-xl border border-line-2 bg-surface p-1 shadow-2xl">
                 {matches.map((c, i) => (
-                  <button key={c} id={`earn-coin-${i}`} role="option" aria-selected={i === hi} tabIndex={-1} onClick={() => { setCoin(c); setQ(""); }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5 ${i === hi ? "bg-white/[0.07]" : ""}`}>
+                  <button key={c} id={`earn-coin-${i}`} role="option" aria-selected={i === hi} tabIndex={-1} onMouseDown={(e) => e.preventDefault()} onClick={() => { setCoin(c); setQ(""); }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-bold hover:bg-white/5 ${i === hi ? "bg-white/[0.07]" : ""}`}>
                     {c}<span className="font-mono text-xs text-ink-3">{byCoin.get(c)?.length ?? ""}</span>
                   </button>
                 ))}

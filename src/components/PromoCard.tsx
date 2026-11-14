@@ -24,7 +24,7 @@ const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string;
   ru: { high: "Реально", mid: "Ожидаемо", low: "Оценка", apr: "на $1 000 сверх обычного earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
     why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
 };
-function ValueLine({ v, lang }: { v?: Value; lang: Locale }) {
+function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
   if (!v || v.net === undefined || v.gross === undefined) return null;
   const L = VAL[lang];
   const usd = (x: number) => (x >= 1000 ? compactUsd(x) : `$${x >= 10 ? Math.round(x) : x.toFixed(x >= 1 ? 1 : 2)}`);
@@ -34,7 +34,7 @@ function ValueLine({ v, lang }: { v?: Value; lang: Locale }) {
   return (
     <div title={title} className="mb-2 flex items-baseline gap-1.5 text-xs font-semibold text-ink-3">
       <span>{L[v.conf]}</span>
-      <span className={`font-mono text-sm font-bold ${tone}`}>{v.mech === "apr" ? "+" : "≈ "}{usd(v.net)}</span>
+      <span className={`font-mono font-bold ${big ? "text-xl text-lime" : `text-sm ${tone}`}`}>{v.mech === "apr" ? "+" : "≈ "}{usd(v.net)}</span>
       {v.mech === "apr" && <span>{L.apr}</span>}
     </div>
   );
@@ -99,6 +99,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
   const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
+  // audit 14.11: "$50 000" in big lime over a grey "≈ $10" read as what a beginner gets — the estimate leads then
+  const oversell = m.value?.net !== undefined && (m.perUser?.usd ?? 0) > 10 * Math.max(1, m.value.net);
   return (
     <article
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-lime ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
@@ -177,7 +179,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
 
       {/* footer */}
       <div className="mt-auto pt-5">
-        {!isFarm && <ValueLine v={m.value} lang={lang} />}
+        {!isFarm && <ValueLine v={m.value} lang={lang} big={oversell} />}
         <div className="flex items-end justify-between gap-3">
           {isFarm ? (
             <div>
@@ -188,7 +190,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
           ) : m.perUser && p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
+              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
               <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {p.reward.label}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
@@ -202,7 +204,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
           ) : m.perUser ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
+              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>
