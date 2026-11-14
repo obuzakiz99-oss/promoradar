@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -63,7 +63,7 @@ const chg = (x?: number) => (x === undefined ? <span className="text-ink-3">—<
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/history"), title: TOOLS[lang].histTitle, description: TOOLS[lang].histSub };
+  return withOg({ alternates: alt(lang, "/history"), title: TOOLS[lang].histTitle, description: TOOLS[lang].histSub });
 }
 
 export default async function HistoryPage({ params }: { params: Params }) {

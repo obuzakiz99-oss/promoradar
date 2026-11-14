@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = getDict(lang);
-  return { title: `Launchpool Radar — ${t.lp.title}`, description: t.lp.sub, alternates: alt(lang, "/launchpools") };
+  return withOg({ title: `Launchpool Radar — ${t.lp.title}`, description: t.lp.sub, alternates: alt(lang, "/launchpools") });
 }
 
 const EX_IDS = LP_API;

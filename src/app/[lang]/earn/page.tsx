@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = getDict(lang);
-  return { title: `${t.aprHub.tabEarn} — ${t.aprHub.earnTitle}`, description: t.aprHub.earnSub, alternates: alt(lang, "/earn") };
+  return withOg({ title: `${t.aprHub.tabEarn} — ${t.aprHub.earnTitle}`, description: t.aprHub.earnSub, alternates: alt(lang, "/earn") });
 }
 
 export default async function EarnPage({ params }: { params: Params }) {

@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -12,7 +12,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/learn/rewards"), title: REWARDS[lang].title, description: REWARDS[lang].sub };
+  return withOg({ alternates: alt(lang, "/learn/rewards"), title: REWARDS[lang].title, description: REWARDS[lang].sub });
 }
 
 const CASH_CLS = { yes: "bg-lime/10 text-lime", no: "bg-rose/10 text-rose", profit: "bg-amber/10 text-amber" } as const;

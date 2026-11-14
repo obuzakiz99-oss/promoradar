@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang, id } = await params;
   if (!isLocale(lang)) return {};
   const g = GUIDES[lang].find((x) => x.id === id);
-  return g ? { alternates: alt(lang, `/learn/guide/${id}`), title: g.title, description: g.sub } : {};
+  return g ? withOg({ alternates: alt(lang, `/learn/guide/${id}`), title: g.title, description: g.sub }) : {};
 }
 
 export default async function GuidePage({ params }: { params: Params }) {

@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -17,7 +17,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/insights"), title: PROX[lang].insTitle, description: PROX[lang].insSub };
+  return withOg({ alternates: alt(lang, "/insights"), title: PROX[lang].insTitle, description: PROX[lang].insSub });
 }
 
 const chg = (x: number | undefined, base: number) => {

@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -25,7 +25,7 @@ const DEFI = /\b(aave|on-?chain|defi|x ?layer|wallet|dex|futures|perp|vip|mena|c
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/learn/quiz"), title: LEARN[lang].quiz.title, description: LEARN[lang].quiz.sub };
+  return withOg({ alternates: alt(lang, "/learn/quiz"), title: LEARN[lang].quiz.title, description: LEARN[lang].quiz.sub });
 }
 
 const TYPE: Record<string, Record<string, string>> = {

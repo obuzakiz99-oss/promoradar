@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -25,7 +25,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/best"), title: TOOLS[lang].bestTitle, description: TOOLS[lang].bestSub };
+  return withOg({ alternates: alt(lang, "/best"), title: TOOLS[lang].bestTitle, description: TOOLS[lang].bestSub });
 }
 
 const dexVenue = (name: string, slug: string, logo?: string): Venue => {

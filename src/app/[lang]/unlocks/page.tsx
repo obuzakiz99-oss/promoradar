@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { TableTools } from "@/components/TableTools";
 import { CalAdd } from "@/components/CalAdd";
@@ -60,7 +60,7 @@ const X: Record<Locale, {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: X[lang].title, description: X[lang].sub, alternates: alt(lang, "/unlocks") };
+  return withOg({ title: X[lang].title, description: X[lang].sub, alternates: alt(lang, "/unlocks") });
 }
 
 const fmtNum = (n: number) => (n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);

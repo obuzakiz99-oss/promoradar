@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -113,7 +113,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const best = Math.max(0, ...p.pools.map((x) => x.apr ?? 0));
   const title = `${p.name} (${p.token}) Launchpool — ${ex}`;
   const description = [X[lang].title(stakes, p.token), best ? `APR ${fmtApr(best)}` : "", `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`].filter(Boolean).join(" · ");
-  return { title, description, alternates: alt(lang, `/lp/${slug}`) };
+  return withOg({ title, description, alternates: alt(lang, `/lp/${slug}`) });
 }
 
 /** Earnings for `stakeUsd` until the end, capped by the per-person maximum; undefined if no APR/price. */

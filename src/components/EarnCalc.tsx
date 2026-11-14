@@ -10,7 +10,7 @@ const STABLE = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/;
 const TX: Record<Locale, {
   title: string; sub: string; input: Record<"trade" | "deposit" | "stake" | "hold" | "buy" | "apr" | "any", string>;
   short: (x: string) => string; passed: string; tier: (r: string) => string; next: (x: string, r: string) => string; upTo: (r: string) => string;
-  share: string; fee: (x: string, pct: string) => string; net: (x: string) => string; netNeg: (x: string) => string; keep: string; keepVol: string;
+  share: string; fee: (x: string, pct: string) => string; net: (x: string) => string; netNeg: (x: string) => string; keep: string; keepLock: string; keepDual: string; keepVol: string;
   perDay: string; perMonth: string; untilEnd: string; note: string; days: (n: number) => string;
 }> = {
   uk: {
@@ -21,7 +21,7 @@ const TX: Record<Locale, {
     share: "Нагорода ділиться між учасниками — точну суму біржа порахує після кінця акції.",
     fee: (x, pct) => `Комісія біржі за цей обсяг ≈ ${x} (${pct} — залежить від вашого VIP-рівня і типу ордера).`,
     net: (x) => `Чистими після комісії ≈ ${x}.`, netNeg: (x) => `Комісія більша за нагороду: ${x}. Це варто лише якщо ви й так торгуєте.`,
-    keep: "Гроші лишаються вашими. Ризик — лише зміна ціни, якщо це не стейблкоїн.", keepVol: "Обсяг торгівлі — не витрата: ви купуєте і продаєте, витрачаєте лише комісію (і ризикуєте ціною під час угоди).",
+    keep: "Гроші лишаються вашими. Ризик — лише зміна ціни, якщо це не стейблкоїн.", keepLock: "Гроші заблоковані на строк продукту: якщо забрати раніше, відсотки згорають. Плюс ризик ціни, якщо це не стейблкоїн.", keepDual: "Це не депозит: біржа може повернути вам іншу монету за гіршим курсом, ніж зараз.", keepVol: "Обсяг торгівлі — не витрата: ви купуєте і продаєте, витрачаєте лише комісію (і ризикуєте ціною під час угоди).",
     perDay: "за день", perMonth: "за 30 днів", untilEnd: "до кінця акції", note: "Оцінка за опублікованими умовами. Біржа може змінити правила — перевіряйте оригінал.",
     days: (n) => `${n} дн.`,
   },
@@ -33,7 +33,7 @@ const TX: Record<Locale, {
     share: "The reward is shared between participants — the exchange calculates the exact amount after the end.",
     fee: (x, pct) => `Exchange fee for this volume ≈ ${x} (${pct} — depends on your VIP level and order type).`,
     net: (x) => `Net after fees ≈ ${x}.`, netNeg: (x) => `Fees exceed the reward: ${x}. Only worth it if you trade anyway.`,
-    keep: "The money stays yours. The only risk is the price moving, unless it's a stablecoin.", keepVol: "Trading volume isn't spent: you buy and sell, paying only fees (and price risk while in a trade).",
+    keep: "The money stays yours. The only risk is the price moving, unless it's a stablecoin.", keepLock: "The money is locked for the product's term: take it out early and the interest is lost. Plus price risk unless it's a stablecoin.", keepDual: "This is not a deposit: the exchange may pay you back in the other coin at a worse rate than now.", keepVol: "Trading volume isn't spent: you buy and sell, paying only fees (and price risk while in a trade).",
     perDay: "per day", perMonth: "per 30 days", untilEnd: "until the end", note: "Estimate from the published rules. The exchange may change them — check the original.",
     days: (n) => `${n} d`,
   },
@@ -45,7 +45,7 @@ const TX: Record<Locale, {
     share: "Награда делится между участниками — точную сумму биржа посчитает после окончания акции.",
     fee: (x, pct) => `Комиссия биржи за этот объём ≈ ${x} (${pct} — зависит от вашего VIP-уровня и типа ордера).`,
     net: (x) => `Чистыми после комиссии ≈ ${x}.`, netNeg: (x) => `Комиссия больше награды: ${x}. Это стоит того, только если вы и так торгуете.`,
-    keep: "Деньги остаются вашими. Риск — только изменение цены, если это не стейблкоин.", keepVol: "Объём торговли — не расход: вы покупаете и продаёте, тратите только комиссию (и рискуете ценой во время сделки).",
+    keep: "Деньги остаются вашими. Риск — только изменение цены, если это не стейблкоин.", keepLock: "Деньги заблокированы на срок продукта: если забрать раньше, проценты сгорают. Плюс риск цены, если это не стейблкоин.", keepDual: "Это не депозит: биржа может вернуть вам другую монету по худшему курсу, чем сейчас.", keepVol: "Объём торговли — не расход: вы покупаете и продаёте, тратите только комиссию (и рискуете ценой во время сделки).",
     perDay: "в день", perMonth: "за 30 дней", untilEnd: "до конца акции", note: "Оценка по опубликованным условиям. Биржа может изменить правила — проверяйте оригинал.",
     days: (n) => `${n} дн.`,
   },
@@ -58,7 +58,8 @@ const fmtOf = (lc: string) => {
 };
 
 /** "How much would I get" for one promo: threshold check, reward tier, exchange fees, net — or interest for APR promos. */
-export function EarnCalc({ lang, m, endsAt, now }: { lang: Locale; m: M; endsAt?: number; now: number }) {
+/** `lock`: a fixed-term / locked product or Dual Investment (read from the title and rules on the page) — changes the risk line. */
+export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; endsAt?: number; now: number; lock?: "lock" | "dual" }) {
   const T = TX[lang];
   const { usd, amt } = fmtOf(nfLocale(lang));
   const kind = m.aprPct !== undefined ? "apr" : m.minEntry?.kind ?? (m.tiers?.length ? "trade" : "any");
@@ -74,7 +75,7 @@ export function EarnCalc({ lang, m, endsAt, now }: { lang: Locale; m: M; endsAt?
     big = `+${usd(day * 30)} ${T.perMonth}`;
     lines.push({ text: `+${usd(day)} ${T.perDay} · ${m.aprPct}% APR` });
     if (left) lines.push({ text: `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });
-    lines.push({ text: T.keep, tone: "muted" });
+    lines.push({ text: lock === "dual" ? T.keepDual : lock === "lock" ? T.keepLock : T.keep, tone: lock ? "bad" : "muted" });
   } else {
     const min = m.minEntry?.amount ?? m.tiers?.[0]?.min ?? 0;
     let rewardUsd: number | undefined;

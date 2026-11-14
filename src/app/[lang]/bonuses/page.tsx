@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,7 +7,7 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { getPromos } from "@/lib/promos";
 import { VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
-import { compactUsd, noEmoji } from "@/lib/format";
+import { compactUsd, money, noEmoji } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PageHeader } from "@/components/PageHeader";
 import { withBase } from "@/lib/base";
@@ -20,15 +20,19 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/bonuses"), title: TOOLS[lang].bonusTitle, description: TOOLS[lang].bonusSub };
+  return withOg({ alternates: alt(lang, "/bonuses"), title: TOOLS[lang].bonusTitle, description: TOOLS[lang].bonusSub });
 }
 
 /** A promo counts as a new-user offer when it's a deposit/welcome bonus or explicitly targets newcomers. */
 // the same set as the "Бонуси" filter on the promo list (category bonus) plus anything marked "for new users" — audit 08.11:
 // the page showed 1 promo while the list filter said 29
-const isNewUser = (p: Promo) =>
+// audit 14.11: community / P2P-merchant / VIP / region-only campaigns are not new-user bonuses
+const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?)\b/i;
+const isNewUser = (p: Promo) => !p.meta?.geo?.only && !NOT_NEW.test(p.titleOrig ?? p.title) && (
   p.category === "bonus" || !!p.meta?.forNew
-  || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title));
+  || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title)));
+/** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
+const perHead = (p: Promo) => p.meta?.perUser?.usd ?? 0;
 
 export default async function Bonuses({ params }: { params: Params }) {
   const { lang } = await params;
@@ -38,9 +42,9 @@ export default async function Bonuses({ params }: { params: Params }) {
   const groups = new Map<string, Promo[]>();
   for (const p of promos.filter(isNewUser)) groups.set(p.venue.id, [...(groups.get(p.venue.id) ?? []), p]);
   const rows = [...groups].map(([id, list]) => {
-    const best = list.reduce((m, p) => ((p.reward?.usd ?? 0) > (m.reward?.usd ?? 0) ? p : m), list[0]);
-    return { id, list, best };
-  }).sort((a, b) => (b.best.reward?.usd ?? 0) - (a.best.reward?.usd ?? 0) || b.list.length - a.list.length);
+    const sorted = [...list].sort((a, b) => perHead(b) - perHead(a));
+    return { id, list: sorted, best: sorted[0] };
+  }).sort((a, b) => perHead(b.best) - perHead(a.best) || b.list.length - a.list.length);
 
   return (
     <>
@@ -58,14 +62,14 @@ export default async function Bonuses({ params }: { params: Params }) {
                     <div>
                       <div className="text-lg font-bold">{v.name}</div>
                       <div className="text-xs font-semibold text-ink-3">{T.colOffers}: {list.length}</div>
-                      {best.reward && <div className="mt-1 font-mono text-xl font-bold text-lime">{best.reward.usd ? compactUsd(best.reward.usd) : best.reward.label}</div>}
+                      {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best))}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{({ uk: "новачку", en: "per newcomer", ru: "новичку" } as const)[lang]}</span></div>}
                     </div>
                   </div>
                   <ul className="space-y-1.5 text-sm">
                     {list.slice(0, 5).map((p) => (
                       <li key={p.id} className="flex gap-2">
                         <span className="text-lime">•</span>
-                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words text-ink-2 hover:text-ink">{noEmoji(p.title)}{p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({p.reward.label})</span> : null}</Link>
+                        <Link href={`/${lang}/p/${slugOf(p)}`} className="break-words text-ink-2 hover:text-ink">{noEmoji(p.title)}{p.meta?.perUser ? <span className="ml-1.5 font-mono text-xs font-bold text-lime">({({ uk: "до", en: "up to", ru: "до" } as const)[lang]} {money(p.meta.perUser.amount, p.meta.perUser.unit, lang)})</span> : p.reward ? <span className="ml-1.5 font-mono text-xs font-bold text-ink-3">({({ uk: "фонд", en: "pool", ru: "фонд" } as const)[lang]} {p.reward.label})</span> : null}</Link>
                       </li>
                     ))}
                   </ul>

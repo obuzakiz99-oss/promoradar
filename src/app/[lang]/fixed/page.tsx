@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -17,7 +17,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/fixed"), title: PROX[lang].fixTitle, description: PROX[lang].fixSub };
+  return withOg({ alternates: alt(lang, "/fixed"), title: PROX[lang].fixTitle, description: PROX[lang].fixSub });
 }
 
 const usd = (x: number) => (x >= 1e9 ? `$${(x / 1e9).toFixed(1)}B` : `$${(x / 1e6).toFixed(1)}M`);

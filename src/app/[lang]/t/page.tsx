@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { PromoTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -20,7 +20,7 @@ const TX: Record<Locale, { title: string; sub: string; search: string; promos: s
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: TX[lang].title, description: TX[lang].sub, alternates: alt(lang, "/t") };
+  return withOg({ title: TX[lang].title, description: TX[lang].sub, alternates: alt(lang, "/t") });
 }
 
 export default async function Tokens({ params }: { params: Params }) {

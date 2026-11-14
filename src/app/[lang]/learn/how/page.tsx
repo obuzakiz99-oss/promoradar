@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -23,7 +23,7 @@ const PAGES: Record<string, string> = {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/learn/how"), title: LEARN[lang].how.title, description: LEARN[lang].how.sub };
+  return withOg({ alternates: alt(lang, "/learn/how"), title: LEARN[lang].how.title, description: LEARN[lang].how.sub });
 }
 
 export default async function LearnHow({ params }: { params: Params }) {

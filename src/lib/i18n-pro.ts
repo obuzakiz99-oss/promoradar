@@ -8,7 +8,7 @@ export const PROX: Record<Locale, {
   sinceTitle: string; sinceNew: (n: number) => string; sinceNone: string;
 }> = {
   uk: {
-    fundTitle: "Funding Radar", fundSub: "Фандинг безстрокових ф'ючерсів на 5 біржах у % річних і різниця між ними. Шорт там, де фандинг найвищий, і лонг там, де найнижчий, — заробіток на різниці без ризику ціни (carry).",
+    fundTitle: "Funding Radar", fundSub: "Фандинг безстрокових ф'ючерсів на 5 біржах у % річних і різниця між ними. Шорт там, де фандинг найвищий, і лонг там, де найнижчий, — заробіток на різниці майже без ризику ціни (carry), але фандинг може розвернутися.",
     fundHow: "Додатний фандинг = лонги платять шортам. Ставка змінюється кожен період нарахування — це поточне значення, а не гарантія.",
     coin: "Монета", spread: "Різниця", shortOn: "Шорт", longOn: "Лонг", vol: "Обсяг 24г", minVol: "Мін. обсяг", search: "Пошук монети…", all: "Усі", perYear: "/рік", every: "кожні {h} год", note: "Комісії входу/виходу на двох біржах (~0,2–0,4%) і ризик ліквідації однієї з ніг не враховані. Різні інтервали нарахування (1/4/8 год) уже приведені до річних.", down: "біржа недоступна", calm: "Без екстремальних (>300%)",
     fixTitle: "Фіксована дохідність (Pendle)", fixSub: "PT-токени Pendle на стейблкоїнах: купуєте зі знижкою — до дати погашення отримуєте відому наперед дохідність.", fixCols: ["Ринок", "Мережа", "Фікс. APY", "Погашення", "Ліквідність"], fixNote: "Фіксується лише дохідність. Якщо сам актив (особливо синтетичний стейблкоїн) втратить прив'язку — PT теж подешевшає. Продаж до погашення — за ринковою ціною.", fixGuide: "Як правильно вкласти — покрокова методичка", days: "дн.",
@@ -18,7 +18,7 @@ export const PROX: Record<Locale, {
     sinceTitle: "З вашого останнього візиту", sinceNew: (n) => `${n} нових акцій — позначені «нове для вас»`, sinceNone: "нових акцій немає",
   },
   en: {
-    fundTitle: "Funding Radar", fundSub: "Perpetual funding on 5 exchanges in % per year and the spread between them. Short where funding is highest and long where it's lowest — earning the difference without price risk (carry).",
+    fundTitle: "Funding Radar", fundSub: "Perpetual funding on 5 exchanges in % per year and the spread between them. Short where funding is highest and long where it's lowest — earning the difference with little price risk (carry), though funding can flip.",
     fundHow: "Positive funding = longs pay shorts. The rate changes every funding period — this is the current value, not a guarantee.",
     coin: "Coin", spread: "Spread", shortOn: "Short", longOn: "Long", vol: "24h volume", minVol: "Min volume", search: "Search coin…", all: "All", perYear: "/yr", every: "every {h}h", note: "Entry/exit fees on two exchanges (~0.2–0.4%) and liquidation risk on one leg aren't included. Different funding intervals (1/4/8h) are already annualised.", down: "exchange unavailable", calm: "Hide extremes (>300%)",
     fixTitle: "Fixed yield (Pendle)", fixSub: "Pendle PT tokens on stablecoins: buy at a discount and get a yield known in advance by maturity.", fixCols: ["Market", "Chain", "Fixed APY", "Maturity", "Liquidity"], fixNote: "Only the yield is fixed. If the asset itself (especially a synthetic stablecoin) depegs, PT falls too. Selling before maturity is at the market price.", fixGuide: "How to invest correctly — step-by-step guide", days: "d",
@@ -28,7 +28,7 @@ export const PROX: Record<Locale, {
     sinceTitle: "Since your last visit", sinceNew: (n) => `${n} new promos — marked "new for you"`, sinceNone: "no new promos",
   },
   ru: {
-    fundTitle: "Funding Radar", fundSub: "Фандинг бессрочных фьючерсов на 5 биржах в % годовых и разница между ними. Шорт там, где фандинг выше всего, и лонг там, где ниже, — заработок на разнице без риска цены (carry).",
+    fundTitle: "Funding Radar", fundSub: "Фандинг бессрочных фьючерсов на 5 биржах в % годовых и разница между ними. Шорт там, где фандинг выше всего, и лонг там, где ниже, — заработок на разнице почти без риска цены (carry), но фандинг может развернуться.",
     fundHow: "Положительный фандинг = лонги платят шортам. Ставка меняется каждый период начисления — это текущее значение, а не гарантия.",
     coin: "Монета", spread: "Разница", shortOn: "Шорт", longOn: "Лонг", vol: "Объём 24ч", minVol: "Мин. объём", search: "Поиск монеты…", all: "Все", perYear: "/год", every: "каждые {h} ч", note: "Комиссии входа/выхода на двух биржах (~0,2–0,4%) и риск ликвидации одной из ног не учтены. Разные интервалы начисления (1/4/8 ч) уже приведены к годовым.", down: "биржа недоступна", calm: "Без экстремальных (>300%)",
     fixTitle: "Фиксированная доходность (Pendle)", fixSub: "PT-токены Pendle на стейблкоинах: покупаете со скидкой — к дате погашения получаете известную заранее доходность.", fixCols: ["Рынок", "Сеть", "Фикс. APY", "Погашение", "Ликвидность"], fixNote: "Фиксируется только доходность. Если сам актив (особенно синтетический стейблкоин) потеряет привязку — PT тоже подешевеет. Продажа до погашения — по рыночной цене.", fixGuide: "Как правильно вложить — пошаговая методичка", days: "дн.",

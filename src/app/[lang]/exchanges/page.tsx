@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   // hidden for now (owner, 12.11): not in the menu or sitemap, and not indexed — remove `robots` to bring it back
-  return { title: TX[lang].title, description: TX[lang].sub, alternates: alt(lang, "/exchanges"), robots: { index: false, follow: false } };
+  return withOg({ title: TX[lang].title, description: TX[lang].sub, alternates: alt(lang, "/exchanges"), robots: { index: false, follow: false } });
 }
 
 export default async function Exchanges({ params }: { params: Params }) {

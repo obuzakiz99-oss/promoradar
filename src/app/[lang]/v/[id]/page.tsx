@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -30,7 +30,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang, id } = await params;
   if (!isLocale(lang) || !VENUES[id]) return {};
   const t = getDict(lang);
-  return { title: `${VENUES[id].name} — ${t.venue.promos}`, alternates: alt(lang, `/v/${id}`) };
+  const n = VENUES[id].name;
+  const description = ({
+    uk: `Акції ${n} зараз: бонуси, Earn, змагання й аірдропи — умови українською, як ${n} платить і що забирати вручну.`,
+    en: `${n} promos right now: bonuses, Earn, competitions and airdrops — plain-language terms, how ${n} pays and what to claim by hand.`,
+    ru: `Акции ${n} сейчас: бонусы, Earn, соревнования и аирдропы — условия по-русски, как ${n} платит и что забирать вручную.`,
+  } as const)[lang];
+  return withOg({ title: `${n} — ${t.venue.promos}`, description, alternates: alt(lang, `/v/${id}`) });
 }
 
 export default async function VenuePage({ params }: { params: Params }) {

@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import { lpSlug } from "@/lib/lpslug";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang, sym } = await params;
   if (!isLocale(lang)) return {};
   const T = TOKEN_TX[lang];
-  return { title: T.title(sym), description: T.desc(sym), alternates: alt(lang, `/t/${sym}`) };
+  return withOg({ title: T.title(sym), description: T.desc(sym), alternates: alt(lang, `/t/${sym}`) });
 }
 
 const UNLOCK_TX: Record<Locale, (d: string, left: string) => string> = { uk: (d, l) => `Наступний розлок: ${d} (через ${l})`, en: (d, l) => `Next unlock: ${d} (in ${l})`, ru: (d, l) => `Следующий разлок: ${d} (через ${l})` };

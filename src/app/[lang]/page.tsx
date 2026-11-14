@@ -32,7 +32,13 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const pinned = promos.filter((p) => pins.some((x) => x.id === p.id));
   const firstCards = [...pinned, ...[...promos].filter((p) => !pinned.includes(p)).sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || Number(!!b.sponsored) - Number(!!a.sponsored) || rankOf(b.meta?.value) - rankOf(a.meta?.value) || b.publishedAt - a.publishedAt).slice(0, 24)];
   // the hero's money figure: the most ONE person can get in a promo open to everyone (a prize-pool total says little)
-  const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && p.category !== "competition").map((p) => p.meta?.perUser?.usd ?? 0));
+  // (audit 14.11: a "win $30,000+" pool and an exchange-footer "$15,000 welcome rewards" were taken as per-person sums —
+  // a per-person figure counts only when it is below the promo's pool, or the promo has no pool and is a bonus/referral)
+  const perPersonOk = (p: (typeof promos)[number]) => {
+    const pu = p.meta?.perUser?.usd ?? 0, pool = p.reward?.usd;
+    return pu > 0 && !p.meta?.thin && (pool !== undefined ? pu < pool : p.category === "bonus" || p.category === "referral");
+  };
+  const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && p.category !== "competition" && perPersonOk(p)).map((p) => p.meta!.perUser!.usd!));
   const newDay = promos.filter((p) => p.publishedAt > fetchedAt - 86400_000).length;
   const venueCount = new Set(promos.filter((p) => p.venue.kind !== "airdrop").map((p) => p.venue.id)).size;
 

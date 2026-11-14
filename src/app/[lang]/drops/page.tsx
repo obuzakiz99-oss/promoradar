@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { noEmoji } from "@/lib/format";
 import { PromoTabs } from "@/components/SectionTabs";
@@ -21,7 +21,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: alt(lang, "/drops"), title: DROP_TEXT[lang].page.title, description: DROP_TEXT[lang].page.sub };
+  return withOg({ alternates: alt(lang, "/drops"), title: DROP_TEXT[lang].page.title, description: DROP_TEXT[lang].page.sub });
 }
 
 const FIRST = 8;

@@ -59,7 +59,16 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const p = findBySlug((await getPromos(lang)).promos, slug);
   if (!p) return { title: "404" };
   const t = getDict(lang);
-  const bits = [p.venue.name, t.cat[p.category], p.reward?.label, p.meta?.apr ? `+${p.meta.apr}% APR` : ""].filter(Boolean).join(" · ");
+  // a real sentence instead of "Bybit · Реферальна · 250 USDT" (audit 14.11): reward, what to do, deadline, what the page gives
+  const D = ({
+    uk: { per: (x: string) => `до ${x} на 1 людину`, pool: (x: string) => `фонд ${x}`, till: (d: string) => `до ${d}`, tail: "Умови українською, ризики і як забрати нагороду." },
+    en: { per: (x: string) => `up to ${x} per person`, pool: (x: string) => `pool ${x}`, till: (d: string) => `until ${d}`, tail: "Plain-language terms, risks and how to claim." },
+    ru: { per: (x: string) => `до ${x} на 1 человека`, pool: (x: string) => `фонд ${x}`, till: (d: string) => `до ${d}`, tail: "Условия по-русски, риски и как забрать награду." },
+  } as const)[lang];
+  const pm = p.meta;
+  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(p.reward.label) : pm?.apr ? `+${pm.apr}% APR` : "";
+  const till = p.endsAt ? D.till(new Date(p.endsAt).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" })) : "";
+  const bits = `${p.venue.name} · ${t.cat[p.category]}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
   const head = sentenceCase(noEmoji(p.title)).replace(/\s{2,}/g, " ").trim();
   const short = head.length > 90 ? `${head.slice(0, 88).replace(/[\s,.:;—–-]+\S*$/, "")}…` : head;
@@ -212,7 +221,7 @@ const UI_TX: Record<Locale, {
   reward: string; action: string; time: string; who: string; allUsers: string; cat: Record<"competition" | "referral" | "airdrop" | "listing" | "bonus" | "earn" | "other", string>; fund: string; noAmount: string; noDeposit: string; tasks: string; seeRules: string;
   left: string; startsIn: string; noEnd: string; forAll: string; uaOk: string; notUA: string; onlyNew: string; kyc: string; region: (r: string) => string;
   todo: string; good: string; more: string; ex: string; exTasks: string; quote: string;
-  s: { reg: (v: string, kyc: boolean, nw: boolean) => string; act: Record<"trade" | "deposit" | "stake" | "hold" | "buy", (a: string, fut: boolean) => string>; free: string; rank: string; join: string; auto: string; manual: string };
+  s: { reg: (v: string, kyc: boolean, nw: boolean) => string; act: Record<"trade" | "deposit" | "stake" | "hold" | "buy", (a: string, fut: boolean) => string>; free: string; rank: string; join: string; auto: string; manual: string; unknown: string };
 }> = {
   uk: {
     reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", allUsers: "Усі користувачі",
@@ -222,7 +231,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Зареєструйтесь на ${v}${nw ? " (новий акаунт)" : ""}${kyc ? " і пройдіть KYC" : ""}`,
       act: { trade: (a, f) => `Наторгуйте від ${a}${f ? " на ф'ючерсах" : ""}`, deposit: (a) => `Внесіть депозит від ${a}`, stake: (a) => `Застейкайте від ${a}`, hold: (a) => `Тримайте на рахунку від ${a}`, buy: (a) => `Купіть на суму від ${a}` },
-      free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Register / Join» на сторінці акції", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення",
+      free: "Виконайте завдання акції — без вкладень", rank: "Торгуйте: місце в рейтингу визначає нагороду", join: "Натисніть «Register / Join» на сторінці акції", auto: "Нагорода прийде на рахунок автоматично", manual: "Заберіть нагороду вручну після завершення", unknown: "Як отримати нагороду — дивіться в умовах (часто треба натиснути «Забрати»)",
     },
   },
   en: {
@@ -233,7 +242,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Sign up on ${v}${nw ? " (new account)" : ""}${kyc ? " and pass KYC" : ""}`,
       act: { trade: (a, f) => `Trade from ${a}${f ? " in futures" : ""}`, deposit: (a) => `Deposit from ${a}`, stake: (a) => `Stake from ${a}`, hold: (a) => `Hold from ${a} on your account`, buy: (a) => `Buy for ${a} or more` },
-      free: "Do the promo's tasks — no deposit", rank: "Trade: your leaderboard place decides the reward", join: "Press “Register / Join” on the promo page", auto: "The reward is credited automatically", manual: "Claim the reward by hand after the end",
+      free: "Do the promo's tasks — no deposit", rank: "Trade: your leaderboard place decides the reward", join: "Press “Register / Join” on the promo page", auto: "The reward is credited automatically", manual: "Claim the reward by hand after the end", unknown: "How the reward is paid — see the rules (often you must press “Claim”)",
     },
   },
   ru: {
@@ -244,7 +253,7 @@ const UI_TX: Record<Locale, {
     s: {
       reg: (v, kyc, nw) => `Зарегистрируйтесь на ${v}${nw ? " (новый аккаунт)" : ""}${kyc ? " и пройдите KYC" : ""}`,
       act: { trade: (a, f) => `Наторгуйте от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a) => `Внесите депозит от ${a}`, stake: (a) => `Застейкайте от ${a}`, hold: (a) => `Держите на счёте от ${a}`, buy: (a) => `Купите на сумму от ${a}` },
-      free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Register / Join» на странице акции", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания",
+      free: "Выполните задания акции — без вложений", rank: "Торгуйте: место в рейтинге определяет награду", join: "Нажмите «Register / Join» на странице акции", auto: "Награда придёт на счёт автоматически", manual: "Заберите награду вручную после окончания", unknown: "Как получить награду — смотрите в условиях (часто нужно нажать «Забрать»)",
     },
   },
 };
@@ -295,6 +304,10 @@ export default async function PromoPage({ params }: { params: Params }) {
   const R = RULES_TX[lang];
   const own = titleOf(p, lang);
   const det = details?.[p.id];
+  // locked / fixed-term products and Dual Investment carry more than price risk (audit 14.11: "the only risk is the price")
+  const ruleText = `${p.titleOrig ?? p.title} ${(det?.blocks ?? []).slice(0, 60).map((b) => b.x).join(" ")}`;
+  const lock: "lock" | "dual" | undefined = /\bdual (investment|asset|currency)|двовалют|двухвалют/i.test(ruleText) ? "dual"
+    : /\b(locked|fixed[- ]term|lock[- ]?up|lock period|\d+[- ]day (fixed|locked|term)|early redemption|redeem(ed)? early|достроков|заблоков)/i.test(ruleText) ? "lock" : undefined;
   const ex = faqs?.[p.id]?.[lang];
   const faq = ex?.faq ?? [];
   const FQ = FAQ_TX[lang];
@@ -468,7 +481,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             ["user", U.s.reg(p.venue.name, kyc, !!m.forNew)],
             ...(m.noDeposit ? [["checkCircle", U.s.free] as [IconName, string]] : m.minEntry ? [[m.minEntry.kind === "trade" ? "trend" : "cash", U.s.act[m.minEntry.kind](amt, !!m.futures)] as [IconName, string]] : p.category === "competition" ? [["trend", U.s.rank] as [IconName, string]] : []),
             ...(needsJoin ? [["target", U.s.join] as [IconName, string]] : []),
-            ["gift", m.payout?.manual ? U.s.manual : U.s.auto],
+            ["gift", m.payout?.manual ? U.s.manual : m.payout?.auto ? U.s.auto : U.s.unknown],
           ];
           const tasks = det ? tasksOf(det.blocks) : [];
           const warn = (ex?.watch?.length ? ex.watch : (det?.facts ?? []).map((f) => f.text).filter((x) => /\b(first|only|exclusive|not eligible|excluded|cannot|limited)\b|перш|лише|виключно|не можуть|обмежен|только|первых/i.test(x)))
@@ -526,7 +539,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* "how much would I get" — only when the rules give something to calculate with */}
         {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || m.tiers?.length || m.minEntry || m.perUser) && (
-          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} />
+          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} />
         )}
 
         {/* everything below is detail: folded by default (audit 12.11); #rules opens it (Chrome expands <details> on a fragment) */}

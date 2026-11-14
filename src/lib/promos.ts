@@ -30,7 +30,8 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
   if (!dict || !Object.keys(dict).length) return c;
   const tr = (s: string) => dict[s.trim()] ?? s;
   const promos = c.promos.map((p) => {
-    const t = dict[p.title.trim()];
+    // DeFi pool names ("USDS · GROVE Farming Pool", "USDE · Plus") are names, not sentences (audit 14.11: «Сільськогосподарський пул»)
+    const t = p.category === "farming" ? undefined : dict[p.title.trim()];
     const m = p.meta;
     return {
       ...p, ...(t ? { title: t, titleOrig: p.title } : {}),
@@ -172,7 +173,7 @@ async function getPromosLive(): Promise<Collected> {
   try { if (fs.existsSync(path.join(process.cwd(), "data"))) fs.writeFileSync(path.join(process.cwd(), "data", "hidden-promos.json"), JSON.stringify({ at: now, items: hidden }, null, 1)); } catch { /* read-only */ }
   // translations (DeepL Free, cached in data/translations.json) — most visible texts first, full rules last
   const texts: string[] = [];
-  for (const p of promos) texts.push(p.title);
+  for (const p of promos) if (p.category !== "farming") texts.push(p.title);
   for (const p of promos) {
     const d = details[p.id];
     if (p.meta?.perUser) texts.push(p.meta.perUser.text);

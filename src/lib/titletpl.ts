@@ -17,9 +17,9 @@ const DO: Record<L, Record<"trade" | "deposit" | "stake" | "hold" | "buy", (x: s
 };
 const FREE: Record<L, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const KIND: Record<L, Record<Promo["category"], string>> = {
-  uk: { competition: "Змагання", airdrop: "Аірдроп", bonus: "Бонус", earn: "Earn", listing: "Лістинг", referral: "Реферальна програма", other: "Розіграш", farming: "Фарм" },
-  en: { competition: "Competition", airdrop: "Airdrop", bonus: "Bonus", earn: "Earn", listing: "Listing", referral: "Referral programme", other: "Giveaway", farming: "Farm" },
-  ru: { competition: "Соревнование", airdrop: "Аирдроп", bonus: "Бонус", earn: "Earn", listing: "Листинг", referral: "Реферальная программа", other: "Розыгрыш", farming: "Фарм" },
+  uk: { competition: "Змагання", airdrop: "Аірдроп", bonus: "Бонус", earn: "Earn", listing: "Лістинг", referral: "Реферальна програма", other: "Акція", farming: "Фарм" },
+  en: { competition: "Competition", airdrop: "Airdrop", bonus: "Bonus", earn: "Earn", listing: "Listing", referral: "Referral programme", other: "Promo", farming: "Farm" },
+  ru: { competition: "Соревнование", airdrop: "Аирдроп", bonus: "Бонус", earn: "Earn", listing: "Листинг", referral: "Реферальная программа", other: "Акция", farming: "Фарм" },
 };
 const PER: Record<L, (x: string) => string> = { uk: (x) => `до ${x} на 1 людину`, en: (x) => `up to ${x} per person`, ru: (x) => `до ${x} на 1 человека` };
 const POOL: Record<L, (x: string) => string> = { uk: (x) => `фонд ${x}`, en: (x) => `pool ${x}`, ru: (x) => `фонд ${x}` };
@@ -31,7 +31,7 @@ const PRODUCTS: Array<[RegExp, Record<L, string>]> = [
   [/\bcopy[- ]?trad/i, { uk: "копітрейдинг", en: "copy trading", ru: "копитрейдинг" }],
   [/\bmargin\b/i, { uk: "маржа", en: "margin", ru: "маржа" }],
   [/\boptions\b/i, { uk: "опціони", en: "options", ru: "опционы" }],
-  [/\b(stocks?|equities|tradfi|xstocks?)\b/i, { uk: "акції", en: "stocks", ru: "акции" }],
+  [/\b(stocks?|equities|tradfi|xstocks?)\b/i, { uk: "токенізовані акції", en: "tokenized stocks", ru: "токенизированные акции" }],
   [/\bP2P\b/, { uk: "P2P", en: "P2P", ru: "P2P" }],
   [/\b(launchpool|gempool|poolx|candybomb|launchpad|jumpstart)\b/i, { uk: "Launchpool", en: "Launchpool", ru: "Launchpool" }],
   [/\bquiz\b/i, { uk: "вікторина", en: "quiz", ru: "викторина" }],
@@ -41,10 +41,11 @@ const PRODUCTS: Array<[RegExp, Record<L, string>]> = [
 const PRIZE = /\b(iPhone(?: \d+)?(?: Pro(?: Max)?)?|MacBook(?: \w+)?|iPad(?: \w+)?|PlayStation ?\d?|Tesla(?: Model \w)?|Rolex|AirPods(?: \w+)?)\b/i;
 // tickers: $ABC, or 2–10 capitals/digits that are not ordinary words
 const STOP = new Set("NEW NOW LIVE THE AND FOR WITH VIP APR APY TGE CEX DEX UTC KYC AMA FAQ USD USDT USDC FDUSD UP TO OF IN ON AT BY GET WIN JOIN EARN SHARE TRADE TRADING DAY DAYS TOP HOT EXCLUSIVE ONLY MENA SEA CIS EU UK US WEEK FREE BONUS NFT AI ALL YOUR OUR YOU IS IT ARE BE DEPOSIT SPOT TASK TASKS REWARD REWARDS PRIZE POOL ROUND PHASE SEASON EVENT CAMPAIGN PROMO PROMOTION PART ETF GO VS IPO PRE DOWN".split(" "));
-function subject(title: string, lang: L, venue: string): string | undefined {
+function subject(title: string, lang: L, venue: string, noPrize = false): { text: string; specific: boolean } | undefined {
   const parts: string[] = [];
-  const prize = title.match(PRIZE)?.[1];
-  if (prize) parts.push(prize);
+  let specific = false;
+  const prize = noPrize ? undefined : title.match(PRIZE)?.[1];
+  if (prize) { parts.push(prize); specific = true; }
   for (const [re, w] of PRODUCTS) if (re.test(title) && parts.length < 2) parts.push(w[lang]);
   const ven = venue.toUpperCase().replace(/[^A-Z0-9]/g, "");
   const words = title.split(/\s+/);
@@ -56,9 +57,9 @@ function subject(title: string, lang: L, venue: string): string | undefined {
     // a bare capital word counts only next to ordinary words ("Trade SIAI to win"), not inside an ALL-CAPS headline
     const calm = (w?: string) => !!w && /[a-zа-я]/.test(w);
     if (!words[i].startsWith("$") && !calm(words[i - 1]) && !calm(words[i + 1])) continue;
-    if (!parts.includes(t)) parts.push(t);
+    if (!parts.includes(t)) { parts.push(t); specific = true; }
   }
-  return parts.length ? parts.slice(0, 2).join(", ") : undefined;
+  return parts.length ? { text: parts.slice(0, 2).join(", "), specific } : undefined;
 }
 
 // the parser's label is language-neutral ("2,000 USDC"); amounts under 10K get the reader's format ("2 000 USDC"),
@@ -69,10 +70,21 @@ const cyr = (s: string) => /[а-яіїєґё]/i.test(s);
 export function titleOf(p: Promo, lang: L): string | undefined {
   const m = p.meta ?? {};
   if (p.category === "farming" || p.venue.kind === "airdrop") return undefined;
+  const head = p.titleOrig ?? p.title;
+  // audit 14.11: "Earn: USDG → +4.25% APR" paired the wrong coin with the wrong rate in a headline listing several —
+  // an Earn headline with several coins or rates keeps its own (translated) wording; APY stays APY, "up to" stays
+  const rates = head.match(/\d+(?:\.\d+)?\s?%/g) ?? [];
+  const many = p.category === "earn" && (new Set(rates).size > 1 || (head.match(/\b[A-Z][A-Z0-9]{1,9}\b(?=\s*(?:,|、|&|and|\/))/g) ?? []).length > 0);
+  if (many && showHeadline(p, lang)) return undefined;
+  const apy = /\bAPY\b/.test(head) && !/\bAPR\b/.test(head) ? "APY" : "APR";
+  const upTo = /\bup to\b/i.test(head) ? ({ uk: "до ", en: "up to ", ru: "до " } as const)[lang] : "";
   const much = m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
-    : m.aprPct !== undefined ? `+${m.aprPct}% APR` : p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined;
+    : m.aprPct !== undefined ? `${upTo || "+"}${m.aprPct}% ${apy}` : p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined;
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;
-  const subj = subject(p.titleOrig ?? p.title, lang, p.venue.name);
+  // an iPhone in an Earn headline is a side prize, not what the product pays
+  const sj = subject(head, lang, p.venue.name, p.category === "earn");
+  // only a product word ("Змагання: WSOT", "Аірдроп: ф'ючерси") says less than the translated headline (audit 14.11)
+  const subj = sj && (sj.specific || much || !showHeadline(p, lang)) ? sj.text : undefined;
   // audit 12.11: "Змагання → фонд 1M USDC" says nothing the reward line doesn't — when we can't name the subject
   // and the headline reads in this language ("Binance Pick: прогнозуйте…"), the headline is the better title
   if (!subj && showHeadline(p, lang)) return undefined;

@@ -16,7 +16,7 @@ const uk = {
   // best
   bestTitle: "Кращий вибір зараз", bestSub: "Готові варіанти для суми, яку ви вводите. Оновлюється разом із сайтом.",
   amount: "Сума", safe: "Стейблкоїни", safeSub: "Earn бірж і пули стейблкоїнів: ціна стабільна, але у DeFi є ризик протоколу і відв'язки від долара",
-  hedged: "Launchpool з хеджем", hedgedSub: "Дельта-нейтрально: стейк + шорт, ціна токена не важлива",
+  hedged: "Launchpool з хеджем", hedgedSub: "Стейк + шорт: ціна токена майже не впливає, але різкий ріст може ліквідувати шорт",
   promos: "Найбільші призові фонди", promosSub: "Акції з найбільшими фондами, які ще тривають",
   perYear: "/рік", perMonth: "≈ за місяць", est: "оцінка", none: "Зараз немає варіантів",
   // calendar
@@ -29,7 +29,7 @@ const uk = {
   earned: "Заробив, $", note: "Нотатка", totalEarned: "Усього заробили", active: "активних", deadlineSoon: "дедлайн скоро",
   emptyMy: "Поки нічого не збережено. Натисніть ★ на будь-якій акції.", export: "Експорт CSV", gone: "Акція вже не активна",
   // hedge
-  hedgeTitle: "Калькулятор дельта-нейтральної стратегії", hedgeSub: "Стейкаєте монету в Launchpool і одночасно шортите її на ф'ючерсах — заробляєте APR без ризику ціни.",
+  hedgeTitle: "Калькулятор хеджу: стейк + шорт", hedgeSub: "Стейкаєте монету в Launchpool і одночасно шортите її на ф'ючерсах — заробляєте APR майже без ризику ціни. Але різкий ріст може ліквідувати шорт, а фандинг — стати від'ємним.",
   pickPool: "Пул", custom: "Свої параметри", capital: "Сума в стейк, $", price: "Ціна монети, $", apr: "APR пулу, %", days: "Днів", funding: "Фандинг шорту, %/рік (+ отримуєш)",
   leverage: "Плече шорту", mmr: "Маржа обслуговування, %", fees: "Комісії + прослизання (вхід+вихід), %",
   plan: "План", step1: "Купіть {q} {c} на споті (~{a})", step2: "Застейкайте {q} {c} у Launchpool", step3: "Відкрийте шорт {q} {c} на {v} з плечем {l}x — маржа {m}",
@@ -39,7 +39,7 @@ const uk = {
   hedgeWarn: "Ризики: різкий ріст ціни може ліквідувати шорт, фандинг може стати від'ємним, APR падає зі зростанням пулу. Тримайте запас маржі.",
   // bonuses
   bonusTitle: "Бонуси для нових користувачів", bonusSub: "Актуальні welcome-акції бірж, зібрані з їхніх офіційних оголошень.",
-  colEx: "Біржа", colBest: "Максимальний бонус", colOffers: "Акцій", colJoin: "Отримати", noBonus: "Зараз немає активних акцій для новачків",
+  colEx: "Біржа", colBest: "Максимальний бонус", colOffers: "Акцій", colJoin: "На сайт біржі", noBonus: "Зараз немає активних акцій для новачків",
   // history
   histTitle: "Історія APR", histSub: "Знімки кожні ~30 хвилин. Історія накопичується з моменту запуску.",
   histEarn: "Найкраща ставка Earn по монеті", histPools: "APR активних Launchpool", noHistory: "Історія ще збирається — з'явиться після кількох оновлень.",
@@ -61,7 +61,7 @@ const en: T = {
   open: "Open",
   bestTitle: "Best picks now", bestSub: "Ready-made options for the amount you enter. Refreshes with the site.",
   amount: "Amount", safe: "Stablecoins", safeSub: "Exchange Earn and stablecoin pools: stable price, but DeFi carries protocol and de-peg risk",
-  hedged: "Launchpool with a hedge", hedgedSub: "Delta-neutral: stake + short, token price doesn't matter",
+  hedged: "Launchpool with a hedge", hedgedSub: "Stake + short: the token price barely matters, but a sharp rise can liquidate the short",
   promos: "Biggest prize pools", promosSub: "Live campaigns with the largest pools",
   perYear: "/yr", perMonth: "≈ per month", est: "estimate", none: "Nothing right now",
   calTitle: "Promo calendar", calSub: "What starts and ends soon.",
@@ -71,7 +71,7 @@ const en: T = {
   status: { saved: "Saved", joined: "Joined", done: "Done", skipped: "Skipped" },
   earned: "Earned, $", note: "Note", totalEarned: "Total earned", active: "active", deadlineSoon: "deadline soon",
   emptyMy: "Nothing saved yet. Tap ★ on any promo.", export: "Export CSV", gone: "No longer live",
-  hedgeTitle: "Delta-neutral strategy calculator", hedgeSub: "Stake a coin in a Launchpool and short it on perps at the same time — earn the APR without price risk.",
+  hedgeTitle: "Hedge calculator: stake + short", hedgeSub: "Stake a coin in a Launchpool and short it on perps at the same time — earn the APR with little price risk. A sharp rise can still liquidate the short, and funding can turn negative.",
   pickPool: "Pool", custom: "Custom", capital: "Amount to stake, $", price: "Coin price, $", apr: "Pool APR, %", days: "Days", funding: "Short funding, %/yr (+ = you receive)",
   leverage: "Short leverage", mmr: "Maintenance margin, %", fees: "Fees + slippage (in+out), %",
   plan: "Plan", step1: "Buy {q} {c} on spot (~{a})", step2: "Stake {q} {c} in the Launchpool", step3: "Open a {q} {c} short on {v} at {l}x — margin {m}",
@@ -80,7 +80,7 @@ const en: T = {
   rewards: "Rewards for the period", fundingTotal: "Funding for the period", costs: "Fees and slippage", net: "Net result", netApr: "Net APR on all capital",
   hedgeWarn: "Risks: a sharp pump can liquidate the short, funding can turn negative, APR drops as the pool grows. Keep spare margin.",
   bonusTitle: "New-user bonuses", bonusSub: "Live welcome campaigns, collected from the exchanges' official announcements.",
-  colEx: "Exchange", colBest: "Biggest bonus", colOffers: "Offers", colJoin: "Get it", noBonus: "No new-user campaigns right now",
+  colEx: "Exchange", colBest: "Biggest bonus", colOffers: "Offers", colJoin: "Go to the exchange", noBonus: "No new-user campaigns right now",
   histTitle: "APR history", histSub: "Snapshots every ~30 minutes. History grows from launch.",
   histEarn: "Best Earn rate per coin", histPools: "APR of live Launchpools", noHistory: "History is still collecting — it appears after a few refreshes.",
 };
@@ -100,7 +100,7 @@ const ru: T = {
   open: "Открыть",
   bestTitle: "Лучший выбор сейчас", bestSub: "Готовые варианты для суммы, которую вы вводите. Обновляется вместе с сайтом.",
   amount: "Сумма", safe: "Стейблкоины", safeSub: "Earn бирж и пулы стейблкоинов: цена стабильна, но в DeFi есть риск протокола и отвязки от доллара",
-  hedged: "Launchpool с хеджем", hedgedSub: "Дельта-нейтрально: стейк + шорт, цена токена не важна",
+  hedged: "Launchpool с хеджем", hedgedSub: "Стейк + шорт: цена токена почти не влияет, но резкий рост может ликвидировать шорт",
   promos: "Крупнейшие призовые фонды", promosSub: "Акции с самыми большими фондами, которые ещё идут",
   perYear: "/год", perMonth: "≈ в месяц", est: "оценка", none: "Сейчас нет вариантов",
   calTitle: "Календарь акций", calSub: "Что стартует и что заканчивается в ближайшее время.",
@@ -110,7 +110,7 @@ const ru: T = {
   status: { saved: "Сохранено", joined: "Участвую", done: "Завершено", skipped: "Пропустил" },
   earned: "Заработал, $", note: "Заметка", totalEarned: "Всего заработали", active: "активных", deadlineSoon: "дедлайн скоро",
   emptyMy: "Пока ничего не сохранено. Нажмите ★ на любой акции.", export: "Экспорт CSV", gone: "Акция уже не активна",
-  hedgeTitle: "Калькулятор дельта-нейтральной стратегии", hedgeSub: "Стейкаете монету в Launchpool и одновременно шортите её на фьючерсах — зарабатываете APR без риска цены.",
+  hedgeTitle: "Калькулятор хеджа: стейк + шорт", hedgeSub: "Стейкаете монету в Launchpool и одновременно шортите её на фьючерсах — зарабатываете APR почти без риска цены. Но резкий рост может ликвидировать шорт, а фандинг — стать отрицательным.",
   pickPool: "Пул", custom: "Свои параметры", capital: "Сумма в стейк, $", price: "Цена монеты, $", apr: "APR пула, %", days: "Дней", funding: "Фандинг шорта, %/год (+ получаете)",
   leverage: "Плечо шорта", mmr: "Поддерживающая маржа, %", fees: "Комиссии + проскальзывание (вход+выход), %",
   plan: "План", step1: "Купите {q} {c} на споте (~{a})", step2: "Застейкайте {q} {c} в Launchpool", step3: "Откройте шорт {q} {c} на {v} с плечом {l}x — маржа {m}",
@@ -119,7 +119,7 @@ const ru: T = {
   rewards: "Награды за период", fundingTotal: "Фандинг за период", costs: "Комиссии и проскальзывание", net: "Чистый результат", netApr: "Чистый APR на весь капитал",
   hedgeWarn: "Риски: резкий рост цены может ликвидировать шорт, фандинг может стать отрицательным, APR падает с ростом пула. Держите запас маржи.",
   bonusTitle: "Бонусы для новых пользователей", bonusSub: "Актуальные welcome-акции бирж, собранные из их официальных объявлений.",
-  colEx: "Биржа", colBest: "Максимальный бонус", colOffers: "Акций", colJoin: "Получить", noBonus: "Сейчас нет активных акций для новичков",
+  colEx: "Биржа", colBest: "Максимальный бонус", colOffers: "Акций", colJoin: "На сайт биржи", noBonus: "Сейчас нет активных акций для новичков",
   histTitle: "История APR", histSub: "Снимки каждые ~30 минут. История накапливается с момента запуска.",
   histEarn: "Лучшая ставка Earn по монете", histPools: "APR активных Launchpool", noHistory: "История ещё собирается — появится после нескольких обновлений.",
 };

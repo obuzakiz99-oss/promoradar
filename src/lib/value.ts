@@ -217,9 +217,13 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       const apr = a?.aprPct ?? m.aprPct;
       if (apr === undefined) return out(undefined, "low", "none");
       // extra over idle money on $1,000 (or the cap) for the period (30 days when not stated)
-      const cap = usd(a?.max) ?? m.perUser?.usd;
-      const base = Math.max(need, Math.min(1000, cap !== undefined && cap > 0 && a?.max ? cap : 1000));
-      const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * ((a?.days ?? 30) / 365));
+      // shown as "+$X on $1,000 a month over regular earn" (audit 14.11: Bitbase used its 250,000 USDT minimum,
+      // KuCoin's 3-day 250 % coupon was counted for a whole month)
+      if (need > 1000) return out(undefined, "low", "none");             // $1,000 can't even enter
+      if (!a && apr > 30) return out(undefined, "low", "none");          // "up to 150 %" boosts: unknown term and cap
+      const cap = usd(a?.max);
+      const base = Math.min(1000, cap !== undefined && cap > 0 ? cap : 1000);
+      const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, a?.days ?? 30) / 365));
       return { gross: g, cost: 0, net: g, conf: "mid", mech, basis: "apr", ai };
     }
     default:

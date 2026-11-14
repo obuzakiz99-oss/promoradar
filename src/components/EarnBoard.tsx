@@ -10,9 +10,9 @@ import { VenueLogo } from "./VenueLogo";
 import { HedgeVenues } from "./HedgeVenues";
 import type { Hedge } from "@/lib/pools";
 const HEDGED: Record<Locale, { title: string; how: (earn: string, f: string, ex: string) => string }> = {
-  uk: { title: "APR з хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорту ${f} на ${ex} · у доларах, без ризику ціни (комісії входу/виходу ~0.2% окремо)` },
-  en: { title: "APR with hedge", how: (e, f, ex) => `Earn ${e} + short funding ${f} on ${ex} · in dollars, no price risk (entry/exit fees ~0.2% extra)` },
-  ru: { title: "APR с хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорта ${f} на ${ex} · в долларах, без риска цены (комиссии входа/выхода ~0.2% отдельно)` },
+  uk: { title: "APR з хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорту ${f} на ${ex} · у доларах, ціна майже не впливає (комісії входу/виходу ~0.2% окремо; різкий ріст може ліквідувати шорт)` },
+  en: { title: "APR with hedge", how: (e, f, ex) => `Earn ${e} + short funding ${f} on ${ex} · in dollars, price barely matters (entry/exit fees ~0.2% extra; a sharp rise can liquidate the short)` },
+  ru: { title: "APR с хеджем", how: (e, f, ex) => `Earn ${e} + фандинг шорта ${f} на ${ex} · в долларах, цена почти не влияет (комиссии входа/выхода ~0.2% отдельно; резкий рост может ликвидировать шорт)` },
 };
 import { ProsCons } from "./ProsCons";
 import { earnPC } from "@/lib/proscons";

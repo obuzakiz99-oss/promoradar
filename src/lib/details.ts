@@ -600,7 +600,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
       const seen = new Set(blocks.map((b) => b.x));
       blocks = [...blocks, { t: "h", x: EX_HEAD }, ...page.filter((b) => !seen.has(b.x))];
     }
-    blocks = dropChrome(blocks);
+    blocks = dropTail(dropChrome(blocks), EX_HEAD);
     if (blocks[blocks.length - 1]?.x === EX_HEAD) blocks = blocks.slice(0, -1);
     out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
   }
@@ -635,6 +635,30 @@ function dropChrome(blocks: Block[]): Block[] {
     if (end - i + 1 >= 15) { for (let k = i; k <= end; k++) if (blocks[k].x !== "On the exchange page") keep[k] = false; i = end + 1; } else i++;
   }
   return blocks.filter((_, i) => keep[i]);
+}
+
+/**
+ * Text that is not the promo (audit 14.11): ads in Telegram posts (a casino under a Coinstore campaign), the exchange's
+ * site-wide sales lines scraped with the page ("Sign up and get welcome rewards worth $15,000" — it became a Phemex
+ * promo's "up to $15,000 per person"), and everything after the "Team" signature of an announcement. Applied per
+ * segment: the post, then the exchange page appended under `head`.
+ */
+const AD = /(casino|казино|gambling|sportsbook|betting|slots?|18\+)\b/i;
+const SALES = /\b(sign up (now |today )?(and|&) (get|claim|receive)|register now|download the [\w.]+ app|scan to download|welcome rewards? worth|user-centric|leading (crypto(currency)? )?(exchange|platform|futures platform)|trade (over|more than) [\d,]+\+? (crypto|cryptocurrenc)|invite friends (and|to) (earn|get) \d+% commission|get your referral link|new user registration|app link|start your crypto journey)\b/i;
+const SIGN = /^(?:the\s+)?[\p{L}\d.]{2,20}(?:\s+[\p{L}\d.]{2,20})?\s+team\.?$|^(?:команда|команда)\s+\S+/iu;
+function dropTail(blocks: Block[], head: string): Block[] {
+  const out: Block[] = [];
+  let cut = false;
+  for (const b of blocks) {
+    if (b.x === head) { cut = false; out.push(b); continue; }   // a new segment (the exchange page) starts
+    if (cut) continue;
+    const x = b.x.trim();
+    if (out.length >= 3 && x.length <= 40 && SIGN.test(x)) { cut = true; continue; }
+    if (AD.test(x) && !/\b(reward|prize|usdt|campaign)\b/i.test(x)) continue;
+    if (b.t !== "tr" && x.length <= 220 && SALES.test(x)) continue;
+    out.push(b);
+  }
+  return out;
 }
 
 /**
