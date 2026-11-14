@@ -1,3 +1,4 @@
+import { readStore, writeStore } from "./store";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -97,10 +98,11 @@ function inputText(p: Promo, d?: PromoDetails): string {
 }
 
 type Store = Record<string, { h: string; v: number; at: number; a: Assess }>;
+let READ_OK = true;
 let MEM: Store | null = null;
 function load(): Store {
   if (MEM) return MEM;
-  try { MEM = JSON.parse(fs.readFileSync(FILE(), "utf8")); } catch { MEM = {}; }
+  const r = readStore<Store>(FILE(), {}); MEM = r.data; READ_OK = r.ok;
   return MEM!;
 }
 
@@ -150,7 +152,7 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
     await Promise.all(Array.from({ length: 4 }, worker));
     const live = new Set(promos.map((p) => p.id));
     for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
-    try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
+    writeStore(FILE(), store, READ_OK);
   }
   const out: Record<string, Assess> = {};
   for (const { p } of items) if (store[p.id]) out[p.id] = store[p.id].a;

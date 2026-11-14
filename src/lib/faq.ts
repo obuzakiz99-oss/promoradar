@@ -1,3 +1,4 @@
+import { readStore, writeStore } from "./store";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -41,10 +42,11 @@ const One = z.object({
 const Schema = z.object({ uk: One, en: One, ru: One });
 
 type Store = Record<string, { h: string; v: number; at: number; faq: Faq }>;
+let READ_OK = true;
 let MEM: Store | null = null;
 function load(): Store {
   if (MEM) return MEM;
-  try { MEM = JSON.parse(fs.readFileSync(FILE(), "utf8")); } catch { MEM = {}; }
+  const r = readStore<Store>(FILE(), {}); MEM = r.data; READ_OK = r.ok;
   return MEM!;
 }
 
@@ -140,7 +142,7 @@ export async function getFaqs(promos: Promo[], details: Record<string, PromoDeta
     await Promise.all(Array.from({ length: 3 }, worker));
     const live = new Set(promos.map((p) => p.id));
     for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
-    try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
+    writeStore(FILE(), store, READ_OK);
   }
   const out: Record<string, Faq> = {};
   for (const p of eligible) if (store[p.id]) out[p.id] = store[p.id].faq;

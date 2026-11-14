@@ -1,3 +1,4 @@
+import { readStore, writeStore } from "./store";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -26,6 +27,7 @@ const AZURE_PER_BUILD = 200_000;
 const KEEP_MS = 60 * 86400_000;
 
 type Store = Record<TLang, Record<string, { t: string; at: number }>> & { usage?: { month: string; azure: number } };
+let READ_OK = true;
 let MEM: Store | null = null;
 let DEEPL_LEFT: Promise<number> | undefined;
 let DEEPL_SPENT: number | undefined;   // DeepL chars used by this build so far (all calls together)
@@ -37,7 +39,7 @@ const month = () => new Date().toISOString().slice(0, 7);
 
 function load(): Store {
   if (MEM) return MEM;
-  try { MEM = JSON.parse(fs.readFileSync(FILE(), "utf8")); } catch { MEM = { uk: {}, ru: {} } as Store; }
+  const r = readStore<Store>(FILE(), { uk: {}, ru: {} } as Store); MEM = r.data; READ_OK = r.ok;
   for (const l of LANGS) MEM![l] ??= {};
   return MEM!;
 }
@@ -136,7 +138,7 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
       if (live.has(k)) v.at = now;
       else if (now - v.at > KEEP_MS) delete store[lang][k];
     }
-    try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
+    writeStore(FILE(), store, READ_OK);
   }
   const out = { uk: {}, ru: {} } as Record<TLang, Record<string, string>>;
   for (const lang of LANGS) for (const s of want[lang]) {

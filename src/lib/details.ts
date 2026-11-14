@@ -1,3 +1,4 @@
+import { readStore, writeStore } from "./store";
 import JUNK_JSON from "@/config/rules-junk.json";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -534,10 +535,11 @@ export function browserKey(url: string): string {
 }
 
 /* ------------------------------------------------------------------ cache + public API */
+let READ_OK = true;
 let MEM: Record<string, PromoDetails> | null = null;   // also keeps dev-server renders from refetching
 function load(): Record<string, PromoDetails> {
   if (MEM) return MEM;
-  try { MEM = JSON.parse(fs.readFileSync(FILE(), "utf8")); } catch { MEM = {}; }
+  const r = readStore<Record<string, PromoDetails>>(FILE(), {}); MEM = r.data; READ_OK = r.ok;
   return MEM!;
 }
 
@@ -590,7 +592,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   // keep current promos + anything seen recently; save for the next build (the workflow commits the data folder)
   const live = new Set(promos.map((p) => p.id));
   for (const [id, d] of Object.entries(store)) if (!live.has(id) && now - d.at > KEEP_MS) delete store[id];
-  try { if (fs.existsSync(path.dirname(FILE()))) fs.writeFileSync(FILE(), JSON.stringify(store)); } catch { /* read-only */ }
+  writeStore(FILE(), store, READ_OK);
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
   for (const p of promos) if (store[p.id]) {
