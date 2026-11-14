@@ -6,6 +6,8 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
 import { readHistory } from "@/lib/history";
 import { getPools } from "@/lib/pools";
+import { getInsights } from "@/lib/insights";
+import { InsightsSections } from "@/components/InsightsSections";
 import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
 import { compactUsd, shortDate } from "@/lib/format";
@@ -71,7 +73,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), T = TOOLS[lang], X = H[lang];
   const snaps = readHistory();
-  const pools = await getPools();
+  const [pools, insights] = await Promise.all([getPools(), getInsights()]);
   const S = lpStats(pools, snaps);
   const curve = decayCurve(pools, snaps);
   const locale = lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB";
@@ -236,6 +238,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
             </div>
           </section>
         )}
+        {/* formerly /insights/ — what happens to the token after the pool, how APR decays (merged 14.11) */}
+        <InsightsSections lang={lang} data={insights} />
         {snaps.length > 0 && <p className="mt-6 font-mono text-xs text-ink-3">{snaps.length} snapshots · {new Date(snaps[0].t).toISOString().slice(0, 16)} → {new Date(snaps[snaps.length - 1].t).toISOString().slice(0, 16)} UTC</p>}
       </main>
       <Footer t={t} fetchedAt={pools.fetchedAt} lang={lang} />

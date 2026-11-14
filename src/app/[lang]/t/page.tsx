@@ -42,7 +42,11 @@ export default async function Tokens({ params }: { params: Params }) {
         <PromoTabs lang={lang} active="tokens" />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-2 max-w-2xl text-ink-2">{T.sub}</p>
-        <TokenIndex rows={rows} labels={{ search: T.search, promos: T.promos, lp: T.lp, earn: T.earn, empty: T.empty }} />
+        <TokenIndex rows={rows} labels={{ search: T.search, promos: T.promos, lp: T.lp, earn: T.earn, empty: T.empty, ...({
+          uk: { gPromos: "З акціями", gLp: "З Launchpool", gEarn: "Лише Earn", more: (n: number) => `Показати ще ${n}` },
+          en: { gPromos: "With promos", gLp: "With a Launchpool", gEarn: "Earn only", more: (n: number) => `Show ${n} more` },
+          ru: { gPromos: "С акциями", gLp: "С Launchpool", gEarn: "Только Earn", more: (n: number) => `Показать ещё ${n}` },
+        } as const)[lang] }} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
     </>

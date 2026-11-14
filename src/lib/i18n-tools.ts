@@ -41,7 +41,7 @@ const uk = {
   bonusTitle: "Бонуси для нових користувачів", bonusSub: "Актуальні welcome-акції бірж, зібрані з їхніх офіційних оголошень.",
   colEx: "Біржа", colBest: "Максимальний бонус", colOffers: "Акцій", colJoin: "На сайт біржі", noBonus: "Зараз немає активних акцій для новачків",
   // history
-  histTitle: "Історія APR", histSub: "Знімки кожні ~30 хвилин. Історія накопичується з моменту запуску.",
+  histTitle: "Історія й аналітика Launchpool", histSub: "Як падає APR пулів і що відбувається з токеном після пулу. Знімки кожні ~30 хвилин, історія накопичується з моменту запуску.",
   histEarn: "Найкраща ставка Earn по монеті", histPools: "APR активних Launchpool", noHistory: "Історія ще збирається — з'явиться після кількох оновлень.",
 };
 type T = typeof uk;
@@ -81,7 +81,7 @@ const en: T = {
   hedgeWarn: "Risks: a sharp pump can liquidate the short, funding can turn negative, APR drops as the pool grows. Keep spare margin.",
   bonusTitle: "New-user bonuses", bonusSub: "Live welcome campaigns, collected from the exchanges' official announcements.",
   colEx: "Exchange", colBest: "Biggest bonus", colOffers: "Offers", colJoin: "Go to the exchange", noBonus: "No new-user campaigns right now",
-  histTitle: "APR history", histSub: "Snapshots every ~30 minutes. History grows from launch.",
+  histTitle: "Launchpool history & insights", histSub: "How pool APR decays and what happens to the token after the pool. Snapshots every ~30 minutes; history grows from launch.",
   histEarn: "Best Earn rate per coin", histPools: "APR of live Launchpools", noHistory: "History is still collecting — it appears after a few refreshes.",
 };
 
@@ -120,7 +120,7 @@ const ru: T = {
   hedgeWarn: "Риски: резкий рост цены может ликвидировать шорт, фандинг может стать отрицательным, APR падает с ростом пула. Держите запас маржи.",
   bonusTitle: "Бонусы для новых пользователей", bonusSub: "Актуальные welcome-акции бирж, собранные из их официальных объявлений.",
   colEx: "Биржа", colBest: "Максимальный бонус", colOffers: "Акций", colJoin: "На сайт биржи", noBonus: "Сейчас нет активных акций для новичков",
-  histTitle: "История APR", histSub: "Снимки каждые ~30 минут. История накапливается с момента запуска.",
+  histTitle: "История и аналитика Launchpool", histSub: "Как падает APR пулов и что происходит с токеном после пула. Снимки каждые ~30 минут, история накапливается с момента запуска.",
   histEarn: "Лучшая ставка Earn по монете", histPools: "APR активных Launchpool", noHistory: "История ещё собирается — появится после нескольких обновлений.",
 };
 

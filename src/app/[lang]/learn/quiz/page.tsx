@@ -14,6 +14,8 @@ import { withBase } from "@/lib/base";
 import { Footer } from "@/components/Sections";
 import { LearnHeader } from "@/components/LearnNav";
 import { Quiz, type QuizItem } from "@/components/Quiz";
+import { BestSection } from "@/components/BestSection";
+import { TOOLS } from "@/lib/i18n-tools";
 
 type Params = Promise<{ lang: string }>;
 
@@ -63,9 +65,12 @@ export default async function LearnQuiz({ params }: { params: Params }) {
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <LearnHeader lang={lang} active="quiz" title={Q.title} sub={Q.sub} />
         <Quiz lang={lang} items={items} startHref={withBase(`/${lang}/learn/start/`)} />
-        <a href={withBase(`/${lang}/best/`)} className="card mt-6 flex items-center justify-between gap-3 p-5 text-sm font-bold">
-          <span>{({ uk: "Без тесту: готові варіанти на сьогодні — від найбезпечнішого до найдохіднішого", en: "Skip the quiz: today's ready picks — from safest to highest yield", ru: "Без теста: готовые варианты на сегодня — от самого безопасного до самого доходного" } as const)[lang]}</span><span className="text-lime">→</span>
-        </a>
+        {/* without the test: today's ready picks (formerly /best/, merged 14.11) */}
+        <section id="ready" className="mt-14 scroll-mt-20">
+          <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{TOOLS[lang].bestTitle}</h2>
+          <p className="mt-2 max-w-3xl text-ink-2">{({ uk: "Без тесту: готові варіанти на сьогодні — від найбезпечнішого до найдохіднішого.", en: "Without the quiz: today's ready picks — from safest to highest yield.", ru: "Без теста: готовые варианты на сегодня — от самого безопасного до самого доходного." } as const)[lang]}</p>
+          <BestSection lang={lang} />
+        </section>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
     </>
