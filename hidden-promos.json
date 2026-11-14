@@ -1,5 +1,5 @@
 {
- "at": 1794634890984,
+ "at": 1794656655529,
  "items": [
   {
    "id": "gate:102768",
@@ -55,7 +55,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 6.17
+   "perUserUsd": 6.18
   },
   {
    "id": "biconomy:64106346149913",
@@ -63,7 +63,7 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.15
+   "perUserUsd": 2.12
   },
   {
    "id": "tg:Kucoin_News/37053",
@@ -93,7 +93,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 9.04,
+   "perUserUsd": 8.82,
    "netUsd": 4.11
   },
   {
@@ -102,7 +102,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 12.25
+   "perUserUsd": 11.15
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -120,11 +120,34 @@
    "perUserUsd": 10
   },
   {
+   "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
+   "venue": "Bybit",
+   "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
+   "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
+   "why": "small",
+   "perUserUsd": 10
+  },
+  {
+   "id": "bybit:bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010",
+   "venue": "Bybit",
+   "title": "Bybit City Edition 13: Transform your community activity into bigger, better rewards!",
+   "url": "https://announcements.bybit.com/en-US/article/bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010/",
+   "why": "social"
+  },
+  {
    "id": "tg:Kucoin_News/36969",
    "venue": "KuCoin",
    "title": "Community Weekly Activity: KuStar Spotlight 🟩",
    "url": "https://t.me/Kucoin_News/36969",
    "why": "social"
+  },
+  {
+   "id": "bybit:welcome-to-bybit-earn-27-usdt-art8c8354c6faec",
+   "venue": "Bybit",
+   "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
+   "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
+   "why": "small",
+   "perUserUsd": 2
   }
  ]
 }
