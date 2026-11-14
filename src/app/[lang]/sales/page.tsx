@@ -148,7 +148,7 @@ export default async function SalesPage({ params }: { params: Params }) {
           </section>
         ))}
 
-        <p className="mt-6 text-xs text-ink-3"><a href={SALES_SRC} target="_blank" rel="noopener" className="font-bold text-ink-2 hover:text-ink">{T.src} ↗</a> <Hint lang={lang}>{T.risk}</Hint></p>
+        <div className="mt-6 text-xs text-ink-3"><a href={SALES_SRC} target="_blank" rel="noopener" className="font-bold text-ink-2 hover:text-ink">{T.src} ↗</a> <Hint lang={lang}>{T.risk}</Hint></div>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
     </>

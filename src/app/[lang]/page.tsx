@@ -44,6 +44,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
         {/* the promo list comes right after the hero; today's top 3 are its pinned first cards (audit 08.11) */}
         <section id="promos" className="mx-auto max-w-7xl scroll-mt-16 px-4 pt-6 sm:px-6">
+          <h2 className="sr-only">{({ uk: "Усі акції", en: "All promos", ru: "Все акции" } as const)[lang]}</h2>
           <div className="mb-5"><PromoTabs lang={lang} active="all" /></div>
           <PromoExplorer promos={firstCards} t={t} lang={lang} serverNow={fetchedAt} src={withBase("/api/promos.json")} pinned={pins} />
         </section>

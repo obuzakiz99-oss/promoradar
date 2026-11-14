@@ -261,10 +261,10 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   </div>
                 )}
                 {!ended && realApr(x) !== undefined && (
-                  <p className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
+                  <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
                     {CHART_TX[lang].real}: <span className={`font-mono font-bold ${realApr(x)! >= (x.apr ?? 0) * 0.7 ? "text-ink" : "text-amber"}`}>{fmtApr(realApr(x))}</span>
                     <Hint lang={lang}>{CHART_TX[lang].realNote}</Hint>
-                  </p>
+                  </div>
                 )}
                 {x.newUsers && <p className="mt-3 rounded-lg bg-amber/10 px-3 py-2 text-xs font-semibold text-amber">{T.newUsers}</p>}
                 {x.stake === p.token && <p className="mt-3 rounded-lg bg-rose/10 px-3 py-2 text-xs font-semibold text-rose">{T.priceRisk}</p>}
