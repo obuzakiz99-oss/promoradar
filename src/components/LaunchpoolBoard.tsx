@@ -3,7 +3,7 @@ import { Spark } from "./Spark";
 import { Term } from "./Term";
 import { useNovice } from "./NoviceToggle";
 import { LEVEL_CLS, LEVEL_TXT, plainProfit, poolLevel } from "@/lib/level";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { Hedge, Pool, PoolProject } from "@/lib/pools";
 import type { Venue } from "@/lib/types";
@@ -39,6 +39,11 @@ const PICK: Record<Locale, { off: string; on: string; mine: string }> = {
   uk: { off: "Рахувати для цього пулу", on: "Обрано", mine: "обраний пул" },
   en: { off: "Calculate for this pool", on: "Selected", mine: "selected pool" },
   ru: { off: "Считать для этого пула", on: "Выбрано", mine: "выбранный пул" },
+};
+const TH: Record<Locale, { pool: string; time: string; more: string; rules: string; hedged: string }> = {
+  uk: { pool: "Пул", time: "Строк", more: "Плюси й ризики", rules: "Умови", hedged: "з хеджем" },
+  en: { pool: "Pool", time: "Time", more: "Pros & risks", rules: "Rules", hedged: "hedged" },
+  ru: { pool: "Пул", time: "Срок", more: "Плюсы и риски", rules: "Условия", hedged: "с хеджем" },
 };
 const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
 const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
@@ -155,6 +160,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const [orderAmount, setOrderAmount] = useState(amount);
   useEffect(() => { const id = setTimeout(() => setOrderAmount(amount), 900); return () => clearTimeout(id); }, [amount]);
   const [picked, setPicked] = useState<string | null>(null);
+  const [openRow, setOpenRow] = useState<string | null>(null);
   const rank = useMemo(() => {
     const out = [...rowsRaw];
     if (sort === "profit") out.sort((a, b) => (b.profit ?? -1) - (a.profit ?? -1));
@@ -258,8 +264,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
         </div>
       </div>
 
-      {/* rows */}
-      <div className="mt-3 space-y-3">
+      {/* rows: cards on phones */}
+      <div className="mt-3 space-y-3 sm:hidden">
         {rows.map((r, i) => {
           const { p, pool } = r;
           const ex = exchanges[p.exchange];
@@ -416,6 +422,146 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             <span className="btn btn-ghost h-10 px-4 text-sm">{t.card.details} →</span>
           </a>
         ))}
+      </div>
+
+      {/* table — the same look as the DeFi-pools table (owner 14.11); phones keep the cards above */}
+      <div className="mt-3 overflow-x-auto rounded-2xl border border-line max-sm:hidden">
+        <table className="w-full min-w-[980px] text-left text-sm">
+          <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+            <tr>
+              <th className="px-4 py-3">{TH[lang].pool}</th>
+              <th className="px-4 py-3"><Term k="stake" lang={lang}>{L.stake}</Term> → {L.earn}</th>
+              <th className="px-4 py-3 text-right"><Term k="apr" lang={lang} align="right">{L.apr}</Term></th>
+              <th className="px-4 py-3 text-right text-lime">{L.yourProfit}</th>
+              <th className="px-4 py-3 text-right">{TH[lang].time}</th>
+              <th className="px-4 py-3" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-line">
+            {rows.map((r) => {
+              const { p, pool } = r;
+              const ex = exchanges[p.exchange];
+              const live = p.status === "live";
+              const prog = live ? Math.min(100, Math.max(0, ((now - p.start) / (p.end - p.start)) * 100)) : 0;
+              const isBest = r === top;
+              const k = rowKey(r);
+              const isPicked = k === picked;
+              const open = openRow === k;
+              const lvl = poolLevel(pool.stake, p.token);
+              const pc = poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount });
+              const spark = sparks[`${p.exchange}:${p.id}:${pool.stake}`];
+              const href = withBase(`/${lang}/lp/${lpSlug(p)}/`);
+              return (
+                <Fragment key={k}>
+                  <tr id={`lpt-${p.id}-${pool.stake}`} className={`hover:bg-white/[0.025] ${open || isPicked ? "bg-white/[0.025]" : ""} ${lvl === "hard" ? "adv" : ""}`}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="relative shrink-0">
+                          <VenueLogo v={tokenVenue(p.token, p.logo)} size={32} rounded="rounded-lg" />
+                          {ex && <span className="absolute -bottom-1 -right-1 rounded-md ring-2 ring-surface"><VenueLogo v={ex} size={16} rounded="rounded-md" /></span>}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <a href={href} className="break-words font-bold hover:text-lime">{p.name}</a>
+                            {isBest && <span className="rounded bg-lime/15 px-1 text-xs font-bold text-lime">{BEST[lang]}</span>}
+                            {pool.stake === p.token ? <span className="rounded bg-rose/10 px-1 text-xs font-bold text-rose" title={L.priceRiskNote}>{L.priceRisk}</span>
+                              : pool.newUsers ? <span className="rounded bg-amber/10 px-1 text-xs font-bold text-amber">{L.newUsers}</span> : null}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-x-1.5 text-xs font-semibold text-ink-3">
+                            <span>{ex?.name}</span>·<span className={live ? "text-lime" : "text-sky"}>{live ? L.live : L.upcoming}</span>
+                            <span className={`nov rounded px-1.5 ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
+                            {r.chgReward !== undefined && <span className={`font-mono ${chgText(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>{p.token} {fmtChg(r.chgReward)}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5 font-mono text-[13px] font-bold">
+                        <VenueLogo v={tokenVenue(pool.stake, pool.stakeLogo)} size={18} rounded="rounded-full" />{pool.stake}<span className="text-ink-3">→</span>{p.token}
+                      </div>
+                      <div className="font-mono text-xs text-ink-3">
+                        {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className={`font-mono text-base font-bold ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
+                      {r.hc.needed && r.hc.possible && r.hc.hedgedApr !== undefined && <div className={`adv text-xs font-semibold ${r.hc.hedgedApr > 0 ? "text-teal" : "text-amber"}`} title={L.hedgeNote}>{TH[lang].hedged} {fmtPct(r.hc.hedgedApr)}</div>}
+                      {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
+                      {spark && <div className="flex justify-end"><Spark points={spark} title="APR · 7d" /></div>}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
+                      {r.profit === undefined ? <span className="text-ink-3">—</span>
+                        : r.belowMin ? <span className="font-sans text-xs font-bold text-amber">{BELOW[lang](`${fmtNum(pool.minStake ?? 0)} ${pool.stake}`)}</span>
+                        : <>
+                          <div className="font-bold text-lime">{fmtUsd(r.profit)}</div>
+                          <div className="text-xs text-ink-3">{prices[p.token] ? `≈ ${fmtNum(r.profit / prices[p.token])} ${p.token} · ` : ""}{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
+                          {r.adjusted !== undefined && r.danger && <div className="text-xs font-semibold text-ink-3" title={L.ifPriceNote}>{L.ifPrice}: <span className={r.adjusted < 0 ? "text-rose" : "text-lime"}>{r.adjusted < 0 ? "−" : "+"}{fmtUsd(Math.abs(r.adjusted))}</span></div>}
+                        </>}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="whitespace-nowrap text-xs font-semibold text-ink-2">{live ? `${L.endsIn} ${duration(p.end - now, t.time)}` : `${L.startsIn} ${duration(p.start - now, t.time)}`}</div>
+                      <div className="ml-auto mt-1.5 h-1.5 w-20 overflow-hidden rounded-full bg-white/5" title={`${prog.toFixed(0)}%`}><div className="h-full rounded-full bg-gradient-to-r from-lime to-teal" style={{ width: `${prog}%` }} /></div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button type="button" onClick={() => setOpenRow(open ? null : k)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 whitespace-nowrap px-3 text-xs ${open ? "border-lime/50 text-ink" : ""}`}>
+                          {TH[lang].more}
+                          <span aria-hidden="true" className="font-mono">{pc.pros.length ? <span className="text-lime">✓{pc.pros.length} </span> : null}{pc.cons.length ? <span className="text-rose">✕{pc.cons.length}</span> : null}</span>
+                        </button>
+                        <a href={href} className={`btn h-9 whitespace-nowrap px-3 text-xs ${isBest || isPicked ? "btn-primary" : "btn-ghost"}`}>{TH[lang].rules}</a>
+                      </div>
+                    </td>
+                  </tr>
+                  {open && (
+                    <tr className="bg-white/[0.025]">
+                      <td colSpan={6} className="px-4 pb-4 pt-1">
+                        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
+                          <div className="space-y-3">
+                            <div className="adv"><HedgeBox r={r} L={L} /></div>
+                            {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (
+                              <div className="flex flex-col gap-1.5">
+                                <HedgeVenues coin={pool.stake} hedge={hedge[pool.stake]} lang={lang} />
+                                {pool.stake !== p.token && <HedgeVenues coin={p.token} hedge={hedge[p.token]} lang={lang} />}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-4 rounded-xl border border-line bg-white/[0.02] p-4">
+                            <ProsCons lang={lang} pc={pc} max={10} />
+                            <div className="mt-auto flex flex-wrap gap-2">
+                              <a href={href} className="btn btn-primary h-10 px-4 text-sm">{OPEN[lang]}</a>
+                              {r.profit !== undefined && (
+                                <button type="button" onClick={() => setPicked(isPicked ? null : k)} aria-pressed={isPicked} className={`btn h-10 px-4 text-sm ${isPicked ? "btn-ghost border-lime/50 text-lime" : "btn-ghost"}`}>{isPicked ? `✓ ${PICK[lang].on}` : PICK[lang].off}</button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+            {/* exchanges that publish Launchpools only as announcements (OKX, HTX, Bybit…) */}
+            {coin === "all" && extra.map((a) => (
+              <tr key={a.id} className="hover:bg-white/[0.025]">
+                <td className="px-4 py-3" colSpan={3}>
+                  <div className="flex items-center gap-3">
+                    <VenueLogo v={a.venue} size={32} rounded="rounded-lg" />
+                    <div className="min-w-0">
+                      <a href={a.href} className="break-words font-semibold leading-snug hover:text-lime">{a.title}</a>
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-ink-3">{a.venue.name}<span className="rounded bg-white/5 px-1">{L.annNews}</span></div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-right font-mono font-bold text-lime">{a.reward ?? <span className="text-ink-3">—</span>}</td>
+                <td className="px-4 py-3 text-right text-xs font-semibold text-ink-2">
+                  {a.endsAt ? duration(Math.max(0, a.endsAt - now), t.time) : a.date ? new Date(a.date).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" }) : "—"}
+                </td>
+                <td className="px-4 py-3 text-right"><a href={a.href} className="btn btn-ghost h-9 whitespace-nowrap px-3 text-xs">{t.card.details} →</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

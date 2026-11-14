@@ -2,7 +2,7 @@
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
 import type { Venue } from "@/lib/types";
@@ -17,6 +17,13 @@ const HEDGED: Record<Locale, { title: string; how: (earn: string, f: string, ex:
 import { ProsCons } from "./ProsCons";
 import { earnPC } from "@/lib/proscons";
 
+const EXPLAIN: Record<Locale, string> = { uk: "Умови й ризики", en: "Terms & risks", ru: "Условия и риски" };
+const COLS: Record<Locale, { ex: string; income: string; limits: string }> = {
+  uk: { ex: "Біржа · тип", income: "Дохід з вашої суми", limits: "Ліміти" },
+  en: { ex: "Exchange · type", income: "Income on your amount", limits: "Limits" },
+  ru: { ex: "Биржа · тип", income: "Доход с вашей суммы", limits: "Лимиты" },
+};
+const DWMY: Record<Locale, string[]> = { uk: ["день", "тиждень", "місяць", "рік"], en: ["day", "week", "month", "year"], ru: ["день", "неделя", "месяц", "год"] };
 const EX_ALL: Record<Locale, string> = { uk: "Усі біржі", en: "All exchanges", ru: "Все биржи" };
 const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
 
@@ -43,7 +50,8 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
   const C = CALC[lang];
   const [q, setQ] = useState("");
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
-  const [exPick, setEx] = useState("all");   // exchange filter (chips + clickable exchange names)
+  const [exPick, setEx] = useState("all");
+  const [openId, setOpenId] = useState<string | null>(null);   // exchange filter (chips + clickable exchange names)
 
   const byCoin = useMemo(() => {
     const m = new Map<string, EarnOffer[]>();
@@ -153,50 +161,132 @@ export function EarnBoard({ offers, popular, exchanges, t, lang, hedge = {}, pri
           </div>
         );
       })()}
-      <div className="mt-3 space-y-2">
-        {list.length === 0 && <div className="rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{A.none}</div>}
-        {list.map((o, i) => {
+      {list.length === 0 && <div className="mt-3 rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{A.none}</div>}
+      {(() => {
+        // the same look as the DeFi-pools table (owner 14.11): rows + "Terms & risks" unfolding under the row; cards on phones
+        const rows = list.map((o, i) => {
           const v = exchanges[o.exchange];
+          const key = `${o.exchange}${o.type}${o.days}${i}`;
           const top = i === 0 && !o.newUsers;
-          return (
-            <div key={`${o.exchange}${o.type}${o.days}${i}`} className={`card grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-3 p-4 ${top ? "ring-1 ring-lime/50" : ""}`} style={{ ["--tint" as string]: v.color }}>
-              <button type="button" onClick={() => setEx(o.exchange)} title={v.name}><VenueLogo v={v} size={40} /></button>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button type="button" onClick={() => setEx(o.exchange)} className="inline-flex min-h-8 items-center font-bold hover:text-lime hover:underline">{v.name}</button>
-                  {top && <span className="rounded-md bg-lime px-1.5 py-0.5 text-xs font-extrabold uppercase text-on-accent">{A.best}</span>}
-                  {o.newUsers && <span className="rounded-md bg-amber/15 px-1.5 py-0.5 text-xs font-extrabold uppercase text-amber">{A.newUsers}</span>}
-                </div>
-                <div className="mt-0.5 text-xs font-semibold text-ink-3">
-                  <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}{o.minAmount ? ` · ${A.min} ${o.minAmount}` : ""}{o.maxAmount ? ` · ${A.max} ${o.maxAmount} ${o.coin}` : ""}
-                </div>
+          const base = o.maxAmount ? Math.min(qty, o.maxAmount) : qty;   // capped offers earn only up to the cap
+          const yr = o.apr > 0 && qty > 0 ? (base * o.apr) / 100 : 0;
+          return { o, v, key, top, yr, pc: earnPC(lang, o, avg) };
+        });
+        type R = (typeof rows)[number];
+        const usdOf = (x: number) => (price && !STABLE.test(coin) ? ` ≈ ${fmtUsd(x * price)}` : "");
+        const nameCell = ({ o, v, top }: R) => (
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={() => setEx(o.exchange)} title={v.name}><VenueLogo v={v} size={32} rounded="rounded-lg" /></button>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
+                {top && <span className="rounded bg-lime/15 px-1 text-xs font-bold text-lime">{A.best}</span>}
+                {o.newUsers && <span className="rounded bg-amber/10 px-1 text-xs font-bold text-amber">{A.newUsers}</span>}
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <div className="font-mono text-2xl font-bold tracking-tight text-ink">{pct(o.apr)}</div>
-                  {o.aprMax ? <div className="font-mono text-xs font-bold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : <div className="text-xs text-ink-3">{A.base}</div>}
-                  {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
-                  {o.apr > 0 && qty > 0 && (() => {
-                    // capped offers (max amount) earn only on the part up to the cap
-                    const base = o.maxAmount ? Math.min(qty, o.maxAmount) : qty;
-                    const yr = (base * o.apr) / 100;
-                    return (
-                      <div className="mt-1 font-mono text-xs font-semibold text-lime">
-                        +{fmtCoin(yr / 12)} {o.coin}{C.mo}
-                        <span className="text-ink-3"> · {fmtCoin(yr)} {o.coin}{C.yr}{price && !STABLE.test(o.coin) ? ` ≈ ${fmtUsd(yr * price)}` : ""}</span>
-                      </div>
-                    );
-                  })()}
-                </div>
-                <a href={o.url} target="_blank" rel="noopener" className="btn btn-ghost hidden h-10 px-4 text-sm sm:inline-flex">{A.open} ↗</a>
-              </div>
-              <div className="col-span-3 border-t border-line pt-3">
-                <ProsCons lang={lang} pc={earnPC(lang, o, avg)} max={2} />
+              <div className="text-xs font-semibold text-ink-3">
+                <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang}>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}
               </div>
             </div>
+          </div>
+        );
+        const aprCell = (o: EarnOffer) => (
+          <>
+            <div className={`font-mono text-base font-bold ${o.apr >= 10 ? "text-lime" : "text-ink"}`}>{pct(o.apr)}</div>
+            {o.aprMax ? <div className="font-mono text-xs font-semibold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : null}
+            {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(o.apr, lang)}</div>}
+          </>
+        );
+        const limits = (o: EarnOffer) => [o.minAmount ? `${A.min} ${fmtCoin(o.minAmount)}` : "", o.maxAmount ? `${A.max} ${fmtCoin(o.maxAmount)}` : ""].filter(Boolean).join(" · ") || "—";
+        const pcButton = ({ key, pc }: R, cls = "") => {
+          const open = openId === key;
+          return (
+            <button type="button" onClick={() => setOpenId(open ? null : key)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
+              {EXPLAIN[lang]}
+              <span aria-hidden="true" className="font-mono">{pc.pros.length ? <span className="text-lime">✓{pc.pros.length} </span> : null}{pc.cons.length ? <span className="text-rose">✕{pc.cons.length}</span> : null}</span>
+            </button>
           );
-        })}
-      </div>
+        };
+        const detail = ({ o, v, yr, pc }: R) => (
+          <div className="grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
+            <div className="rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
+              <div className="text-sm font-bold">{v.name} · {o.coin} · {pct(o.apr)}</div>
+              <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {([[DWMY[lang][0], 365], [DWMY[lang][1], 52], [DWMY[lang][2], 12], [DWMY[lang][3], 1]] as const).map(([k, n]) => (
+                  <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div>
+                    <div className="font-mono text-base font-bold text-lime">+{fmtCoin(yr / n)} {o.coin}</div>
+                    {price && !STABLE.test(o.coin) ? <div className="font-mono text-xs text-ink-3">≈ {fmtUsd((yr / n) * price)}</div> : null}</div>
+                ))}
+              </div>
+              <div className="mt-2 font-mono text-xs text-ink-3">{COLS[lang].limits}: {limits(o)}</div>
+            </div>
+            <div className="flex flex-col gap-4 rounded-xl border border-line bg-white/[0.02] p-4">
+              <ProsCons lang={lang} pc={pc} max={10} />
+              <div className="mt-auto flex flex-wrap gap-2"><a href={o.url} target="_blank" rel="noopener" className="btn btn-primary h-10 px-4 text-sm">{A.open} {v.name} ↗</a></div>
+            </div>
+          </div>
+        );
+        if (!rows.length) return null;
+        return (
+          <>
+            {/* phone: cards */}
+            <div className="mt-3 grid gap-3 sm:hidden">
+              {rows.map((r) => (
+                <div key={r.key} className={`card p-4 hover:transform-none ${r.top ? "ring-1 ring-lime/50" : ""}`}>
+                  <div className="flex items-start gap-3">
+                    <div className="min-w-0 flex-1">{nameCell(r)}</div>
+                    <div className="text-right">{aprCell(r.o)}</div>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 font-mono text-xs">
+                    <div><div className="font-sans text-ink-3">{COLS[lang].income}</div><span className="font-bold text-lime">+{fmtCoin(r.yr / 12)} {r.o.coin}</span>{C.mo}</div>
+                    <div><div className="font-sans text-ink-3">{COLS[lang].limits}</div>{limits(r.o)}</div>
+                  </div>
+                  <div className="mt-3">{pcButton(r, "w-full justify-center")}</div>
+                  {openId === r.key && <div className="mt-3">{detail(r)}</div>}
+                </div>
+              ))}
+            </div>
+            {/* table */}
+            <div className="mt-3 overflow-x-auto rounded-2xl border border-line max-sm:hidden">
+              <table className="w-full min-w-[820px] text-left text-sm">
+                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+                  <tr>
+                    <th className="px-4 py-3">{COLS[lang].ex}</th>
+                    <th className="px-4 py-3 text-right"><Term k="apr" lang={lang} align="right">APR</Term></th>
+                    <th className="px-4 py-3 text-right text-lime">{COLS[lang].income}</th>
+                    <th className="px-4 py-3 text-right">{COLS[lang].limits}</th>
+                    <th className="px-4 py-3" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {rows.map((r) => {
+                    const open = openId === r.key;
+                    return (
+                      <Fragment key={r.key}>
+                        <tr className={`hover:bg-white/[0.025] ${open ? "bg-white/[0.025]" : ""}`}>
+                          <td className="px-4 py-3">{nameCell(r)}</td>
+                          <td className="px-4 py-3 text-right">{aprCell(r.o)}</td>
+                          <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
+                            {r.yr > 0 ? <>
+                              <div className="font-bold text-lime">+{fmtCoin(r.yr / 12)} {r.o.coin}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>
+                              <div className="text-xs text-ink-3">{fmtCoin(r.yr)} {r.o.coin}{C.yr}{usdOf(r.yr)}</div>
+                            </> : <span className="text-ink-3">—</span>}
+                          </td>
+                          <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">{limits(r.o)}</td>
+                          <td className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
+                            {pcButton(r, "whitespace-nowrap")}
+                            <a href={r.o.url} target="_blank" rel="noopener" className="btn btn-ghost h-9 px-3 text-xs">{A.open} ↗</a>
+                          </div></td>
+                        </tr>
+                        {open && <tr className="bg-white/[0.025]"><td colSpan={5} className="px-4 pb-4 pt-1">{detail(r)}</td></tr>}
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
+        );
+      })()}
 
     </div>
   );
