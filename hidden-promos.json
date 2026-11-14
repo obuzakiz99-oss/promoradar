@@ -1,5 +1,5 @@
 {
- "at": 1794664078605,
+ "at": 1794664286013,
  "items": [
   {
    "id": "gate:102768",
@@ -23,7 +23,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.18
+   "perUserUsd": 2.19
   },
   {
    "id": "tg:coinstore_global/10361",
@@ -63,7 +63,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 6.09
+   "perUserUsd": 6.08
   },
   {
    "id": "biconomy:64106346149913",
@@ -72,6 +72,14 @@
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
    "perUserUsd": 2.1
+  },
+  {
+   "id": "tg:LBanknews/20773",
+   "venue": "LBank",
+   "title": "Paying for ChatGPT or Claude? Might as well get cashback. 👀",
+   "url": "https://www.lbank.com/event-new/10003763-LBank-Cash-Voucher-Giveaway?qcode=9iszu&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=fiat-activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "small",
+   "perUserUsd": 5
   },
   {
    "id": "tg:Kucoin_News/37053",
@@ -101,7 +109,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.71,
+   "perUserUsd": 8.7,
    "netUsd": 4.11
   },
   {
@@ -118,7 +126,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 11.07
+   "perUserUsd": 11.09
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
