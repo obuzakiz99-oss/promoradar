@@ -195,7 +195,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       // the smallest tier is certain, but the bigger tiers are within reach too → not "surely small"
       if (typical !== undefined) return out(typical, mech === "tiers" || (max !== undefined && max > typical * 2) ? "mid" : "high", "stated");
       // only an "up to" figure: the top tier / an affiliate's best month is not what a typical person gets
-      if (max !== undefined) return out(mech === "tiers" ? max / 4 : max, mech === "fixed" && a ? "high" : "low", "max");
+      // (an affiliate "up to $3,000" is a best month, not one friend: capped until Claude reads the per-friend amount)
+      if (max !== undefined) return out(mech === "tiers" ? max / 4 : mech === "referral" ? Math.min(max, 100) : max, mech === "fixed" && a ? "high" : "low", "max");
       return out(undefined, "low", "none");
     case "first_n": {
       const per = typical ?? max ?? (pool && a?.winners ? pool / a.winners : undefined);

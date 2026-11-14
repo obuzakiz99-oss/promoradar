@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { officialList } from "@/app/[lang]/check/official";
 import { TOOLS } from "@/lib/i18n-tools";
@@ -13,7 +14,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: LEARN[lang].safety.title, description: LEARN[lang].safety.sub };
+  return { alternates: alt(lang, "/learn/safety"), title: LEARN[lang].safety.title, description: LEARN[lang].safety.sub };
 }
 
 export default async function LearnSafety({ params }: { params: Params }) {

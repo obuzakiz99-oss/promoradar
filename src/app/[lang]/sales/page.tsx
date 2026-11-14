@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CalendarTabs } from "@/components/SectionTabs";
@@ -56,7 +57,7 @@ const PI_CLS: Record<PreIpoVenue["kind"], string> = { subscribe: "bg-lime/15 tex
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: X[lang].title, description: X[lang].sub };
+  return { alternates: alt(lang, "/sales"), title: X[lang].title, description: X[lang].sub };
 }
 
 export default async function SalesPage({ params }: { params: Params }) {

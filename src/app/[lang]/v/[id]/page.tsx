@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import { plural } from "@/lib/format";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang, id } = await params;
   if (!isLocale(lang) || !VENUES[id]) return {};
   const t = getDict(lang);
-  return { title: `${VENUES[id].name} — ${t.venue.promos}`, alternates: { canonical: `/${lang}/v/${id}` } };
+  return { title: `${VENUES[id].name} — ${t.venue.promos}`, alternates: alt(lang, `/v/${id}`) };
 }
 
 export default async function VenuePage({ params }: { params: Params }) {

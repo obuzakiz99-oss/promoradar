@@ -57,6 +57,7 @@ export function parseReward(title: string): Reward | undefined {
   // 1,670,000 CT / 400,000 USDC / 2.3M RITUAL / 10 USDT
   for (const m of t.matchAll(/\b([\d][\d,.]*)\s?([kKmMbB]|[Mm]illion|[Tt]housand|[Bb]illion|mn)?\+?\s+([A-Z][A-Z0-9]{1,9})\b/g)) {
     const unit = m[3];
+    if (/\$\s?$/.test(t.slice(0, m.index))) continue;   // "$50 ETH voucher": already counted as $50
     // in an ALL-CAPS headline every word looks like a ticker ("KUCOIN 5.0 JUST DROPPED") — only dollar stables count there
     if (shouty && !STABLES.has(unit)) continue;
     if (/^(APR|APY|USERS?|BNB CHAIN|VIP|NFT|AM|PM|UTC|X|DAYS?|MILLION|MILLIONS|BILLION|THOUSAND|HOURS?|WEEKS?|MONTHS?|TIMES|POINTS?|PAIRS?|NEW|ROUND)$/i.test(unit)) continue;

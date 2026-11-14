@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const t = getDict(lang);
-  return { title: t.aprHub.dexTitle, description: t.aprHub.dexSub, alternates: { canonical: `/${lang}/dex` } };
+  return { title: t.aprHub.dexTitle, description: t.aprHub.dexSub, alternates: alt(lang, "/dex") };
 }
 
 export default async function DexPage({ params }: { params: Params }) {

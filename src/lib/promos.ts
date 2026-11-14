@@ -150,7 +150,15 @@ async function getPromosLive(): Promise<Collected> {
   // newest real promos first: the first builds read up to VALUE_PER_BUILD of them
   const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
+  // several Telegram posts about one campaign link to the same page (KuCoin 5.0 ×3, MEXC Pre-IPO ×2): keep the newest
+  const seenUrl = new Set<string>(), dups = new Set<string>();
+  for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
+    let u = "";
+    try { const x = new URL(p.url); u = x.pathname.length > 1 ? `${p.venue.id}${x.host}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
+    if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
+  }
   for (const p of promos) {
+    if (dups.has(p.id)) continue;
     const handAdded = !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id);
     const a = facts[p.id];
     const v = p.category === "farming" ? undefined : valueOf(p, a, px);

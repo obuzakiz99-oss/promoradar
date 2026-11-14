@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -18,7 +19,7 @@ type Params = Promise<{ lang: string; doc: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, doc } = await params;
   if (!isLocale(lang) || !DOCS.includes(doc as DocId)) return {};
-  return doc === "api" ? { title: API_DOC[lang].title, description: API_DOC[lang].sub } : { title: LEGAL[lang][doc as Exclude<DocId, "api">].title };
+  return doc === "api" ? { alternates: alt(lang, `/${doc}`), title: API_DOC[lang].title, description: API_DOC[lang].sub } : { alternates: alt(lang, `/${doc}`), title: LEGAL[lang][doc as Exclude<DocId, "api">].title };
 }
 
 const linkify = (s: string) => s.split(/(https?:\/\/\S+)/).map((x, i) => (x.startsWith("http") ? <a key={i} href={x} target="_blank" rel="noopener" className="font-semibold text-lime hover:underline">{x.replace(/^https:\/\//, "")}</a> : x));

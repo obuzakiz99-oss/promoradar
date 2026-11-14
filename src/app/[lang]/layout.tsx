@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 // self-hosted variable fonts (Latin + Cyrillic), preloaded — see lib/fonts.ts
@@ -25,9 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     metadataBase: new URL(`https://${SITE.domain}`),
     title: { default: title, template: `%s · ${SITE.name}` },
     description: t.hero.sub,
-    alternates: { canonical: `/${lang}`, languages: { uk: "/uk", en: "/en", ru: "/ru", "x-default": "/en" } },
-    openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website" },
-    twitter: { card: "summary_large_image", title, description: t.hero.sub },
+    alternates: alt(lang),
+    openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website", images: [{ url: "/og-home.png", width: 1200, height: 630, alt: SITE.name }] },
+    twitter: { card: "summary_large_image", title, description: t.hero.sub, images: ["/og-home.png"] },
     icons: { icon: withBase("/icon.svg"), apple: withBase("/apple-touch-icon.png") },
     manifest: withBase("/manifest.webmanifest"),
     appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "black-translucent" },

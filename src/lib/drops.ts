@@ -64,12 +64,13 @@ export const DROP_TEXT: Record<Locale, Record<DropType, Text> & { page: { title:
 /* ---- two cross-cutting lists shown above the types ---- */
 const STABLE_UNIT = /^(USDT|USDC|USD1|FDUSD|USD)$/i;
 /** Needs money or trading to qualify → not "free". */
-const COSTS = /deposit|trade|trading|futures|volume|stake|staking|hold|subscribe|lock|invest|buy|convert|p2p|copy|vip|leverage|margin/i;
+const COSTS = /deposit|trade|trading|futures|volume|stake|staking|hold|subscribe|lock|invest|buy|convert|p2p|copy|vip|leverage|margin|transfer|swap|торг|депозит|ф'?ючерс|фьючерс|стейк|переказ|перевод|купі|купи|обмін|обмен/i;
 /** Stablecoin rewards you can get without putting money in: quizzes, tasks, social, referrals-free giveaways. */
 const NOT_FREE_CAT = new Set(["competition", "earn", "bonus", "farming"]);
 const NOT_FOR_ALL = /exclusive|exclucsive|region|south asia|mena|cis|latam|wsot|compete|jackpot|spin|mining/i;
-export const isFreeStable = (p: { title: string; category?: string; reward?: { unit?: string } }) =>
-  !!p.reward?.unit && STABLE_UNIT.test(p.reward.unit) && !COSTS.test(p.title) && !NOT_FOR_ALL.test(p.title) && !NOT_FREE_CAT.has(p.category ?? "");
+// checked on the original (English) headline too: translated titles ("Наторгуйте $100…") slipped through (audit 14.11)
+export const isFreeStable = (p: { title: string; titleOrig?: string; category?: string; reward?: { unit?: string }; meta?: { minEntry?: unknown } }) =>
+  !!p.reward?.unit && STABLE_UNIT.test(p.reward.unit) && !p.meta?.minEntry && ![p.title, p.titleOrig ?? ""].some((x) => COSTS.test(x) || NOT_FOR_ALL.test(x)) && !NOT_FREE_CAT.has(p.category ?? "");
 /** Live claims / airdrops already being distributed — check your account or claim page. */
 export const CLAIM_RE = /\bclaim\b|claimable|distribution (has been |is )?(completed|complete|started|live)|has completed .*distribution|now (live|open) for claim|airdrop (is )?live/i;
 

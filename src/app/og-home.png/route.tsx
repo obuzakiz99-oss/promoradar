@@ -1,15 +1,14 @@
 import { ImageResponse } from "next/og";
 import { SITE } from "@/config/site";
-import { LOCALES } from "@/lib/i18n";
 
 export const dynamic = "force-static";
-export function generateStaticParams() { return LOCALES.map((lang) => ({ lang })); }
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
-export const alt = `${SITE.name} — every exchange & DeFi promo in one place`;
+const size = { width: 1200, height: 630 };
 
-/** Social preview card (Telegram, X, Facebook). Latin-only text: the default OG font has no Cyrillic. */
-export default function OG() {
+/**
+ * Social preview card (Telegram, X, Facebook) → /og-home.png. Latin-only text: the default OG font has no Cyrillic.
+ * A plain static route, not the opengraph-image file convention: that one put the base path into the URL twice (404).
+ */
+export function GET() {
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 72, background: "#06080b", color: "#eef2f6", fontFamily: "sans-serif", position: "relative" }}>

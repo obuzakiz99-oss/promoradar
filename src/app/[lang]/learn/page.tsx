@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import { TOOLS } from "@/lib/i18n-tools";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -12,7 +13,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: LEARN[lang].hubTitle, description: LEARN[lang].hubSub };
+  return { alternates: alt(lang, "/learn"), title: LEARN[lang].hubTitle, description: LEARN[lang].hubSub };
 }
 
 export default async function LearnHub({ params }: { params: Params }) {

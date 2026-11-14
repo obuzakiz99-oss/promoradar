@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -11,7 +12,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: LEARN[lang].glossary.title, description: LEARN[lang].glossary.sub };
+  return { alternates: alt(lang, "/learn/glossary"), title: LEARN[lang].glossary.title, description: LEARN[lang].glossary.sub };
 }
 
 export default async function LearnGlossary({ params }: { params: Params }) {

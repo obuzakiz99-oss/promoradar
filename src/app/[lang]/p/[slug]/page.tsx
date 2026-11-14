@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -66,7 +67,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
   return {
-    title, description: bits, alternates: { canonical: `/${lang}/p/${slug}` },
+    title, description: bits, alternates: alt(lang, `/p/${slug}`),
     openGraph: { title, description: bits, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description: bits, images: [image] },
   };

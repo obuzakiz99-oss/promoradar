@@ -24,7 +24,7 @@ export function TableTools({ lang, sorts, filters = [], search = true, storeKey,
   const [sort, setSort] = useState(sorts[0]?.key ?? "");
   const [f, setF] = useState<Record<string, string>>({});
   const [q, setQ] = useState("");
-  const [count, setCount] = useState<[number, number]>([0, 0]);
+  const [count, setCount] = useState<[number, number] | null>(null);   // null until the rows are counted (no "0 of 0" in the static HTML)
   const key = `pr:table:${storeKey}:${lang}`;
 
   useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "{}"); if (sorts.some((s) => s.key === v.sort)) setSort(v.sort); if (v.f) setF(Object.fromEntries(Object.entries(v.f as Record<string, string>).filter(([k, x]) => filters.some((d) => d.key === k && d.options.includes(x))))); } catch {} }, [key, sorts, filters]);
@@ -61,13 +61,13 @@ export function TableTools({ lang, sorts, filters = [], search = true, storeKey,
               options={[{ value: "all", label: x.all }, ...x.options.map((o) => ({ value: o, label: o }))]} />
           </div>
         ))}
-        <span className="text-xs font-semibold text-ink-3 sm:ml-auto">{L.shown(count[0], count[1])}</span>
+        <span className="text-xs font-semibold text-ink-3 sm:ml-auto">{count ? L.shown(count[0], count[1]) : ""}</span>
         <div className="min-w-52">
           <Select label={L.sort} value={sort} onChange={setSort} align="right" className={ctl} options={sorts.map((s) => ({ value: s.key, label: s.label }))} />
         </div>
       </div>
       <div className="mt-3">{children}</div>
-      {count[1] > 0 && count[0] === 0 && <p className="mt-3 rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{L.none}</p>}
+      {count && count[1] > 0 && count[0] === 0 && <p className="mt-3 rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{L.none}</p>}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -14,7 +15,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: TOOLS[lang].hedgeTitle, description: TOOLS[lang].hedgeSub };
+  return { alternates: alt(lang, "/hedge"), title: TOOLS[lang].hedgeTitle, description: TOOLS[lang].hedgeSub };
 }
 
 export default async function HedgePage({ params }: { params: Params }) {

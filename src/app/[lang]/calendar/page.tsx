@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import { CalendarTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -17,7 +18,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: TOOLS[lang].calTitle, description: TOOLS[lang].calSub };
+  return { alternates: alt(lang, "/calendar"), title: TOOLS[lang].calTitle, description: TOOLS[lang].calSub };
 }
 
 export default async function Calendar({ params }: { params: Params }) {

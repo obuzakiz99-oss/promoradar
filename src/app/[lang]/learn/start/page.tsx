@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,7 +12,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: LEARN[lang].start.title, description: LEARN[lang].start.sub };
+  return { alternates: alt(lang, "/learn/start"), title: LEARN[lang].start.title, description: LEARN[lang].start.sub };
 }
 
 export default async function LearnStart({ params }: { params: Params }) {

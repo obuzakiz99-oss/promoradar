@@ -251,7 +251,9 @@ function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
       let amount = Number(numS.replace(/,/g, "")) * (mult ? (/^(m|million)$/i.test(mult) ? 1e6 : 1e3) : 1);
       // a unit is a ticker (written in capitals) or a dollar stable — not words like "tokens"/"rewards"
       const unitRaw = g.find((x) => /^[A-Za-z][A-Za-z0-9]{1,9}$/.test(x) && (/^(usdt|usdc|usd|fdusd)$/i.test(x) || (x === x.toUpperCase() && /[A-Z]/.test(x))) && !/^(K|M|UID|VIP|KYC|APR|APY)$/.test(x));
-      const unit = unitRaw ? (/^usd$/i.test(unitRaw) ? "USD" : unitRaw.toUpperCase()) : /\$/.test(m[0]) ? "USD" : "";
+      // "$50 ETH Position Voucher" is $50 paid in ETH, not 50 ETH (audit 14.11: showed as ≈ $93K per person)
+      const dollar = new RegExp(`\\$\\s?${numS.replace(/[.]/g, "\\.")}`).test(m[0]);
+      const unit = dollar ? "USD" : unitRaw ? (/^usd$/i.test(unitRaw) ? "USD" : unitRaw.toUpperCase()) : "";
       if (!unit || !(amount > 0) || amount > 5e8) continue;
       // staking / deposit / volume limits per user are not winnings
       const before = line.slice(0, m.index!).split(/[,.;:!?]/).pop() ?? "";        // same clause only

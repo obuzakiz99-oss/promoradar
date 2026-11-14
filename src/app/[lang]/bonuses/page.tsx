@@ -1,3 +1,4 @@
+import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ type Params = Promise<{ lang: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { title: TOOLS[lang].bonusTitle, description: TOOLS[lang].bonusSub };
+  return { alternates: alt(lang, "/bonuses"), title: TOOLS[lang].bonusTitle, description: TOOLS[lang].bonusSub };
 }
 
 /** A promo counts as a new-user offer when it's a deposit/welcome bonus or explicitly targets newcomers. */
