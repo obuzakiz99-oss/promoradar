@@ -92,6 +92,8 @@ async function getPromosLive(): Promise<Collected> {
   const promos: Promo[] = [];
   const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news"; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
+    // the venue registry is the source of logos (audit 14.11: one Phemex card had the logo, its twin a monogram)
+    if (!p.venue.logo && VENUES[p.venue.id]?.logo) p.venue = { ...p.venue, logo: venueOf(p.venue.id).logo };
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
     // exchange rating then see coin pools too (audit 12.11)
     if (p.reward && p.reward.usd === undefined && px[p.reward.unit.toUpperCase()]) p.reward = { ...p.reward, usd: Math.round(p.reward.amount * px[p.reward.unit.toUpperCase()]) };

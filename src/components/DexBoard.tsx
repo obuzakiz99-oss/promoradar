@@ -205,7 +205,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                     <div className="flex flex-wrap items-center gap-1.5 font-mono text-sm font-bold">
                       {p.symbol}
                       {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-xs text-teal">{A.stableTag}</span>}
-                      {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-xs text-amber">{A.il}</span>}
+                      {p.il && <span className="whitespace-nowrap rounded bg-amber/10 px-1 font-sans text-xs text-amber"><Term k="il" lang={lang}>{A.il}</Term></span>}
                     </div>
                     <div className="break-words text-xs font-semibold text-ink-3">{p.project} · {p.chain}</div>
                   </div>
