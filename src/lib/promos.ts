@@ -28,10 +28,19 @@ export async function getPromos(lang?: string): Promise<Collected> {
 function localize(c: Collected, lang: "uk" | "ru"): Collected {
   const dict = c.i18n?.[lang];
   if (!dict || !Object.keys(dict).length) return c;
-  const tr = (s: string) => dict[s.trim()] ?? s;
+  // recurring machine-translation slips in exchange texts (audit 14.11), fixed after translation for every line
+  // (no \b around Cyrillic: JS word boundaries only know Latin letters)
+  const FIX: Array<[RegExp, string]> = lang === "uk" ? [
+    [/Дорогі співробітники Binance/g, "Шановні користувачі Binance"], [/Приймайте участь/g, "Беріть участь"], [/приймайте участь/g, "беріть участь"],
+    [/Слідкуйте/g, "Стежте"], [/слідкуйте/g, "стежте"], [/стейблкоін/g, "стейблкоїн"], [/Наторгуйте/g, "Торгуйте"], [/наторгуйте/g, "торгуйте"],
+    [/^Товар$/, "Продукт"], [/самоуправством/g, "угодами із самим собою"],
+  ] : [[/Дорогие сотрудники Binance/g, "Уважаемые пользователи Binance"]];
+  const fix = (x: string) => FIX.reduce((a, [re, to]) => a.replace(re, to), x);
+  const tr = (s: string) => { const x = dict[s.trim()]; return x ? fix(x) : s; };
   const promos = c.promos.map((p) => {
     // DeFi pool names ("USDS · GROVE Farming Pool", "USDE · Plus") are names, not sentences (audit 14.11: «Сільськогосподарський пул»)
-    const t = p.id.startsWith("llama:") ? undefined : dict[p.title.trim()];
+    const t0 = p.id.startsWith("llama:") ? undefined : dict[p.title.trim()];
+    const t = t0 && fix(t0);
     const m = p.meta;
     // leftovers of the post body in a headline: "2. …", "@wanchain_org", lowercase stablecoin tickers (audit 14.11)
     const tidy = (x: string) => x.replace(/^\s*\d{1,2}\.\s+/, "").replace(/\s*@[A-Za-z0-9_]{3,}\b/g, "").replace(/\b(usdt|usdc|btc|eth|sol)\b/g, (m) => m.toUpperCase()).trim();
@@ -51,7 +60,8 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
   for (const [id, d] of Object.entries(c.details ?? {})) {
     let done = 0;
     const blocks = d.blocks.map((b) => {
-      const x = dict[b.x.trim()];
+      const x0 = dict[b.x.trim()];
+      const x = x0 && fix(x0);
       if (x || b.t === "tr") done++;
       return b.t === "tr" ? { ...b, cells: b.cells?.map(tr) } : x ? { ...b, x } : b;
     });
