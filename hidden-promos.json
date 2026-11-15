@@ -1,13 +1,29 @@
 {
- "at": 1794701843072,
+ "at": 1794702073021,
  "items": [
+  {
+   "id": "tg:Kucoin_News/37168",
+   "venue": "KuCoin",
+   "title": "Visors down, bricks up! The build is in full swing, so are YOU snapping up those Futures vouchers? 💚",
+   "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
+   "why": "small",
+   "netUsd": 5
+  },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15834",
    "venue": "HTX",
    "title": "The SPCX airdrop is live, and over 13,000 users have already participated!",
    "url": "https://www.htx.com/en-us/mars/activity-center?callId=179395001871350",
    "why": "small",
-   "perUserUsd": 2
+   "perUserUsd": 2,
+   "netUsd": 2
+  },
+  {
+   "id": "tg:Bitget_Announcements/18397",
+   "venue": "Bitget",
+   "title": "$8,425 (after fees) stays unallocated → earns 10% APY while you wait → +$34.62",
+   "url": "https://www.bitget.com/aboutus",
+   "why": "news"
   },
   {
    "id": "gate:102768",
@@ -15,7 +31,15 @@
    "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
    "url": "https://www.gate.com/announcements/article/102768",
    "why": "social",
-   "perUserUsd": 50
+   "perUserUsd": 50,
+   "netUsd": 0.02
+  },
+  {
+   "id": "tg:Bitrue_official/11210",
+   "venue": "Bitrue",
+   "title": "2,000 USDT worth of rewards up for grabs!",
+   "url": "https://t.me/Bitrue_official/11210",
+   "why": "social"
   },
   {
    "id": "gate:102761",
@@ -88,7 +112,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.84,
+   "perUserUsd": 5.83,
    "netUsd": 0.27
   },
   {
@@ -161,7 +185,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.64
+   "perUserUsd": 10.7
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
