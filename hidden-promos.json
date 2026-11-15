@@ -1,5 +1,5 @@
 {
- "at": 1794709084160,
+ "at": 1794709739783,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -70,14 +70,6 @@
    "why": "social"
   },
   {
-   "id": "gate:102761",
-   "venue": "Gate",
-   "title": "Gate Square Anthropic IPO Challenge: Share Your Subscription, Win 150 USDT in ANT Shares",
-   "url": "https://www.gate.com/announcements/article/102761",
-   "why": "social",
-   "netUsd": 0.03
-  },
-  {
    "id": "binance:d55c2b2278034806ae44967fa7a2e62c",
    "venue": "Binance",
    "title": "Binance Lite Loan Promotion Extended: Enjoy Simple Borrowing with 50% Off Service Fee! (2026-11-13)",
@@ -90,7 +82,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.16,
+   "perUserUsd": 2.17,
    "netUsd": -0.07
   },
   {
@@ -177,8 +169,8 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.09,
-   "netUsd": -0.08
+   "perUserUsd": 2.07,
+   "netUsd": -0.09
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -265,7 +257,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.49,
+   "perUserUsd": 10.48,
    "netUsd": -0.16
   },
   {
