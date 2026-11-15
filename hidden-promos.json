@@ -1,5 +1,5 @@
 {
- "at": 1794703771339,
+ "at": 1794704365060,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -112,7 +112,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.79,
+   "perUserUsd": 5.77,
    "netUsd": 0.27
   },
   {
@@ -121,8 +121,8 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.03,
-   "netUsd": -0.09
+   "perUserUsd": 2.01,
+   "netUsd": -0.1
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -177,7 +177,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.31,
+   "perUserUsd": 8.27,
    "netUsd": 2.74
   },
   {
@@ -195,7 +195,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.53,
+   "perUserUsd": 10.28,
    "netUsd": -0.16
   },
   {
@@ -245,6 +245,22 @@
    "title": "Binance VIP Level Protection Program",
    "url": "https://www.binance.com/en/support/announcement/detail/b3f6a9b7d0a746af9551912893029622",
    "why": "news"
+  },
+  {
+   "id": "tg:Bitget_Announcements/18269",
+   "venue": "Bitget",
+   "title": "Total Prize Pool: 10,000 USDT!",
+   "url": "https://www.bitget.com/support/articles/12560603899382",
+   "why": "social",
+   "netUsd": 0.17
+  },
+  {
+   "id": "tg:coinstore_global/10326",
+   "venue": "Coinstore",
+   "title": "USDT — Up to 7.50% APR",
+   "url": "https://t.me/coinstore_global/10326",
+   "why": "news",
+   "netUsd": 2.05
   },
   {
    "id": "tg:Kucoin_News/36969",
