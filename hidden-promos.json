@@ -1,6 +1,14 @@
 {
- "at": 1794736221378,
+ "at": 1794738214144,
  "items": [
+  {
+   "id": "tg:coinstore_global/10373",
+   "venue": "Coinstore",
+   "title": "Discover Pixagram® (pixagram_omni) — a social platform for pixel artists, featuring on-chain artwork, social publishing, Proof-of-Brain rewards, and a planned NFT…",
+   "url": "https://www.coinstore.com/launchpadDetail?activityId=242&fromPath=%2Flaunchpad%3Fts%3D1794378965407&ts=1794378970155",
+   "why": "small",
+   "netUsd": 5
+  },
   {
    "id": "tg:Kucoin_News/37168",
    "venue": "KuCoin",
@@ -40,15 +48,6 @@
    "why": "news"
   },
   {
-   "id": "gate:102768",
-   "venue": "Gate",
-   "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
-   "url": "https://www.gate.com/announcements/article/102768",
-   "why": "social",
-   "perUserUsd": 50,
-   "netUsd": 0.02
-  },
-  {
    "id": "tg:MEXCofficialNews/38816",
    "venue": "MEXC",
    "title": "AI chips get the spotlight. What about the machines behind them? 👀",
@@ -75,7 +74,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.16,
+   "perUserUsd": 2.15,
    "netUsd": -0.07
   },
   {
@@ -153,7 +152,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.97,
+   "perUserUsd": 5.98,
    "netUsd": 0.28
   },
   {
@@ -162,8 +161,8 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.1,
-   "netUsd": -0.08
+   "perUserUsd": 2.13,
+   "netUsd": -0.07
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -232,7 +231,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.36,
+   "perUserUsd": 8.4,
    "netUsd": 2.74
   },
   {
@@ -257,8 +256,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.67,
-   "netUsd": -0.17
+   "perUserUsd": 8.14,
+   "netUsd": -0.18
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -267,6 +266,15 @@
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social",
    "netUsd": 0.58
+  },
+  {
+   "id": "gate:102590",
+   "venue": "Gate",
+   "title": "Gate Square Comment Challenge: First-Comment Rewards & a 20,000 USDT Weekly Pool",
+   "url": "https://www.gate.com/announcements/article/102590",
+   "why": "social",
+   "perUserUsd": 10,
+   "netUsd": 10
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15758",
