@@ -1,5 +1,5 @@
 {
- "at": 1794702276280,
+ "at": 1794702481266,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -26,11 +26,28 @@
    "why": "news"
   },
   {
+   "id": "gate:102768",
+   "venue": "Gate",
+   "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
+   "url": "https://www.gate.com/announcements/article/102768",
+   "why": "social",
+   "perUserUsd": 50,
+   "netUsd": 0.02
+  },
+  {
    "id": "tg:Bitrue_official/11210",
    "venue": "Bitrue",
    "title": "2,000 USDT worth of rewards up for grabs!",
    "url": "https://t.me/Bitrue_official/11210",
    "why": "social"
+  },
+  {
+   "id": "gate:102761",
+   "venue": "Gate",
+   "title": "Gate Square Anthropic IPO Challenge: Share Your Subscription, Win 150 USDT in ANT Shares",
+   "url": "https://www.gate.com/announcements/article/102761",
+   "why": "social",
+   "netUsd": 0.03
   },
   {
    "id": "binance:d55c2b2278034806ae44967fa7a2e62c",
@@ -45,7 +62,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.16,
+   "perUserUsd": 2.15,
    "netUsd": -0.07
   },
   {
@@ -95,7 +112,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.81,
+   "perUserUsd": 5.79,
    "netUsd": 0.27
   },
   {
@@ -104,7 +121,7 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.05,
+   "perUserUsd": 2.03,
    "netUsd": -0.09
   },
   {
@@ -160,7 +177,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.38,
+   "perUserUsd": 8.36,
    "netUsd": 2.74
   },
   {
@@ -169,7 +186,8 @@
    "title": "Phemex Card Giveaway — Round 2 Is Here!",
    "url": "https://phemex.com/cards/management?group=8402&referralCode=BG79H9",
    "why": "social",
-   "perUserUsd": 20
+   "perUserUsd": 20,
+   "netUsd": 0.05
   },
   {
    "id": "kucoin:351781",
@@ -177,23 +195,16 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.62
+   "perUserUsd": 10.62,
+   "netUsd": -0.15
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
    "venue": "PancakeSwap",
    "title": "Explore Dual Investment on PancakeSwap, share your subscription & get a shot at our $1,200 BONUS POOL! 🔥",
    "url": "https://link.pancakeswap.finance/double-dip-tg",
-   "why": "social"
-  },
-  {
-   "id": "gate:102590",
-   "venue": "Gate",
-   "title": "Gate Square Comment Challenge: First-Comment Rewards & a 20,000 USDT Weekly Pool",
-   "url": "https://www.gate.com/announcements/article/102590",
    "why": "social",
-   "perUserUsd": 10,
-   "netUsd": 0.67
+   "netUsd": 0.58
   },
   {
    "id": "tg:MEXCofficialNews/38778",
@@ -201,7 +212,15 @@
    "title": "Nail every pick & win a champion skin!",
    "url": "https://www.mexc.com/download?utm_source=community&utm_medium=tg",
    "why": "small",
-   "perUserUsd": 10
+   "perUserUsd": 10,
+   "netUsd": 10
+  },
+  {
+   "id": "tg:OKXAnnouncements/7378",
+   "venue": "OKX",
+   "title": "Earn when you spend. Cashback on eligible USDG purchases starts at 2% and can reach 10% at the top tier.",
+   "url": "https://okx.com/card?channelid=ACE505900",
+   "why": "news"
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -209,14 +228,23 @@
    "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
    "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
    "why": "small",
-   "perUserUsd": 10
+   "perUserUsd": 10,
+   "netUsd": 9.59
   },
   {
    "id": "bybit:bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010",
    "venue": "Bybit",
    "title": "Bybit City Edition 13: Transform your community activity into bigger, better rewards!",
    "url": "https://announcements.bybit.com/en-US/article/bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010/",
-   "why": "social"
+   "why": "social",
+   "netUsd": 0.13
+  },
+  {
+   "id": "binance:b3f6a9b7d0a746af9551912893029622",
+   "venue": "Binance",
+   "title": "Binance VIP Level Protection Program",
+   "url": "https://www.binance.com/en/support/announcement/detail/b3f6a9b7d0a746af9551912893029622",
+   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/36969",
