@@ -1,5 +1,5 @@
 {
- "at": 1794704365060,
+ "at": 1794706778172,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -26,6 +26,27 @@
    "why": "news"
   },
   {
+   "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
+   "venue": "Bybit",
+   "title": "WSOT 2026 Captains' Call: Watch the Replay",
+   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-captains-call-watch-the-replay--arte378a592d8e9/",
+   "why": "news"
+  },
+  {
+   "id": "tg:Bitrue_official/11220",
+   "venue": "Bitrue",
+   "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
+   "url": "https://www.bitrue.com/bitrue-ai/land?cn=399990",
+   "why": "news"
+  },
+  {
+   "id": "tg:btsenews/5722",
+   "venue": "BTSE",
+   "title": "A big win for the team behind the scenes.",
+   "url": "https://t.me/btsenews/5722",
+   "why": "news"
+  },
+  {
    "id": "gate:102768",
    "venue": "Gate",
    "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
@@ -33,6 +54,13 @@
    "why": "social",
    "perUserUsd": 50,
    "netUsd": 0.02
+  },
+  {
+   "id": "tg:MEXCofficialNews/38816",
+   "venue": "MEXC",
+   "title": "AI chips get the spotlight. What about the machines behind them? 👀",
+   "url": "https://www.mexc.com/futures/AMATSTOCK_USDT?utm_source=community&utm_medium=tg&utm_campaign=q3_earning_season",
+   "why": "news"
   },
   {
    "id": "tg:Bitrue_official/11210",
@@ -82,6 +110,20 @@
    "netUsd": 0.03
   },
   {
+   "id": "tg:Phemex_Announcements/7966",
+   "venue": "Phemex",
+   "title": "Spend Crypto, Earn Cashback with Phemex Card!",
+   "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
+   "why": "news"
+  },
+  {
+   "id": "tg:Phemex_Announcements/7965",
+   "venue": "Phemex",
+   "title": "Phemex Halloween Party: Crypto Costume Challenge! 👻 Halloween is here, and this party has a crypto dress code! What would you dress up as? Your biggest trading fear,…",
+   "url": "https://t.me/Phemex_Announcements/7965",
+   "why": "news"
+  },
+  {
    "id": "tg:Phemex_Announcements/7959",
    "venue": "Phemex",
    "title": "$100 USDT Bonus Giveaway",
@@ -112,7 +154,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.77,
+   "perUserUsd": 5.68,
    "netUsd": 0.27
   },
   {
@@ -121,7 +163,7 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.01,
+   "perUserUsd": 2,
    "netUsd": -0.1
   },
   {
@@ -177,7 +219,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.27,
+   "perUserUsd": 8.17,
    "netUsd": 2.74
   },
   {
@@ -195,7 +237,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.28,
+   "perUserUsd": 10.44,
    "netUsd": -0.16
   },
   {
@@ -275,7 +317,8 @@
    "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
    "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
    "why": "small",
-   "perUserUsd": 2
+   "perUserUsd": 2,
+   "netUsd": 4.37
   }
  ]
 }
