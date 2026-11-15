@@ -1,0 +1,1 @@
+{"id":"okx:hold-to-earn-usdc-to-share-400000-usdc","h":"R7emKDbSLpzXZfqw","v":1,"at":1794703866405,"data":{"isPromo":true,"socialOnly":false,"mech":"pool_share","act":{"kind":"hold","usd":10000},"pool":{"amount":400000,"unit":"USDC"},"aprPct":8,"days":30}}
