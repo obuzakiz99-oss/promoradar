@@ -1,5 +1,5 @@
 {
- "at": 1794747822666,
+ "at": 1794748124024,
  "items": [
   {
    "id": "tg:coinstore_global/10373",
@@ -46,15 +46,6 @@
    "title": "A big win for the team behind the scenes.",
    "url": "https://t.me/btsenews/5722",
    "why": "news"
-  },
-  {
-   "id": "gate:102768",
-   "venue": "Gate",
-   "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
-   "url": "https://www.gate.com/announcements/article/102768",
-   "why": "social",
-   "perUserUsd": 50,
-   "netUsd": 0.02
   },
   {
    "id": "tg:MEXCofficialNews/38816",
@@ -240,7 +231,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.39,
+   "perUserUsd": 8.37,
    "netUsd": 2.74
   },
   {
@@ -265,7 +256,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.17,
+   "perUserUsd": 8.26,
    "netUsd": -0.18
   },
   {
@@ -275,6 +266,15 @@
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social",
    "netUsd": 0.58
+  },
+  {
+   "id": "gate:102590",
+   "venue": "Gate",
+   "title": "Gate Square Comment Challenge: First-Comment Rewards & a 20,000 USDT Weekly Pool",
+   "url": "https://www.gate.com/announcements/article/102590",
+   "why": "social",
+   "perUserUsd": 10,
+   "netUsd": 10
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15758",
