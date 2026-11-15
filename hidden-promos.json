@@ -1,5 +1,5 @@
 {
- "at": 1794706778172,
+ "at": 1794709084160,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -90,7 +90,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.14,
+   "perUserUsd": 2.16,
    "netUsd": -0.07
   },
   {
@@ -124,6 +124,13 @@
    "why": "news"
   },
   {
+   "id": "tg:Bybit_Announcements/10076",
+   "venue": "Bybit",
+   "title": "The competition has moved. — The World Trades Here.",
+   "url": "https://t.me/Bybit_Announcements/10076",
+   "why": "news"
+  },
+  {
    "id": "tg:Phemex_Announcements/7959",
    "venue": "Phemex",
    "title": "$100 USDT Bonus Giveaway",
@@ -149,12 +156,19 @@
    "netUsd": 2
   },
   {
+   "id": "tg:Phemex_Announcements/7951",
+   "venue": "Phemex",
+   "title": "AI vs. You: CPI Prediction Challenge!",
+   "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
+   "why": "news"
+  },
+  {
    "id": "binance:0ea740cbfca045ed935964f4555dc689",
    "venue": "Binance",
    "title": "Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/0ea740cbfca045ed935964f4555dc689",
    "why": "small",
-   "perUserUsd": 5.68,
+   "perUserUsd": 5.88,
    "netUsd": 0.27
   },
   {
@@ -163,8 +177,8 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2,
-   "netUsd": -0.1
+   "perUserUsd": 2.09,
+   "netUsd": -0.08
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -173,6 +187,13 @@
    "url": "https://www.kucoin.com/campaigns/Prepare_For_Winter_Bootcamp?utm_source=Bootcamp&utm_medium=Community&utm_campaign=Bootcamp",
    "why": "small",
    "netUsd": 5
+  },
+  {
+   "id": "tg:MEXCofficialNews/38808",
+   "venue": "MEXC",
+   "title": "New to MEXC? Join the Canton Carnival",
+   "url": "https://www.mexc.com/events/star/Canton?utm_source=community&utm_medium=tg&utm_campaign=cc_carnival",
+   "why": "news"
   },
   {
    "id": "tg:MEXCofficialNews/38807",
@@ -219,8 +240,15 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.17,
+   "perUserUsd": 8.34,
    "netUsd": 2.74
+  },
+  {
+   "id": "tg:MEXCofficialNews/38791",
+   "venue": "MEXC",
+   "title": "The post-midterm rally is bringing risk assets and safe havens into the spotlight together.",
+   "url": "https://www.mexc.com/events/star/Midterm-Market-Rush?utm_source=community&utm_medium=tg&utm_campaign=midterm_rush",
+   "why": "news"
   },
   {
    "id": "tg:Phemex_Announcements/7938",
@@ -237,7 +265,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 10.44,
+   "perUserUsd": 10.49,
    "netUsd": -0.16
   },
   {
