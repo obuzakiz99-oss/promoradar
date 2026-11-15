@@ -1,5 +1,5 @@
 {
- "at": 1794713654188,
+ "at": 1794715891912,
  "items": [
   {
    "id": "tg:Kucoin_News/37168",
@@ -26,13 +26,6 @@
    "why": "news"
   },
   {
-   "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
-   "venue": "Bybit",
-   "title": "WSOT 2026 Captains' Call: Watch the Replay",
-   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-captains-call-watch-the-replay--arte378a592d8e9/",
-   "why": "news"
-  },
-  {
    "id": "tg:Bitrue_official/11220",
    "venue": "Bitrue",
    "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
@@ -45,15 +38,6 @@
    "title": "A big win for the team behind the scenes.",
    "url": "https://t.me/btsenews/5722",
    "why": "news"
-  },
-  {
-   "id": "gate:102768",
-   "venue": "Gate",
-   "title": "Gate Live Stream Carnival Phase 28: Watch Live and Join the Daily Reward Spins",
-   "url": "https://www.gate.com/announcements/article/102768",
-   "why": "social",
-   "perUserUsd": 50,
-   "netUsd": 0.02
   },
   {
    "id": "tg:MEXCofficialNews/38816",
@@ -82,7 +66,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.17,
+   "perUserUsd": 2.16,
    "netUsd": -0.07
   },
   {
@@ -169,8 +153,8 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.08,
-   "netUsd": -0.08
+   "perUserUsd": 2.07,
+   "netUsd": -0.09
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -232,7 +216,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.36,
+   "perUserUsd": 8.32,
    "netUsd": 2.74
   },
   {
@@ -257,8 +241,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 11.05,
-   "netUsd": -0.15
+   "perUserUsd": 9.89,
+   "netUsd": -0.16
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -267,6 +251,15 @@
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social",
    "netUsd": 0.58
+  },
+  {
+   "id": "gate:102590",
+   "venue": "Gate",
+   "title": "Gate Square Comment Challenge: First-Comment Rewards & a 20,000 USDT Weekly Pool",
+   "url": "https://www.gate.com/announcements/article/102590",
+   "why": "social",
+   "perUserUsd": 10,
+   "netUsd": 10
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15758",
@@ -311,23 +304,6 @@
    "title": "Earn when you spend. Cashback on eligible USDG purchases starts at 2% and can reach 10% at the top tier.",
    "url": "https://okx.com/card?channelid=ACE505900",
    "why": "news"
-  },
-  {
-   "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
-   "venue": "Bybit",
-   "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
-   "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
-   "why": "small",
-   "perUserUsd": 10,
-   "netUsd": 9.59
-  },
-  {
-   "id": "bybit:bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010",
-   "venue": "Bybit",
-   "title": "Bybit City Edition 13: Transform your community activity into bigger, better rewards!",
-   "url": "https://announcements.bybit.com/en-US/article/bybit-city-edition-13-transform-your-community-activity-into-bigger-better-rewards--arteb0a7c144010/",
-   "why": "social",
-   "netUsd": 0.13
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
@@ -380,15 +356,6 @@
    "title": "Margin Saver Voucher (1000x Futures)",
    "url": "https://zoomex.zendesk.com/hc/en-us/articles/63690091619097-Margin-Saver-Voucher-1000x-Futures",
    "why": "news"
-  },
-  {
-   "id": "bybit:welcome-to-bybit-earn-27-usdt-art8c8354c6faec",
-   "venue": "Bybit",
-   "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
-   "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
-   "why": "small",
-   "perUserUsd": 2,
-   "netUsd": 4.37
   }
  ]
 }
