@@ -214,9 +214,9 @@ async function getPromosLive(): Promise<Collected> {
     if (v) p.meta = { ...(p.meta ?? {}), value: v };
     if (isZeroFee(p.titleOrig ?? p.title, details[p.id]?.blocks)) p.meta = { ...(p.meta ?? {}), zeroFee: true };
     // owner 16.11: nothing where one person can get under $15 at most — also competitions and promos the $30 rule
-    // misses; zero-fee offers (the saving is the point) and referrals (paid per friend) are exempt
+    // misses, referrals included; only zero-fee offers (the saving is the point) and APR products (no per-person cap) are exempt
     const maxPer = [v?.max, p.meta?.perUser?.usd].filter((x): x is number => x !== undefined);
-    const tiny = !p.sponsored && !handAdded && !p.meta?.zeroFee && v?.mech !== "referral" && v?.mech !== "apr" && maxPer.length > 0 && Math.max(...maxPer) < MIN_MAX_PER_USER_USD;
+    const tiny = !p.sponsored && !handAdded && !p.meta?.zeroFee && v?.mech !== "apr" && maxPer.length > 0 && Math.max(...maxPer) < MIN_MAX_PER_USER_USD;
     const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (tiny ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
     if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
     kept.push(p);
