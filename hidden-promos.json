@@ -1,12 +1,36 @@
 {
- "at": 1794867504384,
+ "at": 1794867750703,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
    "venue": "Phemex",
    "title": "Share your prediction for a chance to win a $50 USDT Trading Bonus!",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
-   "why": "social"
+   "why": "social",
+   "netUsd": 0.03
+  },
+  {
+   "id": "tg:Kucoin_News/37201",
+   "venue": "KuCoin",
+   "title": "The next wave of rewards is yours to catch, KuFam!",
+   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
+   "why": "small",
+   "netUsd": 5
+  },
+  {
+   "id": "tg:Bitget_Announcements/18410",
+   "venue": "Bitget",
+   "title": "Share your real product experiences, reviews, and ideas on X for a chance to win from a 3,000 USDT total prize pool! 🎁",
+   "url": "https://www.bitget.com/support/articles/12560603900606",
+   "why": "social",
+   "netUsd": 0.05
+  },
+  {
+   "id": "tg:Bybit_Announcements/10119",
+   "venue": "Bybit",
+   "title": "Earn up to 400 USDT every two weeks.",
+   "url": "https://t.me/Bybit_Announcements/10119",
+   "why": "news"
   },
   {
    "id": "kucoin:352892",
@@ -67,7 +91,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.95,
+   "perUserUsd": 5.94,
    "netUsd": 0.28
   },
   {
@@ -191,8 +215,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.03,
-   "netUsd": -0.29
+   "perUserUsd": 1.02,
+   "netUsd": -0.3
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -389,7 +413,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.07,
+   "perUserUsd": 8.06,
    "netUsd": 2.74
   },
   {
@@ -422,7 +446,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.57,
+   "perUserUsd": 8.76,
    "netUsd": -0.17
   },
   {
