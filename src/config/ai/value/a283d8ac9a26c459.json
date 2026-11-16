@@ -1,1 +1,1 @@
-{"id":"tg:Toobit_announcements/6087","h":"IeHk-58bWToa5lM3","v":1,"at":1794828801670,"data":{"isPromo":true,"socialOnly":false,"mech":"unknown","act":{"kind":"trade_futures"},"pool":{"amount":100000,"unit":"USDT"},"days":21}}
+{"id":"tg:Toobit_announcements/6087","h":"7UG5L-BmbilfrqoA","v":1,"at":1794867101263,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"trade_futures","usd":100},"typical":{"amount":50,"unit":"USDT"},"max":{"amount":12000,"unit":"USDT"},"pool":{"amount":100000,"unit":"USDT"},"days":21}}
