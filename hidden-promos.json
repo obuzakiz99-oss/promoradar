@@ -1,5 +1,5 @@
 {
- "at": 1794868985201,
+ "at": 1794869766387,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -68,24 +68,6 @@
    "netUsd": 0.02
   },
   {
-   "id": "gate:102792",
-   "venue": "Gate",
-   "title": "Gate Stocks Player One: Trade to Win GTA6 and TTWO Shares",
-   "url": "https://www.gate.com/announcements/article/102792",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 1.5
-  },
-  {
-   "id": "gate:102786",
-   "venue": "Gate",
-   "title": "Deposit Rewards Season: Boost Your Deposits and Trades to Share 35,000 USDT",
-   "url": "https://www.gate.com/announcements/article/102786",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 4.87
-  },
-  {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
    "venue": "Binance",
    "title": "Binance x Pick n Pay: From Black Friday to New Year, Earn 20% Cashback in USDC!",
@@ -100,7 +82,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.95,
+   "perUserUsd": 5.94,
    "netUsd": 0.28
   },
   {
@@ -224,7 +206,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.01,
+   "perUserUsd": 1,
    "netUsd": -0.3
   },
   {
@@ -422,7 +404,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.08,
+   "perUserUsd": 8.05,
    "netUsd": 2.74
   },
   {
@@ -455,7 +437,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.81,
+   "perUserUsd": 8.94,
    "netUsd": -0.17
   },
   {
