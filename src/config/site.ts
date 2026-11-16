@@ -299,6 +299,20 @@ export const MANUAL: Array<{
     checked: "2026-11-08",
   },
   {
+    // official: bitfinex.com/zero-fee-trading — standing policy, no end date; re-checked monthly like the referral entries
+    id: "bitfinex:zero-fee-trading", venue: "bitfinex", category: "other",
+    title: "Bitfinex zero trading fees: 0% maker and 0% taker on spot, margin and derivatives — for every user",
+    url: "https://www.bitfinex.com/zero-fee-trading/", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
+    rules: [
+      "Bitfinex charges 0% maker and 0% taker fees on spot and margin trading, on Bitfinex Derivatives, on eligible products of Bitfinex Securities and on OTC block trades.",
+      "All Bitfinex customers are eligible: no trading-volume requirement, no LEO token holdings and no fee tier to reach. Bitfinex calls it the new default, not a time-limited promotion.",
+      "Not covered: lending fees, withdrawal fees and other non-trading charges stay as before. Thalex derivatives are not on the zero-fee list.",
+      "No end date is announced — Bitfinex can change its fee schedule at any time. Check the fee page before trading.",
+      "Zero fees do not remove other trading costs: the spread and slippage on thin order books still apply.",
+    ],
+    checked: "2026-11-16",
+  },
+  {
     id: "gemini:referral-50", venue: "gemini", category: "referral",
     title: "Gemini referral: $50 in crypto for you and your friend",
     url: "https://www.gemini.com/referrals", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",
