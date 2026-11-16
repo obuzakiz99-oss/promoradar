@@ -1,5 +1,5 @@
 {
- "at": 1794868718807,
+ "at": 1794868985201,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -16,7 +16,7 @@
    "url": "https://www.lbank.com/event-new/10003902-btc-trading-carnival?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
    "perUserUsd": 3,
-   "netUsd": 2.99
+   "netUsd": 4.81
   },
   {
    "id": "tg:Kucoin_News/37201",
@@ -100,7 +100,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.94,
+   "perUserUsd": 5.95,
    "netUsd": 0.28
   },
   {
@@ -414,7 +414,7 @@
    "title": "Daily Top 10 Trading Opportunities: The First Contract Trading Competition Is Here!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15778",
    "why": "small",
-   "netUsd": 2.96
+   "netUsd": 2.95
   },
   {
    "id": "binance:f8e719ab5ce440cfb564858c27f2a6f3",
@@ -422,7 +422,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.06,
+   "perUserUsd": 8.08,
    "netUsd": 2.74
   },
   {
@@ -455,7 +455,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.83,
+   "perUserUsd": 8.81,
    "netUsd": -0.17
   },
   {
