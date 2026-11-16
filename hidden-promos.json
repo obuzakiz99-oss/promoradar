@@ -1,6 +1,14 @@
 {
- "at": 1794820526531,
+ "at": 1794823104439,
  "items": [
+  {
+   "id": "tg:MEXCofficialNews/38824",
+   "venue": "MEXC",
+   "title": "Share Your VVIP Story: 500 USDT Prize Pool",
+   "url": "https://www.mexc.com/user/m-score?utm_source=community&utm_medium=tg&utm_campaign=vvipalways",
+   "why": "social",
+   "netUsd": 0.02
+  },
   {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
    "venue": "Binance",
@@ -16,7 +24,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.87,
+   "perUserUsd": 5.89,
    "netUsd": 0.27
   },
   {
@@ -131,8 +139,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.91,
-   "netUsd": -0.12
+   "perUserUsd": 1.87,
+   "netUsd": -0.13
   },
   {
    "id": "tg:coinstore_global/10361",
@@ -216,7 +224,7 @@
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.11,
+   "perUserUsd": 2.1,
    "netUsd": -0.08
   },
   {
@@ -311,7 +319,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 9.37,
+   "perUserUsd": 8.8,
    "netUsd": -0.17
   },
   {
@@ -388,14 +396,6 @@
    "title": "AI vs You: NFP Prediction Challenge!",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
    "why": "news"
-  },
-  {
-   "id": "tg:Bitget_Announcements/18269",
-   "venue": "Bitget",
-   "title": "Total Prize Pool: 10,000 USDT!",
-   "url": "https://www.bitget.com/support/articles/12560603899382",
-   "why": "social",
-   "netUsd": 0.17
   },
   {
    "id": "zoomex:63690091619097",
