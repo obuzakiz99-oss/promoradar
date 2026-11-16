@@ -1,5 +1,5 @@
 {
- "at": 1794809486476,
+ "at": 1794809807551,
  "items": [
   {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
@@ -7,7 +7,8 @@
    "title": "Binance x Pick n Pay: From Black Friday to New Year, Earn 20% Cashback in USDC!",
    "url": "https://www.binance.com/en/support/announcement/detail/56549e5045354813bbf8234d34fe8959",
    "why": "small",
-   "perUserUsd": 5
+   "perUserUsd": 5,
+   "netUsd": 0.5
   },
   {
    "id": "binance:e1416125fa44407f92af70b594b215a3",
@@ -15,7 +16,16 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.89
+   "perUserUsd": 5.9,
+   "netUsd": 0.28
+  },
+  {
+   "id": "tg:Toobit_announcements/6083",
+   "venue": "Toobit",
+   "title": "A LITTLE GRATITUDE, A BIG REWARD!",
+   "url": "https://t.me/Toobit_announcements/6083",
+   "why": "social",
+   "netUsd": 0.5
   },
   {
    "id": "tg:BingXAnnouncement/5375",
@@ -23,7 +33,8 @@
    "title": "One invite lands a $10 ANTHROPIC voucher. Their first ANTHROPIC futures trade lands you another $15.",
    "url": "http://bingx.com/activity/task/",
    "why": "small",
-   "perUserUsd": 10
+   "perUserUsd": 10,
+   "netUsd": 10
   },
   {
    "id": "tg:Bybit_Announcements/10112",
@@ -193,6 +204,13 @@
    "why": "news"
   },
   {
+   "id": "tg:ourbitofficial/4179",
+   "venue": "Ourbit",
+   "title": "Ourbit Weekly Active + PnL Challenge！",
+   "url": "https://t.me/ourbitofficial/4179",
+   "why": "news"
+  },
+  {
    "id": "biconomy:64106346149913",
    "venue": "Biconomy.com",
    "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
@@ -268,7 +286,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.12,
+   "perUserUsd": 8.13,
    "netUsd": 2.74
   },
   {
@@ -293,7 +311,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.83,
+   "perUserUsd": 8.74,
    "netUsd": -0.17
   },
   {
