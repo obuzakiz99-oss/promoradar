@@ -285,7 +285,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
           {(counts.zerofee || cat === "zerofee") && (
             <button className="chip" data-on={cat === "zerofee"} onClick={() => setCat("zerofee")} aria-pressed={cat === "zerofee"}>
-              <span className="font-mono text-[11px] font-bold text-lime">0%</span>
+              <span className="font-mono text-xs font-bold text-lime">0%</span>
               {ZERO_TAB[lang]} <span className="chip-count">{counts.zerofee ?? 0}</span>
             </button>
           )}
