@@ -1,5 +1,5 @@
 {
- "at": 1794809807551,
+ "at": 1794810347316,
  "items": [
   {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
@@ -286,7 +286,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.13,
+   "perUserUsd": 8.12,
    "netUsd": 2.74
   },
   {
@@ -311,7 +311,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.74,
+   "perUserUsd": 8.7,
    "netUsd": -0.17
   },
   {
@@ -396,14 +396,6 @@
    "url": "https://www.bitget.com/support/articles/12560603899382",
    "why": "social",
    "netUsd": 0.17
-  },
-  {
-   "id": "tg:coinstore_global/10326",
-   "venue": "Coinstore",
-   "title": "USDT — Up to 7.50% APR",
-   "url": "https://t.me/coinstore_global/10326",
-   "why": "news",
-   "netUsd": 2.05
   },
   {
    "id": "zoomex:63690091619097",
