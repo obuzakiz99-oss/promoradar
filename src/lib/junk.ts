@@ -10,6 +10,8 @@ import type { Promo } from "./types";
  */
 export type JunkReason = "social" | "small";
 export const MIN_PER_USER_USD = 30;
+/** Owner 16.11: also hide anything where the most one person can get (any mechanic, competitions too) is under $15. */
+export const MIN_MAX_PER_USER_USD = 15;
 
 const NET = String.raw`(?:X(?!\s*Layer)|Twitter|Telegram|Discord|YouTube|Instagram|TikTok|Facebook|Reddit|social (?:media|platforms?|accounts?))`;
 const SOCIAL_TITLE = new RegExp(

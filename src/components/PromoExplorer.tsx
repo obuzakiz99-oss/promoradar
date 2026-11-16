@@ -53,6 +53,9 @@ const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: s
   ru: { n: (n) => `Вы скрыли: ${n}`, show: "показать", hideAgain: "снова скрыть", reset: "вернуть все" },
 };
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
+/** The "0 fees" tab (owner 16.11): 0% trading-fee offers from any category, flagged in promos.ts (zerofee.ts). */
+const ZERO_TAB: Record<Locale, string> = { uk: "0 комісії", en: "0 fees", ru: "0 комиссии" };
+const catOk = (p: Promo, cat: Category | "all" | "zerofee") => cat === "all" || (cat === "zerofee" ? !!p.meta?.zeroFee : p.category === cat);
 const HID_TAB: Record<Locale, string> = { uk: "Приховані", en: "Hidden", ru: "Скрытые" };
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
@@ -91,7 +94,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   const saved = useSaved();
   const [kind, setKind] = useState<Kind>("all");
   const [status, setStatus] = useState<Status | "all">("all");
-  const [cat, setCat] = useState<Category | "all">("all");
+  const [cat, setCat] = useState<Category | "all" | "zerofee">("all");
   const [venues, setVenues] = useState<Set<string>>(new Set());
   const [allVenues, setAllVenues] = useState(false);
   const [q, setQ] = useState("");
@@ -124,7 +127,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const many = (k: string) => (src.get(k) ?? "").split(",").map((x) => x.trim()).filter(Boolean);
     const k = one("kind", [...KINDS, "saved", "hidden"] as Kind[]); if (k && showKinds) setKind(k);
     const st = one("status", STATUSES); if (st) setStatus(st);
-    const c = one("cat", CATS); if (c) setCat(c);
+    const c = one("cat", [...CATS, "zerofee"] as Array<Category | "zerofee">); if (c) setCat(c);
     const so = one("sort", SORTS); if (so) setSort(so);
     const v = many("venue"); if (v.length) setVenues(new Set(v));
     const qk = many("quick").filter((x): x is Quick => (QUICKS as readonly string[]).includes(x)); if (qk.length) setQuick(new Set(qk));
@@ -209,18 +212,18 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   const venueList = useMemo(() => {
     const m = new Map<string, { v: Venue; n: number }>();
-    byKind.forEach((p) => { if (p.venue.kind === "airdrop" || !qOk(p) || (cat !== "all" && p.category !== cat)) return; const e = m.get(p.venue.id); e ? e.n++ : m.set(p.venue.id, { v: p.venue, n: 1 }); });
+    byKind.forEach((p) => { if (p.venue.kind === "airdrop" || !qOk(p) || !catOk(p, cat)) return; const e = m.get(p.venue.id); e ? e.n++ : m.set(p.venue.id, { v: p.venue, n: 1 }); });
     return [...m.values()].sort((a, b) => b.n - a.n);
   }, [byKind, qOk, cat]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: base.length };
-    base.forEach((p) => (c[p.category] = (c[p.category] ?? 0) + 1));
+    base.forEach((p) => { c[p.category] = (c[p.category] ?? 0) + 1; if (p.meta?.zeroFee) c.zerofee = (c.zerofee ?? 0) + 1; });
     return c;
   }, [base]);
 
   const list = useMemo(() => {
-    const l = base.filter((p) => cat === "all" || p.category === cat);
+    const l = base.filter((p) => catOk(p, cat));
     const sponsored = l.filter((p) => p.sponsored);
     const rest = l.filter((p) => !p.sponsored);
     // best first: expected net $ for one ordinary participant (value.ts), surer amounts ahead of estimates
@@ -280,6 +283,12 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} aria-pressed={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>
+          {(counts.zerofee || cat === "zerofee") && (
+            <button className="chip" data-on={cat === "zerofee"} onClick={() => setCat("zerofee")} aria-pressed={cat === "zerofee"}>
+              <span className="font-mono text-[11px] font-bold text-lime">0%</span>
+              {ZERO_TAB[lang]} <span className="chip-count">{counts.zerofee ?? 0}</span>
+            </button>
+          )}
           {CATS.filter((c) => counts[c] || cat === c).map((c) => (
             <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)} aria-pressed={cat === c}>
               <span className="size-2 rounded-full" style={{ background: CAT_STYLE[c].dot }} />

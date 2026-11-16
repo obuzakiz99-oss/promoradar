@@ -57,6 +57,7 @@ export interface Promo {
     minEntry?: { amount: number; unit: string; kind: "trade" | "deposit" | "stake" | "hold" | "buy"; text: string };   // smallest $ threshold that earns anything
     datesFromRules?: boolean;
     geo?: { only?: string; noUA?: boolean; noEU?: boolean; text?: string };   // region-exclusive / country restrictions
+    zeroFee?: boolean;         // a 0% trading-fee offer (the "0 fees" tab)
     forNew?: boolean;          // only for new users
     tiers?: Array<{ min: number; reward: string; amount: number; unit: string }>;   // threshold → reward table from the rules
     aprPct?: number;           // advertised APR of an interest-type promo

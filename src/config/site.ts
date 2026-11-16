@@ -355,6 +355,20 @@ export const MANUAL: Array<{
     checked: "2026-11-16",
   },
   {
+    // official Binance announcement (14.10.2026); it has dropped out of the CMS feed, which only returns the latest posts
+    id: "binance:kgst-usdt-zero-fee", venue: "binance", category: "other",
+    title: "Binance zero trading fees on KGST/USDT: 0% maker and taker for all verified users until January 13, 2027",
+    url: "https://www.binance.com/en/support/announcement/detail/54f481d07bee4e98a2c082aa1e481d0b", from: "2026-10-14T00:00:00Z", until: "2027-01-13T23:59:00Z",
+    rules: [
+      "Campaign period: October 14, 2026 00:00 – January 13, 2027 23:59 (UTC).",
+      "All verified Binance users pay zero maker and zero taker fees on the KGST/USDT spot pair.",
+      "KGST is a stablecoin pegged 1:1 to the Kyrgyz som (KGS), fully backed by fiat reserves.",
+      "KGST/USDT volume does not count toward VIP tiers or Liquidity Provider programs; BNB discounts and referral rebates do not apply to this pair during the campaign.",
+      "Trading the pair depends on your country or region of residence. Standard trading fees apply after the campaign ends.",
+    ],
+    checked: "2026-11-16",
+  },
+  {
     id: "gemini:referral-50", venue: "gemini", category: "referral",
     title: "Gemini referral: $50 in crypto for you and your friend",
     url: "https://www.gemini.com/referrals", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",
