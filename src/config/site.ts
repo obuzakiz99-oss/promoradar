@@ -313,6 +313,48 @@ export const MANUAL: Array<{
     checked: "2026-11-16",
   },
   {
+    // official: docs.lighter.xyz/trading/trading-fees — standing fee model, no end date; re-checked monthly
+    id: "lighter:zero-fee-standard", venue: "lighter", category: "other",
+    title: "Lighter zero fees: 0% maker and 0% taker on perps and spot for Standard accounts",
+    url: "https://docs.lighter.xyz/trading/trading-fees", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
+    rules: [
+      "Standard accounts (the default account type) pay no maker or taker fees on regular perpetual and spot orders.",
+      "TWAP/advanced orders and RFQ on Standard accounts cost 1 bp (0.01%).",
+      "The price of zero fees is speed: on Standard accounts taker orders and cancels/modifications wait 300 ms; maker orders have no delay.",
+      "Premium/Advanced accounts are opt-in and pay fees (0.004% maker / 0.028% taker without LIT staking; up to 30% off when staking LIT) in exchange for lower latency.",
+      "Zero fees do not remove other trading costs: the spread, slippage and funding on perpetuals still apply. Lighter can change its fee model at any time — check the fee page before trading.",
+    ],
+    checked: "2026-11-16",
+  },
+  {
+    // official: docs.paradex.trade/trading/trading-fees + /trading/trader-profiles — standing fee model; re-checked monthly
+    id: "paradex:zero-fee-retail", venue: "paradex", category: "other",
+    title: "Paradex zero fees for retail: 0% maker and 0% taker on perps, spot and options",
+    url: "https://docs.paradex.trade/trading/trading-fees", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
+    rules: [
+      "Retail orders on Paradex pay 0% maker and 0% taker fees on perpetuals, spot and options.",
+      "An order counts as Retail when it is placed through the Paradex web app (or via API with an interactive token). Regular API orders are Pro orders and pay Pro fees (0.003% maker, taker from 0.045%).",
+      "Retail orders have a 300 ms speed bump on submission and cancellation and are limited to 3 orders per second, 30 per minute, 300 per hour and 1,000 per 24 hours.",
+      "If an account exceeds the Retail rate limits it is switched to Pro behaviour and loses the zero-fee retail treatment.",
+      "Zero fees do not remove other trading costs: the spread, slippage and funding on perpetuals still apply. Paradex can change its fees at any time — check the fee page before trading.",
+    ],
+    checked: "2026-11-16",
+  },
+  {
+    // official: okx.com/help/regarding-changes-on-zero-fee-pairs (24.12.2025) — standing list; re-checked monthly
+    id: "okx:zero-fee-stablecoin-pairs", venue: "okx", category: "other",
+    title: "OKX zero-fee spot pairs: 0% maker and taker on USDC-USDT and PYUSD-USDT",
+    url: "https://www.okx.com/help/regarding-changes-on-zero-fee-pairs", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
+    rules: [
+      "OKX keeps zero maker and zero taker fees on selected stablecoin spot pairs: USDC-USDT and PYUSD-USDT (its notice of December 24, 2025 also lists DAI-USDT and USDG-USDT).",
+      "The zero-fee promotion on USDT-USD stablecoin pairs ended on January 7, 2026 — standard spot fees apply there.",
+      "Zero-fee pairs may not be available in every jurisdiction, and rates differ by region: log in and check the Trading Fees page for your account.",
+      "Volume on zero-fee pairs usually does not count toward VIP tiers or trading competitions.",
+      "Useful for moving between stablecoins for free; it is not a discount on trading other coins.",
+    ],
+    checked: "2026-11-16",
+  },
+  {
     id: "gemini:referral-50", venue: "gemini", category: "referral",
     title: "Gemini referral: $50 in crypto for you and your friend",
     url: "https://www.gemini.com/referrals", from: "2026-11-01T00:00:00Z", until: "2026-11-30T23:59:00Z", reward: "$50",
