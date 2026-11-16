@@ -1,5 +1,5 @@
 {
- "at": 1794867105591,
+ "at": 1794867504384,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -9,12 +9,48 @@
    "why": "social"
   },
   {
+   "id": "kucoin:352892",
+   "venue": "KuCoin",
+   "title": "KuMining Black Friday: Mine More, Get More!",
+   "url": "https://www.kucoin.com/announcement/en-kumining-black-friday-mine-more-get-more?lang=en_US",
+   "why": "small",
+   "perUserUsd": 2,
+   "netUsd": 2
+  },
+  {
+   "id": "tg:LBanknews/20850",
+   "venue": "LBank",
+   "title": "New to LBank? You can earn a 5 USDT bonus at 1,000 USDT in qualifying Futures volume. Volume rewards go up to 100 USDT.",
+   "url": "https://www.lbank.com/event-new/10003897-Hot-Coin-Boost-Week-6?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=Platform-activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 4.5
+  },
+  {
    "id": "tg:MEXCofficialNews/38824",
    "venue": "MEXC",
    "title": "Share Your VVIP Story: 500 USDT Prize Pool",
    "url": "https://www.mexc.com/user/m-score?utm_source=community&utm_medium=tg&utm_campaign=vvipalways",
    "why": "social",
    "netUsd": 0.02
+  },
+  {
+   "id": "gate:102792",
+   "venue": "Gate",
+   "title": "Gate Stocks Player One: Trade to Win GTA6 and TTWO Shares",
+   "url": "https://www.gate.com/announcements/article/102792",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 1.5
+  },
+  {
+   "id": "gate:102786",
+   "venue": "Gate",
+   "title": "Deposit Rewards Season: Boost Your Deposits and Trades to Share 35,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102786",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 4.87
   },
   {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
@@ -113,6 +149,15 @@
    "why": "news"
   },
   {
+   "id": "xt:64279466595993",
+   "venue": "XT.com",
+   "title": "LIT · JUP · AVAX · ARIA · MIHAO: Complete Tasks and Earn Up to 153 USDT!",
+   "url": "https://xtsupport.zendesk.com/hc/en-us/articles/64279466595993-LIT-JUP-AVAX-ARIA-MIHAO-Complete-Tasks-and-Earn-Up-to-153-USDT",
+   "why": "small",
+   "perUserUsd": 1,
+   "netUsd": 1.49
+  },
+  {
    "id": "tg:btsenews/5722",
    "venue": "BTSE",
    "title": "A big win for the team behind the scenes.",
@@ -148,6 +193,15 @@
    "why": "small",
    "perUserUsd": 1.03,
    "netUsd": -0.29
+  },
+  {
+   "id": "tg:Toobit_announcements/6041",
+   "venue": "Toobit",
+   "title": "More reasons to trade, more ways to earn, and more rewards to celebrate!",
+   "url": "https://www.toobit.com/activities/c/Thanksgiving2026",
+   "why": "small",
+   "perUserUsd": 10,
+   "netUsd": 4.51
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15825",
@@ -187,6 +241,15 @@
    "title": "Phemex Halloween Party: Crypto Costume Challenge! 👻 Halloween is here, and this party has a crypto dress code! What would you dress up as? Your biggest trading fear,…",
    "url": "https://t.me/Phemex_Announcements/7965",
    "why": "news"
+  },
+  {
+   "id": "tg:coinstore_global/10360",
+   "venue": "Coinstore",
+   "title": "The race is on! The top 1,000 eligible traders will receive rewards in the Gold Trading Challenge. Trade eligible pairs, climb the leaderboard and compete for USDT…",
+   "url": "https://www.coinstore.com/activity/Goldtrading",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 4.7
   },
   {
    "id": "binance:252d3a2cb7a847428699458241796399",
@@ -359,7 +422,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.6,
+   "perUserUsd": 8.57,
    "netUsd": -0.17
   },
   {
@@ -377,6 +440,15 @@
    "url": "https://t.me/Bybit_Announcements/10044",
    "why": "small",
    "netUsd": 10
+  },
+  {
+   "id": "tg:HTXGlobalAnnouncementChannel/15759",
+   "venue": "HTX",
+   "title": "WAN Bonanza Is Live! Trade to Share 10,000 USDT! @wanchain_org",
+   "url": "https://www.htx.com/en-us/support/45047951964130",
+   "why": "small",
+   "perUserUsd": 2,
+   "netUsd": 0.9
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15758",
