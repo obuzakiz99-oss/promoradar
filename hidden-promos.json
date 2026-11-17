@@ -1,5 +1,5 @@
 {
- "at": 1794873442376,
+ "at": 1794875263674,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -224,8 +224,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.07,
-   "netUsd": -0.29
+   "perUserUsd": 1.22,
+   "netUsd": -0.26
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -339,15 +339,6 @@
    "why": "news"
   },
   {
-   "id": "biconomy:64106346149913",
-   "venue": "Biconomy.com",
-   "title": "🎁 Share 985,000 GRIFFAIN — Biconomy × GRIFFAIN Trading Airdrop!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64106346149913--Share-985-000-GRIFFAIN-Biconomy-GRIFFAIN-Trading-Airdrop",
-   "why": "small",
-   "perUserUsd": 2.15,
-   "netUsd": -0.07
-  },
-  {
    "id": "tg:Kucoin_News/37079",
    "venue": "KuCoin",
    "title": "The Trail Gate Is Closing — Claim Your Bonus Today! 📲",
@@ -422,7 +413,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.03,
+   "perUserUsd": 8,
    "netUsd": 2.74
   },
   {
@@ -455,7 +446,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.96,
+   "perUserUsd": 8.82,
    "netUsd": -0.17
   },
   {
