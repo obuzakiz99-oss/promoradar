@@ -9,6 +9,7 @@ const I = {
   yield: <path d="M3 17l6-6 4 4 8-8M14 7h7v7" />,
   cal: <><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4" /></>,
   learn: <path d="M22 10 12 5 2 10l10 5 10-5ZM6 12v5c3 2 9 2 12 0v-5" />,
+  unlock: <><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 7.5-2" /></>,
   star: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z" />,
 };
 
@@ -25,7 +26,8 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
   const items: Array<{ href: string; label: string; icon: React.ReactNode; on: boolean; badge?: number }> = [
     { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "t", "bonuses"].includes(seg) },
     { href: `${base}/${lang}/launchpools/`, label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], icon: I.yield, on: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"].includes(seg) },
-    { href: `${base}/${lang}/calendar/`, label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], icon: I.cal, on: ["calendar", "unlocks", "sales"].includes(seg) },
+    // owner 17.11: token unlocks on the bar; the promo calendar and token sales are tabs on that page
+    { href: `${base}/${lang}/unlocks/`, label: { uk: "Розлоки", en: "Unlocks", ru: "Разлоки" }[lang], icon: I.unlock, on: ["calendar", "unlocks", "sales"].includes(seg) },
     { href: `${base}/${lang}/learn/`, label: { uk: "Новачкам", en: "Beginners", ru: "Новичкам" }[lang], icon: I.learn, on: ["learn", "best", "check"].includes(seg) },
     { href: `${base}/${lang}/my/`, label: { uk: "Мої", en: "Saved", ru: "Мои" }[lang], icon: I.star, on: seg === "my", badge: saved },
   ];

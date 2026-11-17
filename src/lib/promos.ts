@@ -9,7 +9,7 @@ import { prices } from "./pools";
 import { translateAll } from "./translate";
 import { getFaqs } from "./faq";
 import { payoutOf } from "./payout";
-import { junkReason, MIN_MAX_PER_USER_USD, type JunkReason } from "./junk";
+import { junkReason, MIN_MAX_PER_USER_USD, RAFFLE, type JunkReason } from "./junk";
 import { isZeroFee } from "./zerofee";
 import { getAssessments, valueOf, valueJunk } from "./value";
 import type { Promo, Venue } from "./types";
@@ -223,7 +223,10 @@ async function getPromosLive(): Promise<Collected> {
     // under $15 hides the promo too, hand-added ones included; APR products (that line is "+$X on $1,000") and 0% fee
     // offers are exempt
     const lowEstimate = !p.sponsored && !p.meta?.zeroFee && v?.mech !== "apr" && v?.net !== undefined && v.gross !== undefined && v.net < MIN_MAX_PER_USER_USD;
-    const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
+    // owner 17.11: raffles go (lucky draws, giveaways, mystery boxes) — also from the "stack with" links under other cards;
+    // 0% fee offers stay (the fee saving is the point, the draw is an extra)
+    const raffle = !p.sponsored && !handAdded && !p.meta?.zeroFee && (v?.mech === "lucky_draw" || RAFFLE.test(p.titleOrig ?? p.title));
+    const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (raffle ? "raffle" : undefined) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
     if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
     kept.push(p);
   }
