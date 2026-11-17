@@ -1,5 +1,5 @@
 {
- "at": 1794889466086,
+ "at": 1794891541107,
  "items": [
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15846",
@@ -109,7 +109,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.94,
+   "perUserUsd": 5.95,
    "netUsd": 0.28
   },
   {
@@ -177,13 +177,6 @@
    "why": "news"
   },
   {
-   "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
-   "venue": "Bybit",
-   "title": "WSOT 2026 Captains' Call: Watch the Replay",
-   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-captains-call-watch-the-replay--arte378a592d8e9/",
-   "why": "news"
-  },
-  {
    "id": "tg:Bitrue_official/11220",
    "venue": "Bitrue",
    "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
@@ -233,7 +226,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.16,
+   "perUserUsd": 1.14,
    "netUsd": -0.27
   },
   {
@@ -422,7 +415,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.04,
+   "perUserUsd": 8.06,
    "netUsd": 2.74
   },
   {
@@ -455,8 +448,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 7.71,
-   "netUsd": -0.18
+   "perUserUsd": 7.07,
+   "netUsd": -0.19
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -512,15 +505,6 @@
    "why": "news"
   },
   {
-   "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
-   "venue": "Bybit",
-   "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
-   "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
-   "why": "small",
-   "perUserUsd": 10,
-   "netUsd": 9.59
-  },
-  {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
    "venue": "Binance",
    "title": "Binance VIP Level Protection Program",
@@ -533,15 +517,6 @@
    "title": "Margin Saver Voucher (1000x Futures)",
    "url": "https://zoomex.zendesk.com/hc/en-us/articles/63690091619097-Margin-Saver-Voucher-1000x-Futures",
    "why": "news"
-  },
-  {
-   "id": "bybit:welcome-to-bybit-earn-27-usdt-art8c8354c6faec",
-   "venue": "Bybit",
-   "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
-   "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
-   "why": "small",
-   "perUserUsd": 2,
-   "netUsd": 4.37
   }
  ]
 }
