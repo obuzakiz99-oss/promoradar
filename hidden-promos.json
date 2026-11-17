@@ -1,5 +1,5 @@
 {
- "at": 1794930402355,
+ "at": 1794930854413,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -23,7 +23,7 @@
    "venue": "KuCoin",
    "title": "Ready to put your KuCoin knowledge to the test? Join the quiz, complete your daily tasks, and climb the Gleam leaderboard for a chance to share the rewards!",
    "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.1
   },
   {
@@ -32,8 +32,16 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 175.35,
-   "netUsd": 2.09
+   "perUserUsd": 240,
+   "netUsd": 3.08
+  },
+  {
+   "id": "tg:Kucoin_News/37214",
+   "venue": "KuCoin",
+   "title": "PROOT: 'Tis the Season – Spot Lucky Draw! 🖤",
+   "url": "https://www.kucoin.com/competition/spotline_proof_tisseason261116?utm_source=SpotTG&utm_medium=TG&utm_campaign=TisTheSeason&transparentTitle=true&appNeedLang=true",
+   "why": "raffle",
+   "netUsd": 16.47
   },
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -57,7 +65,7 @@
    "venue": "Bitget",
    "title": "Trading Challenge | Win a Share of 30,000 USDT!",
    "url": "https://www.bitget.com/events/activities/new/0ce71d1d04ef5d9d883d8e053f53eda1?color=dark&languageType=0",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 2.4
   },
   {
@@ -65,7 +73,7 @@
    "venue": "Bitget",
    "title": "ANTHROPIC Futures Trading Competition Is LIVE!",
    "url": "https://www.bitget.com/launchhub/trading-club/234022",
-   "why": "small",
+   "why": "raffle",
    "perUserUsd": 3000,
    "netUsd": 4.17
   },
@@ -74,15 +82,23 @@
    "venue": "KuCoin",
    "title": "Get started with TradFi Futures Trading with as low as $100 to unlock a lucky draw spin",
    "url": "https://www.kucoin.com/campaigns/futures_lego_tradfi261030?utm_source=global_futures_lego_tradfi261030futuresTG&appNeedLang=true&loading=2&transparentTitle=true",
-   "why": "small",
+   "why": "raffle",
    "netUsd": -0.03
+  },
+  {
+   "id": "tg:Toobit_announcements/6103",
+   "venue": "Toobit",
+   "title": "We're celebrating this exciting listing with a $30,000 reward pool and plenty of opportunities to grab extra rewards.",
+   "url": "https://www.toobit.com/activities/c/BPTY-trading-event",
+   "why": "raffle",
+   "netUsd": 15
   },
   {
    "id": "gate:102827",
    "venue": "Gate",
    "title": "Gate ETF Treasure Hunt Edition 10: Up to 88 USDT per Draw & Trade for up to 900 USDT",
    "url": "https://www.gate.com/announcements/article/102827",
-   "why": "small",
+   "why": "raffle",
    "perUserUsd": 88,
    "netUsd": 4
   },
@@ -116,7 +132,7 @@
    "venue": "Bybit",
    "title": "2,500 USDT in red packets and chances to win an iPhone 18 for eligible viewers.",
    "url": "https://t.me/Bybit_Announcements/10123",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.17
   },
   {
@@ -125,7 +141,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 8.77
+   "netUsd": 12
   },
   {
    "id": "gate:102822",
@@ -160,6 +176,15 @@
    "why": "small",
    "perUserUsd": 5,
    "netUsd": 5
+  },
+  {
+   "id": "gate:102817",
+   "venue": "Gate",
+   "title": "Gold & Silver Futures Lucky Rewards: Unlock Double Lucky Draws, Win XAUT & SLVON Bonuses",
+   "url": "https://www.gate.com/announcements/article/102817",
+   "why": "raffle",
+   "perUserUsd": 500,
+   "netUsd": 24
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15848",
@@ -286,11 +311,26 @@
    "netUsd": 2
   },
   {
+   "id": "tg:Kucoin_News/37192",
+   "venue": "KuCoin",
+   "title": "Enjoy a boosted 10K USDT cash reward + Futures Points for the Top 3 Winners in the Solo Contest, new Copy Trading integration, and an upgraded 100K USDT new-user…",
+   "url": "https://www.kucoin.com/competition/futures_proof_TisSeason261116?utm_source=FuturesTG&utm_medium=TG&utm_campaign=TisTheSeason&transparentTitle=true&loading=2&appNeedLang=true",
+   "why": "raffle",
+   "netUsd": 91.62
+  },
+  {
+   "id": "tg:Bitget_Announcements/18402",
+   "venue": "Bitget",
+   "title": "Stock rToken Campaign | Chip Giants – Limited-Time Rewards! 📈",
+   "url": "https://www.bitget.com/launchhub/trading-club/234025",
+   "why": "raffle"
+  },
+  {
    "id": "bybit:wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac",
    "venue": "Bybit",
    "title": "[WSOT 2026 Livestream] Trade the Future with Bybit AI: Share 4,900 USDT Worth of Red Packet + Apple Product Rewards",
    "url": "https://announcements.bybit.com/en-US/article/wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac/",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.33
   },
   {
@@ -315,8 +355,8 @@
    "venue": "Binance",
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
-   "why": "small",
-   "netUsd": 3.86
+   "why": "raffle",
+   "netUsd": 3.83
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -344,12 +384,21 @@
    "netUsd": 0.5
   },
   {
+   "id": "kucoin:354183",
+   "venue": "KuCoin",
+   "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
+   "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
+   "why": "raffle",
+   "perUserUsd": 1000,
+   "netUsd": 91.27
+  },
+  {
    "id": "binance:e1416125fa44407f92af70b594b215a3",
    "venue": "Binance",
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.86,
+   "perUserUsd": 5.81,
    "netUsd": 0.27
   },
   {
@@ -357,7 +406,7 @@
    "venue": "Toobit",
    "title": "A LITTLE GRATITUDE, A BIG REWARD!",
    "url": "https://t.me/Toobit_announcements/6083",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.5
   },
   {
@@ -384,6 +433,13 @@
    "why": "small",
    "perUserUsd": 550,
    "netUsd": -99.67
+  },
+  {
+   "id": "tg:Kucoin_News/37183",
+   "venue": "KuCoin",
+   "title": "TIME IS RUNNING OUT — TAKE THE KUCOIN 5.0 QUIZ!",
+   "url": "https://t.me/Kucoin_News/37183",
+   "why": "raffle"
   },
   {
    "id": "tg:coinstore_global/10373",
@@ -414,7 +470,7 @@
    "venue": "LBank",
    "title": "New to LBank? Verify your account, reach 100 USDT in net deposits and make your first Spot trade of 50 USDT or more for up to 2 Mystery Box draw entries.",
    "url": "https://www.lbank.com/event-new/10003865-eftts-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "small",
+   "why": "raffle",
    "netUsd": -0.14
   },
   {
@@ -478,6 +534,15 @@
    "why": "news"
   },
   {
+   "id": "tg:btsenews/5720",
+   "venue": "BTSE",
+   "title": "Round 2 of the BTSE Fiesta is here—and the prize pool just hit $1,300,000 🎉",
+   "url": "https://www.btse.com/en/events/fiesta_r2?utm_source=telegram&utm_medium=2&utm_campaign=00007471803",
+   "why": "raffle",
+   "perUserUsd": 2098,
+   "netUsd": 649.82
+  },
+  {
    "id": "binance:5635d4502cc840c39b3b6e2d2f28a1ca",
    "venue": "Binance",
    "title": "Binance Stocks University: Trade bStocks to Share 2,000 USDC!",
@@ -490,7 +555,7 @@
    "venue": "Bybit",
    "title": "Fiat-to-Crypto Frenzy: Complete Simple Tasks for a Chance to Win a Share of 80,000 USDT",
    "url": "https://announcements.bybit.com/en-US/article/fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492/",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 5.33
   },
   {
@@ -498,9 +563,16 @@
    "venue": "Bitget",
    "title": "All-Star Futures Trading Competition Is LIVE! 📈",
    "url": "https://www.bitget.com/events/super-pairs/task/234013",
-   "why": "small",
+   "why": "raffle",
    "perUserUsd": 3000,
    "netUsd": 5.78
+  },
+  {
+   "id": "tg:Bitget_Announcements/18388",
+   "venue": "Bitget",
+   "title": "Stock Investor Campaign | Earn Up to 2.5 rNVDA! 📈",
+   "url": "https://www.bitget.com/launchhub/stock-investor/1006",
+   "why": "raffle"
   },
   {
    "id": "tg:Bitrue_official/11210",
@@ -538,7 +610,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.25,
+   "perUserUsd": 1.26,
    "netUsd": -0.25
   },
   {
@@ -572,7 +644,7 @@
    "venue": "XT.com",
    "title": "EDIENPOL Listing Celebration: Trade to Share 5,100 EPOL and Earn Up to 500 USDT Extra!",
    "url": "https://xtsupport.zendesk.com/hc/en-us/articles/64230354475417-EDIENPOL-Listing-Celebration-Trade-to-Share-5-100-EPOL-and-Earn-Up-to-500-USDT-Extra",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.05
   },
   {
@@ -580,7 +652,7 @@
    "venue": "KCEX",
    "title": "FIND KCEX & WIN REWARDS! 🎁 — It's time for a little hide-and-seek!",
    "url": "https://t.me/KCEX_announcements/5687",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.03
   },
   {
@@ -613,6 +685,14 @@
    "why": "small",
    "perUserUsd": 1888,
    "netUsd": 2.99
+  },
+  {
+   "id": "tg:LBanknews/20818",
+   "venue": "LBank",
+   "title": "$30,000 in rewards, with an iPhone Duo and a travel voucher up for grabs. 👀",
+   "url": "https://www.lbank.com/event-new/10003822-ai-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "raffle",
+   "netUsd": 15
   },
   {
    "id": "tg:coinstore_global/10360",
@@ -648,11 +728,18 @@
    "netUsd": 0.82
   },
   {
+   "id": "kucoin:355011",
+   "venue": "KuCoin",
+   "title": "Matrix (MTX) Listing Campaign — 70,000 MTX Giveaway",
+   "url": "https://www.kucoin.com/announcement/en-matrix-mtx-listing-campaign-70000-mtx-giveaway?lang=en_US",
+   "why": "raffle"
+  },
+  {
    "id": "tg:Toobit_announcements/6027",
    "venue": "Toobit",
    "title": "Big Trades, Bigger Perks! — Put your trading volume to work and unlock more rewards! Eligible VIPs can get their first lucky draw with just 20,000 USDT in qualifying…",
    "url": "https://t.me/Toobit_announcements/6027",
-   "why": "small",
+   "why": "raffle",
    "netUsd": -7.4
   },
   {
@@ -667,7 +754,7 @@
    "venue": "Bitget",
    "title": "Trade Futures & Win a Share of 60,000 USDT in Gold Rewards! 🚀",
    "url": "https://www.bitget.com/events/activities/new/22caec1a8809533d8b7567fcd29c6b1b?color=dark&languageType=0",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 5
   },
   {
@@ -675,7 +762,7 @@
    "venue": "Bitget",
    "title": "Earnings Season Trading Challenge Is LIVE!",
    "url": "https://www.bitget.com/events/super-pairs/task/234001",
-   "why": "small",
+   "why": "raffle",
    "perUserUsd": 3000,
    "netUsd": 4.12
   },
@@ -693,7 +780,7 @@
    "venue": "Bybit",
    "title": "Join the Fiat-to-Crypto Frenzy and turn your first fiat-to-crypto trades into chances to win weekly USDT rewards!",
    "url": "https://t.me/Bybit_Announcements/10075",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 5.33
   },
   {
@@ -714,6 +801,14 @@
    "netUsd": 2.5
   },
   {
+   "id": "tg:Phemex_Announcements/7956",
+   "venue": "Phemex",
+   "title": "More Ways to Spin in Lucky Draw #13!",
+   "url": "https://phemex.com/promo/activity/985?group=9077&referralCode=BG79H9",
+   "why": "raffle",
+   "netUsd": 24.95
+  },
+  {
    "id": "bitbase:5792472385182",
    "venue": "Bitbase",
    "title": "Bitbase Community Growth Program: Unlock a 4,000 USDT Tiered Prize Pool — Every Move Counts!",
@@ -727,14 +822,14 @@
    "title": "🏆 DOT Trading Competition — Share 10,000 DOT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64145841538201--DOT-Trading-Competition-Share-10-000-DOT",
    "why": "small",
-   "netUsd": 0.22
+   "netUsd": 0.21
   },
   {
    "id": "tg:LBanknews/20788",
    "venue": "LBank",
    "title": "Join the Carnival, then reach 10 USDT in total LBank Pay spending to unlock a draw chance.",
    "url": "https://www.lbank.com/event-new/10003707-Deposit-Trade-Cash?qcode=9iszu&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=fiat-activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.01
   },
   {
@@ -742,15 +837,22 @@
    "venue": "Bitget",
    "title": "Get ready to compete for a share of $75,000 across four reward pools! 🚀",
    "url": "https://www.bitget.com/launchhub/trading-club/234005",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 4.25
+  },
+  {
+   "id": "tg:Bitget_Announcements/18354",
+   "venue": "Bitget",
+   "title": "Limited-time AI Boom Stock Bonus 🚀",
+   "url": "https://www.bitget.com/launchhub/trading-club/234003",
+   "why": "raffle"
   },
   {
    "id": "tg:Bybit_Announcements/10066",
    "venue": "Bybit",
    "title": "Meet the squad leaders and join a squad now for a chance to win Apple products and Red Packets worth 4,900 USDT in total.",
    "url": "https://t.me/Bybit_Announcements/10066",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.33
   },
   {
@@ -765,7 +867,14 @@
    "venue": "Ourbit",
    "title": "Ourbit Weekly Active + PnL Challenge！",
    "url": "https://t.me/ourbitofficial/4179",
-   "why": "news"
+   "why": "raffle"
+  },
+  {
+   "id": "tg:Toobit_announcements/6002",
+   "venue": "Toobit",
+   "title": "More than just interest, there’s a chance to win!",
+   "url": "https://t.me/Toobit_announcements/6002",
+   "why": "raffle"
   },
   {
    "id": "tg:Kucoin_News/37079",
@@ -794,8 +903,15 @@
    "venue": "KuCoin",
    "title": "Sign up, trade over 100 USDT in Futures, and get a chance to share 5,000 USDT in rewards — up to 100 USDT each.",
    "url": "https://www.kucoin.com/campaigns/Trick_or_Trade?utm_source=Trick_or_Trade&utm_medium=Community&utm_campaign=Trick_or_Trade",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.78
+  },
+  {
+   "id": "tg:Toobit_announcements/5987",
+   "venue": "Toobit",
+   "title": "Sign up to join Exclusively VIP R5, then make your first Futures trade with a total trading volume of at least 1,000 USDT to get 1 lucky draw chance! 🚀",
+   "url": "https://t.me/Toobit_announcements/5987",
+   "why": "raffle"
   },
   {
    "id": "tg:MEXCofficialNews/38807",
@@ -803,6 +919,14 @@
    "title": "U.S. nonfarm payrolls take the spotlight on Nov 6 at 08:30 ET / 13:30 UTC.",
    "url": "https://www.mexc.com/futures/NAS100_USDT?utm_source=community&utm_medium=tg&utm_campaign=q3_earning_season",
    "why": "news"
+  },
+  {
+   "id": "tg:MEXCofficialNews/38805",
+   "venue": "MEXC",
+   "title": "Anthropic Pre-IPO Carnival is on!",
+   "url": "https://www.mexc.com/campaigns/Pre-IPO-ANT?utm_source=community&utm_medium=tg&utm_campaign=anthropic_futures",
+   "why": "raffle",
+   "netUsd": 100
   },
   {
    "id": "tg:LBanknews/20773",
@@ -825,7 +949,7 @@
    "venue": "HTX",
    "title": "Trade at least 500 USDT in futures to enter the lucky draw for a chance to win a shopping allowance of $11, $111, $1,000, or up to $1,111.",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15782",
-   "why": "small",
+   "why": "raffle",
    "netUsd": -0.03
   },
   {
@@ -861,6 +985,14 @@
    "netUsd": 2.95
   },
   {
+   "id": "tg:Toobit_announcements/5955",
+   "venue": "Toobit",
+   "title": "Ready to Unlock More VIP Perks? Your Rewards Are Waiting! 💎",
+   "url": "https://www.toobit.com/activities/c/exclusively-vip-r5",
+   "why": "raffle",
+   "netUsd": 240
+  },
+  {
    "id": "tg:BingXAnnouncement/5347",
    "venue": "BingX",
    "title": "#BingXTradFi Giveaway 🎉 — Non-farm payrolls drops tomorrow, is $BTC going UP or DOWN?📊",
@@ -883,8 +1015,16 @@
    "venue": "HTX",
    "title": "Daily Top 10 Trading Opportunities: The First Contract Trading Competition Is Here!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15778",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 2.96
+  },
+  {
+   "id": "tg:LBanknews/20761",
+   "venue": "LBank",
+   "title": "Lucky Prize Star Phase 2 is live. Reach 100 USDT in Futures volume this phase to earn a Star Pick.",
+   "url": "https://www.lbank.com/event-new/special/11th?qcode=9iu9c&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=Platform-activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "raffle",
+   "netUsd": 55.51
   },
   {
    "id": "binance:f8e719ab5ce440cfb564858c27f2a6f3",
@@ -892,7 +1032,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.88,
+   "perUserUsd": 7.74,
    "netUsd": 2.74
   },
   {
@@ -915,7 +1055,7 @@
    "venue": "KuCoin",
    "title": "ONE LAST THING, KUFAM… YOUR FINAL SHOT AT THE REWARDS!",
    "url": "https://www.kucoin.com/campaigns/United_as_KuFam?utm_source=United_as_KuFam&utm_medium=Community&utm_campaign=United_as_KuFam",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.25
   },
   {
@@ -932,7 +1072,7 @@
    "venue": "Bitget",
    "title": "Onchain trading challenge #132 (Robinhood): trade to share 20,000 U 🔥",
    "url": "https://www.bitget.com/zh-CN/support/articles/12560603899478",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 1.62
   },
   {
@@ -941,7 +1081,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.98,
+   "perUserUsd": 6.04,
    "netUsd": -0.2
   },
   {
@@ -951,6 +1091,13 @@
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social",
    "netUsd": 0.58
+  },
+  {
+   "id": "tg:Bybit_Announcements/10045",
+   "venue": "Bybit",
+   "title": "More missions completed, more chances to win!",
+   "url": "https://t.me/Bybit_Announcements/10045",
+   "why": "raffle"
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -1022,8 +1169,15 @@
    "venue": "Bybit",
    "title": "Lucky Jackpot: Spin to Win 8,888 USDT, iPhone 18 Pro Max, Gold 9999 & More",
    "url": "https://announcements.bybit.com/en-US/article/lucky-jackpot-spin-to-win-8-888-usdt-iphone-18-pro-max-more--artf41bf91725f7/",
-   "why": "small",
+   "why": "raffle",
    "netUsd": 0.59
+  },
+  {
+   "id": "bitvavo:52205687377425",
+   "venue": "Bitvavo",
+   "title": "Club Brugge promotion: win a trip to Naples",
+   "url": "https://support.bitvavo.com/hc/en-us/articles/52205687377425-Club-Brugge-promotion-win-a-trip-to-Naples",
+   "why": "raffle"
   },
   {
    "id": "binance:ade351b5d80842b69784d836e0338a6d",
