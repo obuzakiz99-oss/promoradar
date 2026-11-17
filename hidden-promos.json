@@ -1,5 +1,5 @@
 {
- "at": 1794950149717,
+ "at": 1794951804378,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -39,8 +39,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 75.35,
-   "netUsd": 0.56
+   "perUserUsd": 66.15,
+   "netUsd": 0.41
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -148,7 +148,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 3.77
+   "netUsd": 3.31
   },
   {
    "id": "gate:102822",
@@ -346,7 +346,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.37
+   "netUsd": 0.36
   },
   {
    "id": "tg:LBanknews/20850",
@@ -363,7 +363,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "netUsd": 3.88
+   "netUsd": 3.89
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -405,7 +405,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.9,
+   "perUserUsd": 5.91,
    "netUsd": 0.28
   },
   {
@@ -617,7 +617,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.1,
+   "perUserUsd": 1.11,
    "netUsd": -0.28
   },
   {
@@ -829,7 +829,7 @@
    "title": "🏆 DOT Trading Competition — Share 10,000 DOT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64145841538201--DOT-Trading-Competition-Share-10-000-DOT",
    "why": "small",
-   "netUsd": 0.23
+   "netUsd": 0.24
   },
   {
    "id": "tg:LBanknews/20788",
@@ -1039,7 +1039,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.89,
+   "perUserUsd": 7.96,
    "netUsd": 2.74
   },
   {
@@ -1088,7 +1088,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.43,
+   "perUserUsd": 6.36,
    "netUsd": -0.19
   },
   {
