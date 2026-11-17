@@ -1,5 +1,5 @@
 {
- "at": 1794948203761,
+ "at": 1794949733100,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -32,8 +32,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 81.9,
-   "netUsd": 0.66
+   "perUserUsd": 75.95,
+   "netUsd": 0.56
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -141,7 +141,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 4.1
+   "netUsd": 3.8
   },
   {
    "id": "gate:102822",
@@ -339,7 +339,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.36
+   "netUsd": 0.37
   },
   {
    "id": "tg:LBanknews/20850",
@@ -610,7 +610,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.17,
+   "perUserUsd": 1.13,
    "netUsd": -0.27
   },
   {
@@ -822,7 +822,7 @@
    "title": "🏆 DOT Trading Competition — Share 10,000 DOT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64145841538201--DOT-Trading-Competition-Share-10-000-DOT",
    "why": "small",
-   "netUsd": 0.24
+   "netUsd": 0.23
   },
   {
    "id": "tg:LBanknews/20788",
@@ -1081,7 +1081,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.29,
+   "perUserUsd": 6.33,
    "netUsd": -0.19
   },
   {
