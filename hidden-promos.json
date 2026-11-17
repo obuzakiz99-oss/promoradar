@@ -1,5 +1,5 @@
 {
- "at": 1794921334119,
+ "at": 1794921558770,
  "items": [
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -18,23 +18,6 @@
    "why": "small",
    "perUserUsd": 2,
    "netUsd": 0.95
-  },
-  {
-   "id": "gate:102818",
-   "venue": "Gate",
-   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
-   "url": "https://www.gate.com/announcements/article/102818",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 4
-  },
-  {
-   "id": "gate:102816",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102816",
-   "why": "small",
-   "perUserUsd": 5
   },
   {
    "id": "zoomex:64403337588121",
@@ -257,8 +240,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.07,
-   "netUsd": -0.29
+   "perUserUsd": 1.08,
+   "netUsd": -0.28
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -479,7 +462,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.23,
+   "perUserUsd": 6.26,
    "netUsd": -0.19
   },
   {
