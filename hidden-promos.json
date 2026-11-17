@@ -1,5 +1,5 @@
 {
- "at": 1794925145426,
+ "at": 1794926466685,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -274,7 +274,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.36
+   "netUsd": 0.35
   },
   {
    "id": "tg:LBanknews/20850",
@@ -291,7 +291,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "small",
-   "netUsd": 3.9
+   "netUsd": 3.91
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -324,7 +324,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.93,
+   "perUserUsd": 5.94,
    "netUsd": 0.28
   },
   {
@@ -367,14 +367,6 @@
    "url": "https://www.coinstore.com/launchpadDetail?activityId=242&fromPath=%2Flaunchpad%3Fts%3D1794378965407&ts=1794378970155",
    "why": "small",
    "netUsd": 5
-  },
-  {
-   "id": "tg:Kucoin_News/37172",
-   "venue": "KuCoin",
-   "title": "The Signs You Can’t Ignore: Sky-High Rewards Ahead!",
-   "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
-   "why": "small",
-   "netUsd": 0.1
   },
   {
    "id": "tg:Kucoin_News/37168",
@@ -875,7 +867,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.98,
+   "perUserUsd": 7.99,
    "netUsd": 2.74
   },
   {
@@ -924,7 +916,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.33,
+   "perUserUsd": 6.14,
    "netUsd": -0.19
   },
   {
