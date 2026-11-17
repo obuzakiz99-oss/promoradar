@@ -1,5 +1,5 @@
 {
- "at": 1794928558731,
+ "at": 1794929352127,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -17,6 +17,14 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 1
+  },
+  {
+   "id": "tg:Kucoin_News/37218",
+   "venue": "KuCoin",
+   "title": "Ready to put your KuCoin knowledge to the test? Join the quiz, complete your daily tasks, and climb the Gleam leaderboard for a chance to share the rewards!",
+   "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
+   "why": "small",
+   "netUsd": 0.1
   },
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -61,15 +69,6 @@
    "netUsd": -0.03
   },
   {
-   "id": "gate:102827",
-   "venue": "Gate",
-   "title": "Gate ETF Treasure Hunt Edition 10: Up to 88 USDT per Draw & Trade for up to 900 USDT",
-   "url": "https://www.gate.com/announcements/article/102827",
-   "why": "small",
-   "perUserUsd": 88,
-   "netUsd": 4
-  },
-  {
    "id": "binance:51ee8ac34c9f4603b514965aa291b668",
    "venue": "Binance",
    "title": "ANT & NVDA Perps Carnival: Trade Selected TradFi Perps and Share Up to 200,000 USDC in rewards!",
@@ -103,23 +102,6 @@
    "netUsd": 0.17
   },
   {
-   "id": "gate:102822",
-   "venue": "Gate",
-   "title": "Gate Web3 SCOR Swap Trading Competition Is Live: Share 2,000 USDC in Rewards",
-   "url": "https://www.gate.com/announcements/article/102822",
-   "why": "small",
-   "netUsd": 0.07
-  },
-  {
-   "id": "gate:102821",
-   "venue": "Gate",
-   "title": "ANT(Anthropic) Futures Trading Competition: 3 USDT on Your First Trade, Up to 8,000 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102821",
-   "why": "small",
-   "perUserUsd": 150,
-   "netUsd": 1
-  },
-  {
    "id": "tg:HTXGlobalAnnouncementChannel/15851",
    "venue": "HTX",
    "title": "Double 11: BTC | ETH Weekly Spot Trading Rewards #1 is live! Register for the event and get a 10 USDT Spot Grid Trial Bonus.",
@@ -128,38 +110,12 @@
    "netUsd": 10
   },
   {
-   "id": "gate:102818",
-   "venue": "Gate",
-   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
-   "url": "https://www.gate.com/announcements/article/102818",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 5
-  },
-  {
    "id": "tg:HTXGlobalAnnouncementChannel/15848",
    "venue": "HTX",
    "title": "Latest standings of the HTX Top 10 Trading Opportunities Futures Trading Competition",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15848",
    "why": "small",
    "netUsd": -4.4
-  },
-  {
-   "id": "gate:102816",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102816",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
-  },
-  {
-   "id": "gate:102815",
-   "venue": "Gate",
-   "title": "USD1 Futures Super League Season 3, Trade and Share 300,000 USD1 in WLFI",
-   "url": "https://www.gate.com/announcements/article/102815",
-   "why": "small",
-   "netUsd": 5.83
   },
   {
    "id": "zoomex:64403337588121",
@@ -274,7 +230,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.32
+   "netUsd": 0.33
   },
   {
    "id": "tg:LBanknews/20850",
@@ -291,7 +247,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "small",
-   "netUsd": 3.88
+   "netUsd": 3.9
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -324,7 +280,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.9,
+   "perUserUsd": 5.92,
    "netUsd": 0.28
   },
   {
@@ -513,7 +469,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.24,
+   "perUserUsd": 1.25,
    "netUsd": -0.25
   },
   {
@@ -743,6 +699,15 @@
    "why": "news"
   },
   {
+   "id": "gate:102667",
+   "venue": "Gate",
+   "title": "CandyDrop 191st: CandyDrop x ValueX (VLX) , Trade and Invite Friends to Share 227,273 VLX",
+   "url": "https://www.gate.com/announcements/article/102667",
+   "why": "small",
+   "perUserUsd": 41.74,
+   "netUsd": 6.9
+  },
+  {
    "id": "tg:Kucoin_News/37079",
    "venue": "KuCoin",
    "title": "The Trail Gate Is Closing — Claim Your Bonus Today! 📲",
@@ -867,7 +832,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.95,
+   "perUserUsd": 8,
    "netUsd": 2.74
   },
   {
@@ -916,8 +881,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.94,
-   "netUsd": -0.2
+   "perUserUsd": 6.11,
+   "netUsd": -0.19
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
