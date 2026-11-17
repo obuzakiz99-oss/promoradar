@@ -1,5 +1,5 @@
 {
- "at": 1794875746312,
+ "at": 1794875961115,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -66,6 +66,24 @@
    "url": "https://www.mexc.com/user/m-score?utm_source=community&utm_medium=tg&utm_campaign=vvipalways",
    "why": "social",
    "netUsd": 0.02
+  },
+  {
+   "id": "gate:102792",
+   "venue": "Gate",
+   "title": "Gate Stocks Player One: Trade to Win GTA6 and TTWO Shares",
+   "url": "https://www.gate.com/announcements/article/102792",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 1.5
+  },
+  {
+   "id": "gate:102786",
+   "venue": "Gate",
+   "title": "Deposit Rewards Season: Boost Your Deposits and Trades to Share 35,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102786",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 4.87
   },
   {
    "id": "binance:56549e5045354813bbf8234d34fe8959",
@@ -428,7 +446,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 8.99,
+   "perUserUsd": 9.09,
    "netUsd": -0.17
   },
   {
