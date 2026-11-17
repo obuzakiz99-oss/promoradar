@@ -1,0 +1,1 @@
+{"id":"binance:51ee8ac34c9f4603b514965aa291b668","h":"bSSlcwVYHrFtRelS","v":1,"at":1794921482007,"data":{"isPromo":true,"socialOnly":false,"mech":"first_n","act":{"kind":"trade_futures","usd":1000},"typical":{"amount":2,"unit":"USDC"},"max":{"amount":26250,"unit":"USDC"},"pool":{"amount":200000,"unit":"USDC"},"winners":10000,"days":14}}
