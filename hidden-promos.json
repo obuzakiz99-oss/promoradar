@@ -1,5 +1,5 @@
 {
- "at": 1794921988206,
+ "at": 1794922182448,
  "items": [
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -11,13 +11,20 @@
    "netUsd": 1.96
   },
   {
+   "id": "tg:btsenews/5725",
+   "venue": "BTSE",
+   "title": "The program is live, with rewards of up to $3,000 for valid findings.",
+   "url": "https://t.me/btsenews/5725",
+   "why": "news"
+  },
+  {
    "id": "tg:LBanknews/20858",
    "venue": "LBank",
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
    "perUserUsd": 2,
-   "netUsd": 0.95
+   "netUsd": 1.9
   },
   {
    "id": "gate:102818",
@@ -26,7 +33,7 @@
    "url": "https://www.gate.com/announcements/article/102818",
    "why": "small",
    "perUserUsd": 5,
-   "netUsd": 4
+   "netUsd": 5
   },
   {
    "id": "gate:102816",
@@ -34,7 +41,8 @@
    "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
    "url": "https://www.gate.com/announcements/article/102816",
    "why": "small",
-   "perUserUsd": 5
+   "perUserUsd": 5,
+   "netUsd": 2
   },
   {
    "id": "zoomex:64403337588121",
@@ -479,7 +487,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.32,
+   "perUserUsd": 6.37,
    "netUsd": -0.19
   },
   {
