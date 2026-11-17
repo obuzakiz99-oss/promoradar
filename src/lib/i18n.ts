@@ -89,7 +89,7 @@ const uk = {
   filters: { all: "Усі", search: "Пошук: токен, біржа, протокол…", sort: "Сортувати", newest: "Нові", ending: "Скоро завершуються", biggest: "Найбільша винагорода", venues: "Майданчики", more: "Ще", less: "Згорнути", reset: "Скинути", empty: "Нічого не знайдено. Спробуйте інші фільтри.", results: "результатів" },
   cat: { airdrop: "Аірдроп / Launchpool", competition: "Змагання", bonus: "Бонус за депозит", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Розіграші та інше" } as Record<Category, string>,
   card: {
-    join: "Взяти участь", details: "Умови", pool: "Фонд", endsIn: "Завершиться через", started: "Опубліковано", new: "Нове", sponsored: "Реклама", soon: "Старт",
+    join: "Взяти участь", details: "Умови", pool: "Загальний фонд на всіх", endsIn: "Завершиться через", started: "Опубліковано", new: "Нове", sponsored: "Реклама", soon: "Старт",
     apr: "APR винагород", base: "базовий", tvl: "TVL", ongoing: "Постійна програма", actions: "Що зробити", via: "джерело", confirmed: "Підтверджено", hot: "Гаряче", open: "Відкрити", requires: "Потрібно",
   },
   req: { telegram: "Telegram", x: "X (Twitter)", email: "Email", discord: "Discord", kyc: "KYC", phone: "Телефон" } as Record<string, string>,
@@ -199,7 +199,7 @@ const en: Dict = {
   filters: { all: "All", search: "Search: token, exchange, protocol…", sort: "Sort", newest: "Newest", ending: "Ending soon", biggest: "Biggest reward", venues: "Venues", more: "More", less: "Less", reset: "Reset", empty: "Nothing found. Try other filters.", results: "results" },
   cat: { airdrop: "Airdrop / Launchpool", competition: "Competition", bonus: "Deposit bonus", earn: "Earn / Staking", farming: "Liquidity farming", listing: "Listing campaign", referral: "Referral", other: "Draws & other" },
   card: {
-    join: "Join", details: "Rules", pool: "Pool", endsIn: "Ends in", started: "Published", new: "New", sponsored: "Sponsored", soon: "Starts",
+    join: "Join", details: "Rules", pool: "Total pool for everyone", endsIn: "Ends in", started: "Published", new: "New", sponsored: "Sponsored", soon: "Starts",
     apr: "Reward APR", base: "base", tvl: "TVL", ongoing: "Ongoing programme", actions: "What to do", via: "source", confirmed: "Confirmed", hot: "Hot", open: "Open", requires: "Requires",
   },
   req: { telegram: "Telegram", x: "X (Twitter)", email: "Email", discord: "Discord", kyc: "KYC", phone: "Phone" },
@@ -307,7 +307,7 @@ const ru: Dict = {
   filters: { all: "Все", search: "Поиск: токен, биржа, протокол…", sort: "Сортировать", newest: "Новые", ending: "Скоро завершатся", biggest: "Крупнейшая награда", venues: "Площадки", more: "Ещё", less: "Свернуть", reset: "Сбросить", empty: "Ничего не найдено. Попробуйте другие фильтры.", results: "результатов" },
   cat: { airdrop: "Аирдроп / Launchpool", competition: "Соревнование", bonus: "Бонус за депозит", earn: "Earn / Стейкинг", farming: "Фарм ликвидности", listing: "Листинг-кампания", referral: "Реферальная", other: "Розыгрыши и другое" },
   card: {
-    join: "Участвовать", details: "Условия", pool: "Фонд", endsIn: "Закончится через", started: "Опубликовано", new: "Новое", sponsored: "Реклама", soon: "Старт",
+    join: "Участвовать", details: "Условия", pool: "Общий фонд на всех", endsIn: "Закончится через", started: "Опубликовано", new: "Новое", sponsored: "Реклама", soon: "Старт",
     apr: "APR наград", base: "базовый", tvl: "TVL", ongoing: "Постоянная программа", actions: "Что сделать", via: "источник", confirmed: "Подтверждено", hot: "Горячее", open: "Открыть", requires: "Нужно",
   },
   req: { telegram: "Telegram", x: "X (Twitter)", email: "Email", discord: "Discord", kyc: "KYC", phone: "Телефон" },

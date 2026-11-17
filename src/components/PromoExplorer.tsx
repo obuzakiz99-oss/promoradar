@@ -54,7 +54,7 @@ const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: s
 };
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
 /** The "0 fees" tab (owner 16.11): 0% trading-fee offers from any category, flagged in promos.ts (zerofee.ts). */
-const ZERO_TAB: Record<Locale, string> = { uk: "0 комісії", en: "0 fees", ru: "0 комиссии" };
+const ZERO_TAB: Record<Locale, string> = { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" };
 const catOk = (p: Promo, cat: Category | "all" | "zerofee") => cat === "all" || (cat === "zerofee" ? !!p.meta?.zeroFee : p.category === cat);
 const HID_TAB: Record<Locale, string> = { uk: "Приховані", en: "Hidden", ru: "Скрытые" };
 
@@ -285,7 +285,6 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
           {(counts.zerofee || cat === "zerofee") && (
             <button className="chip" data-on={cat === "zerofee"} onClick={() => setCat("zerofee")} aria-pressed={cat === "zerofee"}>
-              <span className="font-mono text-xs font-bold text-lime">0%</span>
               {ZERO_TAB[lang]} <span className="chip-count">{counts.zerofee ?? 0}</span>
             </button>
           )}

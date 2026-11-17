@@ -17,11 +17,11 @@ import { regionName } from "@/lib/regions";
 
 /** "What you'd really get" line (value.ts): expected net $ for one ordinary participant, with how sure it is. */
 const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string; loss: string; flat: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
-  uk: { high: "Реально", mid: "Очікувано", low: "Оцінка", apr: "на $1 000 понад звичайний earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
+  uk: { high: "Реально отримаєте", mid: "Найімовірніше отримаєте", low: "У середньому на учасника", apr: "на $1 000 понад звичайний earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
     why: { stated: "сума з правил для мінімальної участі", max: "лише «до …» з правил — більшість отримує менше", chance: "пул ÷ приблизна кількість учасників (шанс)", apr: "дохід за строк акції на $1 000 понад звичайні 5% річних", none: "" } },
-  en: { high: "Realistic", mid: "Expected", low: "Estimate", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", flat: "No better than regular earn", cost: (x) => `minus fees/lock-up ≈ ${x}`,
+  en: { high: "You will really get", mid: "Most likely you get", low: "Average per participant", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", flat: "No better than regular earn", cost: (x) => `minus fees/lock-up ≈ ${x}`,
     why: { stated: "amount from the rules for the minimum entry", max: "only an 'up to' figure — most people get less", chance: "pool ÷ rough number of participants (a chance)", apr: "income for the period on $1,000 above a regular 5% a year", none: "" } },
-  ru: { high: "Реально", mid: "Ожидаемо", low: "Оценка", apr: "на $1 000 сверх обычного earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
+  ru: { high: "Реально получите", mid: "Скорее всего получите", low: "В среднем на участника", apr: "на $1 000 сверх обычного earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
     why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
 };
 function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
@@ -80,6 +80,8 @@ const FOR_NEW: Record<Locale, string> = { uk: "Для нових користу�
 const NO_DEP: Record<Locale, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from", ru: "порог от" };
 const PER_T: Record<Locale, string> = { uk: "Максимум на 1 людину", en: "Max per person", ru: "Максимум на 1 человека" };
+/** 0% trading-fee offers (the "0% fees" tab): the saving is the point, so the card says it where the amount would be. */
+const ZF: Record<Locale, { label: string; badge: string }> = { uk: { label: "Комісія за торгівлю", badge: "0% комісії" }, en: { label: "Trading fee", badge: "0% fees" }, ru: { label: "Комиссия за торговлю", badge: "0% комиссии" } };
 
 export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string }; combos?: Combo[] }) {
   const cs = CAT_STYLE[p.category];
@@ -167,6 +169,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
         // one badge per card (audit 12.11), the most decisive first: can't join → region → no deposit → new users → payout form
         if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "danger"]);
         if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
+        if (m.zeroFee && (m.perUser || p.reward)) b.push([ZF[lang].badge, "success"]);
         if (m.noDeposit && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
         if (m.forNew) b.push([FOR_NEW[lang], "info"]);
         if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form], "neutral"]);
@@ -205,6 +208,11 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
+            </div>
+          ) : m.zeroFee ? (
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{ZF[lang].label}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-lime">0%</div>
             </div>
           ) : isDrop && m.requires?.length ? (
             <div>
