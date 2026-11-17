@@ -1,5 +1,5 @@
 {
- "at": 1794948007826,
+ "at": 1794948203761,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -32,8 +32,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 84.5,
-   "netUsd": 0.7
+   "perUserUsd": 81.9,
+   "netUsd": 0.66
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -51,6 +51,14 @@
    "why": "small",
    "perUserUsd": 2,
    "netUsd": 0.08
+  },
+  {
+   "id": "okx:okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
+   "venue": "OKX",
+   "title": "OKX × ANTHROPICUSDT Trade to Earn: Trade to Share 200,000 USDT",
+   "url": "https://www.okx.com/help/okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
+   "why": "small",
+   "netUsd": 13.33
   },
   {
    "id": "tg:Bitget_Announcements/18437",
@@ -133,7 +141,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 4.22
+   "netUsd": 4.1
   },
   {
    "id": "gate:102822",
@@ -318,6 +326,14 @@
    "why": "raffle"
   },
   {
+   "id": "bybit:wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac",
+   "venue": "Bybit",
+   "title": "[WSOT 2026 Livestream] Trade the Future with Bybit AI: Share 4,900 USDT Worth of Red Packet + Apple Product Rewards",
+   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac/",
+   "why": "raffle",
+   "netUsd": 0.33
+  },
+  {
    "id": "biconomy:64378795293721",
    "venue": "Biconomy.com",
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
@@ -465,6 +481,13 @@
    "why": "news"
   },
   {
+   "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
+   "venue": "Bybit",
+   "title": "WSOT 2026 Captains' Call: Watch the Replay",
+   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-captains-call-watch-the-replay--arte378a592d8e9/",
+   "why": "news"
+  },
+  {
    "id": "tg:Bitrue_official/11220",
    "venue": "Bitrue",
    "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
@@ -526,6 +549,14 @@
    "url": "https://www.binance.com/en/support/announcement/detail/5635d4502cc840c39b3b6e2d2f28a1ca",
    "why": "small",
    "netUsd": -0.93
+  },
+  {
+   "id": "bybit:fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492",
+   "venue": "Bybit",
+   "title": "Fiat-to-Crypto Frenzy: Complete Simple Tasks for a Chance to Win a Share of 80,000 USDT",
+   "url": "https://announcements.bybit.com/en-US/article/fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492/",
+   "why": "raffle",
+   "netUsd": 5.33
   },
   {
    "id": "tg:Bitget_Announcements/18389",
@@ -1001,7 +1032,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.89,
+   "perUserUsd": 7.88,
    "netUsd": 2.74
   },
   {
@@ -1050,7 +1081,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.31,
+   "perUserUsd": 6.29,
    "netUsd": -0.19
   },
   {
@@ -1069,11 +1100,46 @@
    "why": "raffle"
   },
   {
+   "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
+   "venue": "Bybit",
+   "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
+   "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
+   "why": "small",
+   "perUserUsd": 10,
+   "netUsd": 9.59
+  },
+  {
+   "id": "bybit:mena-exclucsive-vip-welcome-rewards-deposit-trade-for-up-to-1-750-usdt--art10376399e577",
+   "venue": "Bybit",
+   "title": "[MENA Exclucsive] VIP Welcome Rewards: Deposit & Trade to Earn Up to 1,750 USDT",
+   "url": "https://announcements.bybit.com/en-US/article/mena-exclucsive-vip-welcome-rewards-deposit-trade-for-up-to-1-750-usdt--art10376399e577/",
+   "why": "small",
+   "perUserUsd": 50,
+   "netUsd": -354.11
+  },
+  {
+   "id": "bybit:mena-demo-arena-test-strategies-earn-rewards--art30d7f5cf1993",
+   "venue": "Bybit",
+   "title": "MENA Demo Arena: Test Strategies, Earn Rewards",
+   "url": "https://announcements.bybit.com/en-US/article/mena-demo-arena-test-strategies-earn-rewards--art30d7f5cf1993/",
+   "why": "small",
+   "perUserUsd": 500,
+   "netUsd": -2
+  },
+  {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
    "venue": "Binance",
    "title": "Binance VIP Level Protection Program",
    "url": "https://www.binance.com/en/support/announcement/detail/b3f6a9b7d0a746af9551912893029622",
    "why": "news"
+  },
+  {
+   "id": "okx:hold-to-earn-usdc-to-share-400000-usdc",
+   "venue": "OKX",
+   "title": "OKX Flash Earn Hold to Earn: Hold USDC to share 400,000 USDC, up to 8%",
+   "url": "https://www.okx.com/help/hold-to-earn-usdc-to-share-400000-usdc",
+   "why": "small",
+   "netUsd": -14.43
   },
   {
    "id": "zoomex:63690091619097",
@@ -1091,6 +1157,22 @@
    "netUsd": 0.07
   },
   {
+   "id": "bybit:sea-festival-of-lights-trade-collect-win--artb90f6f4e082d",
+   "venue": "Bybit",
+   "title": "SEA Festival of Lights: Trade, Collect & Win!",
+   "url": "https://announcements.bybit.com/en-US/article/sea-festival-of-lights-trade-collect-win--artb90f6f4e082d/",
+   "why": "small",
+   "netUsd": 0.05
+  },
+  {
+   "id": "bybit:lucky-jackpot-spin-to-win-8-888-usdt-iphone-18-pro-max-more--artf41bf91725f7",
+   "venue": "Bybit",
+   "title": "Lucky Jackpot: Spin to Win 8,888 USDT, iPhone 18 Pro Max, Gold 9999 & More",
+   "url": "https://announcements.bybit.com/en-US/article/lucky-jackpot-spin-to-win-8-888-usdt-iphone-18-pro-max-more--artf41bf91725f7/",
+   "why": "raffle",
+   "netUsd": 0.59
+  },
+  {
    "id": "bitvavo:52205687377425",
    "venue": "Bitvavo",
    "title": "Club Brugge promotion: win a trip to Naples",
@@ -1105,6 +1187,15 @@
    "why": "small",
    "perUserUsd": 20,
    "netUsd": 1.49
+  },
+  {
+   "id": "bybit:welcome-to-bybit-earn-27-usdt-art8c8354c6faec",
+   "venue": "Bybit",
+   "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
+   "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
+   "why": "small",
+   "perUserUsd": 2,
+   "netUsd": 4.37
   }
  ]
 }
