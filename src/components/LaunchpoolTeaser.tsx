@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { PoolsData } from "@/lib/pools";
 import { venueOf } from "@/config/site";
-import { compactUsd } from "@/lib/format";
+import { aprText, compactUsd } from "@/lib/format";
 import { VenueLogo } from "./VenueLogo";
 
 /** Homepage banner that sends people to the Launchpool Radar. */
@@ -31,7 +31,7 @@ export function LaunchpoolTeaser({ t, lang, data }: { t: Dict; lang: Locale; dat
                 <div className="break-words text-sm font-bold">{p.name}</div>
                 <div className="text-xs text-ink-3">{t.lp.stake} {x.stake} → {p.token}</div>
               </div>
-              <div className="font-mono text-lg font-bold text-lime">{x.apr! >= 100 ? Math.round(x.apr!) : x.apr!.toFixed(1)}%</div>
+              <div className="font-mono text-lg font-bold text-lime">{aprText(x.apr!, lang)}</div>
             </div>
           ))}
         </div>

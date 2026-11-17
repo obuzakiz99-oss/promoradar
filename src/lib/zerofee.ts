@@ -8,8 +8,11 @@ import type { Block } from "./details";
  */
 const FEE = String.raw`(?:zero|0\s?%?|no)[- ]?(?:maker |taker |spot |futures |trading |spot trading |futures trading |net transaction |gas )?(?:(?:and|&|or) (?:zero |0\s?%? )?taker )?(?:trading )?(?:fees?|commissions?)\b`;
 const TITLE = new RegExp(String.raw`\b${FEE}|\bfee[- ]free\b|\b0\s?% maker and 0\s?% taker\b|\bzero[- ]fee\b`, "i");
+// in the rules only "zero / 0%" offers count, never "no fees" or "charges …": audit 17.11 — KuCoin's rules said a
+// third-party terminal "charges no trading fees", which flagged a normal-fee contest
+const FEE_RULES = FEE.replace("(?:zero|0\\s?%?|no)", "(?:zero|0\\s?%?)");
 const OFFER = new RegExp(
-  String.raw`\b(enjoy|enjoys|offers?|pay|pays|charges?|with|launch(?:es)?|get|trade [^.]{0,50}?with)\b[^.]{0,40}?\b${FEE}` +
+  String.raw`\b(enjoy|enjoys|offers?|pay|pays|with|launch(?:es)?|get|trade [^.]{0,50}?with)\b[^.]{0,40}?\b${FEE_RULES}` +
   String.raw`|\bzero[- ]trading[- ]fee campaign\b|\b0\s?% maker and 0\s?% taker\b|\bpay no maker or taker fees\b`, "i");
 const EXCLUDE = /\b(exclud\w*|except\w*|not (be )?(count|eligible|includ)\w*|non[- ]?zero|do(es)? not|will not|won't|isn't|aren't|nor)\b/i;
 

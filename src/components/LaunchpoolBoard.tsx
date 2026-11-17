@@ -12,7 +12,7 @@ import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
 import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
-import { compactUsd, duration, money } from "@/lib/format";
+import { aprText, compactUsd, duration, money } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 import { Icon } from "./Icon";
 
@@ -329,7 +329,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               {/* apr + limits */}
               <div>
                 <div className="text-xs font-semibold text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
-                <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
+                <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? aprText(pool.apr, lang, 2) : "—"}</div>
                 {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                 {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
                 <div className="font-mono text-xs text-ink-3">
@@ -479,7 +479,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className={`font-mono text-base font-bold ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? `${pool.apr >= 100 ? Math.round(pool.apr) : pool.apr.toFixed(2)}%` : "—"}</div>
+                      <div className={`font-mono text-base font-bold ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? aprText(pool.apr, lang, 2) : "—"}</div>
                       {r.hc.needed && r.hc.possible && r.hc.hedgedApr !== undefined && <div className={`adv text-xs font-semibold ${r.hc.hedgedApr > 0 ? "text-teal" : "text-amber"}`} title={L.hedgeNote}>{TH[lang].hedged} {fmtPct(r.hc.hedgedApr)}</div>}
                       {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                       {spark && <div className="flex justify-end"><Spark points={spark} title="APR · 7d" /></div>}

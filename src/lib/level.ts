@@ -51,6 +51,8 @@ export const LEVEL_CLS: Record<Level, string> = {
 
 /** "$100 → +$0.83 a month" — profit in plain dollars. */
 export function plainProfit(apr: number, lang: Locale, amount = 100): string {
+  // a pool that has just opened (almost nothing staked yet) shows an APR that collapses within hours
+  if (apr >= 1000) return { uk: "Пул щойно відкрився — APR швидко впаде", en: "Pool just opened — the APR will drop fast", ru: "Пул только открылся — APR быстро упадёт" }[lang];
   const m = (amount * apr) / 100 / 12;
   const v = m >= 10 ? m.toFixed(0) : m >= 1 ? m.toFixed(1) : m.toFixed(2);
   return { uk: `$${amount} → ≈ +$${v} за місяць`, en: `$${amount} → ≈ +$${v} a month`, ru: `$${amount} → ≈ +$${v} в месяц` }[lang];

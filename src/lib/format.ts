@@ -51,6 +51,11 @@ export const nfLocale = (lang: string) => (lang === "en" ? "en-US" : lang === "r
 export function num(n: number, lang: string, digits = 2): string {
   return new Intl.NumberFormat(lang === "en" ? "en-US" : lang === "ru" ? "ru-RU" : "uk-UA", { maximumFractionDigits: digits }).format(n);
 }
+/** APR for display: "45.2%", "1 250%"; a pool that has just opened shows Bitget-style 3 928 866% — capped at ">10 000%". */
+export function aprText(x: number, lang: string, digits = 1): string {
+  if (x >= 10_000) return `>${num(10_000, lang)}%`;
+  return `${num(x >= 100 ? Math.round(x) : x, lang, x >= 100 ? 0 : digits)}%`;
+}
 /** Money: "$50 000" for dollars, "50 000 USDT" for coins. */
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;
