@@ -1,5 +1,5 @@
 {
- "at": 1794923127737,
+ "at": 1794923401946,
  "items": [
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -8,7 +8,7 @@
    "url": "https://www.binance.com/en/support/announcement/detail/fb40667e3c714d7f8aa2f1bac2b82aa9",
    "why": "small",
    "perUserUsd": 2,
-   "netUsd": 1.96
+   "netUsd": 0.08
   },
   {
    "id": "tg:btsenews/5725",
@@ -24,25 +24,7 @@
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
    "perUserUsd": 2,
-   "netUsd": 1.9
-  },
-  {
-   "id": "gate:102818",
-   "venue": "Gate",
-   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
-   "url": "https://www.gate.com/announcements/article/102818",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 5
-  },
-  {
-   "id": "gate:102816",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102816",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
+   "netUsd": 1.81
   },
   {
    "id": "zoomex:64403337588121",
@@ -59,6 +41,14 @@
    "why": "small",
    "perUserUsd": 3,
    "netUsd": 0.9
+  },
+  {
+   "id": "tg:coinstore_global/10378",
+   "venue": "Coinstore",
+   "title": "Put your USDT, BTC and ETH to work with Coinstore Earn and explore rewards that fit your investment timeline. 🚀",
+   "url": "https://www.coinstore.com/earn/list?ts=1794880709048",
+   "why": "news",
+   "netUsd": 2.05
   },
   {
    "id": "binance:7bc53180b9cd4a53a809f7066b79eb34",
@@ -454,7 +444,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.07,
+   "perUserUsd": 8.06,
    "netUsd": 2.74
   },
   {
@@ -487,7 +477,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.39,
+   "perUserUsd": 6.38,
    "netUsd": -0.19
   },
   {
