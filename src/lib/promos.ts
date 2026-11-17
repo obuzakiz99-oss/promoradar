@@ -93,7 +93,7 @@ async function getPromosLive(): Promise<Collected> {
       id: s.id, venue: venueOf(s.venue), title: s.title, url: s.url, category: s.category,
       publishedAt: s.from ? new Date(s.from).getTime() : now, startsAt: s.from ? new Date(s.from).getTime() : undefined, endsAt: new Date(s.until).getTime(),
       reward: s.reward ? parseReward(s.reward) : undefined, tags: [],
-      meta: { source: `${venueOf(s.venue).name} · ${s.checked}`, ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
+      meta: { source: `${venueOf(s.venue).name} · ${s.checked}`, ...(s.standing ? { standing: true } : {}), ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
     } satisfies Promo;
   });
   const all = [...sponsored, ...manual, ...data.promos];

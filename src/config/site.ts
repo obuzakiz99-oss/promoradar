@@ -164,7 +164,7 @@ export const SPONSORED: Array<{ id: string; venue: string; title: string; url: s
  */
 export const MANUAL: Array<{
   id: string; venue: string; title: string; url: string; category: Category; from?: string; until: string; reward?: string;
-  perUser?: { amount: number; unit: string }; rules?: string[]; checked: string;
+  perUser?: { amount: number; unit: string }; rules?: string[]; checked: string; standing?: boolean;
 }> = [
   {
     id: "pumpfun:creator-competition-2026-11", venue: "pumpfun", category: "competition",
@@ -310,7 +310,7 @@ export const MANUAL: Array<{
       "No end date is announced — Bitfinex can change its fee schedule at any time. Check the fee page before trading.",
       "Zero fees do not remove other trading costs: the spread and slippage on thin order books still apply.",
     ],
-    checked: "2026-11-16",
+    checked: "2026-11-16", standing: true,
   },
   {
     // official: docs.lighter.xyz/trading/trading-fees — standing fee model, no end date; re-checked monthly
@@ -324,7 +324,7 @@ export const MANUAL: Array<{
       "Premium/Advanced accounts are opt-in and pay fees (0.004% maker / 0.028% taker without LIT staking; up to 30% off when staking LIT) in exchange for lower latency.",
       "Zero fees do not remove other trading costs: the spread, slippage and funding on perpetuals still apply. Lighter can change its fee model at any time — check the fee page before trading.",
     ],
-    checked: "2026-11-16",
+    checked: "2026-11-16", standing: true,
   },
   {
     // official: docs.paradex.trade/trading/trading-fees + /trading/trader-profiles — standing fee model; re-checked monthly
@@ -338,7 +338,7 @@ export const MANUAL: Array<{
       "If an account exceeds the Retail rate limits it is switched to Pro behaviour and loses the zero-fee retail treatment.",
       "Zero fees do not remove other trading costs: the spread, slippage and funding on perpetuals still apply. Paradex can change its fees at any time — check the fee page before trading.",
     ],
-    checked: "2026-11-16",
+    checked: "2026-11-16", standing: true,
   },
   {
     // official: okx.com/help/regarding-changes-on-zero-fee-pairs (24.12.2025) — standing list; re-checked monthly
@@ -352,7 +352,7 @@ export const MANUAL: Array<{
       "Volume on zero-fee pairs usually does not count toward VIP tiers or trading competitions.",
       "Useful for moving between stablecoins for free; it is not a discount on trading other coins.",
     ],
-    checked: "2026-11-16",
+    checked: "2026-11-16", standing: true,
   },
   {
     // official Binance announcement (14.10.2026); it has dropped out of the CMS feed, which only returns the latest posts

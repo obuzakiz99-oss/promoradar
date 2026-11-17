@@ -317,7 +317,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   // token pages this promo appears on (its reward coin and tickers in the headline)
   const { tokens } = await getTokens(lang);
   const coins = [...tokens.values()].filter((x) => !isStableSym(x.sym) && x.promos.some((q) => q.id === p.id)).slice(0, 4);
-  const cal: CalEvent | undefined = p.endsAt && p.endsAt > fetchedAt ? {
+  const cal: CalEvent | undefined = p.endsAt && p.endsAt > fetchedAt && !p.meta?.standing ? {
     uid: p.id.replace(/[^a-z0-9]/gi, "-"), title: Array.from(`⏳ ${R.calTitle}: ${p.title}`).slice(0, 180).join(""), at: deadlineReminder(p.endsAt, fetchedAt),
     description: `${p.venue.name} · ${dateFull(p.endsAt, lang)}`, url: `https://${SITE.domain}/${lang}/p/${slug}/`,
   } : undefined;
@@ -378,7 +378,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
               <span className={`inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-1 ${CAT_STYLE[p.category].text}`}>
-                <span className="size-1.5 rounded-full" style={{ background: CAT_STYLE[p.category].dot }} /> {t.cat[p.category]}
+                <span className="size-1.5 rounded-full" style={{ background: CAT_STYLE[p.category].dot }} /> {p.meta?.zeroFee && p.category === "other" ? ({ uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } as const)[lang] : t.cat[p.category]}
               </span>
               <span className={`rounded-md px-2 py-1 ${st === "ending" ? "bg-rose/10 text-rose" : st === "upcoming" ? "bg-sky/10 text-sky" : "bg-lime/10 text-lime"}`}>{t.status[st]}</span>
               {m.confirmed && <span className="rounded-md bg-teal/10 px-2 py-1 text-teal">✓ {t.card.confirmed}</span>}
@@ -443,11 +443,12 @@ export default async function PromoPage({ params }: { params: Params }) {
           const byCat: Partial<Record<string, [IconName, string]>> = { competition: ["trend", U.cat.competition], referral: ["user", U.cat.referral], airdrop: ["checkCircle", U.cat.airdrop], listing: ["trend", U.cat.listing], bonus: ["cash", U.cat.bonus], earn: ["bank", U.cat.earn] };
           const notTradingC = p.category === "competition" && /\b(creator|prediction|predict|pick|demo|guess|quiz|meme contest|post|chat)\b/i.test(p.titleOrig ?? p.title);
           const act: [IconName, string, string] = notTradingC ? ["trend", ({ uk: "Змагання — рейтинг", en: "Contest — leaderboard", ru: "Соревнование — рейтинг" } as const)[lang], "text-ink"]
+            : m.zeroFee && !m.minEntry && !m.perUser && !p.reward ? ["trend", ({ uk: "Просто торгувати", en: "Just trade", ru: "Просто торговать" } as const)[lang], "text-teal"]
             : p.category === "referral" ? ["user", ({ uk: "Запросити друга", en: "Invite a friend", ru: "Пригласить друга" } as const)[lang], "text-ink"]
             : m.noDeposit ? ["checkCircle", U.noDeposit, "text-teal"]
             : m.minEntry ? [actIcon[m.minEntry.kind], `${R.kind[m.minEntry.kind]} ${R.from} ${amt}`, "text-amber"]
             : [...(byCat[p.category] ?? (["checkCircle", U.cat.other] as [IconName, string])), "text-ink"];
-          const ending = p.endsAt && p.endsAt - now < 3 * 86400_000;
+          const ending = !m.standing && p.endsAt && p.endsAt - now < 3 * 86400_000;
           const whoParts: Array<[string, string]> = [];
           if (m.geo?.noUA) whoParts.push([U.notUA, "text-rose"]);
           else if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
@@ -460,7 +461,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
-                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : U.noAmount}
+                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : m.zeroFee ? ({ uk: "0% комісії за торгівлю", en: "0% trading fees", ru: "0% комиссии за торговлю" } as const)[lang] : U.noAmount}
                   {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}
                   {/* the maximum is the top tier, not what the minimum entry gets (audit 14.11: "до 500 USDT" next to "від 50 USDT") */}
                   {pu && (m.tiers?.length ?? 0) > 1 && <span className="block text-sm font-normal text-ink-3">{({ uk: "за найвищий рівень; поріг входу дає менше", en: "for the top tier; the entry threshold pays less", ru: "за высший уровень; порог входа даёт меньше" } as const)[lang]}</span>}</>,
@@ -477,10 +478,10 @@ export default async function PromoPage({ params }: { params: Params }) {
               { icon: act[0], label: U.action, tone: act[2], value: act[1], body: m.minEntry?.text ? <p>“{clean(m.minEntry.text)}”</p> : undefined },
               {
                 icon: "hourglass", label: U.time, tone: ending ? "text-rose" : "text-ink",
-                value: p.startsAt && p.startsAt > now ? `${U.startsIn} ${duration(p.startsAt - now, t.time)}` : p.endsAt ? `${U.left} ${duration(p.endsAt - now, t.time)}` : U.noEnd,
+                value: m.standing ? ({ uk: "Постійно, без дати завершення", en: "Ongoing, no end date", ru: "Постоянно, без даты окончания" } as const)[lang] : p.startsAt && p.startsAt > now ? `${U.startsIn} ${duration(p.startsAt - now, t.time)}` : p.endsAt ? `${U.left} ${duration(p.endsAt - now, t.time)}` : U.noEnd,
                 body: <>
                   <p>{t.detail.start}: {p.startsAt ? dateFull(p.startsAt, lang) : p.publishedAt ? `${R.published} ${dateFull(p.publishedAt, lang)}` : "—"}</p>
-                  <p>{t.detail.end}: {p.endsAt ? dateFull(p.endsAt, lang) : R.noEnd}</p>
+                  <p>{t.detail.end}: {p.endsAt && !m.standing ? dateFull(p.endsAt, lang) : R.noEnd}</p>
                   {cal && (
                     <div className="mt-2 flex flex-wrap gap-x-3 font-bold">
                       <a href={googleCalUrl(cal)} target="_blank" rel="noopener" className="inline-flex min-h-8 items-center gap-1 text-sky hover:underline"><Icon name="calendar" /> Google</a>

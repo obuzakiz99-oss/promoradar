@@ -82,6 +82,7 @@ const MIN: Record<Locale, string> = { uk: "поріг від", en: "entry from",
 const PER_T: Record<Locale, string> = { uk: "Максимум на 1 людину", en: "Max per person", ru: "Максимум на 1 человека" };
 /** 0% trading-fee offers (the "0% fees" tab): the saving is the point, so the card says it where the amount would be. */
 const ZF: Record<Locale, { label: string; badge: string }> = { uk: { label: "Комісія за торгівлю", badge: "0% комісії" }, en: { label: "Trading fee", badge: "0% fees" }, ru: { label: "Комиссия за торговлю", badge: "0% комиссии" } };
+const STANDING: Record<Locale, [string, string]> = { uk: ["Діє", "постійно"], en: ["Runs", "ongoing"], ru: ["Действует", "постоянно"] };
 
 export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: Promo; t: Dict; lang: Locale; now: number; index: number; fresh?: boolean; pin?: { tag: string; cls: string }; combos?: Combo[] }) {
   const cs = CAT_STYLE[p.category];
@@ -120,7 +121,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <span className="rounded border border-line px-1 py-px font-mono text-xs font-bold tracking-wider text-ink-3">{KIND_LABEL[p.venue.kind]}</span>
             {/* one status badge (most important first) */}
             {p.sponsored ? <Badge tone="accent">{t.card.sponsored}</Badge>
-              : st === "ending" ? <Badge tone="danger">{cap(t.status.ending)}</Badge>
+              : st === "ending" && !m.standing ? <Badge tone="danger">{cap(t.status.ending)}</Badge>
               : fresh ? <Badge tone="accent">{cap(FRESH[lang])}</Badge>
               : st === "upcoming" ? <Badge tone="info">{cap(t.status.upcoming)}</Badge>
               : isDrop && (m.hot ?? 0) >= 60 ? <Badge tone="warning">{m.hot}°</Badge>
@@ -128,7 +129,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
               : null}
           </div>
           <div className={`mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs font-semibold ${cs.text}`}>
-            <span className="inline-flex items-center gap-1.5 whitespace-nowrap"><span className="size-1.5 rounded-full" style={{ background: cs.dot }} />{t.cat[p.category]}</span>
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap"><span className="size-1.5 rounded-full" style={{ background: cs.dot }} />{m.zeroFee && p.category === "other" ? ZF[lang].badge : t.cat[p.category]}</span>
             <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
@@ -228,6 +229,11 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
               <>
                 <div className="text-ink-3">{t.card.tvl}</div>
                 <div className="mt-0.5 font-mono text-sm font-bold text-ink">{compactUsd(m.tvlUsd ?? 0)}</div>
+              </>
+            ) : m.standing ? (
+              <>
+                <div className="text-ink-3">{STANDING[lang][0]}</div>
+                <div className="mt-0.5 font-mono text-sm font-bold text-ink">{STANDING[lang][1]}</div>
               </>
             ) : notStarted ? (
               <>

@@ -58,6 +58,7 @@ export interface Promo {
     datesFromRules?: boolean;
     geo?: { only?: string; noUA?: boolean; noEU?: boolean; text?: string };   // region-exclusive / country restrictions
     zeroFee?: boolean;         // a 0% trading-fee offer (the "0 fees" tab)
+    standing?: boolean;        // a standing policy with no end date (the `until` of a hand-added entry is only our re-check date)
     forNew?: boolean;          // only for new users
     tiers?: Array<{ min: number; reward: string; amount: number; unit: string }>;   // threshold → reward table from the rules
     aprPct?: number;           // advertised APR of an interest-type promo
