@@ -1,1 +1,1 @@
-{"id":"tg:LBanknews/20858","h":"4vZxro2lIBxr2WRW","v":1,"at":1794921482014,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"deposit"},"typical":{"amount":2,"unit":"USDT"},"max":{"amount":500,"unit":"PEARL"},"pool":{"amount":10000,"unit":"USDT"}}}
+{"id":"tg:LBanknews/20858","h":"gEbS3_CC1XAW0sWd","v":1,"at":1794922854569,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"deposit","usd":100},"typical":{"amount":2,"unit":"USDT"},"max":{"amount":500,"unit":"PEARL"},"pool":{"amount":10000,"unit":"USDT"},"winners":50}}
