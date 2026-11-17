@@ -1,5 +1,5 @@
 {
- "at": 1794875961115,
+ "at": 1794876155826,
  "items": [
   {
    "id": "tg:Phemex_Announcements/7985",
@@ -224,8 +224,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.27,
-   "netUsd": -0.25
+   "perUserUsd": 1.28,
+   "netUsd": -0.24
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -446,7 +446,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 9.09,
+   "perUserUsd": 8.96,
    "netUsd": -0.17
   },
   {
