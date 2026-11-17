@@ -1,6 +1,23 @@
 {
- "at": 1794893512004,
+ "at": 1794915427155,
  "items": [
+  {
+   "id": "gate:102818",
+   "venue": "Gate",
+   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
+   "url": "https://www.gate.com/announcements/article/102818",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 4
+  },
+  {
+   "id": "gate:102816",
+   "venue": "Gate",
+   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/102816",
+   "why": "small",
+   "perUserUsd": 5
+  },
   {
    "id": "zoomex:64403337588121",
    "venue": "Zoomex",
@@ -107,7 +124,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.95,
+   "perUserUsd": 5.92,
    "netUsd": 0.28
   },
   {
@@ -157,15 +174,6 @@
    "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
    "why": "small",
    "netUsd": 5
-  },
-  {
-   "id": "tg:HTXGlobalAnnouncementChannel/15834",
-   "venue": "HTX",
-   "title": "The SPCX airdrop is live, and over 13,000 users have already participated!",
-   "url": "https://www.htx.com/en-us/mars/activity-center?callId=179395001871350",
-   "why": "small",
-   "perUserUsd": 2,
-   "netUsd": 2
   },
   {
    "id": "tg:Bitget_Announcements/18397",
@@ -224,7 +232,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.09,
+   "perUserUsd": 1.1,
    "netUsd": -0.28
   },
   {
@@ -405,7 +413,7 @@
    "title": "Daily Top 10 Trading Opportunities: The First Contract Trading Competition Is Here!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15778",
    "why": "small",
-   "netUsd": 2.97
+   "netUsd": 2.96
   },
   {
    "id": "binance:f8e719ab5ce440cfb564858c27f2a6f3",
@@ -413,7 +421,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.01,
+   "perUserUsd": 7.99,
    "netUsd": 2.74
   },
   {
@@ -446,7 +454,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 7.13,
+   "perUserUsd": 6.34,
    "netUsd": -0.19
   },
   {
@@ -464,43 +472,6 @@
    "url": "https://t.me/Bybit_Announcements/10044",
    "why": "small",
    "netUsd": 10
-  },
-  {
-   "id": "tg:HTXGlobalAnnouncementChannel/15759",
-   "venue": "HTX",
-   "title": "WAN Bonanza Is Live! Trade to Share 10,000 USDT! @wanchain_org",
-   "url": "https://www.htx.com/en-us/support/45047951964130",
-   "why": "small",
-   "perUserUsd": 2,
-   "netUsd": 0.9
-  },
-  {
-   "id": "tg:HTXGlobalAnnouncementChannel/15758",
-   "venue": "HTX",
-   "title": "TradFi Trade to Earn #4 – Live Stats Are In!",
-   "url": "https://t.me/HTXGlobalAnnouncementChannel/15758",
-   "why": "news"
-  },
-  {
-   "id": "tg:HTXGlobalAnnouncementChannel/15756",
-   "venue": "HTX",
-   "title": "November 4 (tomorrow) at 9 AM UTC, we'll open the mic in the group to discuss three exciting campaigns: 10% APY Earn on Top Assets via HTX Fixed Products, Spot Trade…",
-   "url": "https://t.me/HTXGlobalAnnouncementChannel/15756",
-   "why": "social"
-  },
-  {
-   "id": "tg:LBanknews/20723",
-   "venue": "LBank",
-   "title": "Home win, away win or a draw? Let’s hear your prediction.",
-   "url": "https://www.lbank.com/futures/prediction/event/lal-dep-osa-2026-11-02?symbol=3608900USDT?qcode=9i4kb&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=prediction-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "news"
-  },
-  {
-   "id": "tg:Bitrue_official/11150",
-   "venue": "Bitrue",
-   "title": "$FLOAT is a memecoin launchpad built on Raydium, where every coin is paired with a tokenized stock.",
-   "url": "https://www.bitrue.com/alpha/sol/float-Bv1a7cEj5aRnJQhMw4kRQqAFesMSd5LwcDnUzq52BMmr?cn=399990",
-   "why": "news"
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
