@@ -1,5 +1,5 @@
 {
- "at": 1794922182448,
+ "at": 1794922861641,
  "items": [
   {
    "id": "binance:fb40667e3c714d7f8aa2f1bac2b82aa9",
@@ -25,24 +25,6 @@
    "why": "small",
    "perUserUsd": 2,
    "netUsd": 1.9
-  },
-  {
-   "id": "gate:102818",
-   "venue": "Gate",
-   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
-   "url": "https://www.gate.com/announcements/article/102818",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 5
-  },
-  {
-   "id": "gate:102816",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102816",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
   },
   {
    "id": "zoomex:64403337588121",
@@ -150,7 +132,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.93,
+   "perUserUsd": 5.91,
    "netUsd": 0.28
   },
   {
@@ -487,7 +469,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.37,
+   "perUserUsd": 6.33,
    "netUsd": -0.19
   },
   {
