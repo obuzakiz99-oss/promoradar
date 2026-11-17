@@ -219,7 +219,11 @@ async function getPromosLive(): Promise<Collected> {
     // owner 17.11: the per-person figure printed big on the card counts too ("2 USDT" with "up to 72 USDT" in the rules)
     const pu = p.meta?.perUser?.usd;
     const tiny = !p.sponsored && !handAdded && !p.meta?.zeroFee && v?.mech !== "apr" && ((maxPer.length > 0 && Math.max(...maxPer) < MIN_MAX_PER_USER_USD) || (pu !== undefined && pu < MIN_MAX_PER_USER_USD));
-    const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (tiny ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
+    // owner 17.11: the card's estimate line ("У середньому на учасника ≈ $X" — expected net for an ordinary participant)
+    // under $15 hides the promo too, hand-added ones included; APR products (that line is "+$X on $1,000") and 0% fee
+    // offers are exempt
+    const lowEstimate = !p.sponsored && !p.meta?.zeroFee && v?.mech !== "apr" && v?.net !== undefined && v.gross !== undefined && v.net < MIN_MAX_PER_USER_USD;
+    const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
     if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
     kept.push(p);
   }
