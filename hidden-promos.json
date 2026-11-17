@@ -1,5 +1,5 @@
 {
- "at": 1794928084833,
+ "at": 1794928558731,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -61,6 +61,15 @@
    "netUsd": -0.03
   },
   {
+   "id": "gate:102827",
+   "venue": "Gate",
+   "title": "Gate ETF Treasure Hunt Edition 10: Up to 88 USDT per Draw & Trade for up to 900 USDT",
+   "url": "https://www.gate.com/announcements/article/102827",
+   "why": "small",
+   "perUserUsd": 88,
+   "netUsd": 4
+  },
+  {
    "id": "binance:51ee8ac34c9f4603b514965aa291b668",
    "venue": "Binance",
    "title": "ANT & NVDA Perps Carnival: Trade Selected TradFi Perps and Share Up to 200,000 USDC in rewards!",
@@ -94,6 +103,23 @@
    "netUsd": 0.17
   },
   {
+   "id": "gate:102822",
+   "venue": "Gate",
+   "title": "Gate Web3 SCOR Swap Trading Competition Is Live: Share 2,000 USDC in Rewards",
+   "url": "https://www.gate.com/announcements/article/102822",
+   "why": "small",
+   "netUsd": 0.07
+  },
+  {
+   "id": "gate:102821",
+   "venue": "Gate",
+   "title": "ANT(Anthropic) Futures Trading Competition: 3 USDT on Your First Trade, Up to 8,000 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/102821",
+   "why": "small",
+   "perUserUsd": 150,
+   "netUsd": 1
+  },
+  {
    "id": "tg:HTXGlobalAnnouncementChannel/15851",
    "venue": "HTX",
    "title": "Double 11: BTC | ETH Weekly Spot Trading Rewards #1 is live! Register for the event and get a 10 USDT Spot Grid Trial Bonus.",
@@ -102,12 +128,38 @@
    "netUsd": 10
   },
   {
+   "id": "gate:102818",
+   "venue": "Gate",
+   "title": "First Referral Bonus: Invite 1 Friend and Get $5 in SOL Instantly",
+   "url": "https://www.gate.com/announcements/article/102818",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 5
+  },
+  {
    "id": "tg:HTXGlobalAnnouncementChannel/15848",
    "venue": "HTX",
    "title": "Latest standings of the HTX Top 10 Trading Opportunities Futures Trading Competition",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15848",
    "why": "small",
    "netUsd": -4.4
+  },
+  {
+   "id": "gate:102816",
+   "venue": "Gate",
+   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/102816",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 2
+  },
+  {
+   "id": "gate:102815",
+   "venue": "Gate",
+   "title": "USD1 Futures Super League Season 3, Trade and Share 300,000 USD1 in WLFI",
+   "url": "https://www.gate.com/announcements/article/102815",
+   "why": "small",
+   "netUsd": 5.83
   },
   {
    "id": "zoomex:64403337588121",
@@ -272,8 +324,8 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.89,
-   "netUsd": 0.27
+   "perUserUsd": 5.9,
+   "netUsd": 0.28
   },
   {
    "id": "tg:Toobit_announcements/6083",
@@ -691,15 +743,6 @@
    "why": "news"
   },
   {
-   "id": "gate:102667",
-   "venue": "Gate",
-   "title": "CandyDrop 191st: CandyDrop x ValueX (VLX) , Trade and Invite Friends to Share 227,273 VLX",
-   "url": "https://www.gate.com/announcements/article/102667",
-   "why": "small",
-   "perUserUsd": 41.65,
-   "netUsd": 6.89
-  },
-  {
    "id": "tg:Kucoin_News/37079",
    "venue": "KuCoin",
    "title": "The Trail Gate Is Closing — Claim Your Bonus Today! 📲",
@@ -824,7 +867,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.96,
+   "perUserUsd": 7.95,
    "netUsd": 2.74
   },
   {
@@ -873,7 +916,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.7,
+   "perUserUsd": 5.94,
    "netUsd": -0.2
   },
   {
