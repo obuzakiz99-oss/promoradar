@@ -55,6 +55,8 @@ const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: s
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
 /** The "0 fees" tab (owner 16.11): 0% trading-fee offers from any category, flagged in promos.ts (zerofee.ts). */
 const ZERO_TAB: Record<Locale, string> = { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" };
+// audit 18.11: the box took any length and the URL kept it, but a reload restored only 80 characters
+const MAX_Q = 600;
 const catOk = (p: Promo, cat: Category | "all" | "zerofee") => cat === "all" || (cat === "zerofee" ? !!p.meta?.zeroFee : p.category === cat);
 const HID_TAB: Record<Locale, string> = { uk: "Приховані", en: "Hidden", ru: "Скрытые" };
 
@@ -131,7 +133,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const so = one("sort", SORTS); if (so) setSort(so);
     const v = many("venue"); if (v.length) setVenues(new Set(v));
     const qk = many("quick").filter((x): x is Quick => (QUICKS as readonly string[]).includes(x)); if (qk.length) setQuick(new Set(qk));
-    const qq = src.get("q"); if (qq) setQ(qq.slice(0, 80));
+    const qq = src.get("q"); if (qq) setQ(qq.slice(0, MAX_Q));
     setRestored(true);
   }, [showKinds]);
   useEffect(() => {
@@ -261,6 +263,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             <svg className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.4 9.83l3.64 3.63a.75.75 0 1 0 1.06-1.06l-3.63-3.64A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clipRule="evenodd" /></svg>
             <input
               value={q}
+              maxLength={MAX_Q}
               onChange={(e) => setQ(e.target.value)}
               placeholder={t.filters.search}
               className="h-11 w-full rounded-xl border border-line bg-white/[0.03] pl-10 pr-9 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none"

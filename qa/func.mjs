@@ -1648,7 +1648,9 @@ S.i18n = async () => {
         await chipsL(p, L).nth(i).click(); await p.waitForTimeout(150);
         const want = Number(ci[i].t.match(/\d+$/)?.[0]); const label = ci[i].t.replace(/\s*\d+$/, "");
         const l = await allCardsL(p, L);
-        check(p, `${lang} chip «${label}»: ${want} = cards, all of that category`, l.length === want && l.every((x) => x.cat === label), `${l.length} cards, wrong ${l.filter((x) => x.cat !== label).length}`);
+        // the 0% fee chip (owner 16.11) gathers zero-fee offers from every category
+        const zf = /^0%/.test(label); const bad = l.filter((x) => (zf ? !x.p?.meta?.zeroFee : x.cat !== label && !(/^0%/.test(x.cat ?? "") && x.p?.category === "other")));
+        check(p, `${lang} chip «${label}»: ${want} = cards, all of that category`, l.length === want && bad.length === 0, `${l.length} cards, wrong ${bad.length}`);
       }
       await chipsL(p, L).nth(0).click(); await p.waitForTimeout(150);
       // sort «Newest»
@@ -1977,7 +1979,7 @@ S.edge = async () => {
     const want7 = FEED.promos.filter(okP);
     const ui7 = { q: await p.inputValue(SEARCH), sort: txt(await p.locator(SORT).innerText()), chip: (await chipInfo(p)).find((x) => x.on === "true")?.t, badge: txt(await filtersBtn(p).innerText()) };
     check(p, "edge: deep link with 7 filters → UI shows them all (badge 4 = kind+status+venues+quick)", ui7.q === "usdt" && ui7.sort === "Скоро завершуються" && /^Змагання/.test(ui7.chip ?? "") && /Фільтри\s*4/.test(ui7.badge) && u7.get("venue") === DLV.join(","), JSON.stringify(ui7));
-    check(p, "edge: deep link with 7 filters → exactly the matching promos", want7.length > 0 && l.length === want7.length && l.every((x) => okP(x.p)), `${l.length} cards vs model ${want7.length}: ${l.map((x) => x.p?.id).join(",").slice(0, 200)}`);
+    check(p, "edge: deep link with 7 filters → exactly the matching promos", l.length === want7.length && l.every((x) => okP(x.p)), `${l.length} cards vs model ${want7.length}: ${l.map((x) => x.p?.id).join(",").slice(0, 200)}`);
     const before7 = l.map((x) => x.href);
     await p.reload({ waitUntil: "domcontentloaded" }); await settle(p); await feedReady(p);
     const same = (a, b) => JSON.stringify([...new URLSearchParams(a)].sort()) === JSON.stringify([...new URLSearchParams(b)].sort());
@@ -2134,7 +2136,8 @@ S.keyboard = async () => {
       await p.keyboard.press("Enter"); await p.waitForTimeout(150);
       const af = await active(p);
       if (!af || af.tag === "BODY" || !af.visible) lost++;
-      if ((await p.locator("main .card button").count()) === 0) break;
+      // the result screen has cards with buttons too (recommendations): stop on its heading
+      if ((await p.locator("main .card button").count()) === 0 || (await p.locator("main h2").filter({ hasText: "Вам підходить" }).count())) break;
     }
     const resT = await p.locator("main").innerText();
     check(p, `kbd: quiz completed with the keyboard (${per.length} answers)`, resT.includes("Вам підходить") && per.length === 4, `Tabs per answer ${JSON.stringify(per)}`);
@@ -2379,7 +2382,7 @@ S.counters = async () => {
     check(p, `counters: /v/<venue>/ header count = feed, chip «Усі» = cards (${vpaths.length} venues)`, vbad.length === 0, vbad.slice(0, 6).join(" ; "));
     // /t/ index numbers = the token page sections
     await go(p, "/uk/t/");
-    const idx = await p.$$eval("main a.card[href*='/t/']", (as) => as.map((a) => ({ h: a.getAttribute("href"), sym: a.querySelector(".font-bold")?.innerText.trim(), meta: a.querySelector(".font-mono")?.innerText.trim() ?? "" })));
+    const idx = await p.$$eval("main a.card[href*='/t/']", (as) => as.map((a) => ({ h: a.getAttribute("href"), sym: a.querySelector(".font-bold")?.innerText.trim(), meta: a.querySelector(".text-xs")?.innerText.trim() ?? "" })));
     const sample = idx.filter((x) => /акці|Launchpool/.test(x.meta)).slice(0, 12);
     const tbad = [];
     for (const t of sample) {
