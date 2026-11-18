@@ -1,1 +1,1 @@
-{"id":"gate:102843","h":"eJPl2f-RCdZ72lNk","v":1,"at":1794996059321,"data":{"isPromo":true,"socialOnly":false,"mech":"referral","act":{"kind":"trade_futures","usd":1000},"typical":{"amount":2,"unit":"USD1"},"max":{"amount":3000,"unit":"USD1"},"pool":{"amount":100000,"unit":"USD1"},"days":19}}
+{"id":"gate:102843","h":"eJPl2f-RCdZ72lNk","v":1,"at":1794996742372,"data":{"isPromo":true,"socialOnly":false,"mech":"referral","act":{"kind":"other"},"typical":{"amount":3,"unit":"USD1"},"max":{"amount":3000,"unit":"USD1"},"pool":{"amount":100000,"unit":"USD1"},"days":19}}
