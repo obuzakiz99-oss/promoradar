@@ -1,5 +1,5 @@
 {
- "at": 1795009119773,
+ "at": 1795009343705,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -27,13 +27,29 @@
    "perUserUsd": 1
   },
   {
+   "id": "tg:Bitrue_official/11254",
+   "venue": "Bitrue",
+   "title": "30D backtested grid APY.",
+   "url": "https://www.bitrue.com/bitrue-ai-strategy?cn=399990",
+   "why": "news"
+  },
+  {
+   "id": "tg:Phemex_Announcements/8002",
+   "venue": "Phemex",
+   "title": "5 winners. A $100 Anthropic futures position voucher each.",
+   "url": "https://phemex.com/futures/ANTHROPIC-USDT",
+   "why": "raffle",
+   "perUserUsd": 100,
+   "netUsd": 0.05
+  },
+  {
    "id": "tg:Phemex_Announcements/8001",
    "venue": "Phemex",
    "title": "Phemex Rewards Bot | Referral Boost",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
    "why": "small",
    "perUserUsd": 20,
-   "netUsd": 19.8
+   "netUsd": 10
   },
   {
    "id": "tg:KCEX_announcements/5737",
@@ -95,7 +111,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 896.4222575,
+   "perUserUsd": 895.5476992,
    "netUsd": -0.05
   },
   {
@@ -184,7 +200,7 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.21,
+   "perUserUsd": 7.23,
    "netUsd": 0.36
   },
   {
@@ -243,7 +259,7 @@
    "title": "Trenches Solana Treasure Hunt: Trade to Unlock Mystery Boxes and Share 30,000 USDT",
    "url": "https://www.gate.com/announcements/article/102838",
    "why": "raffle",
-   "perUserUsd": 98.777,
+   "perUserUsd": 99.051,
    "netUsd": 4.8
   },
   {
@@ -292,8 +308,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 72.25,
-   "netUsd": 0.51
+   "perUserUsd": 69.4,
+   "netUsd": 0.46
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -376,7 +392,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 911.4499999999999,
+   "perUserUsd": 909,
    "netUsd": 1.81
   },
   {
@@ -529,7 +545,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1323.84,
+   "perUserUsd": 1325.28,
    "netUsd": 0.33
   },
   {
@@ -547,8 +563,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 141.648,
-   "netUsd": 3.88
+   "perUserUsd": 141.672,
+   "netUsd": 3.89
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -591,7 +607,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6411.84,
+   "perUserUsd": 6410.42,
    "netUsd": 91.27
   },
   {
@@ -800,7 +816,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 459.7645125,
+   "perUserUsd": 463.29073,
    "netUsd": -0.27
   },
   {
@@ -1206,7 +1222,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.03,
+   "perUserUsd": 8.04,
    "netUsd": 2.74
   },
   {
@@ -1222,7 +1238,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.66,
+   "perUserUsd": 4.59,
    "netUsd": -0.21
   },
   {
