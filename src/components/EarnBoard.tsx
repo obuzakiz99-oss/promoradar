@@ -285,7 +285,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                     <th className="px-4 py-3 text-right"><Term k="apr" lang={lang} align="right">APR</Term></th>
                     <th className="px-4 py-3 text-right text-lime">{COLS[lang].income}</th>
                     <th className="px-4 py-3 text-right">{COLS[lang].limits}</th>
-                    <th className="px-4 py-3" />
+                    <th className="px-4 py-3"><span className="sr-only">{({ uk: "Посилання", en: "Link", ru: "Ссылка" } as const)[lang]}</span></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">

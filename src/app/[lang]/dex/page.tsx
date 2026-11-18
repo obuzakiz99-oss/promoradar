@@ -35,6 +35,8 @@ export default async function DexPage({ params }: { params: Params }) {
     if (coins.length >= 40) break;
   }
   const hedge = await getHedges(coins.slice(0, 40));
+  // the rows the table opens with (APY order, TVL ≥ $1M = DexBoard's default filter), so nothing re-sorts once the full list loads
+  const shipped = pools.filter((p) => p.tvl >= 1_000_000).sort((a, b) => b.apy - a.apy).slice(0, 300);
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
@@ -52,7 +54,7 @@ export default async function DexPage({ params }: { params: Params }) {
           </dl>
         </header>
         <div className="mt-8">
-          <DexBoard hedge={hedge} pools={pools.slice(0, 300)} fullUrl={withBase("/api/dex.json")} chains={chains} categories={categories} t={t} lang={lang} />
+          <DexBoard hedge={hedge} pools={shipped} fullUrl={withBase("/api/dex.json")} chains={chains} categories={categories} t={t} lang={lang} />
         </div>
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.dexNote} · DefiLlama</p>
       </main>

@@ -24,6 +24,7 @@ VALUE_BATCH = 40       # small JSON per promo — cheap on the plan's limits
 FAQ_BATCH = 8          # three languages of prose per promo — kept small per run
 NOWIN = 0x08000000 if os.name == "nt" else 0
 CLAUDE = os.path.join(os.environ.get("APPDATA", ""), "npm", "claude.cmd") if os.name == "nt" else "claude"
+MODEL = os.environ.get("PROMORADAR_MODEL", "claude-opus-5-5")   # pinned: the CLI default follows whatever /model was last set to
 GIT = r"C:\Program Files\Git\cmd\git.exe" if os.path.exists(r"C:\Program Files\Git\cmd\git.exe") else "git"
 
 MECH = {"fixed", "tiers", "pool_share", "top_n", "lucky_draw", "first_n", "apr", "referral", "points", "unknown"}
@@ -117,7 +118,7 @@ def ask_claude(prompt, files_in, file_out):
         if os.path.exists(p) and f == file_out:
             os.remove(p)
     # the prompt goes through stdin: claude.cmd (cmd.exe) cuts a multi-line argument at the first line break
-    r = run([CLAUDE, "-p", "--allowedTools", "Read", "Write", "--permission-mode", "acceptEdits"],
+    r = run([CLAUDE, "-p", "--model", MODEL, "--allowedTools", "Read", "Write", "--permission-mode", "acceptEdits"],
             cwd=WORK, check=False, timeout=2400, input=prompt)
     log(f"claude exit {r.returncode}: {(r.stdout or r.stderr).strip()[-160:]}")
     try:

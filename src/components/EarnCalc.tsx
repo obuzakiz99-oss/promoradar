@@ -9,7 +9,7 @@ const STABLE = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/;
 
 const TX: Record<Locale, {
   title: string; sub: string; input: Record<"trade" | "deposit" | "stake" | "hold" | "buy" | "apr" | "any", string>;
-  short: (x: string) => string; passed: string; tier: (r: string) => string; next: (x: string, r: string) => string; upTo: (r: string) => string;
+  short: (x: string) => string; passed: string; tier: (r: string) => string; next: (x: string, r: string) => string; upTo: (r: string, shared: boolean) => string;
   share: string; fee: (x: string, pct: string) => string; net: (x: string) => string; netNeg: (x: string) => string; keep: string; keepLock: string; keepDual: string; keepFut: string; keepVol: string;
   perDay: string; perMonth: string; untilEnd: string; note: string; days: (n: number) => string;
 }> = {
@@ -17,7 +17,7 @@ const TX: Record<Locale, {
     title: "Скільки отримаю я", sub: "Введіть свою суму — порахуємо за умовами акції.",
     input: { trade: "Мій обсяг торгівлі, $", deposit: "Я внесу депозит $", stake: "Я застейкаю $", hold: "Я триматиму $", buy: "Я куплю на $", apr: "Я покладу $", any: "Моя сума $" },
     short: (x) => `До порогу не вистачає ${x} — нагороди не буде.`, passed: "✓ Поріг пройдено.", tier: (r) => `Ваш рівень нагороди: ${r}`,
-    next: (x, r) => `Ще ${x} — і наступний рівень: ${r}`, upTo: (r) => `Нагорода: до ${r} (залежить від інших учасників).`,
+    next: (x, r) => `Ще ${x} — і наступний рівень: ${r}`, upTo: (r, shared) => `Нагорода: до ${r} (${shared ? "залежить від інших учасників" : "залежить від того, які умови ви виконаєте"}).`,
     share: "Нагорода ділиться між учасниками — точну суму біржа порахує після кінця акції.",
     fee: (x, pct) => `Комісія біржі за цей обсяг ≈ ${x} (${pct} — залежить від вашого VIP-рівня і типу ордера).`,
     net: (x) => `Чистими після комісії ≈ ${x}.`, netNeg: (x) => `Комісія більша за нагороду: ${x}. Це варто лише якщо ви й так торгуєте.`,
@@ -29,7 +29,7 @@ const TX: Record<Locale, {
     title: "What would I get", sub: "Enter your amount — we'll work it out from the promo's rules.",
     input: { trade: "I'll trade $", deposit: "I'll deposit $", stake: "I'll stake $", hold: "I'll hold $", buy: "I'll buy for $", apr: "I'll put in $", any: "My amount $" },
     short: (x) => `${x} short of the entry threshold — no reward.`, passed: "✓ Threshold reached.", tier: (r) => `Your reward tier: ${r}`,
-    next: (x, r) => `${x} more for the next tier: ${r}`, upTo: (r) => `Reward: up to ${r} (depends on other participants).`,
+    next: (x, r) => `${x} more for the next tier: ${r}`, upTo: (r, shared) => `Reward: up to ${r} (${shared ? "depends on other participants" : "depends on which tasks you complete"}).`,
     share: "The reward is shared between participants — the exchange calculates the exact amount after the end.",
     fee: (x, pct) => `Exchange fee for this volume ≈ ${x} (${pct} — depends on your VIP level and order type).`,
     net: (x) => `Net after fees ≈ ${x}.`, netNeg: (x) => `Fees exceed the reward: ${x}. Only worth it if you trade anyway.`,
@@ -41,7 +41,7 @@ const TX: Record<Locale, {
     title: "Сколько получу я", sub: "Введите свою сумму — посчитаем по условиям акции.",
     input: { trade: "Мой объём торговли, $", deposit: "Я внесу депозит $", stake: "Я застейкаю $", hold: "Я буду держать $", buy: "Я куплю на $", apr: "Я положу $", any: "Моя сумма $" },
     short: (x) => `До порога не хватает ${x} — награды не будет.`, passed: "✓ Порог пройден.", tier: (r) => `Ваш уровень награды: ${r}`,
-    next: (x, r) => `Ещё ${x} — и следующий уровень: ${r}`, upTo: (r) => `Награда: до ${r} (зависит от других участников).`,
+    next: (x, r) => `Ещё ${x} — и следующий уровень: ${r}`, upTo: (r, shared) => `Награда: до ${r} (${shared ? "зависит от других участников" : "зависит от того, какие условия вы выполните"}).`,
     share: "Награда делится между участниками — точную сумму биржа посчитает после окончания акции.",
     fee: (x, pct) => `Комиссия биржи за этот объём ≈ ${x} (${pct} — зависит от вашего VIP-уровня и типа ордера).`,
     net: (x) => `Чистыми после комиссии ≈ ${x}.`, netNeg: (x) => `Комиссия больше награды: ${x}. Это стоит того, только если вы и так торгуете.`,
@@ -95,7 +95,9 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
         if (next) lines.push({ text: T.next(usd(next.min - v), next.reward), tone: "muted" });
       } else if (m.perUser) {
         big = `≤ ${amt(m.perUser.amount, m.perUser.unit)}`;
-        lines.push({ text: T.upTo(amt(m.perUser.amount, m.perUser.unit)) });
+        // audit 18.11: a fixed tier ladder (Bitget 50 / 400 / 6,000) was explained as "depends on other participants"
+        const shared = !m.value || (["pool_share", "top_n", "lucky_draw", "first_n", "unknown"] as string[]).includes(m.value.mech);
+        lines.push({ text: T.upTo(amt(m.perUser.amount, m.perUser.unit), shared) });
         rewardUsd = m.perUser.usd;
       } else {
         lines.push({ text: T.share, tone: "muted" });

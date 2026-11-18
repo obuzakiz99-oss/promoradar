@@ -429,7 +429,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               <th className="px-4 py-3 text-right"><Term k="apr" lang={lang} align="right">{L.apr}</Term></th>
               <th className="px-4 py-3 text-right text-lime">{L.yourProfit}</th>
               <th className="px-4 py-3 text-right">{TH[lang].time}</th>
-              <th className="px-4 py-3" />
+              <th className="px-4 py-3"><span className="sr-only">{({ uk: "Посилання", en: "Link", ru: "Ссылка" } as const)[lang]}</span></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">

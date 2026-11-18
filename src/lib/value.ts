@@ -171,9 +171,16 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
 
 // --- step 2: arithmetic ---------------------------------------------------------------------------------------------
 
-const STABLE = /^(USD|USDT|USDC|FDUSD|USD1|USDE|DAI|PYUSD|USDG|RLUSD)$/;
+// audit 18.11: Gate's "claim 20 USDx" was dropped as an unpriced coin and the estimate fell back to the 5,000 USDT top prize
+export const STABLE = /^(USD|USDT|USDC|FDUSD|USD1|USDE|DAI|PYUSD|USDG|RLUSD|USDX|USDS|USDD|USD0|USDF|USDB|TUSD)$/i;
+export const usdOf = (x: { amount: number; unit: string } | undefined, px: Record<string, number>) => {
+  if (!x) return undefined;
+  const r = STABLE.test(x.unit) ? 1 : px[x.unit] ?? px[x.unit.toUpperCase()];
+  return r ? x.amount * r : undefined;
+};
 /** How many people a campaign on this venue typically draws (order of magnitude; competitions/pools on Binance get tens of thousands). */
-const CROWD: Record<string, number> = { binance: 30_000, bybit: 15_000, okx: 15_000, bitget: 12_000, gate: 6_000, kucoin: 6_000, mexc: 6_000, htx: 5_000, bingx: 4_000 };
+// aster (audit 18.11): a 6.25M pool over the 2,000 default read as "≈ $3K per participant"
+const CROWD: Record<string, number> = { binance: 30_000, bybit: 15_000, okx: 15_000, aster: 15_000, bitget: 12_000, gate: 6_000, kucoin: 6_000, mexc: 6_000, htx: 5_000, bingx: 4_000 };
 const crowd = (venueId: string) => CROWD[venueId] ?? 2_000;
 /** Trading fee per $1 of volume (taker; what a beginner pays). */
 const FEE = { spot: 0.001, futures: 0.0005 };
@@ -181,11 +188,7 @@ const FEE = { spot: 0.001, futures: 0.0005 };
 const IDLE_APR = 0.05;
 
 export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, number>): Value {
-  const usd = (x?: { amount: number; unit: string }) => {
-    if (!x) return undefined;
-    const r = STABLE.test(x.unit) ? 1 : px[x.unit];
-    return r ? x.amount * r : undefined;
-  };
+  const usd = (x?: { amount: number; unit: string }) => usdOf(x, px);
   const m = p.meta ?? {};
   const mech: Mech = a?.mech ?? (p.category === "referral" ? "referral" : p.category === "competition" ? "top_n" : m.aprPct !== undefined || p.category === "earn" ? "apr" : "unknown");
   const max = usd(a?.max) ?? m.perUser?.usd;

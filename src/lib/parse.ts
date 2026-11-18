@@ -28,7 +28,7 @@ export function classify(title: string, hint?: string): Category {
 const STABLES = new Set(["USDT", "USDC", "USD", "FDUSD", "USDE", "DAI", "PYUSD", "USD1"]);
 const MULT: Record<string, number> = { k: 1e3, thousand: 1e3, m: 1e6, million: 1e6, mn: 1e6, b: 1e9, billion: 1e9 };
 
-function compact(n: number): string {
+export function compact(n: number): string {
   if (n >= 1e9) return `${+(n / 1e9).toFixed(2)}B`;
   if (n >= 1e6) return `${+(n / 1e6).toFixed(2)}M`;
   if (n >= 1e4) return `${+(n / 1e3).toFixed(1)}K`;

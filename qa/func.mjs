@@ -271,7 +271,7 @@ S.header = async () => {
     const tabs = await p.$$eval('nav.fixed[aria-label="Розділи"] a', (els) => els.map((e) => ({ t: e.innerText.trim().replace(/\s+/g, " "), h: e.getAttribute("href"), cur: e.getAttribute("aria-current"), vis: e.getBoundingClientRect().height > 0 })));
     check(p, "phone: bottom tab bar has 5 visible tabs", tabs.length === 5 && tabs.every((x) => x.vis), JSON.stringify(tabs.map((x) => x.t)));
     check(p, "phone: tab 'Дохідність' is current on /uk/fixed/", tabs.find((x) => x.cur === "page")?.t?.startsWith("Дохідність"), JSON.stringify(tabs.find((x) => x.cur)));
-    const wantTabs = { "Акції": "/uk/", "Дохідність": "/uk/launchpools/", "Календар": "/uk/calendar/", "Новачкам": "/uk/learn/", "Мої": "/uk/my/" };
+    const wantTabs = { "Акції": "/uk/", "Дохідність": "/uk/launchpools/", "Розлоки": "/uk/unlocks/", "Новачкам": "/uk/learn/", "Мої": "/uk/my/" };   // owner 17.11: unlocks replaced the calendar tab
     for (const [t, h] of Object.entries(wantTabs)) {
       await go(p, "/uk/fixed/");
       await p.locator('nav.fixed[aria-label="Розділи"] a', { hasText: t }).first().tap();
@@ -380,7 +380,8 @@ S.home = async () => {
       await chips(p).nth(i).click(); await p.waitForTimeout(150);
       const label = ci[i].t.replace(/\s*\d+$/, "");
       const list = await allCardsMapped(p);
-      const wrong = list.filter((x) => x.cat !== label);
+      // the 0% fee tab (owner 16.11) gathers zero-fee offers from every category; such "other" cards are labelled "0% комісії"
+      const wrong = list.filter((x) => (label === "0% комісії" ? !x.p?.meta?.zeroFee : x.cat !== label && !(x.cat === "0% комісії" && x.p?.category === "other")));
       check(p, `chip «${label}»: count ${num(ci[i].t.match(/\d+$/)?.[0])} = cards and all of that category`, list.length === Number(ci[i].t.match(/\d+$/)?.[0]) && wrong.length === 0, `${list.length} cards, ${wrong.length} wrong`);
     }
     await chips(p).nth(0).click(); await p.waitForTimeout(150);
@@ -673,7 +674,8 @@ S.popovers = async () => {
   for (const kind of ["desk", "phone"]) {
     await withCtx(kind, async (c) => {
       const p = await newPage(c);
-      await go(p, "/uk/lp/gate-555/");
+      // a live pool (gate-555 ended; ended pools have no hints) — the first launchpool page in the sitemap
+      await go(p, (await sitemapPaths()).find((u) => /^\/uk\/lp\/[^/]+\/$/.test(u)) ?? "/uk/launchpools/");
       const hs = p.locator("details[data-pop] > summary[aria-label='Пояснення']");
       const n = await hs.count();
       check(p, "Hint «?» present", n >= 2, `${n}`);
@@ -769,7 +771,7 @@ S.popovers = async () => {
         const info0 = await p.evaluate(() => { const d = document.querySelector("details[data-pop][open]"); if (!d) return null; const a = d.querySelector("a[href*='calendar.google.com']"); const box = [...d.children].find((x) => x.tagName !== "SUMMARY"); const r = box.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + 12); return { href: a?.getAttribute("href"), r: [Math.round(r.left), Math.round(r.top), Math.round(r.right), Math.round(r.bottom)], top: !!e && box.contains(e), vw: innerWidth, vh: innerHeight }; });
         check(p, "calendar page menu opens on top & inside the viewport", !!info0 && info0.top && info0.r[0] >= 0 && info0.r[2] <= info0.vw && info0.r[3] <= info0.vh, JSON.stringify(info0 && { r: info0.r, top: info0.top }));
         if (info0?.href) { const g = new URL(info0.href); const t = g.searchParams.get("text"); const d = g.searchParams.get("dates"); const det = g.searchParams.get("details") ?? ""; check(p, "calendar page Google link has title, dates and a working site link", !!t && /^\d{8}T\d{6}Z\/\d{8}T\d{6}Z$/.test(d ?? "") && det.includes("https://obuzakiz99-oss.github.io/promoradar/uk/"), `text=${t?.slice(0, 60)} dates=${d} details=${det.slice(0, 120)}`); }
-        if (cn > 1) { await cs.nth(1).scrollIntoViewIfNeeded(); if (kind === "phone") await cs.nth(1).tap(); else await cs.nth(1).click(); await p.waitForTimeout(120); check(p, "calendar page: one menu open at a time", (await p.locator("details[data-pop][open]").count()) === 1); }
+        if (cn > 1) { await cs.nth(1).scrollIntoViewIfNeeded(); /* the open panel sits over the next button (a real tap lands on the panel) — toggle it directly */ await cs.nth(1).dispatchEvent("click"); await p.waitForTimeout(120); check(p, "calendar page: one menu open at a time", (await p.locator("details[data-pop][open]").count()) === 1); }
         if (kind === "desk") {
           const ics = p.locator("details[data-pop][open] button").filter({ hasText: ".ics" }).first();
           const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 8000 }).catch(() => null), ics.click()]);
@@ -857,6 +859,8 @@ S.promo = async () => {
       const calcIn = p.locator("main input[type=number]").first();
       if (await calcIn.count()) {
         const boxText = () => calcIn.evaluate((i) => { let a = i.parentElement; while (a && a.innerText.length < 120) a = a.parentElement; return a ? a.innerText.replace(/\s+/g, " ") : ""; });
+        // from $1 (below any entry threshold) to $5,000: a one-threshold promo shows the same text for $1,000 and $5,000
+        await calcIn.fill("1"); await p.waitForTimeout(150);
         const t0 = await boxText();
         await calcIn.fill("5000"); await p.waitForTimeout(150);
         const t1 = await boxText();

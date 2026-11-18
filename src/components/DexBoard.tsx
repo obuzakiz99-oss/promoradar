@@ -46,6 +46,9 @@ const CALC: Record<Locale, { amount: string; col: (a: string) => string; mo: str
 const usdFmt = (lang: Locale) => (x: number) => "$" + (x >= 1000 ? num(Math.round(x), lang, 0) : x >= 10 ? x.toFixed(0) : x.toFixed(2));
 const digits = (s: string) => s.replace(/[^0-9.]/g, "");
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
+// the default filter; dex/page.tsx ships the top pools above it (audit 18.11: `touched` compared against TVLS[0], so the
+// full list always swapped in on load and re-sorted the table, CLS 0.26)
+const TVL0 = 1_000_000;
 const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
 function logo(p: DexPool) {
@@ -66,7 +69,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   const [chain, setChain] = useState("all");
   const [stable, setStable] = useState(false);
   const [noIl, setNoIl] = useState(false);
-  const [minTvl, setMinTvl] = useState(1_000_000);
+  const [minTvl, setMinTvl] = useState(TVL0);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<Sort>("apy");
   const [limit, setLimit] = useState(PAGE);
@@ -78,7 +81,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
   // the full list replaces the shipped rows only once the visitor changes something (audit 14.11: swapping it in on
   // load re-sorted the table under the reader, CLS 0.24); the count already uses it
-  const touched = cat !== "all" || chain !== "all" || stable || noIl || minTvl !== TVLS[0] || q !== "" || sort !== "apy" || limit > PAGE;
+  const touched = cat !== "all" || chain !== "all" || stable || noIl || minTvl !== TVL0 || q !== "" || sort !== "apy" || limit > PAGE;
   const pools = touched && full ? full : initial;
 
   const list = useMemo(() => {
@@ -92,7 +95,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   }, [pools, cat, chain, stable, noIl, minTvl, q, sort]);
   const total = useMemo(() => (full && !touched ? full.filter((p) => p.tvl >= minTvl).length : list.length), [full, touched, minTvl, list.length]);
 
-  const reset = () => { setCat("all"); setChain("all"); setStable(false); setNoIl(false); setMinTvl(TVLS[0]); setQ(""); };
+  const reset = () => { setCat("all"); setChain("all"); setStable(false); setNoIl(false); setMinTvl(TVL0); setQ(""); };
   const pcButton = (p: DexPool, pc: ReturnType<typeof dexPC>, open: boolean, cls = "") => (
     <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
       {EXPLAIN[lang]}
@@ -230,7 +233,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
           <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
             <tr>
               <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right"><Term k="tvl" lang={lang} align="right">{A.colTvl}</Term></th>
-              <th className="px-4 py-3 text-right"><Term k="apy" lang={lang} align="right">{A.colApy}</Term></th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3" />
+              <th className="px-4 py-3 text-right"><Term k="apy" lang={lang} align="right">{A.colApy}</Term></th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3"><span className="sr-only">{({ uk: "Посилання", en: "Link", ru: "Ссылка" } as const)[lang]}</span></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">

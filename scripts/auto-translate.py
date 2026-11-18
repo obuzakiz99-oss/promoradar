@@ -22,6 +22,7 @@ MANUAL = os.path.join(REPO, "src", "config", "translations-manual.json")
 BATCH = 150
 NOWIN = 0x08000000 if os.name == "nt" else 0   # CREATE_NO_WINDOW
 CLAUDE = os.path.join(os.environ.get("APPDATA", ""), "npm", "claude.cmd")
+MODEL = os.environ.get("PROMORADAR_MODEL", "claude-opus-5-5")   # pinned: the CLI default follows whatever /model was last set to
 GIT = r"C:\Program Files\Git\cmd\git.exe" if os.path.exists(r"C:\Program Files\Git\cmd\git.exe") else "git"
 
 PROMPT = """You translate promo texts for PromoRadar, a crypto-exchange promo aggregator, into Ukrainian and Russian.
@@ -127,7 +128,7 @@ def main():
             for k, s in batch:
                 f.write(k + "\t" + s.replace("\r", "").replace("\n", " ⏎ ").replace("\t", " ") + "\n")
         # the prompt goes through stdin: claude.cmd (cmd.exe) cuts a multi-line argument at the first line break
-        r = run([CLAUDE, "-p", "--allowedTools", "Read", "Write", "--permission-mode", "acceptEdits"],
+        r = run([CLAUDE, "-p", "--model", MODEL, "--allowedTools", "Read", "Write", "--permission-mode", "acceptEdits"],
                 cwd=WORK, check=False, timeout=1500, input=PROMPT)
         log(f"claude exit {r.returncode}: {(r.stdout or r.stderr).strip()[-200:]}")
         uk = read_tsv(os.path.join(WORK, "out_uk.tsv"), src)

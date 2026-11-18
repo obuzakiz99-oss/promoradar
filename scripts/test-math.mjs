@@ -29,10 +29,10 @@ const p = { id: "t", exchange: "gate", token: "KOR", name: "KOR", start: now - 8
 const pool = { stake: "KOR", apr: 1000, maxStake: 500000 };
 const hedge = { KOR: { perps: [{ ex: "MEXC", fundingApr: -43.8 }, { ex: "Gate", fundingApr: -60 }], spotDepthUsd: 2000 } };
 const h = pc.hedgeCalc(pool, p, hedge, 1000, now, 2900);
-// cost = 2·(0.3 + 2·1000/2000) + 0.3 = 2.9 %; hedged = 1000 − 43.8 − 2.9·365/28 = 918.395
+// cost = 2·(0.3 + 2·1000/2000) + 0.3 = 2.9 %; hedged = (1000 − 43.8 − 2.9·365/28) / (1 + 1/HEDGE_LEV): the short's margin is capital too
 eq("hedge picks best funding venue", h.venue, "MEXC");
 eq("round-trip cost %", h.costPct, 2.9);
-eq("hedged APR", h.hedgedApr, 1000 - 43.8 - (2.9 * 365) / 28);
+eq("hedged APR", h.hedgedApr, (1000 - 43.8 - (2.9 * 365) / 28) / (1 + 1 / pc.HEDGE_LEV));
 // sensible = (Y/2 − 0.9)·depth/4, Y = (1000 − 43.8)·28/365 = 73.35 → 17 889 → capped at 2 900
 eq("sensible size capped by max stake", h.sensibleUsd, 2900);
 const h2 = pc.hedgeCalc(pool, p, hedge, 1000, now);
@@ -67,7 +67,7 @@ eq("classify withdrawal notice is not promo", parse.isPromo("Resumption of Depos
   const L = 3, mmr = 0.005;
   const exact = (1 / L - mmr) / (1 + mmr);
   const src = fs.readFileSync("src/components/HedgeCalculator.tsx", "utf8");
-  eq("HedgeCalculator uses exact liquidation formula", src.includes("(1 / v.leverage - v.mmr / 100) / (1 + v.mmr / 100)"), true);
+  eq("HedgeCalculator uses exact liquidation formula", src.includes("(1 / c.leverage - c.mmr / 100) / (1 + c.mmr / 100)"), true);
   // check: at the liquidation price equity equals maintenance margin
   const N = 1000, u = exact;
   eq("equity at liq = maintenance margin", N / L - N * u, mmr * N * (1 + u));

@@ -87,7 +87,7 @@ export default async function TokenPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
-        <nav className="text-sm font-semibold text-ink-3"><Link href={`/${lang}/t`} className="hover:text-ink">← {T.back}</Link></nav>
+        <nav aria-label={T.back} className="text-sm font-semibold text-ink-3"><Link href={`/${lang}/t`} className="hover:text-ink">← {T.back}</Link></nav>
         <header className="mt-6 flex flex-col gap-5 rounded-3xl border border-line bg-bg-2 p-6 sm:flex-row sm:items-center sm:p-10">
           <VenueLogo v={coinV} alts={coinLogos(tk.sym)} size={72} rounded="rounded-full" />
           <div className="flex-1">

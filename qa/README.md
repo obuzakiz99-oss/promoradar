@@ -7,7 +7,7 @@ written for the 3-round audit of 14.11.2026 and are meant to be re-run after big
 ```sh
 cd qa && npm install                 # playwright-core + axe-core (uses your installed Chrome)
 ROUND=r4 node func.mjs               # ~1,300 functional checks: filters, search, counters, menus, keyboard, tablet, en/ru
-node a11y-visual.mjs --out out/r4    # axe (WCAG 2.2 AA) + screenshots at 390/768/1280/1440 + 200 % zoom, open states
+node a11y-visual.mjs --out=out/r4   # axe (WCAG 2.2 AA) + screenshots at 390/768/1280/1440 + 200 % zoom, open states
 node texts.mjs r4                    # page text captures (uk/en/ru) for copy review and diffs
 ```
 

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, MANUAL, venueOf } from "@/config/site";
-import { parseReward } from "./parse";
+import { compact, parseReward } from "./parse";
 import { aprOf, factsOf, geoOf, getDetails, poolOf, termsOf, tiersOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
@@ -11,7 +11,7 @@ import { getFaqs } from "./faq";
 import { payoutOf } from "./payout";
 import { junkReason, MIN_MAX_PER_USER_USD, RAFFLE, type JunkReason } from "./junk";
 import { isZeroFee } from "./zerofee";
-import { getAssessments, valueOf, valueJunk } from "./value";
+import { getAssessments, usdOf, valueOf, valueJunk } from "./value";
 import type { Promo, Venue } from "./types";
 
 /** All live promos (exchange & DeFi feeds + paid placements). */
@@ -132,8 +132,8 @@ async function getPromosLive(): Promise<Collected> {
       // "Bitbase Points is live" with a start months ahead: the parser took the end / verification date as the start
       if (p.startsAt && p.startsAt > now && meta.datesFromRules && /\b(is (now )?live|now live|kicks? off|has (started|begun|launched)|is here|are live|is on)\b/i.test(p.titleOrig ?? p.title)) p.startsAt = undefined;
       if (tm.perUser) {
-        const rate = /^(USD|USDT|USDC|FDUSD|USD1|DAI)$/.test(tm.perUser.unit) ? 1 : px[tm.perUser.unit];
-        meta.perUser = { ...tm.perUser, usd: rate ? Math.round(tm.perUser.amount * rate * 100) / 100 : undefined };
+        const u = usdOf(tm.perUser, px);
+        meta.perUser = { ...tm.perUser, usd: u !== undefined ? Math.round(u * 100) / 100 : undefined };
       }
       if (tm.minEntry) meta.minEntry = tm.minEntry;
       // calculator inputs: reward tiers, advertised APR, futures vs spot (fees)
@@ -210,6 +210,23 @@ async function getPromosLive(): Promise<Collected> {
     if (dups.has(p.id)) continue;
     const handAdded = !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id);
     const a = facts[p.id];
+    // audit 18.11: Claude read the full rules, the regexes only guessed from a sentence — its per-person cap and pool win
+    // (OKX "up to 350K USDC in DeFi incentives" was a pool printed as "max per person", a 400 USDT prize as the pool)
+    // for APR products `max` is the stake cap, not a reward; "% COMMISSION" / POINTS / XP are not money
+    const coin = (x?: { amount: number; unit: string }) => !!x && x.amount > 0 && /^[A-Z][A-Z0-9]{0,9}$/i.test(x.unit) && !/^(POINTS?|XP|PTS)$/i.test(x.unit);
+    if (a && !handAdded && p.category !== "farming") {
+      const m = { ...(p.meta ?? {}) };
+      const same = (x: { amount: number; unit: string }, y: { amount: number; unit: string }) => x.unit.toUpperCase() === y.unit.toUpperCase() && Math.abs(x.amount - y.amount) <= 0.01 * y.amount;
+      const rewardCap = a.mech !== "apr" && a.mech !== "points" && coin(a.max) ? a.max : undefined;
+      if (rewardCap && (!m.perUser || !same(m.perUser, rewardCap))) {
+        const prize = a.mech === "top_n" || a.mech === "lucky_draw";
+        m.perUser = { amount: rewardCap.amount, unit: rewardCap.unit, usd: usdOf(rewardCap, px), text: prize ? p.titleOrig ?? p.title : "" };
+      } else if (!rewardCap && m.perUser && a.pool && m.perUser.unit.toUpperCase() === a.pool.unit.toUpperCase() && m.perUser.amount >= a.pool.amount * 0.99) {
+        delete m.perUser;
+      }
+      if (coin(a.pool) && a.pool && (!p.reward || !same(p.reward, a.pool))) p.reward = { amount: a.pool.amount, unit: a.pool.unit, usd: usdOf(a.pool, px), label: `${compact(a.pool.amount)} ${a.pool.unit}` };
+      p.meta = m;
+    }
     const v = p.category === "farming" ? undefined : valueOf(p, a, px);
     if (v) p.meta = { ...(p.meta ?? {}), value: v };
     if (isZeroFee(p.titleOrig ?? p.title, details[p.id]?.blocks)) p.meta = { ...(p.meta ?? {}), zeroFee: true };

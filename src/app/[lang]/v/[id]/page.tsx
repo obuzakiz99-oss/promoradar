@@ -52,7 +52,7 @@ export default async function VenuePage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
-        <nav className="text-sm font-semibold text-ink-3"><Link href={`/${lang}#promos`} className="hover:text-ink">← {t.detail.back}</Link></nav>
+        <nav aria-label={t.detail.back} className="text-sm font-semibold text-ink-3"><Link href={`/${lang}#promos`} className="hover:text-ink">← {t.detail.back}</Link></nav>
         <header className="relative mt-6 overflow-hidden rounded-3xl border border-line bg-bg-2 p-6 sm:p-10">
           <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full opacity-20 blur-3xl" style={{ background: v.color }} />
           <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">

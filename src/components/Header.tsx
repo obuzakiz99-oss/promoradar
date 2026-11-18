@@ -17,7 +17,9 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     // exchange rating hidden for now (owner, 12.11) — the page stays at /exchanges/, only the menu entry is off
     // { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
     { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
-    { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], match: ["calendar", "sales"] },
+    // audit 18.11: with Unlocks added the bar pushed the language switch 59px off a 768px tablet; the calendar is a tab on
+    // the Unlocks page, so tablets drop this entry (as the phone bar does)
+    { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], wide: "lg:block", match: ["calendar", "sales"] },
     // owner 17.11: token unlocks get their own menu entry (the page used to hide behind a Calendar tab)
     { href: withBase(`/${lang}/unlocks/`), label: { uk: "Розлоки", en: "Unlocks", ru: "Разлоки" }[lang], match: ["unlocks"] },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn", "best", "check"] },
