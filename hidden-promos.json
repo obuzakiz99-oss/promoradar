@@ -1,5 +1,5 @@
 {
- "at": 1794972331150,
+ "at": 1794974331613,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -47,8 +47,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 52.35,
-   "netUsd": 0.2
+   "perUserUsd": 49.65,
+   "netUsd": 0.16
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -148,7 +148,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 2.62
+   "netUsd": 2.48
   },
   {
    "id": "gate:102822",
@@ -303,7 +303,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.34
+   "netUsd": 0.33
   },
   {
    "id": "tg:LBanknews/20850",
@@ -551,7 +551,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.13,
+   "perUserUsd": 1.14,
    "netUsd": -0.27
   },
   {
@@ -1014,16 +1014,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.03,
+   "perUserUsd": 5.81,
    "netUsd": -0.2
-  },
-  {
-   "id": "tg:PancakeSwapAnn/7041",
-   "venue": "PancakeSwap",
-   "title": "Explore Dual Investment on PancakeSwap, share your subscription & get a shot at our $1,200 BONUS POOL! 🔥",
-   "url": "https://link.pancakeswap.finance/double-dip-tg",
-   "why": "social",
-   "netUsd": 0.58
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
