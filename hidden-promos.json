@@ -1,5 +1,5 @@
 {
- "at": 1794960970592,
+ "at": 1794970110511,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -39,8 +39,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 66.55,
-   "netUsd": 0.42
+   "perUserUsd": 73.25,
+   "netUsd": 0.52
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -148,7 +148,7 @@
    "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
    "url": "https://www.gate.com/announcements/article/102823",
    "why": "small",
-   "netUsd": 3.33
+   "netUsd": 3.66
   },
   {
    "id": "gate:102822",
@@ -185,38 +185,12 @@
    "netUsd": 5
   },
   {
-   "id": "gate:102817",
-   "venue": "Gate",
-   "title": "Gold & Silver Futures Lucky Rewards: Unlock Double Lucky Draws, Win XAUT & SLVON Bonuses",
-   "url": "https://www.gate.com/announcements/article/102817",
-   "why": "raffle",
-   "perUserUsd": 500,
-   "netUsd": 24
-  },
-  {
    "id": "tg:HTXGlobalAnnouncementChannel/15848",
    "venue": "HTX",
    "title": "Latest standings of the HTX Top 10 Trading Opportunities Futures Trading Competition",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15848",
    "why": "small",
    "netUsd": -4.4
-  },
-  {
-   "id": "gate:102816",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 8: Trade Popular Coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102816",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
-  },
-  {
-   "id": "gate:102815",
-   "venue": "Gate",
-   "title": "USD1 Futures Super League Season 3, Trade and Share 300,000 USD1 in WLFI",
-   "url": "https://www.gate.com/announcements/article/102815",
-   "why": "small",
-   "netUsd": 5.83
   },
   {
    "id": "zoomex:64403337588121",
@@ -346,7 +320,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.37
+   "netUsd": 0.34
   },
   {
    "id": "tg:LBanknews/20850",
@@ -363,7 +337,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "netUsd": 3.93
+   "netUsd": 3.88
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -405,7 +379,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.97,
+   "perUserUsd": 5.9,
    "netUsd": 0.28
   },
   {
@@ -589,14 +563,6 @@
    "why": "social"
   },
   {
-   "id": "tg:OKXAnnouncements/7406",
-   "venue": "OKX",
-   "title": "Trade onchain, share your honest feedback in our short survey, and upload your trade proof to split a 1,000 USDT prize pool.",
-   "url": "https://www.okx.com/account/register?channelid=ACE505900",
-   "why": "small",
-   "netUsd": 0.07
-  },
-  {
    "id": "binance:d55c2b2278034806ae44967fa7a2e62c",
    "venue": "Binance",
    "title": "Binance Lite Loan Promotion Extended: Enjoy Simple Borrowing with 50% Off Service Fee! (2026-11-13)",
@@ -617,7 +583,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.11,
+   "perUserUsd": 1.1,
    "netUsd": -0.28
   },
   {
@@ -1031,7 +997,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.02,
+   "perUserUsd": 7.92,
    "netUsd": 2.74
   },
   {
@@ -1080,8 +1046,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 6.34,
-   "netUsd": -0.19
+   "perUserUsd": 6,
+   "netUsd": -0.2
   },
   {
    "id": "tg:PancakeSwapAnn/7041",
@@ -1090,13 +1056,6 @@
    "url": "https://link.pancakeswap.finance/double-dip-tg",
    "why": "social",
    "netUsd": 0.58
-  },
-  {
-   "id": "tg:Bybit_Announcements/10045",
-   "venue": "Bybit",
-   "title": "More missions completed, more chances to win!",
-   "url": "https://t.me/Bybit_Announcements/10045",
-   "why": "raffle"
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
