@@ -1,5 +1,5 @@
 {
- "at": 1794974331613,
+ "at": 1794995740069,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -16,6 +16,89 @@
    "url": "https://help.crypto.com/en/articles/3124990-app-referral-programme",
    "why": "small",
    "perUserUsd": 50,
+   "netUsd": 1
+  },
+  {
+   "id": "biconomy:64458359254681",
+   "venue": "Biconomy.com",
+   "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
+   "why": "small",
+   "perUserUsd": 1.35
+  },
+  {
+   "id": "gate:102849",
+   "venue": "Gate",
+   "title": "Convert Promotion Phase 3: Trade to Get $8 BTC, Share 100,000 USDT Prize Pool",
+   "url": "https://www.gate.com/announcements/article/102849",
+   "why": "small",
+   "perUserUsd": 200,
+   "netUsd": -16.67
+  },
+  {
+   "id": "gate:102848",
+   "venue": "Gate",
+   "title": "Crude Oil and Silver CFD Trading Party: Trade to Claim 20 USDx and Win Up to 5,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102848",
+   "why": "small",
+   "perUserUsd": 5000,
+   "netUsd": -4.83
+  },
+  {
+   "id": "gate:102845",
+   "venue": "Gate",
+   "title": "Trade Stock Bots to Share 20,000 USDT Prize Pool 5",
+   "url": "https://www.gate.com/announcements/article/102845",
+   "why": "small",
+   "perUserUsd": 100,
+   "netUsd": -4.33
+  },
+  {
+   "id": "gate:102842",
+   "venue": "Gate",
+   "title": "Gate Web3 Volatility Hunter Challenge: Trade to Share 6,000 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/102842",
+   "why": "small",
+   "perUserUsd": 65,
+   "netUsd": -0.05
+  },
+  {
+   "id": "gate:102841",
+   "venue": "Gate",
+   "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
+   "url": "https://www.gate.com/announcements/article/102841",
+   "why": "small",
+   "perUserUsd": 7.35
+  },
+  {
+   "id": "biconomy:64452292175257",
+   "venue": "Biconomy.com",
+   "title": "🏆 MMT Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64452292175257--MMT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": 0.02
+  },
+  {
+   "id": "tg:Phemex_Announcements/7993",
+   "venue": "Phemex",
+   "title": "Phemex Lucky Draw #14 is LIVE!",
+   "url": "https://phemex.com/en/promo/activity/993",
+   "why": "small",
+   "netUsd": 5
+  },
+  {
+   "id": "binance:53d99d59696c41319b620b31d3525241",
+   "venue": "Binance",
+   "title": "Binance Trading Master Tournament: 10 Traders From Around the World Compete Live on Binance Square",
+   "url": "https://www.binance.com/en/support/announcement/detail/53d99d59696c41319b620b31d3525241",
+   "why": "social"
+  },
+  {
+   "id": "gate:102838",
+   "venue": "Gate",
+   "title": "Trenches Solana Treasure Hunt: Trade to Unlock Mystery Boxes and Share 30,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102838",
+   "why": "small",
    "netUsd": 1
   },
   {
@@ -47,8 +130,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 49.65,
-   "netUsd": 0.16
+   "perUserUsd": 62.95,
+   "netUsd": 0.37
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -101,15 +184,6 @@
    "netUsd": 15
   },
   {
-   "id": "gate:102827",
-   "venue": "Gate",
-   "title": "Gate ETF Treasure Hunt Edition 10: Up to 88 USDT per Draw & Trade for up to 900 USDT",
-   "url": "https://www.gate.com/announcements/article/102827",
-   "why": "raffle",
-   "perUserUsd": 88,
-   "netUsd": 4
-  },
-  {
    "id": "binance:51ee8ac34c9f4603b514965aa291b668",
    "venue": "Binance",
    "title": "ANT & NVDA Perps Carnival: Trade Selected TradFi Perps and Share Up to 200,000 USDC in rewards!",
@@ -143,31 +217,6 @@
    "netUsd": 0.17
   },
   {
-   "id": "gate:102823",
-   "venue": "Gate",
-   "title": "Initial Listing: Gate to List infiniFi (INFI) Spot, Convert Trading and Launch Launchpool",
-   "url": "https://www.gate.com/announcements/article/102823",
-   "why": "small",
-   "netUsd": 2.48
-  },
-  {
-   "id": "gate:102822",
-   "venue": "Gate",
-   "title": "Gate Web3 SCOR Swap Trading Competition Is Live: Share 2,000 USDC in Rewards",
-   "url": "https://www.gate.com/announcements/article/102822",
-   "why": "small",
-   "netUsd": 0.07
-  },
-  {
-   "id": "gate:102821",
-   "venue": "Gate",
-   "title": "ANT(Anthropic) Futures Trading Competition: 3 USDT on Your First Trade, Up to 8,000 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102821",
-   "why": "small",
-   "perUserUsd": 150,
-   "netUsd": 1
-  },
-  {
    "id": "tg:HTXGlobalAnnouncementChannel/15851",
    "venue": "HTX",
    "title": "Double 11: BTC | ETH Weekly Spot Trading Rewards #1 is live! Register for the event and get a 10 USDT Spot Grid Trial Bonus.",
@@ -198,14 +247,6 @@
    "why": "small",
    "perUserUsd": 3,
    "netUsd": 0.9
-  },
-  {
-   "id": "biconomy:64401563663641",
-   "venue": "Biconomy.com",
-   "title": "🏆 GMX Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64401563663641--GMX-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "netUsd": 4.9
   },
   {
    "id": "tg:coinstore_global/10378",
@@ -438,13 +479,6 @@
    "netUsd": -0.14
   },
   {
-   "id": "tg:Bitget_Announcements/18397",
-   "venue": "Bitget",
-   "title": "$8,425 (after fees) stays unallocated → earns 10% APY while you wait → +$34.62",
-   "url": "https://www.bitget.com/aboutus",
-   "why": "news"
-  },
-  {
    "id": "tg:Bitrue_official/11220",
    "venue": "Bitrue",
    "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
@@ -551,8 +585,16 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.14,
+   "perUserUsd": 1.16,
    "netUsd": -0.27
+  },
+  {
+   "id": "biconomy:64240044022809",
+   "venue": "Biconomy.com",
+   "title": "🏆 JCT Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240044022809--JCT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": 0.02
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -634,15 +676,6 @@
    "url": "https://www.lbank.com/event-new/10003822-ai-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "raffle",
    "netUsd": 15
-  },
-  {
-   "id": "tg:coinstore_global/10360",
-   "venue": "Coinstore",
-   "title": "The race is on! The top 1,000 eligible traders will receive rewards in the Gold Trading Challenge. Trade eligible pairs, climb the leaderboard and compete for USDT…",
-   "url": "https://www.coinstore.com/activity/Goldtrading",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 4.7
   },
   {
    "id": "kraken:https://blog.kraken.com/product/promotions/the-anthropic-pre-ipo-challenge-nov-2026",
@@ -965,7 +998,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.94,
+   "perUserUsd": 8.1,
    "netUsd": 2.74
   },
   {
@@ -992,30 +1025,13 @@
    "netUsd": 0.25
   },
   {
-   "id": "tg:Phemex_Announcements/7938",
-   "venue": "Phemex",
-   "title": "Phemex Card Giveaway — Round 2 Is Here!",
-   "url": "https://phemex.com/cards/management?group=8402&referralCode=BG79H9",
-   "why": "social",
-   "perUserUsd": 20,
-   "netUsd": 0.05
-  },
-  {
-   "id": "tg:Bitget_Announcements/18303",
-   "venue": "Bitget",
-   "title": "Onchain trading challenge #132 (Robinhood): trade to share 20,000 U 🔥",
-   "url": "https://www.bitget.com/zh-CN/support/articles/12560603899478",
-   "why": "raffle",
-   "netUsd": 1.62
-  },
-  {
    "id": "kucoin:351781",
    "venue": "KuCoin",
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.81,
-   "netUsd": -0.2
+   "perUserUsd": 4.86,
+   "netUsd": -0.21
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
