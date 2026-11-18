@@ -1,5 +1,5 @@
 {
- "at": 1794996902114,
+ "at": 1794997242008,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -23,8 +23,8 @@
    "venue": "Bybit",
    "title": "Anthropic IPO Livestream: Watch, Learn and Win",
    "url": "https://t.me/Bybit_Announcements/10138",
-   "why": "small",
-   "netUsd": 0
+   "why": "raffle",
+   "netUsd": 0.01
   },
   {
    "id": "biconomy:64458359254681",
@@ -32,7 +32,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.34,
+   "perUserUsd": 1.35,
    "netUsd": -0.05
   },
   {
@@ -51,7 +51,7 @@
    "url": "https://www.gate.com/announcements/article/102849",
    "why": "small",
    "perUserUsd": 200,
-   "netUsd": 5
+   "netUsd": 0.5
   },
   {
    "id": "tg:Bitget_Announcements/18442",
@@ -76,7 +76,7 @@
    "title": "Binance Pay: Spend, Deposit, and Share Up to $140,000 Worth of Rewards This Black Friday!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4434fb5be2340a29beefd8f4c2502cd",
    "why": "small",
-   "netUsd": 5
+   "netUsd": 4.63
   },
   {
    "id": "binance:95f5dbe0ea674a48a739b59e046648bf",
@@ -93,7 +93,7 @@
    "url": "https://www.gate.com/announcements/article/102843",
    "why": "small",
    "perUserUsd": 500,
-   "netUsd": 1.5
+   "netUsd": 3
   },
   {
    "id": "gate:102842",
@@ -141,7 +141,8 @@
    "venue": "Binance",
    "title": "Binance Trading Master Tournament: 10 Traders From Around the World Compete Live on Binance Square",
    "url": "https://www.binance.com/en/support/announcement/detail/53d99d59696c41319b620b31d3525241",
-   "why": "social"
+   "why": "social",
+   "netUsd": 5000
   },
   {
    "id": "gate:102840",
@@ -177,19 +178,19 @@
    "netUsd": 1.67
   },
   {
-   "id": "hotcoin:HotcoinFixed-TermEarnExclusive",
-   "venue": "Hotcoin",
-   "title": "Hotcoin Fixed-Term Earn Exclusive | Boost Your Rewards, Make Every Investment Count",
-   "url": "https://www.hotcoin.com/en_US/announcement/HotcoinFixed-TermEarnExclusive/",
-   "why": "news"
-  },
-  {
    "id": "tg:OKXAnnouncements/7422",
    "venue": "OKX",
    "title": "Invite new users to join the server through unique Discord invite links",
    "url": "https://www.okx.com/account/register?channelid=ACE505900",
    "why": "small",
    "netUsd": 0
+  },
+  {
+   "id": "bybit:fast-track-your-onboarding-as-a-verified-bybit-p2p-merchant--artefc35670d74e",
+   "venue": "Bybit",
+   "title": "Fast-Track Your Onboarding as a Verified Bybit P2P Merchant!",
+   "url": "https://announcements.bybit.com/en-US/article/fast-track-your-onboarding-as-a-verified-bybit-p2p-merchant--artefc35670d74e/",
+   "why": "news"
   },
   {
    "id": "binance:81e5668f2453429593002ad515a06b4c",
@@ -212,8 +213,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 69.25,
-   "netUsd": 0.46
+   "perUserUsd": 70.2,
+   "netUsd": 0.48
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -698,7 +699,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.17,
+   "perUserUsd": 1.16,
    "netUsd": -0.27
   },
   {
@@ -707,7 +708,7 @@
    "title": "🏆 JCT Futures Carnival · Trade & Win Up to 2,130 USDT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240044022809--JCT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
    "why": "small",
-   "netUsd": 4.92
+   "netUsd": 4.9
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -1111,7 +1112,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.04,
+   "perUserUsd": 8.06,
    "netUsd": 2.74
   },
   {
@@ -1143,7 +1144,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.9,
+   "perUserUsd": 4.85,
    "netUsd": -0.21
   },
   {
