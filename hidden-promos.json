@@ -1,5 +1,5 @@
 {
- "at": 1795002075954,
+ "at": 1795003142188,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -157,7 +157,7 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.23,
+   "perUserUsd": 7.27,
    "netUsd": 0.36
   },
   {
@@ -260,8 +260,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 69.7,
-   "netUsd": 0.47
+   "perUserUsd": 67.65,
+   "netUsd": 0.44
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -1151,7 +1151,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.04,
+   "perUserUsd": 8.05,
    "netUsd": 2.74
   },
   {
@@ -1175,7 +1175,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.5,
+   "perUserUsd": 4.47,
    "netUsd": -0.21
   },
   {
