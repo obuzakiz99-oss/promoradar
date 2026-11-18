@@ -1,5 +1,5 @@
 {
- "at": 1795003735243,
+ "at": 1795003924663,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -17,6 +17,13 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 1
+  },
+  {
+   "id": "tg:KCEX_announcements/5737",
+   "venue": "KCEX",
+   "title": "Crypto101 🕹 — $SANC is Sanctum’s Solana token, born from its liquid-staking ecosystem. It enables users to access staking opportunities and mint liquid staking tokens.",
+   "url": "https://t.me/KCEX_announcements/5737",
+   "why": "news"
   },
   {
    "id": "binance:a164c7e8c7cd4fb48413541b17f8ab27",
@@ -157,7 +164,7 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.23,
+   "perUserUsd": 7.24,
    "netUsd": 0.36
   },
   {
@@ -260,8 +267,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 74.4,
-   "netUsd": 0.54
+   "perUserUsd": 79.6,
+   "netUsd": 0.62
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -738,7 +745,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.16,
+   "perUserUsd": 1.15,
    "netUsd": -0.27
   },
   {
@@ -1175,7 +1182,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.47,
+   "perUserUsd": 4.49,
    "netUsd": -0.21
   },
   {
