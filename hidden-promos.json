@@ -1,5 +1,5 @@
 {
- "at": 1794999510491,
+ "at": 1795000083692,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -19,12 +19,28 @@
    "netUsd": 1
   },
   {
+   "id": "binance:a164c7e8c7cd4fb48413541b17f8ab27",
+   "venue": "Binance",
+   "title": "Binance Alpha Trading Competition: Trade KiiChain (KII) and Share $200K Worth of Rewards (2026-11-18)",
+   "url": "https://www.binance.com/en/support/announcement/detail/a164c7e8c7cd4fb48413541b17f8ab27",
+   "why": "small",
+   "netUsd": 1.33
+  },
+  {
+   "id": "tg:Bybit_Announcements/10139",
+   "venue": "Bybit",
+   "title": "Trade with your AI Subaccount and compete for up to 1,000,000 USDT. Top 200 by P&L win.",
+   "url": "https://t.me/Bybit_Announcements/10139",
+   "why": "small",
+   "netUsd": 13.33
+  },
+  {
    "id": "tg:LBanknews/20874",
    "venue": "LBank",
    "title": "3 copies of GTA 6 up for grabs. The top 3 traders by volume each win a copy for PlayStation or Xbox.",
    "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "social",
-   "netUsd": 0.02
+   "netUsd": 0.1
   },
   {
    "id": "tg:Bitrue_official/11252",
@@ -141,7 +157,7 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.16,
+   "perUserUsd": 7.18,
    "netUsd": 0.36
   },
   {
@@ -244,8 +260,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 76.95,
-   "netUsd": 0.58
+   "perUserUsd": 81,
+   "netUsd": 0.64
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -491,7 +507,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "netUsd": 3.89
+   "netUsd": 3.88
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -533,8 +549,8 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.9,
-   "netUsd": 0.28
+   "perUserUsd": 5.89,
+   "netUsd": 0.27
   },
   {
    "id": "tg:Toobit_announcements/6083",
@@ -591,14 +607,6 @@
    "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
    "why": "small",
    "netUsd": 5
-  },
-  {
-   "id": "binance:341033fc7dcd483dab73bc90ea3e21e6",
-   "venue": "Binance",
-   "title": "Binance Alpha Trading Competition: Trade Collect on Fanable (COLLECT) and Share $200K Worth of Rewards (2026-11-13)",
-   "url": "https://www.binance.com/en/support/announcement/detail/341033fc7dcd483dab73bc90ea3e21e6",
-   "why": "small",
-   "netUsd": 1.33
   },
   {
    "id": "tg:LBanknews/20838",
@@ -1127,7 +1135,7 @@
    "title": "Daily Top 10 Trading Opportunities: The First Contract Trading Competition Is Here!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15778",
    "why": "raffle",
-   "netUsd": 2.99
+   "netUsd": 2.98
   },
   {
    "id": "tg:LBanknews/20761",
@@ -1143,7 +1151,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.08,
+   "perUserUsd": 8.06,
    "netUsd": 2.74
   },
   {
@@ -1162,20 +1170,12 @@
    "netUsd": 2
   },
   {
-   "id": "tg:Kucoin_News/37030",
-   "venue": "KuCoin",
-   "title": "ONE LAST THING, KUFAM… YOUR FINAL SHOT AT THE REWARDS!",
-   "url": "https://www.kucoin.com/campaigns/United_as_KuFam?utm_source=United_as_KuFam&utm_medium=Community&utm_campaign=United_as_KuFam",
-   "why": "raffle",
-   "netUsd": 0.25
-  },
-  {
    "id": "kucoin:351781",
    "venue": "KuCoin",
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.76,
+   "perUserUsd": 4.85,
    "netUsd": -0.21
   },
   {
