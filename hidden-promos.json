@@ -1,5 +1,5 @@
 {
- "at": 1795037927803,
+ "at": 1795039770565,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -17,6 +17,14 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 1
+  },
+  {
+   "id": "tg:Bitget_Announcements/18448",
+   "venue": "Bitget",
+   "title": "Trade ANTUSDT and compete for a share of the 50,000 USDT prize pool!",
+   "url": "https://www.bitget.com/launchhub/trading-club/234022",
+   "why": "small",
+   "netUsd": 0.83
   },
   {
    "id": "tg:LBanknews/20879",
@@ -112,8 +120,8 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 853.5689008,
-   "netUsd": -0.07
+   "perUserUsd": 849.5936358,
+   "netUsd": -0.08
   },
   {
    "id": "gate:102850",
@@ -201,7 +209,7 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.08,
+   "perUserUsd": 6.99,
    "netUsd": 0.35
   },
   {
@@ -260,7 +268,7 @@
    "title": "Trenches Solana Treasure Hunt: Trade to Unlock Mystery Boxes and Share 30,000 USDT",
    "url": "https://www.gate.com/announcements/article/102838",
    "why": "raffle",
-   "perUserUsd": 96.996,
+   "perUserUsd": 95.76299999999999,
    "netUsd": 4.8
   },
   {
@@ -302,8 +310,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 58.05,
-   "netUsd": 0.29
+   "perUserUsd": 54.95,
+   "netUsd": 0.24
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -337,15 +345,6 @@
    "url": "https://www.bitget.com/events/activities/new/0ce71d1d04ef5d9d883d8e053f53eda1?color=dark&languageType=0",
    "why": "raffle",
    "netUsd": 2.4
-  },
-  {
-   "id": "tg:Bitget_Announcements/18436",
-   "venue": "Bitget",
-   "title": "ANTHROPIC Futures Trading Competition Is LIVE!",
-   "url": "https://www.bitget.com/launchhub/trading-club/234022",
-   "why": "raffle",
-   "perUserUsd": 3000,
-   "netUsd": 4.17
   },
   {
    "id": "tg:Kucoin_News/37211",
@@ -386,7 +385,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1112.7,
+   "perUserUsd": 1080.1000000000001,
    "netUsd": 1.81
   },
   {
@@ -539,7 +538,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1279.68,
+   "perUserUsd": 1277.04,
    "netUsd": 0.3
   },
   {
@@ -557,7 +556,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 138.48,
+   "perUserUsd": 138.72,
    "netUsd": 3.8
   },
   {
@@ -601,7 +600,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6240.110000000001,
+   "perUserUsd": 6236.610000000001,
    "netUsd": 91.27
   },
   {
@@ -610,7 +609,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.77,
+   "perUserUsd": 5.78,
    "netUsd": 0.27
   },
   {
@@ -818,7 +817,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 431.93451899999997,
+   "perUserUsd": 435.29798800000003,
    "netUsd": -0.28
   },
   {
@@ -1224,7 +1223,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.85,
+   "perUserUsd": 7.82,
    "netUsd": 2.74
   },
   {
@@ -1233,7 +1232,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.71,
+   "perUserUsd": 4.73,
    "netUsd": -0.21
   },
   {
