@@ -57,7 +57,8 @@ const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: 
 const ZERO_TAB: Record<Locale, string> = { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" };
 // audit 18.11: the box took any length and the URL kept it, but a reload restored only 80 characters
 const MAX_Q = 600;
-const catOk = (p: Promo, cat: Category | "all" | "zerofee") => cat === "all" || (cat === "zerofee" ? !!p.meta?.zeroFee : p.category === cat);
+// owner 18.11: 0% fee offers live only in their own tab (and "All"), not in Raffles / Other / the other categories
+const catOk = (p: Promo, cat: Category | "all" | "zerofee") => cat === "all" || (cat === "zerofee" ? !!p.meta?.zeroFee : !p.meta?.zeroFee && p.category === cat);
 const HID_TAB: Record<Locale, string> = { uk: "Приховані", en: "Hidden", ru: "Скрытые" };
 
 /** Search synonyms: what people type → words that appear in titles (original English and machine translations). */
@@ -220,7 +221,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: base.length };
-    base.forEach((p) => { c[p.category] = (c[p.category] ?? 0) + 1; if (p.meta?.zeroFee) c.zerofee = (c.zerofee ?? 0) + 1; });
+    base.forEach((p) => { if (p.meta?.zeroFee) c.zerofee = (c.zerofee ?? 0) + 1; else c[p.category] = (c[p.category] ?? 0) + 1; });
     return c;
   }, [base]);
 
