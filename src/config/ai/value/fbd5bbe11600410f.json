@@ -1,1 +1,1 @@
-{"id":"tg:Phemex_Announcements/7999","h":"Y57DFv27ySjDp8p9","v":1,"at":1794998451504,"data":{"isPromo":true,"socialOnly":true,"mech":"lucky_draw","act":{"kind":"other"},"typical":{"amount":100,"unit":"USD"},"max":{"amount":100,"unit":"USD"},"winners":10}}
+{"id":"tg:Phemex_Announcements/7999","h":"Y57DFv27ySjDp8p9","v":1,"at":1794998628314,"data":{"isPromo":true,"socialOnly":true,"mech":"first_n","act":{"kind":"other"},"typical":{"amount":100,"unit":"USDT"},"max":{"amount":100,"unit":"USDT"},"winners":10}}
