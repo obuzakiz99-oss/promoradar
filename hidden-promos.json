@@ -1,5 +1,5 @@
 {
- "at": 1794996709384,
+ "at": 1794996902114,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -19,12 +19,30 @@
    "netUsd": 1
   },
   {
+   "id": "tg:Bybit_Announcements/10138",
+   "venue": "Bybit",
+   "title": "Anthropic IPO Livestream: Watch, Learn and Win",
+   "url": "https://t.me/Bybit_Announcements/10138",
+   "why": "small",
+   "netUsd": 0
+  },
+  {
    "id": "biconomy:64458359254681",
    "venue": "Biconomy.com",
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.34
+   "perUserUsd": 1.34,
+   "netUsd": -0.05
+  },
+  {
+   "id": "gate:102850",
+   "venue": "Gate",
+   "title": "ANT3L/3S Trading Challenge: Win AI Gear & Claude Subscription Bonuses",
+   "url": "https://www.gate.com/announcements/article/102850",
+   "why": "raffle",
+   "perUserUsd": 500,
+   "netUsd": 6.17
   },
   {
    "id": "gate:102849",
@@ -33,16 +51,15 @@
    "url": "https://www.gate.com/announcements/article/102849",
    "why": "small",
    "perUserUsd": 200,
-   "netUsd": -16.67
+   "netUsd": 5
   },
   {
-   "id": "gate:102848",
-   "venue": "Gate",
-   "title": "Crude Oil and Silver CFD Trading Party: Trade to Claim 20 USDx and Win Up to 5,000 USDT",
-   "url": "https://www.gate.com/announcements/article/102848",
+   "id": "tg:Bitget_Announcements/18442",
+   "venue": "Bitget",
+   "title": "Trading Floor Exclusive New User Campaign | Share 1,000 USDT 🔥",
+   "url": "https://www.bitget.com/aboutus",
    "why": "small",
-   "perUserUsd": 5000,
-   "netUsd": -4.83
+   "netUsd": 0.08
   },
   {
    "id": "gate:102845",
@@ -51,7 +68,32 @@
    "url": "https://www.gate.com/announcements/article/102845",
    "why": "small",
    "perUserUsd": 100,
-   "netUsd": -4.33
+   "netUsd": 6
+  },
+  {
+   "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
+   "venue": "Binance",
+   "title": "Binance Pay: Spend, Deposit, and Share Up to $140,000 Worth of Rewards This Black Friday!",
+   "url": "https://www.binance.com/en/support/announcement/detail/f4434fb5be2340a29beefd8f4c2502cd",
+   "why": "small",
+   "netUsd": 5
+  },
+  {
+   "id": "binance:95f5dbe0ea674a48a739b59e046648bf",
+   "venue": "Binance",
+   "title": "Agent ID Hackathon: Build Decentralized Applications (dApps) Around Agent ID to Win 60,000 USDC Worth of Rewards",
+   "url": "https://www.binance.com/en/support/announcement/detail/95f5dbe0ea674a48a739b59e046648bf",
+   "why": "small",
+   "netUsd": 0.4
+  },
+  {
+   "id": "gate:102843",
+   "venue": "Gate",
+   "title": "USD1 Trading Partners: Invite Friends to Share 100,000 USD1 Worth of WLFI and Earn Up to 500 USD1 pe...",
+   "url": "https://www.gate.com/announcements/article/102843",
+   "why": "small",
+   "perUserUsd": 500,
+   "netUsd": 1.5
   },
   {
    "id": "gate:102842",
@@ -60,7 +102,7 @@
    "url": "https://www.gate.com/announcements/article/102842",
    "why": "small",
    "perUserUsd": 65,
-   "netUsd": -0.05
+   "netUsd": 1.25
   },
   {
    "id": "gate:102841",
@@ -68,7 +110,8 @@
    "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
    "url": "https://www.gate.com/announcements/article/102841",
    "why": "small",
-   "perUserUsd": 7.34
+   "perUserUsd": 7.31,
+   "netUsd": 0.37
   },
   {
    "id": "biconomy:64452292175257",
@@ -76,15 +119,22 @@
    "title": "🏆 MMT Futures Carnival · Trade & Win Up to 2,130 USDT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64452292175257--MMT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
    "why": "small",
-   "netUsd": 0.02
+   "netUsd": 4.9
   },
   {
    "id": "tg:Phemex_Announcements/7993",
    "venue": "Phemex",
    "title": "Phemex Lucky Draw #14 is LIVE!",
    "url": "https://phemex.com/en/promo/activity/993",
-   "why": "small",
-   "netUsd": 5
+   "why": "raffle",
+   "netUsd": 25
+  },
+  {
+   "id": "tg:Bitrue_official/11249",
+   "venue": "Bitrue",
+   "title": "$TRX/USDT — TRON’s native token for fees and staking",
+   "url": "https://support.bitrue.com/hc/en-001/articles/64448455976601-Bitrue-Futures-Will-List-3-New-USDT-Based-Perpetual-Futures-Pairs?cn=399990",
+   "why": "news"
   },
   {
    "id": "binance:53d99d59696c41319b620b31d3525241",
@@ -94,12 +144,44 @@
    "why": "social"
   },
   {
+   "id": "gate:102840",
+   "venue": "Gate",
+   "title": "Stock Futures Trading Giveback: Triple Care Benefits, Claim Up to 1,110 USDT per User",
+   "url": "https://www.gate.com/announcements/article/102840",
+   "why": "small",
+   "perUserUsd": 1110,
+   "netUsd": 9.95
+  },
+  {
+   "id": "tg:Phemex_Announcements/7992",
+   "venue": "Phemex",
+   "title": "Phemex Turns 7 | AI Agent & Anniversary Lucky Draw!",
+   "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
+   "why": "raffle",
+   "netUsd": 250
+  },
+  {
    "id": "gate:102838",
    "venue": "Gate",
    "title": "Trenches Solana Treasure Hunt: Trade to Unlock Mystery Boxes and Share 30,000 USDT",
    "url": "https://www.gate.com/announcements/article/102838",
-   "why": "small",
-   "netUsd": 1
+   "why": "raffle",
+   "netUsd": 4.8
+  },
+  {
+   "id": "gate:102837",
+   "venue": "Gate",
+   "title": "Crazy Wednesday Computing Power Storm: Register to Draw, Unlock NVDAG, Tech Rewards and High-Yield P...",
+   "url": "https://www.gate.com/announcements/article/102837",
+   "why": "raffle",
+   "netUsd": 1.67
+  },
+  {
+   "id": "hotcoin:HotcoinFixed-TermEarnExclusive",
+   "venue": "Hotcoin",
+   "title": "Hotcoin Fixed-Term Earn Exclusive | Boost Your Rewards, Make Every Investment Count",
+   "url": "https://www.hotcoin.com/en_US/announcement/HotcoinFixed-TermEarnExclusive/",
+   "why": "news"
   },
   {
    "id": "tg:OKXAnnouncements/7422",
@@ -130,8 +212,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 63.05,
-   "netUsd": 0.37
+   "perUserUsd": 69.25,
+   "netUsd": 0.46
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -360,7 +442,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "netUsd": 0.33
+   "netUsd": 0.32
   },
   {
    "id": "tg:LBanknews/20850",
@@ -419,7 +501,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.92,
+   "perUserUsd": 5.91,
    "netUsd": 0.28
   },
   {
@@ -616,7 +698,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 1.16,
+   "perUserUsd": 1.17,
    "netUsd": -0.27
   },
   {
@@ -625,7 +707,7 @@
    "title": "🏆 JCT Futures Carnival · Trade & Win Up to 2,130 USDT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240044022809--JCT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
    "why": "small",
-   "netUsd": 0.02
+   "netUsd": 4.92
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -1029,7 +1111,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.05,
+   "perUserUsd": 8.04,
    "netUsd": 2.74
   },
   {
@@ -1061,7 +1143,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.93,
+   "perUserUsd": 4.9,
    "netUsd": -0.21
   },
   {
