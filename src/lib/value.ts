@@ -190,7 +190,10 @@ const IDLE_APR = 0.05;
 export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, number>): Value {
   const usd = (x?: { amount: number; unit: string }) => usdOf(x, px);
   const m = p.meta ?? {};
-  const mech: Mech = a?.mech ?? (p.category === "referral" ? "referral" : p.category === "competition" ? "top_n" : m.aprPct !== undefined || p.category === "earn" ? "apr" : "unknown");
+  // audit 19.11: a pool shared by holdings with an APR ceiling ("MIN(pool ÷ all holdings × 365, 8%)", OKX Hold to Earn)
+  // is a yield product — splitting it over the crowd and charging idle interest read as −$14 and hid it as "small"
+  const yieldPool = a?.mech === "pool_share" && a.aprPct !== undefined && (a.act.kind === "hold" || a.act.kind === "stake" || a.act.kind === "deposit");
+  const mech: Mech = yieldPool ? "apr" : a?.mech ?? (p.category === "referral" ? "referral" : p.category === "competition" ? "top_n" : m.aprPct !== undefined || p.category === "earn" ? "apr" : "unknown");
   const max = usd(a?.max) ?? m.perUser?.usd;
   const typical = usd(a?.typical);
   const pool = usd(a?.pool) ?? p.reward?.usd;

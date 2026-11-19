@@ -210,11 +210,12 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             <button type="button" onClick={() => setEx(o.exchange)} title={v.name}><VenueLogo v={v} size={32} rounded="rounded-lg" /></button>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5">
-                <button type="button" onClick={() => setEx(o.exchange)} className="font-bold hover:text-lime hover:underline">{v.name}</button>
+                {/* audit 19.11 (WCAG 2.5.8): the 20px name button sat flush on the 16px term tip — 24px tall + 4px gap */}
+                <button type="button" onClick={() => setEx(o.exchange)} className="inline-flex min-h-6 items-center font-bold hover:text-lime hover:underline">{v.name}</button>
                 {top && <span className="rounded bg-lime/15 px-1 text-xs font-bold text-lime">{A.best}</span>}
                 {o.newUsers && <span className="rounded bg-amber/10 px-1 text-xs font-bold text-amber">{A.newUsers}</span>}
               </div>
-              <div className="text-xs font-semibold text-ink-3">
+              <div className="mt-1 text-xs font-semibold text-ink-3">
                 <Term k={o.type === "fixed" ? "fixed" : o.type === "onchain" ? "onchain" : "flexible"} lang={lang} up>{A.type[o.type]}</Term>{o.days ? ` · ${o.days} ${A.days}` : ""}
               </div>
             </div>

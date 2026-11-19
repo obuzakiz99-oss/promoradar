@@ -2049,9 +2049,12 @@ S.keyboard = async () => {
     check(p, "kbd: Tab reaches the status Select", n > 0, `${n}`);
     await p.keyboard.press("ArrowDown"); await p.waitForTimeout(100); await p.keyboard.press("End"); await p.keyboard.press("Enter"); await p.waitForTimeout(200);
     check(p, "kbd: status Select → «Закінчується» by keyboard", new URL(p.url()).searchParams.get("status") === "ending", rel(p.url()));
-    n = await tabUntil(p, (x) => x.tag === "SUMMARY" && /Майданчики/.test(x.text), 10);
-    check(p, "kbd: Tab reaches the «Майданчики» menu", n > 0, `${n}`);
-    if (n > 0) {
+    // the venues menu exists only with 2+ venues in the filtered list (19.11: «cex + ending» was 2 cards of one venue)
+    const hasVenues = (await p.locator("details[data-pop] > summary", { hasText: "Майданчики" }).count()) > 0;
+    n = hasVenues ? await tabUntil(p, (x) => x.tag === "SUMMARY" && /Майданчики/.test(x.text), 10) : 0;
+    if (!hasVenues) info(p, "kbd: «Майданчики» menu not rendered (fewer than 2 venues for this filter) — skipped");
+    else check(p, "kbd: Tab reaches the «Майданчики» menu", n > 0, `${n}`);
+    if (hasVenues && n > 0) {
       await p.keyboard.press("Enter"); await p.waitForTimeout(150);
       check(p, "kbd: Enter opens the venues menu", (await p.locator("details[data-pop][open]").count()) === 1);
       await p.keyboard.press("Tab"); await p.waitForTimeout(50);
@@ -2238,7 +2241,7 @@ S.promo10 = async () => {
       if (pr.category !== "farming") {
         if (pg.steps.length < 2) sbad.push(`${pg.steps.length} steps`);
         const act = pg.tiles.find((x) => x.startsWith("Що зробити")) ?? "";
-        if (pr.category === "referral" && !pg.steps.some((x) => /посилання|друг/i.test(x))) sbad.push("referral steps never mention the link / friend");
+        if (pr.category === "referral" && !pg.steps.some((x) => /посилання|друг|друз|реферальн/i.test(x))) sbad.push("referral steps never mention the link / friend");
         if (pr.meta?.minEntry && !pg.steps.some((x) => /\d/.test(x))) sbad.push(`minEntry ${pr.meta.minEntry.amount} ${pr.meta.minEntry.unit} not in the steps`);
         if (/Без вкладень/.test(act) && /(обсяг|торгуйте|торгівл|депозит|внесіть|VIP|trading volume|trade\b|deposit)/i.test(`${pg.rules} ${pr.title}`)) sbad.push(`«Без вкладень» but the rules ask to trade / deposit: «${(/(.{0,60}(обсяг|торгуйте|торгівл|депозит|внесіть|VIP|trading volume|trade\b|deposit).{0,40})/i.exec(`${pr.title} ${pg.rules}`)?.[1] ?? "").trim()}»`);
         if (pr.category === "competition" && !pr.meta?.minEntry && !pg.steps.some((x) => /рейтинг|місце|завдан|умов/i.test(x))) sbad.push("competition steps say nothing about ranking / tasks");

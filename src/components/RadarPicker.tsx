@@ -57,7 +57,10 @@ export function RadarPicker({ items: allItems, venues, labels, catLabels, venueB
         {[0.78, 0.44].map((s) => <div key={s} className="absolute rounded-full border border-line" style={{ inset: `${((1 - s) / 2) * 100}%` }} />)}
         <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-line" />
         <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-line" />
-        <div className="pointer-events-none absolute inset-0 animate-sweep rounded-full" style={{ background: "conic-gradient(from 0deg, rgb(200 255 61 / 0.32), rgb(200 255 61 / 0.06) 18%, transparent 30%)" }} />
+        {/* audit 19.11: the rotating square's 45° box (√2 × 400px) pushed the page 2px past a 1280px window — clip it to the circle */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
+          <div className="absolute inset-0 animate-sweep rounded-full" style={{ background: "conic-gradient(from 0deg, rgb(200 255 61 / 0.32), rgb(200 255 61 / 0.06) 18%, transparent 30%)" }} />
+        </div>
         <div className="absolute left-1/2 top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime shadow-[0_0_24px_6px_rgb(200_255_61/0.5)]" />
         {ranked.map(([id, list], i) => {
           const [x, y] = pos[i];

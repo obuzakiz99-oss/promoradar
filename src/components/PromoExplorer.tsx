@@ -332,14 +332,17 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   
   
       {venueList.length > 1 && (
-        <details data-pop="" className="group relative w-fit">
+        // audit 19.11: opened mid-screen the list ran 110px past the bottom (on phones under the tab bar) and, being
+        // overscroll-contained, a swipe inside it never scrolled the page to the hidden rows — bring it into view
+        <details data-pop="" className="group relative w-fit"
+          onToggle={(e) => { const el = e.currentTarget; if (el.open) requestAnimationFrame(() => el.querySelector<HTMLElement>("[role=group]")?.scrollIntoView({ block: "nearest" })); }}>
           <summary className={`flex h-11 cursor-pointer list-none items-center gap-2 rounded-xl border px-3 text-[13px] sm:h-9 font-bold [&::-webkit-details-marker]:hidden ${venues.size ? "border-lime/60 bg-lime/10 text-ink" : "border-line bg-white/[0.02] text-ink-2 hover:text-ink"}`}>
             {t.filters.venues}
             {venues.size > 0 && <span className="flex -space-x-1.5">{venueList.filter(({ v }) => venues.has(v.id)).slice(0, 5).map(({ v }) => <VenueLogo key={v.id} v={v} size={20} rounded="rounded-md" />)}</span>}
             {venues.size > 0 && <span className="font-mono text-xs text-lime">{venues.size}</span>}
             <Icon name="chevronDown" className="size-4 text-ink-3 transition-transform group-open:rotate-180" />
           </summary>
-          <div className="absolute left-0 top-11 z-30 grid max-h-[60vh] w-[min(36rem,calc(100vw-2rem))] grid-cols-2 gap-1.5 overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
+          <div className="absolute left-0 top-11 z-30 grid max-h-[60vh] w-[min(36rem,calc(100vw-2rem))] scroll-mb-24 md:scroll-mb-4 grid-cols-2 gap-1.5 overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-2 shadow-2xl sm:grid-cols-3" role="group" aria-label={t.filters.venues}>
             {venueList.map(({ v, n }) => (
               <button key={v.id} type="button" onClick={() => toggleVenue(v.id)} aria-pressed={venues.has(v.id)}
                 className={`flex min-h-9 items-center gap-2 rounded-xl border py-1 pl-1.5 pr-3 text-left text-[13px] font-bold leading-tight transition-all ${venues.has(v.id) ? "border-lime/60 bg-lime/10 text-ink" : "border-transparent text-ink-2 hover:bg-white/5 hover:text-ink"}`}>

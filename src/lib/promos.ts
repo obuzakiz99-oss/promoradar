@@ -129,6 +129,14 @@ async function getPromosLive(): Promise<Collected> {
           if (Number.isFinite(end) && end > Date.UTC(2020, 0, 1)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
+      // audit 19.11: a timeline of bare dates with no "period" line ("Subscription channel closes 2026-11-18") — when every
+      // date in the rules is over a day old the campaign is over (a Bitget IPO challenge kept saying «Триває» after it closed)
+      if (!p.endsAt && !p.evergreen) {
+        const ds = [...d.blocks.slice(0, 60).map((b) => b.x).join(" ").matchAll(/\b(20\d\d)[./-](\d{1,2})[./-](\d{1,2})\b/g)]
+          .map((m) => Date.UTC(+m[1], +m[2] - 1, +m[3])).filter((t) => Number.isFinite(t) && t > Date.UTC(2025, 0, 1));
+        const last = ds.length >= 2 ? Math.max(...ds) : undefined;
+        if (last !== undefined && last < now - 86400_000) { p.endsAt = last + 86400_000 - 1; meta.datesFromRules = true; }
+      }
       // "Bitbase Points is live" with a start months ahead: the parser took the end / verification date as the start
       if (p.startsAt && p.startsAt > now && meta.datesFromRules && /\b(is (now )?live|now live|kicks? off|has (started|begun|launched)|is here|are live|is on)\b/i.test(p.titleOrig ?? p.title)) p.startsAt = undefined;
       if (tm.perUser) {

@@ -86,7 +86,8 @@ export function Select<V extends string>({ value, onChange, options, label, clas
         <svg className={`size-4 shrink-0 text-ink-3 transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.2 7.6a.75.75 0 0 1 1.06 0L10 11.3l3.74-3.7a.75.75 0 1 1 1.06 1.06l-4.27 4.24a.75.75 0 0 1-1.06 0L5.2 8.66a.75.75 0 0 1 0-1.06Z" /></svg>
       </button>
       {open && (
-        <ul ref={list} id={id} role="listbox" tabIndex={-1} aria-label={label} aria-activedescendant={`${id}-${act}`} onKeyDown={onListKey}
+        // tabIndex 0 (audit 19.11, axe scrollable-region-focusable): long lists scroll, so the list itself must be focusable
+        <ul ref={list} id={id} role="listbox" tabIndex={0} aria-label={label} aria-activedescendant={`${id}-${act}`} onKeyDown={onListKey}
           className={`absolute z-50 max-h-80 min-w-full overflow-y-auto overscroll-contain rounded-2xl border border-line-2 bg-surface p-1.5 shadow-2xl focus:outline-none ${up ? "bottom-full mb-1.5" : "top-full mt-1.5"} ${align === "right" && !flipL ? "right-0" : "left-0"} ${menuClassName}`}>
           {options.map((o, i) => {
             const sel = i === cur;
