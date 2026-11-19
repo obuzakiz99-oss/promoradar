@@ -1,5 +1,5 @@
 {
- "at": 1795100922263,
+ "at": 1795101138778,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -17,6 +17,13 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 1
+  },
+  {
+   "id": "tg:Kucoin_News/37246",
+   "venue": "KuCoin",
+   "title": "Thinking That Free Airdrop Is Money in Your Pocket? Think Again!",
+   "url": "https://www.kucoin.com/learn/crashcourse/article10",
+   "why": "news"
   },
   {
    "id": "bybit:anthropic-is-live-on-bybit-more-reasons-to-trade--art4312c89a5fc6",
@@ -42,15 +49,6 @@
    "netUsd": 0.1
   },
   {
-   "id": "gate:102877",
-   "venue": "Gate",
-   "title": "Gate P2P Safety Shield Program: Learn & Quiz to Win Up to 1 GT",
-   "url": "https://www.gate.com/announcements/article/102877",
-   "why": "small",
-   "perUserUsd": 7,
-   "netUsd": 0
-  },
-  {
    "id": "tg:LBanknews/20892",
    "venue": "LBank",
    "title": "New users: register for a $5 futures bonus. Net deposit 100 USDT to Futures + trade 100 USDT in Futures to unlock 50 points.",
@@ -58,24 +56,6 @@
    "why": "small",
    "perUserUsd": 5,
    "netUsd": 5
-  },
-  {
-   "id": "gate:102869",
-   "venue": "Gate",
-   "title": "Convert New User Airdrop: Convert $1 to Get 20 USDT, with 80,000 WLFI Auto-Credited",
-   "url": "https://www.gate.com/announcements/article/102869",
-   "why": "small",
-   "perUserUsd": 20,
-   "netUsd": 6
-  },
-  {
-   "id": "gate:102868",
-   "venue": "Gate",
-   "title": "Gate Event Contracts Limited-Time Trading Competition Round 3: New User First Trade Reward, Win Up t...",
-   "url": "https://www.gate.com/announcements/article/102868",
-   "why": "small",
-   "perUserUsd": 5005.5,
-   "netUsd": 5.49
   },
   {
    "id": "tg:MEXCofficialNews/38840",
@@ -100,24 +80,6 @@
    "url": "https://www.okx.com/campaigns/anthropic-ipo-campaign?channelid=ACE505900",
    "why": "small",
    "netUsd": 3.33
-  },
-  {
-   "id": "gate:102866",
-   "venue": "Gate",
-   "title": "Futures Dual Prize Pool Challenge: Share 55,000 USDT in Automatically Credited Rewards, Up to 6,256...",
-   "url": "https://www.gate.com/announcements/article/102866",
-   "why": "small",
-   "perUserUsd": 6256,
-   "netUsd": -24
-  },
-  {
-   "id": "gate:102865",
-   "venue": "Gate",
-   "title": "Gate ETF Starter Rewards: Register to Get 10 USDT & Trade for Up to 200 USDT More",
-   "url": "https://www.gate.com/announcements/article/102865",
-   "why": "small",
-   "perUserUsd": 210,
-   "netUsd": 3
   },
   {
    "id": "xt:64493852060441",
@@ -240,7 +202,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 866.8462859,
+   "perUserUsd": 864.4611269000001,
    "netUsd": -0.07
   },
   {
@@ -332,7 +294,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 48.95,
+   "perUserUsd": 49.2,
    "netUsd": 0.15
   },
   {
@@ -407,7 +369,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1163.05,
+   "perUserUsd": 1178.85,
    "netUsd": 1.81
   },
   {
@@ -560,7 +522,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1239.36,
+   "perUserUsd": 1238.4,
    "netUsd": 0.27
   },
   {
@@ -578,8 +540,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 142.2,
-   "netUsd": 3.9
+   "perUserUsd": 141.84,
+   "netUsd": 3.89
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -613,7 +575,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6377.280000000001,
+   "perUserUsd": 6352.26,
    "netUsd": 91.27
   },
   {
@@ -622,7 +584,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.93,
+   "perUserUsd": 5.91,
    "netUsd": 0.28
   },
   {
@@ -846,7 +808,7 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 448.64336499999996,
+   "perUserUsd": 445.8766405,
    "netUsd": -0.28
   },
   {
@@ -1177,7 +1139,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.16,
+   "perUserUsd": 8.12,
    "netUsd": 2.74
   },
   {
@@ -1186,7 +1148,7 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.03,
+   "perUserUsd": 5,
    "netUsd": -0.2
   },
   {
