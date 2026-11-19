@@ -1,5 +1,5 @@
 {
- "at": 1795051635871,
+ "at": 1795080319096,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -17,6 +17,80 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 1
+  },
+  {
+   "id": "gate:102869",
+   "venue": "Gate",
+   "title": "Convert New User Airdrop: Convert $1 to Get 20 USDT, with 80,000 WLFI Auto-Credited",
+   "url": "https://www.gate.com/announcements/article/102869",
+   "why": "small",
+   "perUserUsd": 0.46
+  },
+  {
+   "id": "gate:102868",
+   "venue": "Gate",
+   "title": "Gate Event Contracts Limited-Time Trading Competition Round 3: New User First Trade Reward, Win Up t...",
+   "url": "https://www.gate.com/announcements/article/102868",
+   "why": "small",
+   "perUserUsd": 5.5
+  },
+  {
+   "id": "tg:Bitrue_official/11260",
+   "venue": "Bitrue",
+   "title": "Trade. Share. Get Rewarded! — Get a chance to win up to 4,000 USDT in Futures Position Bonuses!",
+   "url": "https://www.bitrue.com/referral/landing?cn=940000&inviteCode=ZVZLGZV",
+   "why": "small",
+   "netUsd": 0.4
+  },
+  {
+   "id": "gate:102866",
+   "venue": "Gate",
+   "title": "Futures Dual Prize Pool Challenge: Share 55,000 USDT in Automatically Credited Rewards, Up to 6,256...",
+   "url": "https://www.gate.com/announcements/article/102866",
+   "why": "small",
+   "perUserUsd": 6256,
+   "netUsd": 1.83
+  },
+  {
+   "id": "gate:102864",
+   "venue": "Gate",
+   "title": "gStocks Trading Rewards: Unlock Multiple Trading Benefits and Share $25,000 Worth of MSFTG",
+   "url": "https://www.gate.com/announcements/article/102864",
+   "why": "small",
+   "perUserUsd": 0.5
+  },
+  {
+   "id": "gate:102862",
+   "venue": "Gate",
+   "title": "SOXL, SOXS & QQQ Futures Trading Challenge: Register to Claim 5 USDT, Up to 240 USDT Per Person",
+   "url": "https://www.gate.com/announcements/article/102862",
+   "why": "small",
+   "perUserUsd": 240,
+   "netUsd": -2.49
+  },
+  {
+   "id": "biconomy:64491976549273",
+   "venue": "Biconomy.com",
+   "title": "🏆 USELESS Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64491976549273--USELESS-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": 0.02
+  },
+  {
+   "id": "biconomy:64490879907865",
+   "venue": "Biconomy.com",
+   "title": "🎁 Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
+   "why": "small",
+   "perUserUsd": 2.26
+  },
+  {
+   "id": "gate:102857",
+   "venue": "Gate",
+   "title": "Gate Futures Points Airdrop #170: Claim 0.016 MUG & 100 USDT",
+   "url": "https://www.gate.com/announcements/article/102857",
+   "why": "small",
+   "perUserUsd": 14.64
   },
   {
    "id": "tg:Bitget_Announcements/18448",
@@ -84,13 +158,6 @@
    "netUsd": 0.1
   },
   {
-   "id": "tg:Bitrue_official/11252",
-   "venue": "Bitrue",
-   "title": "BLACK FRIDAY IS HERE: Trading v. Staking on #Bitrue",
-   "url": "https://www.bitrue.com/staking?cn=399990",
-   "why": "news"
-  },
-  {
    "id": "tg:Phemex_Announcements/7999",
    "venue": "Phemex",
    "title": "What do you think Anthropic's IPO closing price will be? Share your prediction and the reasoning behind it for a chance to win! 📊",
@@ -98,13 +165,6 @@
    "why": "social",
    "perUserUsd": 100,
    "netUsd": 30
-  },
-  {
-   "id": "gate:102851",
-   "venue": "Gate",
-   "title": "Global Markets Rebound Watch : 48-Hour Trading Challenge",
-   "url": "https://www.gate.com/announcements/article/102851",
-   "why": "raffle"
   },
   {
    "id": "tg:Bybit_Announcements/10138",
@@ -120,35 +180,8 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 856.1130704,
+   "perUserUsd": 860.1678407,
    "netUsd": -0.07
-  },
-  {
-   "id": "gate:102850",
-   "venue": "Gate",
-   "title": "ANT3L/3S Trading Challenge: Win AI Gear & Claude Subscription Bonuses",
-   "url": "https://www.gate.com/announcements/article/102850",
-   "why": "raffle",
-   "perUserUsd": 500,
-   "netUsd": 6.17
-  },
-  {
-   "id": "gate:102849",
-   "venue": "Gate",
-   "title": "Convert Promotion Phase 3: Trade to Get $8 BTC, Share 100,000 USDT Prize Pool",
-   "url": "https://www.gate.com/announcements/article/102849",
-   "why": "small",
-   "perUserUsd": 228,
-   "netUsd": 0.5
-  },
-  {
-   "id": "gate:102848",
-   "venue": "Gate",
-   "title": "Crude Oil and Silver CFD Trading Party: Trade to Claim 20 USDx and Win Up to 5,000 USDT",
-   "url": "https://www.gate.com/announcements/article/102848",
-   "why": "small",
-   "perUserUsd": 5000,
-   "netUsd": 5
   },
   {
    "id": "tg:Bitget_Announcements/18442",
@@ -157,15 +190,6 @@
    "url": "https://www.bitget.com/aboutus",
    "why": "small",
    "netUsd": 0.08
-  },
-  {
-   "id": "gate:102845",
-   "venue": "Gate",
-   "title": "Trade Stock Bots to Share 20,000 USDT Prize Pool 5",
-   "url": "https://www.gate.com/announcements/article/102845",
-   "why": "small",
-   "perUserUsd": 1000,
-   "netUsd": 6
   },
   {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
@@ -184,42 +208,6 @@
    "why": "small",
    "perUserUsd": 10000,
    "netUsd": 0.4
-  },
-  {
-   "id": "gate:102843",
-   "venue": "Gate",
-   "title": "USD1 Trading Partners: Invite Friends to Share 100,000 USD1 Worth of WLFI and Earn Up to 500 USD1 pe...",
-   "url": "https://www.gate.com/announcements/article/102843",
-   "why": "small",
-   "perUserUsd": 3000,
-   "netUsd": 3
-  },
-  {
-   "id": "gate:102842",
-   "venue": "Gate",
-   "title": "Gate Web3 Volatility Hunter Challenge: Trade to Share 6,000 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102842",
-   "why": "small",
-   "perUserUsd": 65,
-   "netUsd": 1.25
-  },
-  {
-   "id": "gate:102841",
-   "venue": "Gate",
-   "title": "Gate 2026 Annual Gala: Support the Stars of the Year and Enter to Win Surprise Rewards",
-   "url": "https://www.gate.com/announcements/article/102841",
-   "why": "small",
-   "perUserUsd": 7.11,
-   "netUsd": 0.36
-  },
-  {
-   "id": "biconomy:64452292175257",
-   "venue": "Biconomy.com",
-   "title": "🏆 MMT Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64452292175257--MMT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "perUserUsd": 2130,
-   "netUsd": 4.9
   },
   {
    "id": "tg:Phemex_Announcements/7993",
@@ -246,38 +234,12 @@
    "netUsd": 5000
   },
   {
-   "id": "gate:102840",
-   "venue": "Gate",
-   "title": "Stock Futures Trading Giveback: Triple Care Benefits, Claim Up to 1,110 USDT per User",
-   "url": "https://www.gate.com/announcements/article/102840",
-   "why": "small",
-   "perUserUsd": 1110,
-   "netUsd": 9.95
-  },
-  {
    "id": "tg:Phemex_Announcements/7992",
    "venue": "Phemex",
    "title": "Phemex Turns 7 | AI Agent & Anniversary Lucky Draw!",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
    "why": "raffle",
    "netUsd": 250
-  },
-  {
-   "id": "gate:102838",
-   "venue": "Gate",
-   "title": "Trenches Solana Treasure Hunt: Trade to Unlock Mystery Boxes and Share 30,000 USDT",
-   "url": "https://www.gate.com/announcements/article/102838",
-   "why": "raffle",
-   "perUserUsd": 97.407,
-   "netUsd": 4.8
-  },
-  {
-   "id": "gate:102837",
-   "venue": "Gate",
-   "title": "Crazy Wednesday Computing Power Storm: Register to Draw, Unlock NVDAG, Tech Rewards and High-Yield P...",
-   "url": "https://www.gate.com/announcements/article/102837",
-   "why": "raffle",
-   "netUsd": 1.67
   },
   {
    "id": "tg:OKXAnnouncements/7422",
@@ -287,13 +249,6 @@
    "why": "small",
    "perUserUsd": 40,
    "netUsd": 0
-  },
-  {
-   "id": "bybit:fast-track-your-onboarding-as-a-verified-bybit-p2p-merchant--artefc35670d74e",
-   "venue": "Bybit",
-   "title": "Fast-Track Your Onboarding as a Verified Bybit P2P Merchant!",
-   "url": "https://announcements.bybit.com/en-US/article/fast-track-your-onboarding-as-a-verified-bybit-p2p-merchant--artefc35670d74e/",
-   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/37218",
@@ -310,8 +265,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 60.1,
-   "netUsd": 0.32
+   "perUserUsd": 54.95,
+   "netUsd": 0.24
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -329,14 +284,6 @@
    "why": "small",
    "perUserUsd": 2,
    "netUsd": 0.08
-  },
-  {
-   "id": "okx:okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
-   "venue": "OKX",
-   "title": "OKX × ANTHROPICUSDT Trade to Earn: Trade to Share 200,000 USDT",
-   "url": "https://www.okx.com/help/okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
-   "why": "small",
-   "netUsd": 13.33
   },
   {
    "id": "tg:Bitget_Announcements/18437",
@@ -385,7 +332,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1136.5,
+   "perUserUsd": 1179.8999999999999,
    "netUsd": 1.81
   },
   {
@@ -525,20 +472,12 @@
    "why": "raffle"
   },
   {
-   "id": "bybit:wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac",
-   "venue": "Bybit",
-   "title": "[WSOT 2026 Livestream] Trade the Future with Bybit AI: Share 4,900 USDT Worth of Red Packet + Apple Product Rewards",
-   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-livestream-trade-the-future-with-bybit-ai-share-4-900-usdt-worth-of-red-packet-apple-produ--artb659833dcbac/",
-   "why": "raffle",
-   "netUsd": 0.33
-  },
-  {
    "id": "biconomy:64378795293721",
    "venue": "Biconomy.com",
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1267.92,
+   "perUserUsd": 1260.72,
    "netUsd": 0.29
   },
   {
@@ -556,17 +495,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 139.608,
-   "netUsd": 3.83
-  },
-  {
-   "id": "tg:MEXCofficialNews/38824",
-   "venue": "MEXC",
-   "title": "Share Your VVIP Story: 500 USDT Prize Pool",
-   "url": "https://www.mexc.com/user/m-score?utm_source=community&utm_medium=tg&utm_campaign=vvipalways",
-   "why": "small",
-   "perUserUsd": 20,
-   "netUsd": 0.02
+   "perUserUsd": 141.744,
+   "netUsd": 3.89
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -600,7 +530,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6274.900000000001,
+   "perUserUsd": 6380.12,
    "netUsd": 91.27
   },
   {
@@ -609,8 +539,8 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.82,
-   "netUsd": 0.27
+   "perUserUsd": 5.91,
+   "netUsd": 0.28
   },
   {
    "id": "tg:Toobit_announcements/6083",
@@ -694,11 +624,12 @@
    "netUsd": 0.03
   },
   {
-   "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
-   "venue": "Bybit",
-   "title": "WSOT 2026 Captains' Call: Watch the Replay",
-   "url": "https://announcements.bybit.com/en-US/article/wsot-2026-captains-call-watch-the-replay--arte378a592d8e9/",
-   "why": "news"
+   "id": "biconomy:64282820012825",
+   "venue": "Biconomy.com",
+   "title": "🏆 IO Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64282820012825--IO-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": 0.02
   },
   {
    "id": "tg:Bitrue_official/11220",
@@ -765,14 +696,6 @@
    "netUsd": -0.93
   },
   {
-   "id": "bybit:fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492",
-   "venue": "Bybit",
-   "title": "Fiat-to-Crypto Frenzy: Complete Simple Tasks for a Chance to Win a Share of 80,000 USDT",
-   "url": "https://announcements.bybit.com/en-US/article/fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492/",
-   "why": "raffle",
-   "netUsd": 5.33
-  },
-  {
    "id": "tg:Bitget_Announcements/18389",
    "venue": "Bitget",
    "title": "All-Star Futures Trading Competition Is LIVE! 📈",
@@ -817,17 +740,8 @@
    "title": "🎁 Share 60,000 AIOT — Biconomy × OKZOO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240938144281--Share-60-000-AIOT-Biconomy-OKZOO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 435.46073649999994,
+   "perUserUsd": 439.69219749999996,
    "netUsd": -0.28
-  },
-  {
-   "id": "biconomy:64240044022809",
-   "venue": "Biconomy.com",
-   "title": "🏆 JCT Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64240044022809--JCT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "perUserUsd": 2130,
-   "netUsd": 4.9
   },
   {
    "id": "tg:Toobit_announcements/6041",
@@ -1193,29 +1107,12 @@
    "netUsd": 0.72
   },
   {
-   "id": "tg:HTXGlobalAnnouncementChannel/15778",
-   "venue": "HTX",
-   "title": "Daily Top 10 Trading Opportunities: The First Contract Trading Competition Is Here!",
-   "url": "https://t.me/HTXGlobalAnnouncementChannel/15778",
-   "why": "raffle",
-   "perUserUsd": 8.961,
-   "netUsd": 2.99
-  },
-  {
-   "id": "tg:LBanknews/20761",
-   "venue": "LBank",
-   "title": "Lucky Prize Star Phase 2 is live. Reach 100 USDT in Futures volume this phase to earn a Star Pick.",
-   "url": "https://www.lbank.com/event-new/special/11th?qcode=9iu9c&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=Platform-activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "raffle",
-   "netUsd": 55.51
-  },
-  {
    "id": "binance:f8e719ab5ce440cfb564858c27f2a6f3",
    "venue": "Binance",
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.95,
+   "perUserUsd": 8.09,
    "netUsd": 2.74
   },
   {
@@ -1224,35 +1121,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 4.91,
+   "perUserUsd": 4.78,
    "netUsd": -0.21
-  },
-  {
-   "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
-   "venue": "Bybit",
-   "title": "[Fiat Welcome Offer] Deposit, Trade, and Earn 10 USDT on Bybit!",
-   "url": "https://announcements.bybit.com/en-US/article/fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af/",
-   "why": "small",
-   "perUserUsd": 10,
-   "netUsd": 9.59
-  },
-  {
-   "id": "bybit:mena-exclucsive-vip-welcome-rewards-deposit-trade-for-up-to-1-750-usdt--art10376399e577",
-   "venue": "Bybit",
-   "title": "[MENA Exclucsive] VIP Welcome Rewards: Deposit & Trade to Earn Up to 1,750 USDT",
-   "url": "https://announcements.bybit.com/en-US/article/mena-exclucsive-vip-welcome-rewards-deposit-trade-for-up-to-1-750-usdt--art10376399e577/",
-   "why": "small",
-   "perUserUsd": 1750,
-   "netUsd": -354.11
-  },
-  {
-   "id": "bybit:mena-demo-arena-test-strategies-earn-rewards--art30d7f5cf1993",
-   "venue": "Bybit",
-   "title": "MENA Demo Arena: Test Strategies, Earn Rewards",
-   "url": "https://announcements.bybit.com/en-US/article/mena-demo-arena-test-strategies-earn-rewards--art30d7f5cf1993/",
-   "why": "small",
-   "perUserUsd": 500,
-   "netUsd": -2
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
@@ -1260,14 +1130,6 @@
    "title": "Binance VIP Level Protection Program",
    "url": "https://www.binance.com/en/support/announcement/detail/b3f6a9b7d0a746af9551912893029622",
    "why": "news"
-  },
-  {
-   "id": "okx:hold-to-earn-usdc-to-share-400000-usdc",
-   "venue": "OKX",
-   "title": "OKX Flash Earn Hold to Earn: Hold USDC to share 400,000 USDC, up to 8%",
-   "url": "https://www.okx.com/help/hold-to-earn-usdc-to-share-400000-usdc",
-   "why": "small",
-   "netUsd": -14.43
   },
   {
    "id": "zoomex:63690091619097",
@@ -1286,37 +1148,11 @@
    "netUsd": 0.07
   },
   {
-   "id": "bybit:sea-festival-of-lights-trade-collect-win--artb90f6f4e082d",
-   "venue": "Bybit",
-   "title": "SEA Festival of Lights: Trade, Collect & Win!",
-   "url": "https://announcements.bybit.com/en-US/article/sea-festival-of-lights-trade-collect-win--artb90f6f4e082d/",
-   "why": "small",
-   "netUsd": 0.05
-  },
-  {
-   "id": "bybit:lucky-jackpot-spin-to-win-8-888-usdt-iphone-18-pro-max-more--artf41bf91725f7",
-   "venue": "Bybit",
-   "title": "Lucky Jackpot: Spin to Win 8,888 USDT, iPhone 18 Pro Max, Gold 9999 & More",
-   "url": "https://announcements.bybit.com/en-US/article/lucky-jackpot-spin-to-win-8-888-usdt-iphone-18-pro-max-more--artf41bf91725f7/",
-   "why": "raffle",
-   "perUserUsd": 8888,
-   "netUsd": 0.59
-  },
-  {
    "id": "bitvavo:52205687377425",
    "venue": "Bitvavo",
    "title": "Club Brugge promotion: win a trip to Naples",
    "url": "https://support.bitvavo.com/hc/en-us/articles/52205687377425-Club-Brugge-promotion-win-a-trip-to-Naples",
    "why": "raffle"
-  },
-  {
-   "id": "bybit:welcome-to-bybit-earn-27-usdt-art8c8354c6faec",
-   "venue": "Bybit",
-   "title": "🎁 Start Your Bybit Journey and Earn Up to 27 USDT!",
-   "url": "https://announcements.bybit.com/en-US/article/welcome-to-bybit-earn-27-usdt-art8c8354c6faec/",
-   "why": "small",
-   "perUserUsd": 27,
-   "netUsd": 4.37
   }
  ]
 }
