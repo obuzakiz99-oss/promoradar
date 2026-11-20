@@ -1,5 +1,5 @@
 {
- "at": 1795196609014,
+ "at": 1795197789706,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -19,6 +19,46 @@
    "netUsd": 1
   },
   {
+   "id": "tg:LBanknews/20915",
+   "venue": "LBank",
+   "title": "10 pairs, one 43,500 USDT Futures bonus pool. 🔥",
+   "url": "https://www.lbank.com/event-new/100003983-Hot-Coin-Boost-Week-7?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=Platform-activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "small",
+   "perUserUsd": 100,
+   "netUsd": 5
+  },
+  {
+   "id": "kraken:https://blog.kraken.com/product/promotions/500k-holiday-deposit-sweepstakes",
+   "venue": "Kraken",
+   "title": "Win €500,000 this holiday season: every euro you deposit is an entry",
+   "url": "https://blog.kraken.com/product/promotions/500k-holiday-deposit-sweepstakes",
+   "why": "raffle"
+  },
+  {
+   "id": "tg:Phemex_Announcements/8019",
+   "venue": "Phemex",
+   "title": "Phemex $500,000 Lucky Draw | How to Earn Tickets",
+   "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
+   "why": "raffle",
+   "netUsd": 250
+  },
+  {
+   "id": "kraken:https://blog.kraken.com/product/promotions/antx-trading-challenge",
+   "venue": "Kraken",
+   "title": "Trade ANTx on Kraken Pro, with $5,000 in prizes",
+   "url": "https://blog.kraken.com/product/promotions/antx-trading-challenge",
+   "why": "small",
+   "perUserUsd": 1000,
+   "netUsd": 2
+  },
+  {
+   "id": "gate:102909",
+   "venue": "Gate",
+   "title": "Gate Research: An Overlooked Profitable Sector: Scale, Competition, and Moat in the Onchain TCG Card...",
+   "url": "https://www.gate.com/announcements/article/102909",
+   "why": "news"
+  },
+  {
    "id": "gate:102907",
    "venue": "Gate",
    "title": "Gate Live Mining Program Bonuses Distribution Announcement (November 9 - November 15)",
@@ -31,8 +71,17 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 46.7,
-   "netUsd": 1.33
+   "perUserUsd": 46.77,
+   "netUsd": 0.62
+  },
+  {
+   "id": "gate:102901",
+   "venue": "Gate",
+   "title": "ANT CFD Launch Event: Get Trading Subsidies and Compete for Up to 1,000 USDx",
+   "url": "https://www.gate.com/announcements/article/102901",
+   "why": "small",
+   "perUserUsd": 1000,
+   "netUsd": 2.25
   },
   {
    "id": "biconomy:64537604172953",
@@ -40,7 +89,8 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "netUsd": 2
+   "perUserUsd": 1271.4,
+   "netUsd": 0
   },
   {
    "id": "gate:102900",
@@ -48,7 +98,7 @@
    "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
    "url": "https://www.gate.com/announcements/article/102900",
    "why": "raffle",
-   "perUserUsd": 135.47,
+   "perUserUsd": 135.52,
    "netUsd": -0.23
   },
   {
@@ -290,7 +340,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 690.0264986999999,
+   "perUserUsd": 687.1643079,
    "netUsd": -0.16
   },
   {
@@ -367,8 +417,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 37.98,
-   "netUsd": -0.02
+   "perUserUsd": 42.16,
+   "netUsd": 0.05
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -434,7 +484,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 977.7,
+   "perUserUsd": 984.75,
    "netUsd": 1.81
   },
   {
@@ -562,8 +612,8 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1187.28,
-   "netUsd": 0.24
+   "perUserUsd": 1204.56,
+   "netUsd": 0.25
   },
   {
    "id": "tg:LBanknews/20850",
@@ -580,8 +630,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 129.91199999999998,
-   "netUsd": 3.56
+   "perUserUsd": 130.272,
+   "netUsd": 3.57
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -615,7 +665,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5898.290000000001,
+   "perUserUsd": 5905.6900000000005,
    "netUsd": 91.27
   },
   {
@@ -624,7 +674,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.41,
+   "perUserUsd": 5.43,
    "netUsd": 0.25
   },
   {
@@ -921,6 +971,15 @@
    "title": "The competition has moved. — The World Trades Here.",
    "url": "https://t.me/Bybit_Announcements/10076",
    "why": "news"
+  },
+  {
+   "id": "tg:Kucoin_News/37115",
+   "venue": "KuCoin",
+   "title": "Explore KuCoin Predictions, pass the quiz, and reach 200 USDT in cumulative eligible buy volume to qualify for a USDT Voucher worth up to 2 USDT.",
+   "url": "https://www.kucoin.com/learn-and-earn/prediction-markets-101-read-the-market-place-your-first-trade",
+   "why": "small",
+   "perUserUsd": 2,
+   "netUsd": 2
   },
   {
    "id": "tg:Bitget_Announcements/18362",
