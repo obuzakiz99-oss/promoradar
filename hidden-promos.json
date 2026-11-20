@@ -1,5 +1,5 @@
 {
- "at": 1795156829845,
+ "at": 1795158852054,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -19,13 +19,30 @@
    "netUsd": 1
   },
   {
+   "id": "tg:OKXAnnouncements/7435",
+   "venue": "OKX",
+   "title": "Following Anthropic? Share your analysis on Orbit and take part in its dedicated Outcomes events for a chance to share the 50,000 USDT prize pool.",
+   "url": "https://okx.com/ul/bzI58jW?channelid=ACE505900",
+   "why": "small",
+   "netUsd": 0.67
+  },
+  {
+   "id": "hibt:18458866523663",
+   "venue": "Hibt",
+   "title": "Hibt Popular Cryptocurrency Trading Competition",
+   "url": "https://support.hibt.com/hc/en-us/articles/18458866523663-Hibt-Popular-Cryptocurrency-Trading-Competition",
+   "why": "small",
+   "perUserUsd": 1000,
+   "netUsd": 7.7
+  },
+  {
    "id": "gate:102890",
    "venue": "Gate",
    "title": "Gate Futures Points Airdrop #171: Claim 0.017 QQQG & 100 USDT",
    "url": "https://www.gate.com/announcements/article/102890",
    "why": "small",
    "perUserUsd": 100,
-   "netUsd": 5.43
+   "netUsd": 5.44
   },
   {
    "id": "gate:102889",
@@ -109,15 +126,6 @@
    "url": "https://t.me/Phemex_Announcements/8011",
    "why": "small",
    "netUsd": 0.1
-  },
-  {
-   "id": "gate:102877",
-   "venue": "Gate",
-   "title": "Gate P2P Safety Shield Program: Learn & Quiz to Win Up to 1 GT",
-   "url": "https://www.gate.com/announcements/article/102877",
-   "why": "small",
-   "perUserUsd": 6.76,
-   "netUsd": 0
   },
   {
    "id": "tg:LBanknews/20892",
@@ -257,8 +265,8 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 791.4752615000001,
-   "netUsd": -0.1
+   "perUserUsd": 784.7173110000001,
+   "netUsd": -0.11
   },
   {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
@@ -334,7 +342,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 44.35,
+   "perUserUsd": 44.5,
    "netUsd": 0.08
   },
   {
@@ -401,7 +409,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 942.55,
+   "perUserUsd": 957.4,
    "netUsd": 1.81
   },
   {
@@ -538,7 +546,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1198.56,
+   "perUserUsd": 1196.16,
    "netUsd": 0.25
   },
   {
@@ -556,8 +564,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 136.96800000000002,
-   "netUsd": 3.75
+   "perUserUsd": 137.448,
+   "netUsd": 3.77
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -591,7 +599,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6182.17,
+   "perUserUsd": 6197.12,
    "netUsd": 91.27
   },
   {
@@ -600,7 +608,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.71,
+   "perUserUsd": 5.73,
    "netUsd": 0.27
   },
   {
@@ -1072,7 +1080,7 @@
    "title": "Anthropic Pre-IPO Carnival is on!",
    "url": "https://www.mexc.com/campaigns/Pre-IPO-ANT?utm_source=community&utm_medium=tg&utm_campaign=anthropic_futures",
    "why": "raffle",
-   "perUserUsd": 457.04999999999995,
+   "perUserUsd": 456.15000000000003,
    "netUsd": 100
   },
   {
@@ -1108,7 +1116,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.88,
+   "perUserUsd": 7.87,
    "netUsd": 2.74
   },
   {
@@ -1117,8 +1125,8 @@
    "title": "Kor Protocol (KOR) Listing Campaign — 1,800,000 KOR Giveaway",
    "url": "https://www.kucoin.com/announcement/en-kor-protocol-kor-listing-campaign-1800000-kor-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 5.09,
-   "netUsd": -0.2
+   "perUserUsd": 4.92,
+   "netUsd": -0.21
   },
   {
    "id": "binance:b3f6a9b7d0a746af9551912893029622",
