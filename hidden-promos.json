@@ -1,5 +1,5 @@
 {
- "at": 1795165156761,
+ "at": 1795166636202,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -19,13 +19,97 @@
    "netUsd": 1
   },
   {
+   "id": "gate:102900",
+   "venue": "Gate",
+   "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
+   "url": "https://www.gate.com/announcements/article/102900",
+   "why": "small",
+   "perUserUsd": 71.86,
+   "netUsd": -0.5
+  },
+  {
+   "id": "biconomy:64536163317529",
+   "venue": "Biconomy.com",
+   "title": "🎁 Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64536163317529--Share-2-000-000-ARK-Biconomy-ARK-DeFAI-Trading-Airdrop",
+   "why": "small",
+   "perUserUsd": 0.05
+  },
+  {
+   "id": "gate:102899",
+   "venue": "Gate",
+   "title": "Claim Free Popular Grid Bots 14, Exclusive Rewards for Returning Users",
+   "url": "https://www.gate.com/announcements/article/102899",
+   "why": "small",
+   "perUserUsd": 20
+  },
+  {
+   "id": "biconomy:64534924314777",
+   "venue": "Biconomy.com",
+   "title": "🏆 KITE Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64534924314777--KITE-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": 0.02
+  },
+  {
+   "id": "gate:102898",
+   "venue": "Gate",
+   "title": "Anthropic (ANT) Listing Trading Challenge :Trade Stocks for a Free ANT Draw 100% Win Rate",
+   "url": "https://www.gate.com/announcements/article/102898",
+   "why": "raffle"
+  },
+  {
+   "id": "gate:102897",
+   "venue": "Gate",
+   "title": "Gate ETF HYPE Bonus Rewards: HYPE Rewards for Futures Points Users, Stock Traders & VIP5+",
+   "url": "https://www.gate.com/announcements/article/102897",
+   "why": "small",
+   "perUserUsd": 230,
+   "netUsd": -2
+  },
+  {
+   "id": "gate:102896",
+   "venue": "Gate",
+   "title": "Swap 7-day Arena: Share 1,000 USDT (W5)",
+   "url": "https://www.gate.com/announcements/article/102896",
+   "why": "small",
+   "perUserUsd": 120,
+   "netUsd": -0.47
+  },
+  {
+   "id": "xt:64530798965529",
+   "venue": "XT.com",
+   "title": "XT Thanksgiving Giveaway——Deposit 1 USDT. Enter the Rolex draw",
+   "url": "https://xtsupport.zendesk.com/hc/en-us/articles/64530798965529-XT-Thanksgiving-Giveaway-Deposit-1-USDT-Enter-the-Rolex-draw",
+   "why": "raffle",
+   "netUsd": 0
+  },
+  {
    "id": "hibt:18458866523663",
    "venue": "Hibt",
-   "title": "Hibt Popular Cryptocurrency Trading Competition",
-   "url": "https://support.hibt.com/hc/en-us/articles/18458866523663-Hibt-Popular-Cryptocurrency-Trading-Competition",
+   "title": "Hibt Popular Spot Trading Competition",
+   "url": "https://support.hibt.com/hc/en-us/articles/18458866523663-Hibt-Popular-Spot-Trading-Competition",
    "why": "small",
    "perUserUsd": 1000,
    "netUsd": 7.7
+  },
+  {
+   "id": "gate:102890",
+   "venue": "Gate",
+   "title": "Gate Futures Points Airdrop #171: Claim 0.017 QQQG & 100 USDT",
+   "url": "https://www.gate.com/announcements/article/102890",
+   "why": "small",
+   "perUserUsd": 100,
+   "netUsd": 5.43
+  },
+  {
+   "id": "gate:102889",
+   "venue": "Gate",
+   "title": "Trenches 7-Day Check-in Sprint Phase 3: Triple Rewards, Share 40,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102889",
+   "why": "small",
+   "perUserUsd": 97,
+   "netUsd": 0.4
   },
   {
    "id": "tg:Bitget_Announcements/18460",
@@ -34,6 +118,15 @@
    "url": "https://www.bitget.com/events/activities/new/51f5b2f2c8a0580f9213aab79921a455?color=dark&languageType=0",
    "why": "raffle",
    "netUsd": 8.23
+  },
+  {
+   "id": "gate:102886",
+   "venue": "Gate",
+   "title": "Trenches Hot Tokens Competition Phase 72: Trade FIONA, Rings and Other Hot Tokens to Share a 20,000...",
+   "url": "https://www.gate.com/announcements/article/102886",
+   "why": "small",
+   "perUserUsd": 3,
+   "netUsd": 1.15
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15873",
@@ -124,15 +217,6 @@
    "why": "small",
    "perUserUsd": 160,
    "netUsd": 0.8
-  },
-  {
-   "id": "biconomy:64491976549273",
-   "venue": "Biconomy.com",
-   "title": "🏆 USELESS Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64491976549273--USELESS-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "perUserUsd": 2130,
-   "netUsd": 4.9
   },
   {
    "id": "biconomy:64490879907865",
@@ -230,8 +314,8 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 771.9169577000001,
-   "netUsd": -0.11
+   "perUserUsd": 756.4134242,
+   "netUsd": -0.12
   },
   {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
@@ -307,8 +391,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 44,
-   "netUsd": 0.07
+   "perUserUsd": 44.37,
+   "netUsd": 0.08
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -374,7 +458,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 999.15,
+   "perUserUsd": 996.6,
    "netUsd": 1.81
   },
   {
@@ -502,8 +586,8 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1203.6,
-   "netUsd": 0.25
+   "perUserUsd": 1211.0400000000002,
+   "netUsd": 0.26
   },
   {
    "id": "tg:LBanknews/20850",
@@ -520,8 +604,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 137.16,
-   "netUsd": 3.76
+   "perUserUsd": 137.448,
+   "netUsd": 3.77
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -555,7 +639,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6182.290000000001,
+   "perUserUsd": 6185.82,
    "netUsd": 91.27
   },
   {
@@ -564,7 +648,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.72,
+   "perUserUsd": 5.73,
    "netUsd": 0.27
   },
   {
@@ -624,6 +708,15 @@
    "perUserUsd": 26
   },
   {
+   "id": "biconomy:64316499307929",
+   "venue": "Biconomy.com",
+   "title": "🏆 ZBT Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64316499307929--ZBT-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "perUserUsd": 2130,
+   "netUsd": 4.9
+  },
+  {
    "id": "tg:Kucoin_News/37168",
    "venue": "KuCoin",
    "title": "Visors down, bricks up! The build is in full swing, so are YOU snapping up those Futures vouchers? 💚",
@@ -647,15 +740,6 @@
    "url": "https://www.mexc.com/campaigns/opportunitycompass?utm_source=community&utm_medium=tg",
    "why": "raffle",
    "netUsd": 0.03
-  },
-  {
-   "id": "biconomy:64282820012825",
-   "venue": "Biconomy.com",
-   "title": "🏆 IO Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64282820012825--IO-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "perUserUsd": 2130,
-   "netUsd": 4.9
   },
   {
    "id": "tg:Bitrue_official/11220",
@@ -1036,7 +1120,7 @@
    "title": "Anthropic Pre-IPO Carnival is on!",
    "url": "https://www.mexc.com/campaigns/Pre-IPO-ANT?utm_source=community&utm_medium=tg&utm_campaign=anthropic_futures",
    "why": "raffle",
-   "perUserUsd": 463.1,
+   "perUserUsd": 454.85,
    "netUsd": 100
   },
   {
@@ -1072,7 +1156,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.93,
+   "perUserUsd": 7.92,
    "netUsd": 2.74
   },
   {
