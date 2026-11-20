@@ -1,1 +1,1 @@
-{"id":"tg:BingXAnnouncement/5397","h":"rFajGXdBMOsPXLrI","v":1,"at":1795137163457,"data":{"isPromo":true,"socialOnly":false,"mech":"top_n","act":{"kind":"other"},"max":{"amount":150000,"unit":"USDT"},"pool":{"amount":500000,"unit":"USDT"}}}
+{"id":"tg:BingXAnnouncement/5397","h":"_weJhXbeGKr38fJ-","v":1,"at":1795142779309,"data":{"isPromo":true,"socialOnly":false,"mech":"top_n","act":{"kind":"trade_futures","usd":2000},"max":{"amount":150000,"unit":"USDT"},"pool":{"amount":500000,"unit":"USDT"},"winners":500}}
