@@ -1,1 +1,1 @@
-{"id":"tg:BingXAnnouncement/5400","h":"Ryjr7-Yeeob2wPil","v":1,"at":1795197308936,"data":{"isPromo":true,"socialOnly":false,"mech":"unknown","act":{"kind":"other"}}}
+{"id":"tg:BingXAnnouncement/5400","h":"T5wnKIjnac_lqWQW","v":1,"at":1795216346285,"data":{"isPromo":true,"socialOnly":false,"mech":"tiers","act":{"kind":"trade_futures","usd":20,"lockDays":3},"typical":{"amount":20,"unit":"USDT"},"max":{"amount":100,"unit":"USDT"},"winners":200}}
