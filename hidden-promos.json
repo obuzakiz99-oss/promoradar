@@ -1,5 +1,5 @@
 {
- "at": 1795197789706,
+ "at": 1795199878272,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -28,28 +28,12 @@
    "netUsd": 5
   },
   {
-   "id": "kraken:https://blog.kraken.com/product/promotions/500k-holiday-deposit-sweepstakes",
-   "venue": "Kraken",
-   "title": "Win €500,000 this holiday season: every euro you deposit is an entry",
-   "url": "https://blog.kraken.com/product/promotions/500k-holiday-deposit-sweepstakes",
-   "why": "raffle"
-  },
-  {
    "id": "tg:Phemex_Announcements/8019",
    "venue": "Phemex",
    "title": "Phemex $500,000 Lucky Draw | How to Earn Tickets",
    "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
    "why": "raffle",
    "netUsd": 250
-  },
-  {
-   "id": "kraken:https://blog.kraken.com/product/promotions/antx-trading-challenge",
-   "venue": "Kraken",
-   "title": "Trade ANTx on Kraken Pro, with $5,000 in prizes",
-   "url": "https://blog.kraken.com/product/promotions/antx-trading-challenge",
-   "why": "small",
-   "perUserUsd": 1000,
-   "netUsd": 2
   },
   {
    "id": "gate:102909",
@@ -71,8 +55,8 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 46.77,
-   "netUsd": 0.62
+   "perUserUsd": 48.77,
+   "netUsd": 0.65
   },
   {
    "id": "gate:102901",
@@ -89,7 +73,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1271.4,
+   "perUserUsd": 1300.05,
    "netUsd": 0
   },
   {
@@ -98,7 +82,7 @@
    "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
    "url": "https://www.gate.com/announcements/article/102900",
    "why": "raffle",
-   "perUserUsd": 135.52,
+   "perUserUsd": 136.08,
    "netUsd": -0.23
   },
   {
@@ -107,7 +91,7 @@
    "title": "🎁 Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64536163317529--Share-2-000-000-ARK-Biconomy-ARK-DeFAI-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 18.2477216,
+   "perUserUsd": 18.3148448,
    "netUsd": -0.49
   },
   {
@@ -267,8 +251,8 @@
    "title": "🎁 Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 816.8285986,
-   "netUsd": -0.09
+   "perUserUsd": 833.20238372,
+   "netUsd": -0.08
   },
   {
    "id": "tg:coinstore_global/10388",
@@ -340,7 +324,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 687.1643079,
+   "perUserUsd": 686.6077708,
    "netUsd": -0.16
   },
   {
@@ -417,8 +401,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 42.16,
-   "netUsd": 0.05
+   "perUserUsd": 38.12,
+   "netUsd": -0.02
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -484,7 +468,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 984.75,
+   "perUserUsd": 995.6500000000001,
    "netUsd": 1.81
   },
   {
@@ -612,7 +596,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1204.56,
+   "perUserUsd": 1201.1999999999998,
    "netUsd": 0.25
   },
   {
@@ -630,8 +614,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 130.272,
-   "netUsd": 3.57
+   "perUserUsd": 130.56,
+   "netUsd": 3.58
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -665,7 +649,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5905.6900000000005,
+   "perUserUsd": 5907.900000000001,
    "netUsd": 91.27
   },
   {
@@ -674,7 +658,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.43,
+   "perUserUsd": 5.44,
    "netUsd": 0.25
   },
   {
@@ -804,15 +788,6 @@
    "why": "social"
   },
   {
-   "id": "kraken:https://blog.kraken.com/product/promotions/black-friday-deposit-trade-bonus",
-   "venue": "Kraken",
-   "title": "Get up to $100 in BTC with our Black Friday Deposit & Trade Bonus",
-   "url": "https://blog.kraken.com/product/promotions/black-friday-deposit-trade-bonus",
-   "why": "small",
-   "perUserUsd": 100,
-   "netUsd": 7.4
-  },
-  {
    "id": "tg:MEXCofficialNews/38816",
    "venue": "MEXC",
    "title": "AI chips get the spotlight. What about the machines behind them? 👀",
@@ -931,15 +906,6 @@
    "url": "https://www.lbank.com/event-new/10003822-ai-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "raffle",
    "netUsd": 15
-  },
-  {
-   "id": "kraken:https://blog.kraken.com/product/promotions/the-anthropic-pre-ipo-challenge-nov-2026",
-   "venue": "Kraken",
-   "title": "The Anthropic Pre-IPO Challenge: compete for $20,000 in ANTHROPICX on Kraken Pro",
-   "url": "https://blog.kraken.com/product/promotions/the-anthropic-pre-ipo-challenge-nov-2026",
-   "why": "small",
-   "perUserUsd": 3000,
-   "netUsd": -3
   },
   {
    "id": "binance:252d3a2cb7a847428699458241796399",
@@ -1148,7 +1114,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.43,
+   "perUserUsd": 7.52,
    "netUsd": 2.74
   },
   {
