@@ -674,8 +674,9 @@ S.popovers = async () => {
   for (const kind of ["desk", "phone"]) {
     await withCtx(kind, async (c) => {
       const p = await newPage(c);
-      // a live pool (gate-555 ended; ended pools have no hints) — the first launchpool page in the sitemap
-      await go(p, (await sitemapPaths()).find((u) => /^\/uk\/lp\/[^/]+\/$/.test(u)) ?? "/uk/launchpools/");
+      // a live pool (ended pools have fewer hints; the first sitemap entry can be an ended one — 21.11)
+      const lp0 = (await lpSample())[0];
+      await go(p, lp0 ? `/uk/lp/${lp0}/` : "/uk/launchpools/");
       const hs = p.locator("details[data-pop] > summary[aria-label='Пояснення']");
       const n = await hs.count();
       check(p, "Hint «?» present", n >= 2, `${n}`);
@@ -1331,7 +1332,7 @@ S.lists = async () => {
       await resetFeed(p);
     }
     // LP pages: "Скільки можна заробити" is a static table ($100 / $1 000 / max per person) — check it is consistent
-    for (const sl of ["gate-555", "bitget-1500675644365795328"]) {
+    for (const sl of await lpSample()) {
       await go(p, `/uk/lp/${sl}/`);
       const inputs = await p.locator("main input").count();
       if (inputs) info(p, `/lp/${sl}/ calculator inputs`, `${inputs}`); else info(p, `/lp/${sl}/ has no calculator inputs`, "earnings are a static table: $100 / $1 000 / max per person");
@@ -1493,7 +1494,7 @@ S.misc = async () => {
 };
 
 const SWEEP = ["/uk/", "/uk/drops/", "/uk/t/", "/uk/t/USDT/", "/uk/t/XAUT/", "/uk/bonuses/", "/uk/v/binance/", "/uk/v/bybit/", "/uk/launchpools/", "/uk/earn/", "/uk/dex/", "/uk/fixed/", "/uk/history/", "/uk/insights/", "/uk/hedge/",
-  "/uk/lp/gate-555/", "/uk/lp/bitget-1500675644365795328/", "/uk/calendar/", "/uk/unlocks/", "/uk/sales/", "/uk/learn/", "/uk/learn/start/", "/uk/learn/quiz/", "/uk/learn/how/", "/uk/learn/rewards/", "/uk/learn/safety/", "/uk/learn/glossary/",
+  "/uk/calendar/", "/uk/unlocks/", "/uk/sales/", "/uk/learn/", "/uk/learn/start/", "/uk/learn/quiz/", "/uk/learn/how/", "/uk/learn/rewards/", "/uk/learn/safety/", "/uk/learn/glossary/",
   "/uk/learn/guide/binance/", "/uk/learn/guide/pendle-pt/", "/uk/best/", "/uk/check/", "/uk/my/", "/uk/about/", "/uk/api/", "/uk/privacy/", "/uk/terms/", "/en/", "/ru/", "/en/unlocks/", "/ru/fixed/"];
 S.sweep = async () => {
   for (const kind of ["phone", "desk"]) {
@@ -1502,7 +1503,7 @@ S.sweep = async () => {
       const extra = [];
       await go(p, "/uk/"); await feedReady(p);
       for (const x of (await cards(p)).slice(0, 3)) extra.push(x.href.replace(BP, ""));
-      for (const u of [...SWEEP, ...extra]) { try { await go(p, u); } catch (e) { log(p, "pageerror", `navigation: ${e.message.slice(0, 120)}`); } }
+      for (const u of [...SWEEP, ...(await lpSample()).map((sl) => `/uk/lp/${sl}/`), ...extra]) { try { await go(p, u); } catch (e) { log(p, "pageerror", `navigation: ${e.message.slice(0, 120)}`); } }
       await p.close();
     });
   }
@@ -1585,6 +1586,20 @@ async function active(p) {
 async function tabUntil(p, pred, max = 120, key = "Tab") { for (let i = 1; i <= max; i++) { await p.keyboard.press(key); await p.waitForTimeout(15); const a = await active(p); if (a && pred(a)) return i; } return -1; }
 function rng(seedStr) { let a = Number.parseInt(hash(String(seedStr)), 36) >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 let SITEMAP = null;
+/** Two launchpool pages that exist in this build: a live one and an ended one when there is (ended pools are kept 14 days,
+ *  so hard-coded slugs age out — gate-555 / bitget-1500675644365795328 did, 21.11). */
+let LPS;
+async function lpSample() {
+  if (LPS) return LPS;
+  const paths = new Set((await sitemapPaths()).filter((u) => /^\/uk\/lp\/[^/]+\/$/.test(u)).map((u) => u.split("/")[3]));
+  const d = await (await fetch(`${BASE}/api/pools.json?ts=${Date.now()}`)).json().catch(() => ({ projects: [] }));
+  const slug = (id) => id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const live = (d.projects ?? []).find((x) => x.status !== "ended" && paths.has(slug(x.id)));
+  const ended = (d.projects ?? []).find((x) => x.status === "ended" && paths.has(slug(x.id)));
+  LPS = [live, ended].filter(Boolean).map((x) => slug(x.id));
+  if (!LPS.length) LPS = [...paths].slice(0, 2);
+  return LPS;
+}
 async function sitemapPaths() {
   if (SITEMAP) return SITEMAP;
   const x = await (await fetch(`${BASE}/sitemap.xml?ts=${Date.now()}`)).text();

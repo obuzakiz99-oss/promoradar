@@ -36,7 +36,10 @@ export function CalAdd({ ev, lang, file }: { ev: CalEvent; lang: "uk" | "en" | "
     // page scroll closes the fixed menu (it would float away); tabbing inside the menu must not
     const close = () => {
       const r = btn.current?.getBoundingClientRect();
-      if (!r || r.bottom < 0 || r.top > window.innerHeight) { setOpen(false); return; }   // button scrolled away: close
+      // button scrolled away: close — unless focus is in here (audit 21.11: Tab starts a smooth scroll to the button; an
+      // Enter pressed before it ends opened the menu while the button was still off screen, and the scroll closed it)
+      const kbd = root.current?.contains(document.activeElement);
+      if (!r || (!kbd && (r.bottom < 0 || r.top > window.innerHeight))) { setOpen(false); return; }
       place(r);
     };
     document.addEventListener("keydown", esc);
