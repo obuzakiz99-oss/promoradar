@@ -14,6 +14,9 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
   // audit 08.11: one item per user question; the old pages are tabs inside these sections (components/SectionTabs.tsx)
   const items: NavItem[] = [
     { href: withBase(`/${lang}/#promos`), label: t.nav.promos, match: ["", "p", "v", "drops", "t", "bonuses"] },
+    // owner 21.11: 0% fee offers in the menu; desktop only like Calendar (the 768px tablet bar has no room — audit 18.11),
+    // tablets and phones reach it through the "0% комісії" tab of the promo section (SectionTabs)
+    { href: withBase(`/${lang}/zero-fees/`), label: { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" }[lang], wide: "lg:block", match: ["zero-fees"] },
     // exchange rating hidden for now (owner, 12.11) — the page stays at /exchanges/, only the menu entry is off
     // { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
     { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },

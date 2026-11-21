@@ -24,7 +24,7 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
     document.querySelectorAll<HTMLElement>(".scroll-x [aria-current='page']").forEach((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
   }, [seg]);
   const items: Array<{ href: string; label: string; icon: React.ReactNode; on: boolean; badge?: number }> = [
-    { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "t", "bonuses"].includes(seg) },
+    { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "zero-fees", "t", "bonuses"].includes(seg) },
     { href: `${base}/${lang}/launchpools/`, label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], icon: I.yield, on: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"].includes(seg) },
     // owner 17.11: token unlocks on the bar; the promo calendar and token sales are tabs on that page
     { href: `${base}/${lang}/unlocks/`, label: { uk: "Розлоки", en: "Unlocks", ru: "Разлоки" }[lang], icon: I.unlock, on: ["calendar", "unlocks", "sales"].includes(seg) },

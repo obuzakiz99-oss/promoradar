@@ -14,6 +14,8 @@ type Tab = { id: string; href: string; label: Record<L, string>; adv?: boolean }
 const PROMO: Tab[] = [
   { id: "all", href: "/#promos", label: { uk: "Усі акції", en: "All promos", ru: "Все акции" } },
   { id: "drops", href: "/drops/", label: { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" } },
+  // owner 21.11: the 0% fee list gets its own page (the chip on the list was hard to find)
+  { id: "zerofee", href: "/zero-fees/", label: { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } },
   { id: "tokens", href: "/t/", label: { uk: "За монетою", en: "By coin", ru: "По монете" } },
 ];
 const YIELD: Tab[] = [
@@ -59,7 +61,7 @@ function Row({ tabs, active, lang, small, label }: { tabs: Tab[]; active: string
   );
 }
 
-export function PromoTabs({ lang, active }: { lang: L; active: "all" | "drops" | "tokens" }) {
+export function PromoTabs({ lang, active }: { lang: L; active: "all" | "drops" | "zerofee" | "tokens" }) {
   return <Row tabs={PROMO} active={active} lang={lang} label={({ uk: "Акції", en: "Promos", ru: "Акции" } as const)[lang]} />;
 }
 
