@@ -195,10 +195,11 @@ export function SiteTour({ lang }: { lang: L }) {
   const s = steps[i], last = i === steps.length - 1;
   return (
     <div className="fixed inset-0 z-[70]" onKeyDown={onKey}>
-      {/* the page stays visible but not clickable; the highlight is a hole cut by a huge shadow */}
+      {/* the page stays visible but not clickable; the highlight is a hole cut by a huge shadow, its frame an outline
+          (a Tailwind ring is a box-shadow too and was overridden by the dimming shadow) */}
       <div className="absolute inset-0" onClick={close} aria-hidden="true" style={box ? undefined : { background: "rgb(3 5 8 / 0.72)" }} />
       {box && (
-        <div aria-hidden="true" className="pointer-events-none fixed rounded-2xl ring-2 ring-lime transition-all duration-200"
+        <div aria-hidden="true" className="tour-spot pointer-events-none fixed rounded-2xl outline outline-2 outline-lime transition-all duration-200"
           style={{ top: box.top, left: box.left, width: box.width, height: box.height, boxShadow: "0 0 0 9999px rgb(3 5 8 / 0.72)" }} />
       )}
       <div ref={cardRef} role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-x"

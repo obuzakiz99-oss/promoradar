@@ -41,7 +41,7 @@ for (const [w, opt] of Object.entries(W)) {
       await sleep(900);   // smooth scroll + placement
       const m = await p.evaluate(() => {
         const d = document.querySelector('[role=dialog][aria-modal=true]');
-        const ring = document.querySelector(".ring-lime.pointer-events-none.fixed");
+        const ring = document.querySelector(".tour-spot");
         const r = d.getBoundingClientRect(), b = ring?.getBoundingClientRect();
         const bar = innerWidth < 768 ? 72 : 0;
         return {
