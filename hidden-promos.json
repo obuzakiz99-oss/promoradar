@@ -1,5 +1,5 @@
 {
- "at": 1795293807073,
+ "at": 1795294234343,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -85,26 +85,12 @@
    "netUsd": 2
   },
   {
-   "id": "gate:102909",
-   "venue": "Gate",
-   "title": "Gate Research: An Overlooked Profitable Sector: Scale, Competition, and Moat in the Onchain TCG Card...",
-   "url": "https://www.gate.com/announcements/article/102909",
-   "why": "news"
-  },
-  {
-   "id": "gate:102907",
-   "venue": "Gate",
-   "title": "Gate Live Mining Program Bonuses Distribution Announcement (November 9 - November 15)",
-   "url": "https://www.gate.com/announcements/article/102907",
-   "why": "social"
-  },
-  {
    "id": "binance:4b72a90be21942bfa22eca0f0748dfcf",
    "venue": "Binance",
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 61.31,
+   "perUserUsd": 61.46,
    "netUsd": 0.82
   },
   {
@@ -116,15 +102,6 @@
    "netUsd": 13.33
   },
   {
-   "id": "gate:102901",
-   "venue": "Gate",
-   "title": "ANT CFD Launch Event: Get Trading Subsidies and Compete for Up to 1,000 USDx",
-   "url": "https://www.gate.com/announcements/article/102901",
-   "why": "small",
-   "perUserUsd": 1000,
-   "netUsd": 2.25
-  },
-  {
    "id": "biconomy:64537604172953",
    "venue": "Biconomy.com",
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
@@ -134,15 +111,6 @@
    "netUsd": 0
   },
   {
-   "id": "gate:102900",
-   "venue": "Gate",
-   "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
-   "url": "https://www.gate.com/announcements/article/102900",
-   "why": "raffle",
-   "perUserUsd": 131.27,
-   "netUsd": -0.24
-  },
-  {
    "id": "biconomy:64536163317529",
    "venue": "Biconomy.com",
    "title": "🎁 Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
@@ -150,40 +118,6 @@
    "why": "small",
    "perUserUsd": 17.717728,
    "netUsd": -0.49
-  },
-  {
-   "id": "gate:102899",
-   "venue": "Gate",
-   "title": "Claim Free Popular Grid Bots 14, Exclusive Rewards for Returning Users",
-   "url": "https://www.gate.com/announcements/article/102899",
-   "why": "small",
-   "perUserUsd": 100,
-   "netUsd": 6
-  },
-  {
-   "id": "gate:102898",
-   "venue": "Gate",
-   "title": "Anthropic (ANT) Listing Trading Challenge :Trade Stocks for a Free ANT Draw 100% Win Rate",
-   "url": "https://www.gate.com/announcements/article/102898",
-   "why": "raffle"
-  },
-  {
-   "id": "gate:102897",
-   "venue": "Gate",
-   "title": "Gate ETF HYPE Bonus Rewards: HYPE Rewards for Futures Points Users, Stock Traders & VIP5+",
-   "url": "https://www.gate.com/announcements/article/102897",
-   "why": "small",
-   "perUserUsd": 230,
-   "netUsd": -2
-  },
-  {
-   "id": "gate:102896",
-   "venue": "Gate",
-   "title": "Swap 7-day Arena: Share 1,000 USDT (W5)",
-   "url": "https://www.gate.com/announcements/article/102896",
-   "why": "small",
-   "perUserUsd": 120,
-   "netUsd": -0.47
   },
   {
    "id": "xt:64530798965529",
@@ -236,6 +170,13 @@
    "why": "small",
    "perUserUsd": 10,
    "netUsd": 0
+  },
+  {
+   "id": "gate:102883",
+   "venue": "Gate",
+   "title": "Gate IPO Access Phase 3: Anthropic (ANT) Share Allocation Confirmed, Total Allocation: 92,100 ANT Sh...",
+   "url": "https://www.gate.com/announcements/article/102883",
+   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/37246",
@@ -379,7 +320,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 858.5777347,
+   "perUserUsd": 863.2685474,
    "netUsd": -0.07
   },
   {
@@ -538,7 +479,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 970.25,
+   "perUserUsd": 975.1999999999999,
    "netUsd": 1.81
   },
   {
@@ -557,6 +498,15 @@
    "why": "small",
    "perUserUsd": 3000,
    "netUsd": -4.4
+  },
+  {
+   "id": "gate:102812",
+   "venue": "Gate",
+   "title": "Gate Prediction Markets Crypto Kickoff Week: 20,000 USDT in First-Trade and Leaderboard Rewards",
+   "url": "https://www.gate.com/announcements/article/102812",
+   "why": "small",
+   "perUserUsd": 5000,
+   "netUsd": 3
   },
   {
    "id": "zoomex:64403337588121",
@@ -674,7 +624,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1173.84,
+   "perUserUsd": 1170,
    "netUsd": 0.23
   },
   {
@@ -692,7 +642,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 131.856,
+   "perUserUsd": 131.784,
    "netUsd": 3.61
   },
   {
@@ -727,7 +677,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6043.71,
+   "perUserUsd": 6039.76,
    "netUsd": 91.27
   },
   {
@@ -1187,7 +1137,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.59,
+   "perUserUsd": 7.58,
    "netUsd": 2.74
   },
   {
