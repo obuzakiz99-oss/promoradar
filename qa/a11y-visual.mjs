@@ -502,7 +502,7 @@ async function keyboard(w) {
     const keys = ["outlineStyle", "outlineWidth", "outlineColor", "boxShadow", "borderTopColor", "borderBottomColor", "backgroundColor", "color", "textDecorationLine"];
     window.__kbBase = new Map();
     const snap = (el) => { const s = getComputedStyle(el); return Object.fromEntries(keys.map((k) => [k, s[k]])); };
-    for (const el of document.querySelectorAll(SEL)) { window.__kbBase.set(el, snap(el)); if (el.parentElement) window.__kbBase.set(el.parentElement, snap(el.parentElement)); }
+    for (const el of document.querySelectorAll(SEL)) { window.__kbBase.set(el, snap(el)); for (let a = el.parentElement, k = 0; a && k < 3; a = a.parentElement, k++) if (!window.__kbBase.has(a)) window.__kbBase.set(a, snap(a)); }
     window.__kbSnap = snap;
   });
   const stops = [];
@@ -523,8 +523,11 @@ async function keyboard(w) {
         if (now.backgroundColor !== was.backgroundColor) diff.push("background");
         if (now.textDecorationLine !== was.textDecorationLine) diff.push("underline");
       }
-      const par = el.parentElement, pn = par && window.__kbSnap(par), pw = par && window.__kbBase.get(par);
-      if (pn && pw && ((pn.outlineStyle !== "none" && parseFloat(pn.outlineWidth) > 0 && pn.outlineStyle !== pw.outlineStyle) || pn.boxShadow !== pw.boxShadow)) diff.push("parent");
+      // up to 3 ancestors: stretched-link cards draw the ring on the <article> (has-[a:focus-visible]), two levels above the <a>
+      for (let par = el.parentElement, k = 0; par && k < 3; par = par.parentElement, k++) {
+        const pn = window.__kbSnap(par), pw = window.__kbBase.get(par);
+        if (pn && pw && ((pn.outlineStyle !== "none" && parseFloat(pn.outlineWidth) > 0 && pn.outlineStyle !== pw.outlineStyle) || pn.boxShadow !== pw.boxShadow)) { diff.push(k ? `ancestor${k}` : "parent"); break; }
+      }
       const r = el.getBoundingClientRect();
       const inVp = r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
       // obscured by a fixed/sticky element?
