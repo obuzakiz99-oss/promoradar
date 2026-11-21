@@ -10,6 +10,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 type L = "uk" | "en" | "ru";
 type Step = { sel?: string; title: string; text: string };
 const KEY = "pr:tour";
+const TOP = 76;                                   // below the sticky 64px header
 
 const UI: Record<L, { ask: string; askSub: string; yes: string; no: string; next: string; back: string; done: string; skip: string; of: string; label: string }> = {
   uk: { ask: "Вперше на PromoRadar?", askSub: "Покажемо за хвилину, що тут для чого.", yes: "Так, покажіть", no: "Ні, я розберусь", next: "Далі", back: "Назад", done: "Зрозуміло", skip: "Пропустити", of: "з", label: "Як користуватися сайтом" },
@@ -109,8 +110,17 @@ export function SiteTour({ lang }: { lang: L }) {
     }
     const el = find(s.sel);
     if (el) {
+      // scroll so that the element AND the card below it fit between the sticky header and the phone tab bar
+      // (centring the element alone left no room for the card next to tall targets — tour test 21.11)
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+      const r = el.getBoundingClientRect(), vh = innerHeight, bar = innerWidth < 768 ? 72 : 0;
+      const ch = cardRef.current?.offsetHeight || 300, h = r.height + 12;
+      const fixed = getComputedStyle(el).position === "fixed" || !!el.closest("header");
+      if (!fixed) {
+        const room = vh - bar - TOP - 16;
+        const off = h + 12 + ch <= room ? TOP + (room - h - 12 - ch) / 2 : TOP;
+        scrollTo({ top: Math.max(0, scrollY + r.top - 6 - off), behavior: reduce ? "auto" : "smooth" });
+      }
     }
   }, [i, steps]);
 
@@ -141,9 +151,16 @@ export function SiteTour({ lang }: { lang: L }) {
     const vw = innerWidth, vh = innerHeight, ch = c.offsetHeight, cw = c.offsetWidth, gap = 12, g = 16;
     const bottomBar = vw < 768 ? 72 : 0;
     if (!box) { setCard({ top: Math.max(g, (vh - ch) / 2), left: (vw - cw) / 2 }); return; }
-    const left = Math.min(Math.max(g, box.left + box.width / 2 - cw / 2), vw - cw - g);
+    const clampTop = (t: number) => Math.min(Math.max(g, t), vh - bottomBar - g - ch);
+    let left = Math.min(Math.max(g, box.left + box.width / 2 - cw / 2), vw - cw - g);
     const below = box.top + box.height + gap, above = box.top - gap - ch;
-    const top = below + ch <= vh - bottomBar - g ? below : above >= g ? above : vh - bottomBar - g - ch;
+    let top: number;
+    if (below + ch <= vh - bottomBar - g) top = below;
+    else if (above >= g) top = above;
+    // no room above or below: beside the element when the screen is wide enough, else docked at the bottom
+    else if (box.left + box.width + gap + cw <= vw - g) { left = box.left + box.width + gap; top = clampTop(box.top); }
+    else if (box.left - gap - cw >= g) { left = box.left - gap - cw; top = clampTop(box.top); }
+    else top = vh - bottomBar - g - ch;
     setCard((p) => (p && Math.abs(p.top - top) < 0.5 && Math.abs(p.left - left) < 0.5 ? p : { top, left }));
   }, [i, box]);
 
