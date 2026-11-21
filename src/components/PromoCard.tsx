@@ -100,7 +100,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   const own = titleOf(p, lang);
   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
-  const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^A-Za-z]/g, ""); if (letters.length < 12 || (s.match(/[A-Z]/g)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
+  // audit 21.11: letters of all scripts count — Latin-only counting took a Ukrainian title with tickers (OKX, USDC-USDT) as SHOUTING
+  const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^\p{L}]/gu, ""); if (letters.length < 12 || (s.match(/\p{Lu}/gu)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
   // audit 14.11: "$50 000" in big lime over a grey "≈ $10" read as what a beginner gets — the estimate leads then
   const oversell = m.value?.net !== undefined && (m.perUser?.usd ?? 0) > 10 * Math.max(1, m.value.net);
