@@ -2479,6 +2479,10 @@ const want = process.argv.slice(2).length ? process.argv.slice(2) : order;
 await waitDeploy();
 await loadFeed();
 browser = await chromium.launch({ executablePath: CHROME, headless: true });
+
+// the first-visit site tour prompt (components/SiteTour.tsx) would cover the page in every fresh context: mark it seen
+// (qa/tour.mjs tests the tour itself)
+{ const nc = browser.newContext.bind(browser); browser.newContext = async (o = {}) => { const c = await nc(o); await c.addInitScript(() => { try { if (!localStorage.getItem("pr:tour")) localStorage.setItem("pr:tour", "qa"); } catch { /* blocked */ } }); return c; }; }
 const t0 = Date.now();
 try {
   for (const s of want) if (S[s]) await section(s, S[s]); else console.log(`unknown section ${s}`);

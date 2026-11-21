@@ -14,6 +14,8 @@ import { PromoExplorer } from "@/components/PromoExplorer";
 import { LaunchpoolTeaser } from "@/components/LaunchpoolTeaser";
 import { getPools } from "@/lib/pools";
 import { HowItWorks, ProSection, AdsSection, Footer } from "@/components/Sections";
+import { SiteTour } from "@/components/SiteTour";
+import { TOUR_LABEL, tourHref } from "@/lib/tour";
 
 export const revalidate = 900; // 15 min, same as SITE.revalidateSeconds
 
@@ -47,11 +49,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <main>
         <Hero t={t} active={promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "максимум на 1 людину", en: "most for one person", ru: "максимум на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
-          learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }} />
+          learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
+          tour={{ href: tourHref(withBase(""), lang), label: TOUR_LABEL[lang] }} />
         {/* the promo list comes right after the hero; today's top 3 are its pinned first cards (audit 08.11) */}
         <section id="promos" className="mx-auto max-w-7xl scroll-mt-16 px-4 pt-6 sm:px-6">
           <h2 className="sr-only">{({ uk: "Усі акції", en: "All promos", ru: "Все акции" } as const)[lang]}</h2>
-          <div className="mb-5"><PromoTabs lang={lang} active="all" /></div>
+          <div data-tour="sections" className="mb-5"><PromoTabs lang={lang} active="all" /></div>
           <PromoExplorer promos={firstCards} t={t} lang={lang} serverNow={fetchedAt} src={withBase("/api/promos.json")} pinned={pins} />
         </section>
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}
@@ -60,6 +63,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         {HAS_TG && <div className="adv"><AdsSection t={t} /></div>}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      {/* owner 21.11: first-visit "how to use the site" tour (asks first; replay via ?tour=1) */}
+      <SiteTour lang={lang} />
     </>
   );
 }

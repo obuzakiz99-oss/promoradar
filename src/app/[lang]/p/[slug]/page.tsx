@@ -508,7 +508,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             || !!det?.blocks.slice(0, 80).some((b) => /\b(after|once you)\b[^.]{0,40}\b(click|press|tap)(ing|ed)?\b[^.]{0,20}\[?(join|register|sign up)|\[(join|register)( now)?\]/i.test(b.x)));
           // a competition that is not about trading (creators, predictions, demo, chat guesses) gets a neutral step
           const notTrading = /\b(creator|prediction|predict|pick|demo|guess|quiz|meme contest|post|chat)\b/i.test(p.titleOrig ?? p.title);
-          const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 4).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : p.category === "referral" ? [
+          // audit 21.11: all the steps (up to 8), not the first 4 — 211 of 289 AI step lists are longer, and the cut
+          // often dropped the step that matters ("trade futures via Glavior…")
+          const steps: Array<[IconName, string]> = ex?.steps?.length ? ex.steps.slice(0, 8).map((x, i) => [(["user", "trend", "checkCircle", "gift"] as IconName[])[i] ?? "checkCircle", x]) : p.category === "referral" ? [
             ["user", U.s.reg(p.venue.name, kyc, false)],
             ["tag", REF[lang].link],
             ["user", REF[lang].friend(m.minEntry ? REF[lang].does[m.minEntry.kind](amt, !!m.futures) : "")],
@@ -528,7 +530,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           return (
             <section className="card mt-4 p-5 hover:transform-none sm:p-6">
               <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight"><Icon name="checkCircle" className="size-5 text-lime" /> {U.todo}</h2>
-              <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ol className={`mt-4 grid gap-3 sm:grid-cols-2 ${steps.length % 3 === 0 || steps.length === 5 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
                 {steps.map(([ic, x], i) => (
                   <li key={i} className="flex gap-3 rounded-xl bg-white/[0.03] p-3">
                     <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>

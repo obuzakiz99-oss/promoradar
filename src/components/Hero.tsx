@@ -6,9 +6,9 @@ import { compactUsd } from "@/lib/format";
 import { TgIcon } from "./Header";
 import { RadarPicker, type RadarItem } from "./RadarPicker";
 
-export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVenues, venueBase, learn, live }: {
+export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVenues, venueBase, learn, tour, live }: {
   t: Dict; active: number; poolsUsd: number; poolsLabel?: string; sources: number; radar: RadarItem[]; radarVenues: Record<string, Venue>; venueBase: string;
-  learn?: { href: string; label: string }; live?: { at: number; newDay: number; lang: Locale };
+  learn?: { href: string; label: string }; tour?: { href: string; label: string }; live?: { at: number; newDay: number; lang: Locale };
 }) {
   return (
     <section className="relative mx-auto grid grid-cols-1 max-w-7xl items-center gap-8 px-4 pb-4 pt-8 sm:px-6 md:pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:pb-6">
@@ -33,9 +33,14 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
           </a>
           {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6 text-base"><TgIcon /> {t.hero.ctaPro}</a>}
         </div>
-        {learn && <a href={learn.href} className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-lime hover:underline md:min-h-0">{learn.label}</a>}
+        {(learn || tour) && (
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1">
+            {learn && <a href={learn.href} className="inline-flex min-h-11 items-center text-sm font-bold text-lime hover:underline md:min-h-6">{learn.label}</a>}
+            {tour && <a href={tour.href} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink md:min-h-6">{tour.label}</a>}
+          </div>
+        )}
 
-        <dl className="mt-8 grid max-w-xl grid-cols-3 gap-3">
+        <dl data-tour="stats" className="mt-8 grid max-w-xl grid-cols-3 gap-3">
           {[
             [String(active), t.hero.statActive],
             [poolsUsd > 0 ? compactUsd(poolsUsd) : "—", poolsLabel ?? t.hero.statPools],
@@ -51,7 +56,7 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
         {live && <LiveLine at={live.at} newDay={live.newDay} lang={live.lang} />}
       </div>
 
-      <div className="hidden animate-fade-up md:block">
+      <div data-tour="radar" className="hidden animate-fade-up md:block">
         <RadarPicker items={radar} venues={radarVenues} labels={t.hero.radar} catLabels={t.cat} venueBase={venueBase} />
       </div>
     </section>

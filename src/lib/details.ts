@@ -511,7 +511,8 @@ export function campaignBlocks(blocks: Block[], title: string): Block[] {
   for (const b of blocks.slice(start)) {
     const x = b.x.trim();
     // the rules are over once the page moves on to other articles / marketing / app links
-    if (/^(articles|related articles|more articles|more themes|you may also like|recommended|why choose \w+\??|trade on the go with .*|download (the )?app.*|join the \w+ community)$/i.test(x) || /\bcookies?\b|privacy preference|waiting to reconnect|^reconnecting to\b/i.test(x)) break;
+    // audit 21.11: Coinstore pages end with a "Trending" sidebar of paid token blurbs (an online casino among them)
+    if (/^(articles|related articles|more articles|more themes|you may also like|recommended|trending( now| tokens| coins)?|hot (tokens|coins)|why choose \w+\??|trade on the go with .*|download (the )?app.*|join the \w+ community)$/i.test(x) || /\bcookies?\b|privacy preference|waiting to reconnect|^reconnecting to\b/i.test(x)) break;
     if (/^(progress\s*[\d/]+|view rewards|reward preview|refresh)$/i.test(x)) continue;
     if (x.length < 4 || UI.test(x) || WALLET.test(x)) continue;
     if (/^(my |remaining rewards?\b|last price|change\s*-?[\d.]+%|(user ?id|uid)\s*[:：]|join now\s*>+|telegram\s*[:：]?$|discord\s*[:：]?$)/i.test(x)) continue;   // viewer's own empty stats, live quotes

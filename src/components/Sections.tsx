@@ -6,6 +6,7 @@ import { LEGAL_NAV } from "@/lib/i18n-legal";
 import { TgIcon } from "./Header";
 import { LogoMark } from "./Logo";
 import { withBase } from "@/lib/base";
+import { TOUR_LABEL, tourHref } from "@/lib/tour";
 
 export function HowItWorks({ t }: { t: Dict }) {
   return (
@@ -135,6 +136,7 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-3">{t.footer.disclaimer}</p>
           <p className="mt-4 text-xs text-ink-3">© {new Date(fetchedAt).getFullYear()} {SITE.name}. {t.footer.rights}</p>
           <nav className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
+            <a href={tourHref(withBase(""), lang)} className="inline-flex min-h-11 items-center text-ink-2 hover:text-ink">{TOUR_LABEL[(lang as "uk" | "en" | "ru")]}</a>
             {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-11 min-w-6 justify-center items-center hover:text-ink">{label}</a>)}
           </nav>
         </div>

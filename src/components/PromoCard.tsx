@@ -106,7 +106,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   // audit 14.11: "$50 000" in big lime over a grey "≈ $10" read as what a beginner gets — the estimate leads then
   const oversell = m.value?.net !== undefined && (m.perUser?.usd ?? 0) > 10 * Math.max(1, m.value.net);
   return (
-    <article
+    <article data-tour="card"
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-lime ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms`, ["--tint" as string]: p.venue.color }}
     >
@@ -134,7 +134,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-2.5">
+        <div data-tour="card-actions" className="flex shrink-0 items-center gap-2.5">
           <HideButton id={p.id} lang={lang} />
           <SaveButton id={p.id} labelAdd={t.saved.add} labelRemove={t.saved.remove} />
         </div>
@@ -183,7 +183,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
       })()}
 
       {/* footer */}
-      <div className="mt-auto pt-5">
+      <div data-tour="card-money" className="mt-auto pt-5">
         {!isFarm && <ValueLine v={m.value} lang={lang} big={oversell} />}
         <div className="flex items-end justify-between gap-3">
           {isFarm ? (

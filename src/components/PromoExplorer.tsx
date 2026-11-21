@@ -258,7 +258,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       {/* toolbar */}
       {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
       <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
-        <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
+        <div data-tour="tools" className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
           <label className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
             <span className="sr-only">{t.filters.search}</span>
             <svg className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.4 9.83l3.64 3.63a.75.75 0 1 0 1.06-1.06l-3.63-3.64A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clipRule="evenodd" /></svg>
@@ -283,7 +283,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           </button>
         </div>
 
-        <div className="scroll-x -mx-1 mt-3 flex gap-2 px-1 md:flex-wrap" role="group" aria-label={({ uk: "Категорія", en: "Category", ru: "Категория" } as const)[lang]}>
+        <div data-tour="cats" className="scroll-x -mx-1 mt-3 flex gap-2 px-1 md:flex-wrap" role="group" aria-label={({ uk: "Категорія", en: "Category", ru: "Категория" } as const)[lang]}>
           <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} aria-pressed={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>
