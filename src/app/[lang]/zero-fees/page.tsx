@@ -74,7 +74,9 @@ export default async function ZeroFees({ params }: { params: Params }) {
   const { promos, fetchedAt } = await getPromos(lang);
   const live = promos.filter((p) => p.meta?.zeroFee && (!p.endsAt || p.endsAt > fetchedAt));
   const standing = live.filter((p) => p.meta?.standing);
-  const temp = live.filter((p) => !p.meta?.standing).sort((a, b) => (a.endsAt ?? Infinity) - (b.endsAt ?? Infinity) || b.publishedAt - a.publishedAt);
+  // region-only offers (P2P South Asia, Kenya…) last: the list on the home page hides them by the visitor's country, here they
+  // stay visible with their "only for …" badge
+  const temp = live.filter((p) => !p.meta?.standing).sort((a, b) => Number(!!a.meta?.geo?.only) - Number(!!b.meta?.geo?.only) || (a.endsAt ?? Infinity) - (b.endsAt ?? Infinity) || b.publishedAt - a.publishedAt);
   const groups: Array<{ id: string; title: string; sub: string; list: Promo[] }> = [
     { id: "standing", title: T.standing, sub: T.standingSub, list: standing },
     { id: "campaigns", title: T.temp, sub: T.tempSub, list: temp },

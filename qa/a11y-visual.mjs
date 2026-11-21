@@ -27,7 +27,7 @@ const WIDTHS = {
   wide: { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 },
   zoom200: { viewport: { width: 640, height: 400 }, deviceScaleFactor: 2 },
 };
-const MAIN = ["home", "p1", "my", "unlocks", "fixed", "dex", "hedge", "earn", "launchpools", "lp1", "calendar", "sales", "drops", "t", "v-binance", "history", "insights", "best", "bonuses", "check", "learn", "learn-start", "learn-quiz", "en-home", "ru-home"];
+const MAIN = ["home", "p1", "my", "unlocks", "fixed", "dex", "hedge", "earn", "launchpools", "lp1", "calendar", "sales", "drops", "zero-fees", "t", "v-binance", "history", "insights", "best", "bonuses", "check", "learn", "learn-start", "learn-quiz", "en-home", "ru-home"];
 const WIDTH_PAGES = { tablet: MAIN, wide: MAIN, zoom200: ["home", "p1"] };
 const pageAt = (n, w) => !WIDTH_PAGES[w] || WIDTH_PAGES[w].some((m) => n === m || n.startsWith(m + "-") && /^p\d/.test(m));
 const useWidths = (args.widths ? String(args.widths).split(",") : Object.keys(WIDTHS));
@@ -121,7 +121,7 @@ function pageList(d) {
     ["my", "/uk/my/"], ["unlocks", "/uk/unlocks/"], ["fixed", "/uk/fixed/"], ["dex", "/uk/dex/"], ["hedge", "/uk/hedge/"], ["earn", "/uk/earn/"],
     ["launchpools", "/uk/launchpools/"],
     ...d.lps.map((h, i) => [`lp${i + 1}`, strip(h)]),
-    ["calendar", "/uk/calendar/"], ["sales", "/uk/sales/"], ["drops", "/uk/drops/"], ["t", "/uk/t/"],
+    ["calendar", "/uk/calendar/"], ["sales", "/uk/sales/"], ["drops", "/uk/drops/"], ["zero-fees", "/uk/zero-fees/"], ["t", "/uk/t/"],
     ...d.tokens.map((h) => [`t-${strip(h).split("/").filter(Boolean).pop()}`, strip(h)]),
     ["v-binance", "/uk/v/binance/"], ["v-bybit", "/uk/v/bybit/"],
     ["history", "/uk/history/"], ["insights", "/uk/insights/"], ["best", "/uk/best/"], ["bonuses", "/uk/bonuses/"], ["check", "/uk/check/"],
