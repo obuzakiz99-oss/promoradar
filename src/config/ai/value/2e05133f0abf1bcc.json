@@ -1,1 +1,1 @@
-{"id":"tg:Bitget_Announcements/18448","h":"ifzOt6xqepCj6WGx","v":1,"at":1795040421146,"data":{"isPromo":true,"socialOnly":false,"mech":"pool_share","act":{"kind":"trade_spot"},"pool":{"amount":50000,"unit":"USDT"}}}
+{"id":"tg:Bitget_Announcements/18448","h":"8UrAPlfU6P-xQ4FD","v":1,"at":1795388869427,"data":{"isPromo":true,"socialOnly":false,"mech":"top_n","act":{"kind":"trade_futures"},"pool":{"amount":50000,"unit":"USDT"}}}
