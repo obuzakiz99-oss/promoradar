@@ -104,7 +104,8 @@ async function getPromosLive(): Promise<Collected> {
   const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news"; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
     // links scraped from HTML / Telegram keep "&amp;" — the second parameter (inviteCode, rcode…) was lost (audit 14.11)
-    p.url = p.url.replace(/&amp;/g, "&");
+    // audit 22.11: links copied from Telegram can be plain http (WhiteBIT) — exchanges all serve https
+    p.url = p.url.replace(/&amp;/g, "&").replace(/^http:\/\//i, "https://");
     if (p.joinUrl) p.joinUrl = p.joinUrl.replace(/&amp;/g, "&");
     // the venue registry is the source of logos (audit 14.11: one Phemex card had the logo, its twin a monogram)
     if (!p.venue.logo && VENUES[p.venue.id]?.logo) p.venue = { ...p.venue, logo: venueOf(p.venue.id).logo };

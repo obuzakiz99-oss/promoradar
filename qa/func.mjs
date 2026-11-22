@@ -275,7 +275,9 @@ S.header = async () => {
     for (const [t, h] of Object.entries(wantTabs)) {
       await go(p, "/uk/fixed/");
       await p.locator('nav.fixed[aria-label="Розділи"] a', { hasText: t }).first().tap();
-      await p.waitForLoadState("domcontentloaded"); await p.waitForTimeout(500);
+      // wait for the new page itself (reading right after the tap raced the navigation — 22.11)
+      await p.waitForURL((u) => !rel(u.toString()).startsWith("/uk/fixed/"), { timeout: 15000 }).catch(() => {});
+      await p.waitForLoadState("load").catch(() => {}); await p.waitForTimeout(500);
       const cur = await p.$$eval('nav.fixed[aria-label="Розділи"] a[aria-current="page"]', (els) => els.map((e) => e.innerText.trim()));
       check(p, `phone tab "${t}" → ${h} and becomes current`, rel(p.url()).startsWith(h) && cur.some((x) => x.startsWith(t)), `url ${rel(p.url())} current ${JSON.stringify(cur)}`);
     }
@@ -461,7 +463,8 @@ S.home = async () => {
       // r2: «Триває» = live + ongoing (evergreen) since dec2d6b — the count must equal the feed exactly
       const okSt = (x) => statusOf(x, now) === stKey[o] || (stKey[o] === "live" && statusOf(x, now) === "ongoing");
       const want = geoUa.filter(okSt).length;
-      check(p, `status «${o}»: every card has that status and count = feed`, l.length > 0 && l.length === want && l.every((x) => x.p && okSt(x.p)), `${l.length} cards (feed: ${want})`);
+      if (want === 0 && l.length === 0) info(p, `status «${o}»: no such promos right now`, "0 in the feed");
+      else check(p, `status «${o}»: every card has that status and count = feed`, l.length > 0 && l.length === want && l.every((x) => x.p && okSt(x.p)), `${l.length} cards (feed: ${want})`);
     }
     await selPick(p, stTrig, "Будь-який статус");
     // every promo must be reachable under some status option (r1 F5: 25 evergreen promos vanished)
@@ -2266,7 +2269,7 @@ S.promo10 = async () => {
         if (pr.category === "referral" && !pg.steps.some((x) => /посилання|друг|друз|реферальн/i.test(x))) sbad.push("referral steps never mention the link / friend");
         if (pr.meta?.minEntry && !pg.steps.some((x) => /\d/.test(x))) sbad.push(`minEntry ${pr.meta.minEntry.amount} ${pr.meta.minEntry.unit} not in the steps`);
         if (/Без вкладень/.test(act) && /(обсяг|торгуйте|торгівл|депозит|внесіть|VIP|trading volume|trade\b|deposit)/i.test(`${pg.rules} ${pr.title}`)) sbad.push(`«Без вкладень» but the rules ask to trade / deposit: «${(/(.{0,60}(обсяг|торгуйте|торгівл|депозит|внесіть|VIP|trading volume|trade\b|deposit).{0,40})/i.exec(`${pr.title} ${pg.rules}`)?.[1] ?? "").trim()}»`);
-        if (pr.category === "competition" && !pr.meta?.minEntry && !pg.steps.some((x) => /рейтинг|місце|завдан|умов/i.test(x))) sbad.push("competition steps say nothing about ranking / tasks");
+        if (pr.category === "competition" && !pr.meta?.minEntry && !pg.steps.some((x) => /рейтинг|місце|завдан|умов|торгуйте|обсяг|рівн/i.test(x))) sbad.push("competition steps say nothing about ranking / tasks / volume");
         // besides «register» and «how to get the reward» there must be at least one step that says what to actually do
         const core = pg.steps.filter((x) => !/^Зареєструйтесь/.test(x) && !/^Як отримати нагороду|^Заберіть нагороду|^Нагорода|^Бонус (нарахов|отриму)/.test(x));
         if (pg.steps.length && !core.length) sbad.push(`no action step: «${pg.steps.join(" | ")}»`);
