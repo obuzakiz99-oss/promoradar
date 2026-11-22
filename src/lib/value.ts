@@ -204,9 +204,14 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   const cost = kind === "trade_spot" ? need * FEE.spot : kind === "trade_futures" ? need * FEE.futures
     : kind === "deposit" || kind === "stake" || kind === "hold" ? need * IDLE_APR * (lock / 365) : 0;
   const ai = !!a;
-  const out = (gross: number | undefined, conf: Conf, basis: Value["basis"]): Value => ({
-    gross: gross === undefined ? undefined : round(gross), cost: round(cost), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai,
-  });
+  // audit 23.11: position vouchers, interest-free coupons and futures bonuses were counted as cash ("$500, sure" for a
+  // BingX voucher) — they can only be used for trading and most expire unused; points are worth even less
+  const fk = ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? "cash"] ?? 1;
+  const out = (g0: number | undefined, c0: Conf, basis: Value["basis"]): Value => {
+    const gross = g0 === undefined ? undefined : g0 * fk;
+    const conf: Conf = fk < 1 && c0 === "high" ? "mid" : c0;
+    return { gross: gross === undefined ? undefined : round(gross), cost: round(cost), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai };
+  };
 
   switch (mech) {
     case "fixed": case "tiers": case "referral":
@@ -214,7 +219,9 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       if (typical !== undefined) return out(typical, mech === "tiers" || (max !== undefined && max > typical * 2) ? "mid" : "high", "stated");
       // only an "up to" figure: the top tier / an affiliate's best month is not what a typical person gets
       // (an affiliate "up to $3,000" is a best month, not one friend: capped until Claude reads the per-friend amount)
-      if (max !== undefined) return out(mech === "tiers" ? max / 4 : mech === "referral" ? Math.min(max, 100) : max, mech === "fixed" && a ? "high" : "low", "max");
+      // audit 23.11: Bitget "up to $12,800" (needs $5M of holdings) read as "≈ $3,200 likely" — a quarter of a big top tier
+      // is still far above what the entry tiers pay, so an unknown tier ladder is capped at $250
+      if (max !== undefined) return out(mech === "tiers" ? Math.min(max / 4, 250) : mech === "referral" ? Math.min(max, 100) : max, mech === "fixed" && a ? "high" : "low", "max");
       return out(undefined, "low", "none");
     case "first_n": {
       const per = typical ?? max ?? (pool && a?.winners ? pool / a.winners : undefined);

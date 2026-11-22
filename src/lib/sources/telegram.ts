@@ -125,10 +125,16 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)
     const own = new URL(site).hostname.replace(/^(www|app)\./, "");
     const links = [...body.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => decodeEntities(m[1]));
-    const url = links.find((u) => { try { const h = new URL(u).hostname; return h === own || h.endsWith("." + own); } catch { return false; } }) ?? `https://t.me/${post}`;
+    const mine = links.filter((u) => { try { const h = new URL(u).hostname; return h === own || h.endsWith("." + own); } catch { return false; } });
+    // audit 23.11: the first own link was often a button (deposit, referral landing, m-score) — prefer the article / event page
+    const url = mine.find((u) => /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/news\//i.test(u))
+      ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(u))
+      ?? mine[0] ?? `https://t.me/${post}`;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
-      category: classify(title) !== "other" ? classify(title) : classify(text.slice(0, 400)), publishedAt: date, reward: parseReward(title), tags: [],
+      category: classify(title) !== "other" ? classify(title) : classify(text.slice(0, 400)), publishedAt: date,
+      // audit 23.11: "up to 1,250 USDT per user", "Maximum reward: $5,000" are per-person caps, not the pool
+      reward: /\b(per (user|person|participant|account|referral|friend)|each user|maximum reward|max(imum)? (of )?\$?[\d,.]+ ?(USDT|USDC|USD)? ?(per|each))\b/i.test(title) ? undefined : parseReward(title), tags: [],
       meta: { source: `Telegram @${ch}` },
     });
   }

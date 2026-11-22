@@ -1,4 +1,5 @@
 import { readStore, writeStore } from "./store";
+import { regionName } from "./regions";
 import JUNK_JSON from "@/config/rules-junk.json";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -398,6 +399,10 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
   if (r && (/exclusive|only\b|\bP2P\b/i.test(title) || title.search(REGION_TITLE) < 14)) g.only = r.length <= 4 ? r.toUpperCase() : r.replace(/\s+/g, " ");
   else if (/region[- ]exclusive/i.test(title)) g.only = "region";
   for (const b of d?.blocks ?? []) {
+    // audit 23.11: "Only available to users in France, Italy, Spain…" (OKX), "for users in South Asia" (Binance) left no mark
+    const only = !g.only && b.x.match(/\b(?:only (?:available|open|eligible) (?:to|for)|exclusively (?:available )?for|open only to) (?:users|residents|customers|participants) (?:in|from|of|located in|residing in) (?:the )?([A-Z][^.;:!?]{2,70})/);
+    // the card says "Лише для окремих регіонів"; the exact list is the quoted line (g.text), translated on the promo page
+    if (only) { const r = only[1].replace(/\s+(?:who|and who|with|that)\b.*$/, "").trim(); g.only = regionName(r, "uk") !== r ? r : "region"; g.text ??= b.x; }
     if (!RESTRICT.test(b.x)) continue;
     // occupied areas (Crimea, Donetsk, Luhansk…) are on most lists — that is not "Ukraine is excluded"
     const x = b.x.replace(/\b(crimea|donetsk|luhansk|sevastopol|kherson|zaporizh\w*)\b[^,;.]*/gi, "")
