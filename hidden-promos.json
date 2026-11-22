@@ -1,5 +1,5 @@
 {
- "at": 1795306627084,
+ "at": 1795308184947,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -32,7 +32,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1598.4,
+   "perUserUsd": 1599.6000000000001,
    "netUsd": 0.3
   },
   {
@@ -104,8 +104,8 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 61.34,
-   "netUsd": 0.82
+   "perUserUsd": 61.03,
+   "netUsd": 0.81
   },
   {
    "id": "tg:OKXAnnouncements/7436",
@@ -130,7 +130,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1357.65,
+   "perUserUsd": 1357.2,
    "netUsd": 0
   },
   {
@@ -139,7 +139,7 @@
    "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
    "url": "https://www.gate.com/announcements/article/102900",
    "why": "raffle",
-   "perUserUsd": 131.01,
+   "perUserUsd": 130.86,
    "netUsd": -0.24
   },
   {
@@ -379,7 +379,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 868.6749078,
+   "perUserUsd": 860.4063566,
    "netUsd": -0.07
   },
   {
@@ -463,8 +463,8 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 31.25,
-   "netUsd": -0.12
+   "perUserUsd": 31.7,
+   "netUsd": -0.11
   },
   {
    "id": "tg:Kucoin_News/37214",
@@ -538,7 +538,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 974.05,
+   "perUserUsd": 975.85,
    "netUsd": 1.81
   },
   {
@@ -674,7 +674,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1165.92,
+   "perUserUsd": 1164.96,
    "netUsd": 0.23
   },
   {
@@ -692,8 +692,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 131.736,
-   "netUsd": 3.61
+   "perUserUsd": 132.024,
+   "netUsd": 3.62
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -727,7 +727,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6028.46,
+   "perUserUsd": 6029.81,
    "netUsd": 91.27
   },
   {
@@ -736,7 +736,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.49,
+   "perUserUsd": 5.5,
    "netUsd": 0.26
   },
   {
@@ -751,7 +751,7 @@
    "id": "tg:BingXAnnouncement/5375",
    "venue": "BingX",
    "title": "One invite lands a $10 ANTHROPIC voucher. Their first ANTHROPIC futures trade lands you another $15.",
-   "url": "http://bingx.com/activity/task/",
+   "url": "https://bingx.com/activity/task/",
    "why": "small",
    "perUserUsd": 10,
    "netUsd": 10
