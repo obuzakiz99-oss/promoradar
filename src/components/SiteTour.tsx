@@ -102,7 +102,9 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
       if (!fixed) {
         const room = vh - bar - TOP - 16;
         const off = h + 12 + ch <= room ? TOP + (room - h - 12 - ch) / 2 : TOP;
-        scrollTo({ top: Math.max(0, scrollY + r.top - 6 - off), behavior: reduce ? "auto" : "smooth" });
+        const to = Math.max(0, scrollY + r.top - 6 - off);
+        // a long way (the source line at the end of a 50-row table) jumps: a 10 000px smooth scroll took seconds
+        scrollTo({ top: to, behavior: reduce || Math.abs(to - scrollY) > vh * 1.5 ? "auto" : "smooth" });
       }
     }
   }, [i, steps]);
@@ -114,9 +116,10 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
     const tick = () => {
       const el = find(steps[i].sel);
       if (el) {
-        const r = el.getBoundingClientRect(), pad = 6;
+        // the frame is clipped to the screen sideways (a wide table scrolls inside its own box)
+        const r = el.getBoundingClientRect(), pad = 6, l = Math.max(4, r.left - pad), rt = Math.min(innerWidth - 4, r.right + pad);
         setBox((b) => {
-          const n = { top: r.top - pad, left: r.left - pad, width: r.width + pad * 2, height: r.height + pad * 2 };
+          const n = { top: r.top - pad, left: l, width: Math.max(0, rt - l), height: r.height + pad * 2 };
           return b && Math.abs(b.top - n.top) < 0.5 && Math.abs(b.left - n.left) < 0.5 && Math.abs(b.width - n.width) < 0.5 && Math.abs(b.height - n.height) < 0.5 ? b : n;
         });
       } else setBox(null);

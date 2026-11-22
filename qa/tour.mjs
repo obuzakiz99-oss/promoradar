@@ -58,7 +58,10 @@ const card = (p) => p.locator('[role=dialog][aria-modal=true]');
 async function walk(p, w, tag, shots) {
   const seen = []; let total = 0;
   for (let k = 0; k < 20; k++) {
-    await sleep(900);   // smooth scroll + placement
+    await sleep(500);
+    // wait until the scroll has settled (the highlight stops moving), at most 4 s
+    await p.evaluate(() => new Promise((res) => { let last = "", same = 0, n = 0; const f = () => { const b = document.querySelector(".tour-spot")?.getBoundingClientRect(); const k = b ? `${Math.round(b.top)},${Math.round(b.left)}` : "-"; same = k === last ? same + 1 : 0; last = k; if (same >= 6 || ++n > 240) res(); else requestAnimationFrame(f); }; f(); }));
+    await sleep(250);   // the card's transition
     const m = await p.evaluate(() => {
       const d = document.querySelector('[role=dialog][aria-modal=true]');
       if (!d) return null;
@@ -70,6 +73,7 @@ async function walk(p, w, tag, shots) {
         ring: b ? [b.top, b.left, b.width, b.height].map(Math.round) : null,
         cut: body ? body.scrollHeight - body.clientHeight : 0,
         focusIn: d.contains(document.activeElement), scrollW: document.documentElement.scrollWidth,
+        top: scrollY < 2, end: scrollY + innerHeight >= document.documentElement.scrollHeight - 2,
       };
     });
     if (!m) { ok(w, `${tag}: tour still open at step ${k + 1}`, false); break; }
@@ -82,7 +86,12 @@ async function walk(p, w, tag, shots) {
       ok(w, `${s}: highlighted element on screen`, rt + rh > 0 && rt < m.vh && rw > 0, JSON.stringify(m.ring));
       // the card may cover a tall highlight only when there is no room above or below it
       const overlap = !(ct >= rt + rh - 1 || ct + chh <= rt + 1 || cl >= rl + rw || cl + cw <= rl);
-      ok(w, `${s}: card does not cover the highlight`, !overlap || rh + chh + 24 > m.vh - m.bar, overlap ? `card ${m.card} ring ${m.ring}` : "");
+      // no room = the element and the card (with the tour's margins: 76px header, 12px gap, 16px edge) don't fit the
+      // screen together, counting the part of the screen lost when the page can't scroll further (element near the
+      // top or the end of the page)
+      const lost = m.top || m.end ? Math.max(0, rt - 70) : 0;   // the element can't move up to the header
+      const roomless = rh + chh + 12 + 16 + 70 + lost > m.vh - m.bar;
+      ok(w, `${s}: card does not cover the highlight`, !overlap || roomless, overlap ? `card ${m.card} ring ${m.ring}` : "");
     }
     ok(w, `${s}: focus inside the card`, m.focusIn);
     ok(w, `${s}: no sideways scroll`, m.scrollW <= m.vw, String(m.scrollW));
