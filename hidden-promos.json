@@ -1,5 +1,5 @@
 {
- "at": 1795388283055,
+ "at": 1795388556680,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -32,7 +32,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1596.8,
+   "perUserUsd": 1595.6,
    "netUsd": 0.3
   },
   {
@@ -101,19 +101,12 @@
    "why": "news"
   },
   {
-   "id": "gate:102907",
-   "venue": "Gate",
-   "title": "Gate Live Mining Program Bonuses Distribution Announcement (November 9 - November 15)",
-   "url": "https://www.gate.com/announcements/article/102907",
-   "why": "social"
-  },
-  {
    "id": "binance:4b72a90be21942bfa22eca0f0748dfcf",
    "venue": "Binance",
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 65.92,
+   "perUserUsd": 65.91,
    "netUsd": 0.88
   },
   {
@@ -139,17 +132,8 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1347.6000000000001,
+   "perUserUsd": 1349.7,
    "netUsd": -0.6
-  },
-  {
-   "id": "gate:102900",
-   "venue": "Gate",
-   "title": "Weekend Power Station: Register to Claim 0.5 NVDAG, Trade to Earn Another 1 NVDAG",
-   "url": "https://www.gate.com/announcements/article/102900",
-   "why": "raffle",
-   "perUserUsd": 135.17,
-   "netUsd": -0.23
   },
   {
    "id": "biconomy:64536163317529",
@@ -259,14 +243,6 @@
    "title": "Anthropic is Live on Bybit: More Reasons to Trade",
    "url": "https://announcements.bybit.com/en-US/article/anthropic-is-live-on-bybit-more-reasons-to-trade--art4312c89a5fc6/",
    "why": "news"
-  },
-  {
-   "id": "tg:BingXAnnouncement/5395",
-   "venue": "BingX",
-   "title": "#BingXTradFi Giveaway 🎉 — $ANT lists on Nasdaq today, and 10 winners split a 500 USDT position voucher 🎁",
-   "url": "https://t.me/BingXAnnouncement/5395",
-   "why": "social",
-   "netUsd": 0.05
   },
   {
    "id": "tg:Phemex_Announcements/8011",
@@ -389,7 +365,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 864.8586534000001,
+   "perUserUsd": 863.427558,
    "netUsd": -0.07
   },
   {
@@ -548,7 +524,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1016.8999999999999,
+   "perUserUsd": 1018.2500000000001,
    "netUsd": 1.81
   },
   {
@@ -684,7 +660,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1200.24,
+   "perUserUsd": 1206.24,
    "netUsd": 0.25
   },
   {
@@ -702,8 +678,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.68,
-   "netUsd": 2.55
+   "perUserUsd": 133.992,
+   "netUsd": 2.56
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -744,7 +720,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6106.950000000001,
+   "perUserUsd": 6120.14,
    "netUsd": 63.77
   },
   {
@@ -753,7 +729,7 @@
    "title": "Word of the Day: Test Your Knowledge on “Stock Options Got Better” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/e1416125fa44407f92af70b594b215a3",
    "why": "small",
-   "perUserUsd": 5.57,
+   "perUserUsd": 5.58,
    "netUsd": 0.1
   },
   {
@@ -1111,15 +1087,6 @@
    "netUsd": 0
   },
   {
-   "id": "tg:Bitget_Announcements/18355",
-   "venue": "Bitget",
-   "title": "Get ready to compete for a share of $75,000 across four reward pools! 🚀",
-   "url": "https://www.bitget.com/launchhub/trading-club/234005",
-   "why": "raffle",
-   "perUserUsd": 4000,
-   "netUsd": 0.5
-  },
-  {
    "id": "tg:Bitget_Announcements/18354",
    "venue": "Bitget",
    "title": "Limited-time AI Boom Stock Bonus 🚀",
@@ -1179,7 +1146,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.76,
+   "perUserUsd": 7.78,
    "netUsd": 2.74
   },
   {
