@@ -112,7 +112,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <div className="flex flex-wrap gap-1.5">
             {popular.filter((c) => byCoin.has(c)).map((c) => (
-              <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
+              <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`${/^(USDT|USDC)$/.test(c) ? "" : "adv "}h-10 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{c}</button>
             ))}
           </div>
           <div ref={searchBox} className="adv relative lg:ml-auto lg:w-56" onBlur={(e) => { if (!searchBox.current?.contains(e.relatedTarget as Node | null)) setQ(""); }}>
@@ -153,10 +153,10 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
       {/* exchange chips — tap to see only that exchange */}
       {coinExchanges.length > 1 && (
         <div data-tour="earn-ex" className="scroll-x mt-3 flex gap-1.5 md:flex-wrap">
-          <button onClick={() => setEx("all")} aria-pressed={ex === "all"} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
+          <button onClick={() => setEx("all")} aria-pressed={ex === "all"} className={`h-10 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
           {coinExchanges.map((id) => (
             <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
-              className={`flex h-9 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>
+              className={`flex h-10 shrink-0 items-center gap-1.5 rounded-lg pl-1 pr-3 text-xs font-bold ${ex === id ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>
               <VenueLogo v={exchanges[id]} size={24} rounded="rounded-md" />{exchanges[id].name}
             </button>
           ))}
@@ -216,7 +216,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5">
                 {/* audit 19.11 (WCAG 2.5.8): the 20px name button sat flush on the 16px term tip — 24px tall + 4px gap */}
-                <button type="button" onClick={() => setEx(o.exchange)} className="inline-flex min-h-6 items-center font-bold hover:text-lime hover:underline">{v.name}</button>
+                <button type="button" onClick={() => setEx(o.exchange)} className="inline-flex min-h-10 items-center font-bold hover:text-lime hover:underline">{v.name}</button>
                 {top && <span className="rounded bg-lime/15 px-1 text-xs font-bold text-lime">{A.best}</span>}
                 {o.newUsers && <span className="rounded bg-amber/10 px-1 text-xs font-bold text-amber">{A.newUsers}</span>}
               </div>
@@ -237,7 +237,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         const pcButton = ({ key, pc }: R, cls = "") => {
           const open = openId === key;
           return (
-            <button type="button" onClick={() => setOpenId(open ? null : key)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
+            <button type="button" onClick={() => setOpenId(open ? null : key)} aria-expanded={open} className={`btn btn-ghost h-10 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
               {EXPLAIN[lang]}
               <span aria-hidden="true" className="font-mono">{pc.pros.length ? <span className="text-lime">✓{pc.pros.length} </span> : null}{pc.cons.length ? <span className="text-rose">✕{pc.cons.length}</span> : null}</span>
             </button>
@@ -311,7 +311,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                           <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">{limits(r.o)}</td>
                           <td data-tour={ri === 0 ? "earn-actions" : undefined} className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
                             {pcButton(r, "whitespace-nowrap")}
-                            <a href={r.o.url} target="_blank" rel="noopener" className="btn btn-ghost h-9 px-3 text-xs">{A.open} ↗</a>
+                            <a href={r.o.url} target="_blank" rel="noopener" className="btn btn-ghost h-10 px-3 text-xs">{A.open} ↗</a>
                           </div></td>
                         </tr>
                         {open && <tr className="bg-white/[0.025]"><td colSpan={5} className="px-4 pb-4 pt-1">{detail(r)}</td></tr>}

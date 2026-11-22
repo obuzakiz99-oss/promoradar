@@ -234,7 +234,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             <div className="text-sm font-semibold text-ink-2">{L.coin}</div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {["all", ...coins].map((c) => (
-                <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`h-9 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-white/15 text-ink ring-1 ring-white/20" : "bg-white/[0.04] text-ink-3 hover:text-ink"}`}>{c === "all" ? L.any : c}</button>
+                <button key={c} onClick={() => setCoin(c)} aria-pressed={coin === c} className={`h-10 rounded-lg px-3 text-sm font-bold transition-colors ${coin === c ? "bg-white/15 text-ink ring-1 ring-white/20" : "bg-white/[0.04] text-ink-3 hover:text-ink"}`}>{c === "all" ? L.any : c}</button>
               ))}
             </div>
           </div>
@@ -500,7 +500,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     </td>
                     <td data-tour={ri === 0 ? "launchpools-actions" : undefined} className="px-4 py-3 text-right">
                       <div className="flex justify-end gap-2">
-                        <button type="button" onClick={() => setOpenRow(open ? null : k)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 whitespace-nowrap px-3 text-xs ${open ? "border-lime/50 text-ink" : ""}`}>
+                        <button type="button" onClick={() => setOpenRow(open ? null : k)} aria-expanded={open} className={`btn btn-ghost h-10 gap-2 whitespace-nowrap px-3 text-xs ${open ? "border-lime/50 text-ink" : ""}`}>
                           {TH[lang].more}
                           <span aria-hidden="true" className="font-mono">{pc.pros.length ? <span className="text-lime">✓{pc.pros.length} </span> : null}{pc.cons.length ? <span className="text-rose">✕{pc.cons.length}</span> : null}</span>
                         </button>

@@ -21,7 +21,15 @@ export function MobileTabBar({ lang, base }: { lang: L; base: string }) {
   const seg = (usePathname() ?? "").split("/").filter(Boolean)[1] ?? "";
   const saved = useSaved().length;
   useEffect(() => {
-    document.querySelectorAll<HTMLElement>(".scroll-x [aria-current='page']").forEach((el) => el.scrollIntoView({ block: "nearest", inline: "nearest" }));
+    // audit 23.11: scrollIntoView also scrolled the PAGE down ~100 px on the home page (its tab strip sits below the first
+    // screen) and hid the hero under the header — only the strip itself is scrolled sideways now
+    document.querySelectorAll<HTMLElement>(".scroll-x [aria-current='page']").forEach((el) => {
+      const box = el.closest<HTMLElement>(".scroll-x");
+      if (!box) return;
+      const l = el.offsetLeft - box.offsetLeft, r = l + el.offsetWidth;
+      if (l < box.scrollLeft) box.scrollLeft = l - 8;
+      else if (r > box.scrollLeft + box.clientWidth) box.scrollLeft = r - box.clientWidth + 8;
+    });
   }, [seg]);
   const items: Array<{ href: string; label: string; icon: React.ReactNode; on: boolean; badge?: number }> = [
     { href: `${base}/${lang}/#promos`, label: { uk: "Акції", en: "Promos", ru: "Акции" }[lang], icon: I.promos, on: ["", "p", "v", "drops", "zero-fees", "t", "bonuses"].includes(seg) },

@@ -130,6 +130,26 @@ async function getPromosLive(): Promise<Collected> {
           if (Number.isFinite(end) && end > Date.UTC(2020, 0, 1)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
+      // audit 23.11: month-name periods in Telegram posts ("📅 September 12–18 (UTC)", "Nov 20 – Dec 4", "until November 24")
+      // left no end date, so ended promos stayed up (Phemex Deposit Week, Hotcoin, LBank). The year defaults to the post's.
+      if (!p.endsAt && !p.evergreen) {
+        const M = "[Jj]an|[Ff]eb|[Mm]ar|[Aa]pr|May|[Jj]un|[Jj]ul|[Aa]ug|[Ss]ept?|[Oo]ct|[Nn]ov|[Dd]ec";   // "May" capitalised only ("users may 1…")
+        const mon = (s: string) => ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].indexOf(s.slice(0, 3).toLowerCase());
+        const txt = d.blocks.slice(0, 40).map((b) => b.x).join(" ");
+        const y0 = new Date(p.publishedAt || now).getUTCFullYear();
+        const range = txt.match(new RegExp(String.raw`\b(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?(?:,? \d{1,2}:\d{2})?\s*(?:[-–~]|to|until|through)\s*(?:(${M})[a-z]*\.? )?(\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`))
+          ?? txt.match(new RegExp(String.raw`\b(?:until|till|through|ends? on|ending)\s+()()()(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`));
+        if (range) {
+          const mEnd = mon(range[4] || range[1]), dEnd = +range[5], yEnd = +(range[6] || range[3] || y0);
+          const end = Date.UTC(yEnd, mEnd, dEnd, 23, 59);
+          if (mEnd >= 0 && dEnd >= 1 && dEnd <= 31 && Number.isFinite(end)) { p.endsAt = end; meta.datesFromRules = true; }
+        }
+      }
+      // "PS5 Slim drop today" — a one-day drop ends the day after it was posted
+      if (!p.endsAt && p.publishedAt && /\b(drop|giveaway|airdrop|flash)\b[^.]{0,30}\btoday\b|\btoday only\b/i.test(p.titleOrig ?? p.title)) {
+        p.endsAt = Date.UTC(new Date(p.publishedAt).getUTCFullYear(), new Date(p.publishedAt).getUTCMonth(), new Date(p.publishedAt).getUTCDate() + 1, 23, 59);
+        meta.datesFromRules = true;
+      }
       // audit 19.11: a timeline of bare dates with no "period" line ("Subscription channel closes 2026-11-18") — when every
       // date in the rules is over a day old the campaign is over (a Bitget IPO challenge kept saying «Триває» after it closed)
       if (!p.endsAt && !p.evergreen) {

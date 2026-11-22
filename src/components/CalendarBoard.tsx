@@ -53,6 +53,12 @@ const X: Record<Locale, { more: string; add: string }> = {
 };
 
 /** Compact calendar (audit 08.11): 7 days at a time, one-line rows, one "add to calendar" menu per row. */
+const dayTitle = (d: string | number, lang: Locale) => {
+  const t = new Date(d), o = { timeZone: "UTC" } as const;
+  const wd = t.toLocaleDateString(locTag(lang), { ...o, weekday: "long" });
+  return `${wd.charAt(0).toUpperCase()}${wd.slice(1)}, ${t.toLocaleDateString(locTag(lang), { ...o, day: "numeric", month: "long" })}`;
+};
+
 export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang: Locale; now: number }) {
   const T = TOOLS[lang], L = X[lang];
   const [days, setDays] = useState(7);
@@ -70,15 +76,17 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
       <div className="space-y-8">
         {all.slice(0, days).map(([d, list]) => (
           <section key={d}>
-            <h2 data-tour="calendar-day" className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 text-lg font-bold backdrop-blur">
-              {d === today ? T.today : d === tomorrow ? T.tomorrow : new Date(d).toLocaleDateString(locTag(lang), { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })}
+            {/* audit 23.11: Node and Chrome format "weekday, day month" differently (React #418, and Chrome's uk gave the
+                accusative "пʼятницю") — weekday and date are formatted apart, which both agree on */}
+            <h2 suppressHydrationWarning data-tour="calendar-day" className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 text-lg font-bold backdrop-blur">
+              {d === today ? T.today : d === tomorrow ? T.tomorrow : dayTitle(d, lang)}
             </h2>
             <ul className="mt-2 space-y-2">
               {list.map((e) => {
                 const label = e.kind === "start" ? T.starts : T.ends;
                 return (
                   <li key={e.id + e.kind} data-tour="calendar-row" className="card relative flex items-center gap-3 p-3 has-[details[open]]:z-30" style={{ ["--tint" as string]: e.venue.color }}>
-                    <span className="w-12 shrink-0 text-sm font-bold tabular-nums text-ink-2">{new Date(e.at).toLocaleTimeString(locTag(lang), { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</span>
+                    <span suppressHydrationWarning className="w-12 shrink-0 text-sm font-bold tabular-nums text-ink-2">{new Date(e.at).toISOString().slice(11, 16)}</span>
                     <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                     <a href={e.href} className="min-w-0 flex-1 text-sm hover:text-lime">
                       <span className={`text-xs font-bold ${e.kind === "start" ? "text-sky" : "text-amber"}`}>{label}</span>

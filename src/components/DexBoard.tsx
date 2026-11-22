@@ -99,7 +99,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
 
   const reset = () => { setCat("all"); setChain("all"); setStable(false); setNoIl(false); setMinTvl(TVL0); setQ(""); };
   const pcButton = (p: DexPool, pc: ReturnType<typeof dexPC>, open: boolean, cls = "") => (
-    <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
+    <button type="button" onClick={() => setOpenId(open ? null : p.id)} aria-expanded={open} className={`btn btn-ghost h-10 gap-2 px-3 text-xs ${open ? "border-lime/50 text-ink" : ""} ${cls}`}>
       {EXPLAIN[lang]}
       {/* secondary action (audit 12.11): the lime primary read as "go"; zero counts are not shown */}
       <span aria-hidden="true" className="font-mono">{pc.pros.length ? <span className="text-lime">✓{pc.pros.length} </span> : null}{pc.cons.length ? <span className="text-rose">✕{pc.cons.length}</span> : null}</span>

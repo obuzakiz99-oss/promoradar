@@ -102,7 +102,7 @@ body {
 
 .chip {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  height: 2.375rem; padding: 0 0.95rem; border-radius: 999px;
+  height: 2.5rem; padding: 0 0.95rem; border-radius: 999px;   /* 40px tap target (audit 23.11) */
   border: 1px solid var(--color-line); background: rgb(255 255 255 / 0.02);
   color: var(--color-ink-2); font-size: 0.875rem; font-weight: 600; white-space: nowrap;
   transition: all 0.2s;
