@@ -65,6 +65,7 @@ function subject(title: string, lang: L, venue: string, noPrize = false): { text
 // the parser's label is language-neutral ("2,000 USDC"); amounts under 10K get the reader's format ("2 000 USDC"),
 // bigger ones keep the compact K/M form
 const poolLabel = (r: NonNullable<Promo["reward"]>, lang: L) => (r.amount > 0 && r.amount < 1e4 ? money(r.amount, r.unit, lang) : r.label);
+const VAGUE = /\b(limited[- ]time|exclusive|special|rewards?|benefits?|perks?|offers?|bonanza|new and existing|all users|everyone)\b/i;
 const cyr = (s: string) => /[а-яіїєґё]/i.test(s);
 
 export function titleOf(p: Promo, lang: L): string | undefined {
@@ -87,9 +88,15 @@ export function titleOf(p: Promo, lang: L): string | undefined {
   const subj = sj && (sj.specific || much || !showHeadline(p, lang)) ? sj.text : undefined;
   // audit 12.11: "Змагання → фонд 1M USDC" says nothing the reward line doesn't — when we can't name the subject
   // and the headline reads in this language ("Binance Pick: прогнозуйте…"), the headline is the better title
-  if (!subj && showHeadline(p, lang)) return undefined;
   // audit 23.11: "Акція: спот" said nothing — a 0% fee offer is named as one
   const K = m.zeroFee && p.category === "other" ? ({ uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } as const)[lang] : KIND[lang][p.category];
+  // owner 23.11: a headline that names nothing ("Limited-time rewards, open to both new and existing users") is not a
+  // better title than the facts — the subject comes from the entry rule ("copy trading") and the amount leads
+  if (!subj && much && VAGUE.test(head) && !/\d|\$|\b[A-Z]{2,10}\b/.test(head)) {
+    const s2 = subject(m.minEntry?.text ?? "", lang, p.venue.name, true)?.text;
+    return `${s2 ? `${K}: ${s2}` : what ?? K} → ${much}`;
+  }
+  if (!subj && showHeadline(p, lang)) return undefined;
   const kind = subj ? `${K}: ${subj}` : K;
   if (much) return `${subj ? kind : what ?? kind} → ${much}`;
   if (what) return subj ? `${kind} · ${what}` : `${K} · ${what}`;
