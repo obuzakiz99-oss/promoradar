@@ -200,6 +200,7 @@ async function getPromosLive(): Promise<Collected> {
     const geo = geoOf(p.title, d);
     // audit 23.11: a KuCoin Australia page (/en-au/) was shown to everyone
     if (!geo.only && /\/(en-au|au)\//i.test(p.url)) geo.only = "AU";
+    else if (!geo.only && /\/en-eu\//i.test(p.url)) geo.only = "EU";   // OKX EU deposit bonus (France, Italy, Spain…)
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;

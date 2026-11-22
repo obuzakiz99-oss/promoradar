@@ -127,8 +127,9 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const links = [...body.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => decodeEntities(m[1]));
     const mine = links.filter((u) => { try { const h = new URL(u).hostname; return h === own || h.endsWith("." + own); } catch { return false; } });
     // audit 23.11: the first own link was often a button (deposit, referral landing, m-score) — prefer the article / event page
-    const url = mine.find((u) => /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/news\//i.test(u))
-      ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(u))
+    const path = (u: string) => u.split(/[?#]/)[0];   // utm_campaign=… is not a campaign page
+    const url = mine.find((u) => /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/news\//i.test(path(u)))
+      ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(path(u)))
       ?? mine[0] ?? `https://t.me/${post}`;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
