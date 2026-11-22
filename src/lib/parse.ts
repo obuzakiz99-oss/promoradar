@@ -24,6 +24,8 @@ export function classify(title: string, hint?: string): Category {
 function kindOf(t: string): Category {
   if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
+  // audit 23.11: MEXC "Futures Loss Coverage" (pays back futures losses) was filed as a deposit bonus
+  if (has(t, /(loss (coverage|protection|compensation|rebate)|compensat\w* (for )?(your )?(futures )?loss|futures insurance)/i)) return "other";
   if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn))/i)) return "bonus";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
   if (has(t, /deposit/i)) return "bonus";

@@ -53,8 +53,7 @@ const HID: Record<Locale, { n: (n: number) => string; show: string; hideAgain: s
   ru: { n: (n) => `Вы скрыли: ${n}`, show: "показать", hideAgain: "снова скрыть", reset: "вернуть все" },
 };
 const FILT: Record<Locale, string> = { uk: "Фільтри", en: "Filters", ru: "Фильтры" };
-/** The "0 fees" tab (owner 16.11): 0% trading-fee offers from any category, flagged in promos.ts (zerofee.ts). */
-const ZERO_TAB: Record<Locale, string> = { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" };
+/** 0% trading-fee offers (owner 16.11, flagged in promos.ts / zerofee.ts): own page /zero-fees/; ?cat=zerofee still filters old links. */
 // audit 18.11: the box took any length and the URL kept it, but a reload restored only 80 characters
 const MAX_Q = 600;
 // owner 18.11: 0% fee offers live only in their own tab (and "All"), not in Raffles / Other / the other categories
@@ -287,11 +286,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           <button className="chip" data-on={cat === "all"} onClick={() => setCat("all")} aria-pressed={cat === "all"}>
             {t.filters.all} <span className="chip-count">{counts.all ?? 0}</span>
           </button>
-          {(counts.zerofee || cat === "zerofee") && (
-            <button className="chip" data-on={cat === "zerofee"} onClick={() => setCat("zerofee")} aria-pressed={cat === "zerofee"}>
-              {ZERO_TAB[lang]} <span className="chip-count">{counts.zerofee ?? 0}</span>
-            </button>
-          )}
+          {/* owner 23.11: no "0% fees" chip here — the offers have their own page (/zero-fees/), linked in the menu and the tabs above */}
           {CATS.filter((c) => counts[c] || cat === c).map((c) => (
             <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)} aria-pressed={cat === c}>
               <span className="size-2 rounded-full" style={{ background: CAT_STYLE[c].dot }} />

@@ -104,7 +104,10 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^\p{L}]/gu, ""); if (letters.length < 12 || (s.match(/\p{Lu}/gu)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
 
   // audit 14.11: "$50 000" in big lime over a grey "≈ $10" read as what a beginner gets — the estimate leads then
-  const oversell = m.value?.net !== undefined && (m.perUser?.usd ?? 0) > 10 * Math.max(1, m.value.net);
+  // owner 23.11: the likely amount is the headline number whenever the max is 2x it or more (was 10x)
+  const oversell = m.value?.net !== undefined && m.value.net > 0 && (m.perUser?.usd ?? 0) >= 2 * Math.max(1, m.value.net);
+  // audit 23.11: "max per person $5 000 · pool for everyone $5 000" — the same figure parsed twice; the pool line goes
+  const samePool = !!(m.perUser && p.reward && p.reward.amount === m.perUser.amount && p.reward.unit === m.perUser.unit);
   return (
     <article data-tour="card"
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-lime ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
@@ -196,7 +199,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
-              <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>
+              {!samePool && <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (

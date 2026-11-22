@@ -301,7 +301,7 @@ export const MANUAL: Array<{
   {
     // official: bitfinex.com/zero-fee-trading — standing policy, no end date; re-checked monthly like the referral entries
     id: "bitfinex:zero-fee-trading", venue: "bitfinex", category: "other",
-    title: "Bitfinex zero trading fees: 0% maker and 0% taker on spot, margin and derivatives — for every user",
+    title: "Bitfinex: 0% fees on spot, margin and derivatives",
     url: "https://www.bitfinex.com/zero-fee-trading/", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
     rules: [
       "Bitfinex charges 0% maker and 0% taker fees on spot and margin trading, on Bitfinex Derivatives, on eligible products of Bitfinex Securities and on OTC block trades.",
@@ -315,7 +315,7 @@ export const MANUAL: Array<{
   {
     // official: docs.lighter.xyz/trading/trading-fees — standing fee model, no end date; re-checked monthly
     id: "lighter:zero-fee-standard", venue: "lighter", category: "other",
-    title: "Lighter zero fees: 0% maker and 0% taker on perps and spot for Standard accounts",
+    title: "Lighter: 0% fees on perps and spot (Standard accounts)",
     url: "https://docs.lighter.xyz/trading/trading-fees", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
     rules: [
       "Standard accounts (the default account type) pay no maker or taker fees on regular perpetual and spot orders.",
@@ -329,7 +329,7 @@ export const MANUAL: Array<{
   {
     // official: docs.paradex.trade/trading/trading-fees + /trading/trader-profiles — standing fee model; re-checked monthly
     id: "paradex:zero-fee-retail", venue: "paradex", category: "other",
-    title: "Paradex zero fees for retail: 0% maker and 0% taker on perps, spot and options",
+    title: "Paradex: 0% fees on perps, spot and options",
     url: "https://docs.paradex.trade/trading/trading-fees", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
     rules: [
       "Retail orders on Paradex pay 0% maker and 0% taker fees on perpetuals, spot and options.",
@@ -343,7 +343,7 @@ export const MANUAL: Array<{
   {
     // official: okx.com/help/regarding-changes-on-zero-fee-pairs (24.12.2025) — standing list; re-checked monthly
     id: "okx:zero-fee-stablecoin-pairs", venue: "okx", category: "other",
-    title: "OKX zero-fee spot pairs: 0% maker and taker on USDC-USDT and PYUSD-USDT",
+    title: "OKX: 0% fees on USDC-USDT and PYUSD-USDT",
     url: "https://www.okx.com/help/regarding-changes-on-zero-fee-pairs", from: "2026-11-16T00:00:00Z", until: "2026-11-30T23:59:00Z",
     rules: [
       "OKX keeps zero maker and zero taker fees on selected stablecoin spot pairs: USDC-USDT and PYUSD-USDT (its notice of December 24, 2025 also lists DAI-USDT and USDG-USDT).",
@@ -357,7 +357,7 @@ export const MANUAL: Array<{
   {
     // official Binance announcement (14.10.2026); it has dropped out of the CMS feed, which only returns the latest posts
     id: "binance:kgst-usdt-zero-fee", venue: "binance", category: "other",
-    title: "Binance zero trading fees on KGST/USDT: 0% maker and taker for all verified users until January 13, 2027",
+    title: "Binance: 0% fees on KGST/USDT until 13 January 2027",
     url: "https://www.binance.com/en/support/announcement/detail/54f481d07bee4e98a2c082aa1e481d0b", from: "2026-10-14T00:00:00Z", until: "2027-01-13T23:59:00Z",
     rules: [
       "Campaign period: October 14, 2026 00:00 – January 13, 2027 23:59 (UTC).",

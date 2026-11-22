@@ -88,9 +88,11 @@ export function titleOf(p: Promo, lang: L): string | undefined {
   // audit 12.11: "Змагання → фонд 1M USDC" says nothing the reward line doesn't — when we can't name the subject
   // and the headline reads in this language ("Binance Pick: прогнозуйте…"), the headline is the better title
   if (!subj && showHeadline(p, lang)) return undefined;
-  const kind = subj ? `${KIND[lang][p.category]}: ${subj}` : KIND[lang][p.category];
+  // audit 23.11: "Акція: спот" said nothing — a 0% fee offer is named as one
+  const K = m.zeroFee && p.category === "other" ? ({ uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } as const)[lang] : KIND[lang][p.category];
+  const kind = subj ? `${K}: ${subj}` : K;
   if (much) return `${subj ? kind : what ?? kind} → ${much}`;
-  if (what) return subj ? `${kind} · ${what}` : `${KIND[lang][p.category]} · ${what}`;
+  if (what) return subj ? `${kind} · ${what}` : `${K} · ${what}`;
   if (subj) return kind;
   return undefined;   // nothing specific to say: the (translated) headline stays the title
 }
