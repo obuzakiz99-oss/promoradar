@@ -40,7 +40,7 @@ export function VenuePayout({ venueId, venueName, promos, lang }: { venueId: str
   const auto = ps.filter((p) => p.meta?.payout?.auto).length;
   const said = ps.length - forms.unknown;
   return (
-    <section id="payout" className="card mt-6 scroll-mt-20 p-6 hover:transform-none">
+    <section id="payout" data-tour="venue-payout" className="card mt-6 scroll-mt-20 p-6 hover:transform-none">
       <h2 className="font-display text-xl font-semibold tracking-tight">{T.title(venueName)}</h2>
       {F && (
         <div className="mt-4">

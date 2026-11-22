@@ -103,7 +103,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
   return (
     <div>
       {/* coin picker */}
-      <div className="card p-5 hover:transform-none sm:p-6">
+      <div data-tour="earn-coin" className="card p-5 hover:transform-none sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <div className="flex flex-wrap gap-1.5">
             {popular.filter((c) => byCoin.has(c)).map((c) => (
@@ -137,7 +137,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
       </div>
 
       {/* offers for the coin */}
-      <div className="mt-6 flex flex-wrap items-end justify-between gap-3">
+      <div data-tour="earn-type" className="mt-6 flex flex-wrap items-end justify-between gap-3">
         <h2 className="font-display text-2xl font-semibold tracking-tight">{coin} <span className="text-ink-3">· {list.length} {A.offers}</span></h2>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1">
           {(["all", "flexible", "fixed", "onchain"] as const).map((x) => (
@@ -147,7 +147,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
       </div>
       {/* exchange chips — tap to see only that exchange */}
       {coinExchanges.length > 1 && (
-        <div className="scroll-x mt-3 flex gap-1.5 md:flex-wrap">
+        <div data-tour="earn-ex" className="scroll-x mt-3 flex gap-1.5 md:flex-wrap">
           <button onClick={() => setEx("all")} aria-pressed={ex === "all"} className={`h-9 shrink-0 rounded-lg px-3 text-xs font-bold ${ex === "all" ? "bg-lime text-on-accent" : "bg-white/[0.05] text-ink-2 hover:text-ink"}`}>{EX_ALL[lang]}</button>
           {coinExchanges.map((id) => (
             <button key={id} onClick={() => setEx(ex === id ? "all" : id)} aria-pressed={ex === id}
@@ -158,7 +158,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         </div>
       )}
       {/* calculator: amount in the coin or in dollars → income per offer in the coin (+ dollars) */}
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div data-tour="earn-calc" className="mt-3 flex flex-wrap items-center gap-2">
         <label className="flex h-11 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           {C.amount}
           <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(/[^0-9.]/g, "").slice(0, 12))} inputMode="decimal"
@@ -262,8 +262,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
           <>
             {/* phone: cards */}
             <div className="mt-3 grid gap-3 sm:hidden">
-              {rows.map((r) => (
-                <div key={r.key} className={`card p-4 hover:transform-none ${r.top ? "ring-1 ring-lime/50" : ""}`}>
+              {rows.map((r, ri) => (
+                <div key={r.key} data-tour={ri === 0 ? "earn-cols" : undefined} className={`card p-4 hover:transform-none ${r.top ? "ring-1 ring-lime/50" : ""}`}>
                   <div className="flex items-start gap-3">
                     <div className="min-w-0 flex-1">{nameCell(r)}</div>
                     <div className="text-right">{aprCell(r.o)}</div>
@@ -272,7 +272,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                     <div><div className="font-sans text-ink-3">{COLS[lang].income}</div><span className="font-bold text-lime">+{fmtCoin(r.yr / 12)} {r.o.coin}</span>{C.mo}</div>
                     <div><div className="font-sans text-ink-3">{COLS[lang].limits}</div>{limits(r.o)}</div>
                   </div>
-                  <div className="mt-3">{pcButton(r, "w-full justify-center")}</div>
+                  <div data-tour={ri === 0 ? "earn-actions" : undefined} className="mt-3">{pcButton(r, "w-full justify-center")}</div>
                   {openId === r.key && <div className="mt-3">{detail(r)}</div>}
                 </div>
               ))}
@@ -280,7 +280,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             {/* table */}
             <div className="mt-3 overflow-x-auto rounded-2xl border border-line max-sm:hidden">
               <table className="w-full min-w-[820px] text-left text-sm">
-                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+                <thead data-tour="earn-cols" className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>
                     <th className="px-4 py-3">{COLS[lang].ex}</th>
                     <th className="px-4 py-3 text-right"><Term k="apr" lang={lang} align="right">APR</Term></th>
@@ -290,7 +290,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {rows.map((r) => {
+                  {rows.map((r, ri) => {
                     const open = openId === r.key;
                     return (
                       <Fragment key={r.key}>
@@ -304,7 +304,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                             </> : <span className="text-ink-3">—</span>}
                           </td>
                           <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">{limits(r.o)}</td>
-                          <td className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
+                          <td data-tour={ri === 0 ? "earn-actions" : undefined} className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
                             {pcButton(r, "whitespace-nowrap")}
                             <a href={r.o.url} target="_blank" rel="noopener" className="btn btn-ghost h-9 px-3 text-xs">{A.open} ↗</a>
                           </div></td>

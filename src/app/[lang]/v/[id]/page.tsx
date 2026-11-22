@@ -19,6 +19,9 @@ import { LEARN } from "@/lib/i18n-learn";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoExplorer } from "@/components/PromoExplorer";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { VENUE_TOUR } from "@/lib/tours/venue";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 export const dynamicParams = false; // every page is pre-rendered at build (required by the static GitHub Pages export)
@@ -53,7 +56,7 @@ export default async function VenuePage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <nav aria-label={t.detail.back} className="text-sm font-semibold text-ink-3"><Link href={`/${lang}#promos`} className="hover:text-ink">← {t.detail.back}</Link></nav>
-        <header className="relative mt-6 overflow-hidden rounded-3xl border border-line bg-bg-2 p-6 sm:p-10">
+        <header data-tour="venue-head" className="relative mt-6 overflow-hidden rounded-3xl border border-line bg-bg-2 p-6 sm:p-10">
           <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full opacity-20 blur-3xl" style={{ background: v.color }} />
           <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
             <VenueLogo v={v} size={80} rounded="rounded-2xl" />
@@ -61,6 +64,7 @@ export default async function VenuePage({ params }: { params: Params }) {
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.kinds[v.kind]}</div>
               <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{v.name}</h1>
               <p className="mt-2 font-mono text-sm text-ink-2">{mine.length} {plural(mine.length, lang, "promo")} {t.venue.count.split(" ").slice(1).join(" ")}</p>
+              <TourButton lang={lang} className="mt-1" />
             </div>
             <div className="flex flex-wrap gap-3">
               <a href={cfg.refUrl || cfg.site} target="_blank" rel={cfg.refUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6">{VENUES[id].kind === "cex" ? t.venue.join : ({ uk: `Відкрити ${VENUES[id].name}`, en: `Open ${VENUES[id].name}`, ru: `Открыть ${VENUES[id].name}` } as const)[lang]} ↗{cfg.refUrl && <span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span>}</a>
@@ -71,7 +75,7 @@ export default async function VenuePage({ params }: { params: Params }) {
         </header>
 
         {PROMO_PAGES[id] && (
-          <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber/30 bg-amber/[0.06] p-5 sm:flex-row sm:items-center">
+          <div data-tour="venue-noauto" className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber/30 bg-amber/[0.06] p-5 sm:flex-row sm:items-center">
             <p className="flex-1 text-sm text-ink-2">{(id === "blofin" ? NOAUTO[lang].browser : NOAUTO[lang].manual)(v.name)}</p>
             <a href={PROMO_PAGES[id]} target="_blank" rel="noopener" className="btn btn-primary h-11 shrink-0 px-5 text-sm">{NOAUTO[lang].open(v.name)} ↗</a>
           </div>
@@ -81,11 +85,11 @@ export default async function VenuePage({ params }: { params: Params }) {
         <VenuePayout venueId={id} venueName={v.name} promos={mine} lang={lang} />
 
         <section className="mt-10">
-          <h2 className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>
+          <h2 data-tour="venue-promos" className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>
           <PromoExplorer promos={mine} t={t} lang={lang} serverNow={fetchedAt} showKinds={false} />
         </section>
 
-        <section className="mt-16">
+        <section data-tour="venue-others" className="mt-16">
           <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.venue.all}</h2>
           <div className="mt-4 flex flex-wrap gap-2">
             {others.map((k) => (
@@ -97,6 +101,7 @@ export default async function VenuePage({ params }: { params: Params }) {
         </section>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(VENUE_TOUR, lang)} />
     </>
   );
 }

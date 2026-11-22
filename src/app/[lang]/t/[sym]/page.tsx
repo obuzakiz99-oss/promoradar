@@ -14,6 +14,9 @@ import { PromoCard } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
 import { getUnlocks } from "@/lib/unlocks";
 import { coinLogos, coinMonogram } from "@/lib/coinlogo";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { TOKEN_TOUR } from "@/lib/tours/token";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 export const dynamicParams = false;
@@ -74,11 +77,11 @@ export default async function TokenPage({ params }: { params: Params }) {
   const trs = await trList(lang, unlock?.sale ? [unlock.sale] : []);
   const related = [...tokens.values()].filter((x) => x.sym !== sym).sort((a, b) => (b.promos.length + b.lpReward.length) - (a.promos.length + a.lpReward.length)).slice(0, 24);
 
-  const Section = ({ title, children, n }: { title: string; children: React.ReactNode; n: number }) => (
+  const Section = ({ title, children, n, tour }: { title: string; children: React.ReactNode; n: number; tour?: string }) => (
     // empty sections are not shown at all (owner 13.11)
     n ? (
       <section className="mt-10">
-        <h2 className="font-display text-2xl font-semibold tracking-tight">{title} <span className="font-mono text-base text-ink-3">{n}</span></h2>
+        <h2 data-tour={tour} className="font-display text-2xl font-semibold tracking-tight">{title} <span className="font-mono text-base text-ink-3">{n}</span></h2>
         {children}
       </section>
     ) : null
@@ -88,11 +91,12 @@ export default async function TokenPage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         <nav aria-label={T.back} className="text-sm font-semibold text-ink-3"><Link href={`/${lang}/t`} className="hover:text-ink">← {T.back}</Link></nav>
-        <header className="mt-6 flex flex-col gap-5 rounded-3xl border border-line bg-bg-2 p-6 sm:flex-row sm:items-center sm:p-10">
+        <header data-tour="token-head" className="mt-6 flex flex-col gap-5 rounded-3xl border border-line bg-bg-2 p-6 sm:flex-row sm:items-center sm:p-10">
           <VenueLogo v={coinV} alts={coinLogos(tk.sym)} size={72} rounded="rounded-full" />
           <div className="flex-1">
             <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{sym}</h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-2">{T.desc(sym)}</p>
+            <TourButton lang={lang} className="mt-1" />
           </div>
           {tk.price !== undefined && !stable && (
             <div className="text-right">
@@ -103,7 +107,7 @@ export default async function TokenPage({ params }: { params: Params }) {
           )}
         </header>
         {unlock && (
-          <a href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
+          <a data-tour="token-unlock" href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
             <span className="font-bold text-amber">{UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
             <span className="font-mono text-ink-2">{compactUsd(unlock.usd)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
             <span className="text-ink-3">{trs(unlock.sale)}</span>
@@ -111,7 +115,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         )}
 
         {!stable && (
-          <Section title={T.promos(sym)} n={tk.promos.length}>
+          <Section title={T.promos(sym)} n={tk.promos.length} tour="token-promos">
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {tk.promos.slice(0, 30).map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={now} index={i} />)}
             </div>
@@ -120,8 +124,8 @@ export default async function TokenPage({ params }: { params: Params }) {
 
         <Section title={T.lpReward(sym)} n={tk.lpReward.length}>
           <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            {tk.lpReward.map((p) => (
-              <a key={p.id} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
+            {tk.lpReward.map((p, i) => (
+              <a key={p.id} data-tour={i === 0 ? "token-lpreward" : undefined} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{venueOf(p.exchange).name} · {p.name}</div>
@@ -137,8 +141,8 @@ export default async function TokenPage({ params }: { params: Params }) {
 
         <Section title={T.lpStake(sym)} n={tk.lpStake.length}>
           <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            {tk.lpStake.sort((a, b) => (b.pool.apr ?? 0) - (a.pool.apr ?? 0)).map(({ project: p, pool }) => (
-              <a key={`${p.id}:${pool.stake}`} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
+            {tk.lpStake.sort((a, b) => (b.pool.apr ?? 0) - (a.pool.apr ?? 0)).map(({ project: p, pool }, i) => (
+              <a key={`${p.id}:${pool.stake}`} data-tour={i === 0 ? "token-lpstake" : undefined} href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="card flex items-center gap-3 p-4">
                 <VenueLogo v={venueOf(p.exchange)} size={32} rounded="rounded-lg" />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>
@@ -153,7 +157,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         <Section title={T.earn(sym)} n={tk.earn.length}>
           <div className="mt-5 overflow-hidden rounded-2xl border border-line">
             {tk.earn.map((o, i) => (
-              <a key={i} href={o.url} target="_blank" rel="noopener" className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-0 hover:bg-white/[0.03]">
+              <a key={i} data-tour={i === 0 ? "token-earn" : undefined} href={o.url} target="_blank" rel="noopener" className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-0 hover:bg-white/[0.03]">
                 <VenueLogo v={venueOf(o.exchange)} size={28} rounded="rounded-lg" />
                 <span className="text-sm font-bold">{venueOf(o.exchange).name}</span>
                 <span className="text-xs text-ink-3">{o.type === "fixed" ? T.fixed(o.days ?? 0) : o.type === "onchain" ? T.onchain : T.flexible}{o.newUsers ? ` · ${T.newUsers}` : ""}{o.maxAmount ? ` · ${T.cap} ${o.maxAmount.toLocaleString(nfLocale(lang))}` : ""}</span>
@@ -164,7 +168,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         </Section>
 
         {related.length > 0 && (
-          <section className="mt-16">
+          <section data-tour="token-related" className="mt-16">
             <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.all}</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {related.map((x) => (
@@ -177,6 +181,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         )}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(TOKEN_TOUR, lang)} />
     </>
   );
 }

@@ -186,7 +186,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   return (
     <div>
       {/* calculator */}
-      <div className="card relative overflow-hidden p-5 hover:transform-none sm:p-7" style={{ background: "linear-gradient(135deg, rgb(200 255 61 / 0.07), transparent 55%), var(--color-surface)" }}>
+      <div data-tour="launchpools-calc" className="card relative overflow-hidden p-5 hover:transform-none sm:p-7" style={{ background: "linear-gradient(135deg, rgb(200 255 61 / 0.07), transparent 55%), var(--color-surface)" }}>
         <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-lime">
           <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 2h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1 3v3h8V5H6Zm0 5v2h2v-2H6Zm3 0v2h2v-2H9Zm3 0v5h2v-5h-2Zm-6 3v2h2v-2H6Zm3 0v2h2v-2H9Z" /></svg>
           {L.calc}
@@ -253,7 +253,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
       </div>
 
       {/* sort */}
-      <div className="mt-6 flex items-center justify-between gap-3">
+      <div data-tour="launchpools-sort" className="mt-6 flex items-center justify-between gap-3">
         <div className="font-mono text-xs text-ink-3">{rows.length} {L.statLive}</div>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1" role="group">
           {(["profit", "hedged", "apr", "end"] as Sort[]).map((s) => (
@@ -277,6 +277,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           const lvl = poolLevel(pool.stake, p.token);
           return (
             <article
+              data-tour={i === 0 ? "launchpools-cols" : undefined}
               key={`${p.id}:${pool.stake}`}
               id={`lp-${p.id}-${pool.stake}`}
               className={`card relative scroll-mt-24 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1fr_auto] lg:items-center ${isPicked ? "ring-2 ring-lime" : isBest ? "ring-1 ring-lime/50" : ""} ${lvl === "hard" ? "adv" : ""}`}
@@ -373,7 +374,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
 
               {/* hedge box + pros & cons — folded under "More" to keep the card light */}
-              <details className="group relative z-10 border-t border-line pt-3 lg:col-span-5">
+              <details data-tour={i === 0 ? "launchpools-actions" : undefined} className="group relative z-10 border-t border-line pt-3 lg:col-span-5">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-xs font-bold text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
                   <Icon name="chevronDown" className="size-4 -rotate-90 transition-transform group-open:rotate-0" />{MORE[lang]}
                 </summary>
@@ -422,7 +423,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
       {/* table — the same look as the DeFi-pools table (owner 14.11); phones keep the cards above */}
       <div className="mt-3 overflow-x-auto rounded-2xl border border-line max-sm:hidden">
         <table className="w-full min-w-[980px] text-left text-sm">
-          <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+          <thead data-tour="launchpools-cols" className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
             <tr>
               <th className="px-4 py-3">{TH[lang].pool}</th>
               <th className="px-4 py-3"><Term k="stake" lang={lang}>{L.stake}</Term> → {L.earn}</th>
@@ -433,7 +434,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {rows.map((r) => {
+            {rows.map((r, ri) => {
               const { p, pool } = r;
               const ex = exchanges[p.exchange];
               const live = p.status === "live";
@@ -497,7 +498,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                       <div className="whitespace-nowrap text-xs font-semibold text-ink-2">{live ? `${L.endsIn} ${duration(p.end - now, t.time)}` : `${L.startsIn} ${duration(p.start - now, t.time)}`}</div>
                       <div className="ml-auto mt-1.5 h-1.5 w-20 overflow-hidden rounded-full bg-white/5" title={`${prog.toFixed(0)}%`}><div className="h-full rounded-full bg-gradient-to-r from-lime to-teal" style={{ width: `${prog}%` }} /></div>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td data-tour={ri === 0 ? "launchpools-actions" : undefined} className="px-4 py-3 text-right">
                       <div className="flex justify-end gap-2">
                         <button type="button" onClick={() => setOpenRow(open ? null : k)} aria-expanded={open} className={`btn btn-ghost h-9 gap-2 whitespace-nowrap px-3 text-xs ${open ? "border-lime/50 text-ink" : ""}`}>
                           {TH[lang].more}

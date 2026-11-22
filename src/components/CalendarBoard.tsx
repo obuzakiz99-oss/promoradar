@@ -66,25 +66,25 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
   return (
     <div className="mt-8">
       {/* the page is static: dates and times are UTC everywhere, and say so (audit 14.11: "23:59" without a zone was misread) */}
-      <p className="mb-4 text-xs text-ink-3">{({ uk: "Час указано за UTC (Київ: +2 год взимку, +3 влітку)", en: "Times are UTC", ru: "Время указано по UTC (Киев: +2 ч зимой, +3 летом)" } as const)[lang]}</p>
+      <p data-tour="calendar-utc" className="mb-4 text-xs text-ink-3">{({ uk: "Час указано за UTC (Київ: +2 год взимку, +3 влітку)", en: "Times are UTC", ru: "Время указано по UTC (Киев: +2 ч зимой, +3 летом)" } as const)[lang]}</p>
       <div className="space-y-8">
         {all.slice(0, days).map(([d, list]) => (
           <section key={d}>
-            <h2 className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 text-lg font-bold backdrop-blur">
+            <h2 data-tour="calendar-day" className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 text-lg font-bold backdrop-blur">
               {d === today ? T.today : d === tomorrow ? T.tomorrow : new Date(d).toLocaleDateString(locTag(lang), { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })}
             </h2>
             <ul className="mt-2 space-y-2">
               {list.map((e) => {
                 const label = e.kind === "start" ? T.starts : T.ends;
                 return (
-                  <li key={e.id + e.kind} className="card relative flex items-center gap-3 p-3 has-[details[open]]:z-30" style={{ ["--tint" as string]: e.venue.color }}>
+                  <li key={e.id + e.kind} data-tour="calendar-row" className="card relative flex items-center gap-3 p-3 has-[details[open]]:z-30" style={{ ["--tint" as string]: e.venue.color }}>
                     <span className="w-12 shrink-0 text-sm font-bold tabular-nums text-ink-2">{new Date(e.at).toLocaleTimeString(locTag(lang), { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</span>
                     <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                     <a href={e.href} className="min-w-0 flex-1 text-sm hover:text-lime">
                       <span className={`text-xs font-bold ${e.kind === "start" ? "text-sky" : "text-amber"}`}>{label}</span>
                       <span className="line-clamp-2 break-words font-semibold">{e.venue.name}: {noEmoji(e.title)}</span>
                     </a>
-                    <details data-pop="" className="relative shrink-0">
+                    <details data-tour="calendar-add" data-pop="" className="relative shrink-0">
                       <summary aria-label={L.add} title={L.add} className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-line text-ink-2 hover:border-line-2 hover:text-ink [&::-webkit-details-marker]:hidden">
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5" /><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5" /></svg>
                       </summary>
@@ -100,7 +100,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
           </section>
         ))}
       </div>
-      {all.length > days && <div className="mt-8 flex justify-center"><button type="button" onClick={() => setDays((n) => n + 7)} className="btn btn-ghost h-12 px-6">{L.more}</button></div>}
+      {all.length > days && <div className="mt-8 flex justify-center"><button data-tour="calendar-more" type="button" onClick={() => setDays((n) => n + 7)} className="btn btn-ghost h-12 px-6">{L.more}</button></div>}
     </div>
   );
 }

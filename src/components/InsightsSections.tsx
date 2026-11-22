@@ -30,7 +30,7 @@ export function InsightsSections({ lang, data }: { lang: Locale; data: Awaited<R
         <section className="mt-12">
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{P.listTitle} <Hint lang={lang}>{P.listSub}</Hint></h2>
           {after.length === 0 ? <p className="mt-6 text-ink-3">{P.noData}</p> : (
-            <>
+            <div data-tour="history-after">
               <dl className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
                 {([["+7", median.d7], ["+30", median.d30], ["+90", median.d90], [P.listCols[5], median.now]] as const).map(([l, v]) => (
                   <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
@@ -70,14 +70,14 @@ export function InsightsSections({ lang, data }: { lang: Locale; data: Awaited<R
               )}
               </div>
               <p className="mt-3 text-xs text-ink-3">{P.method}</p>
-            </>
+            </div>
           )}
         </section>
 
         <section className="mt-16">
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{P.decayTitle} <Hint lang={lang}>{P.decaySub}</Hint></h2>
           {decay.length === 0 ? <p className="mt-6 text-ink-3">{P.noData}</p> : (
-            <>
+            <div data-tour="history-decay">
               {decayMedian !== undefined && (
                 <div className="mt-6 w-fit rounded-2xl border border-line bg-white/[0.02] px-5 py-4">
                   <div className="font-display text-3xl font-semibold text-amber">×{decayMedian.toFixed(2)}</div>
@@ -101,7 +101,7 @@ export function InsightsSections({ lang, data }: { lang: Locale; data: Awaited<R
                   </tbody>
                 </table>
               </div>
-            </>
+            </div>
           )}
         </section>
     </div>

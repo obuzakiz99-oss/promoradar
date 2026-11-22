@@ -89,16 +89,16 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
     a.download = "promoradar-deadlines.ics"; a.click();
   };
 
-  if (!rows.length) return <div className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{T.emptyMy}</div>;
+  if (!rows.length) return <div data-tour="my-empty" className="mt-10 rounded-3xl border border-dashed border-line-2 px-6 py-16 text-center text-ink-2">{T.emptyMy}</div>;
   return (
     <div className="mt-8">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div data-tour="my-stats" className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold text-lime">{money(total, "USD", lang)}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.totalEarned}</div></div>
         <div className="card p-4 hover:transform-none"><div className="font-display text-3xl font-semibold">{activeN}</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.status.joined} · {T.active}</div></div>
         <button onClick={exportCsv} className="card p-4 text-left"><div className="font-display text-3xl font-semibold">⇩</div><div className="mt-1 text-xs font-semibold text-ink-3">{T.export}</div></button>
         <button onClick={exportIcs} disabled={!withEnd.length} className="card p-4 text-left disabled:opacity-50"><div className="font-display text-3xl font-semibold">{withEnd.length}</div><div className="mt-1 text-xs font-semibold text-ink-3">{CAL_ALL[lang]}</div></button>
       </div>
-      <div className="mt-6 flex flex-wrap items-center gap-2">
+      <div data-tour="my-filters" className="mt-6 flex flex-wrap items-center gap-2">
         <div className="scroll-x -mx-1 flex min-w-0 flex-1 gap-2 px-1" role="tablist" aria-label={L.all}>
           {(["all", "joined", "saved", "done", "skipped", "ended"] as Show[]).filter((k) => k === "all" || counts[k] || show === k).map((k) => (
             <button key={k} type="button" className="chip" data-on={show === k} role="tab" aria-selected={show === k} onClick={() => setShow(k)}>
@@ -123,11 +123,11 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
       </div>
       {!view.length && <div className="mt-4 rounded-3xl border border-dashed border-line-2 px-6 py-10 text-center text-sm text-ink-2">{L.empty}</div>}
       <ul className="mt-4 space-y-2">
-        {view.map(({ id, p, tr }) => {
+        {view.map(({ id, p, tr }, i) => {
           const left = p?.endsAt ? p.endsAt - now : undefined;
           const soon = left !== undefined && left > 0 && left < 2 * 86400_000;
           return (
-            <li key={id} className={`card grid gap-3 p-4 lg:grid-cols-[1.6fr_auto_auto_1fr_auto] lg:items-center ${soon && tr.status === "joined" ? "ring-1 ring-amber/50" : ""}`} style={{ ["--tint" as string]: p?.venue.color }}>
+            <li key={id} data-tour={i === 0 ? "my-row" : undefined} className={`card grid gap-3 p-4 lg:grid-cols-[1.6fr_auto_auto_1fr_auto] lg:items-center ${soon && tr.status === "joined" ? "ring-1 ring-amber/50" : ""}`} style={{ ["--tint" as string]: p?.venue.color }}>
               <div className="flex min-w-0 items-center gap-3">
                 {p && <VenueLogo v={p.venue} size={34} />}
                 <div className="min-w-0">

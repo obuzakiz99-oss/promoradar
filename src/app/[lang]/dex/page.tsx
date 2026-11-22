@@ -10,6 +10,9 @@ import { compactUsd, nfLocale, plural } from "@/lib/format";
 import { withBase } from "@/lib/base";
 import { DexBoard } from "@/components/DexBoard";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { DEX_TOUR } from "@/lib/tours/dex";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 1800;
 type Params = Promise<{ lang: string }>;
@@ -40,11 +43,12 @@ export default async function DexPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <YieldTabs lang={lang} active="dex" updated={fetchedAt} />
+        <div data-tour="dex-tabs"><YieldTabs lang={lang} active="dex" updated={fetchedAt} /></div>
         <header className="mt-8">
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{t.aprHub.dexTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{t.aprHub.dexSub}</p>
-          <dl className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-3"><TourButton lang={lang} /></div>
+          <dl data-tour="dex-stats" className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
             {[[pools.length.toLocaleString(nfLocale(lang)), plural(pools.length, lang, "pool")], [String(protocols), plural(protocols, lang, "protocol")], [String(chains.length), plural(chains.length, lang, "chain")], [compactUsd(tvl), t.aprHub.colTvl]].map(([v, l]) => (
               <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3">
                 <dd className="font-display text-2xl font-semibold tracking-tight">{v}</dd>
@@ -59,6 +63,7 @@ export default async function DexPage({ params }: { params: Params }) {
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.dexNote} · DefiLlama</p>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(DEX_TOUR, lang)} />
     </>
   );
 }

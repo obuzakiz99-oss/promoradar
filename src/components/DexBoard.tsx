@@ -157,28 +157,28 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   return (
     <div>
       {/* category tabs */}
-      <div className="scroll-x flex gap-1.5 md:flex-wrap">
+      <div data-tour="dex-cats" className="scroll-x flex gap-1.5 md:flex-wrap">
         {["all", "DEX", ...categories.filter((c) => c !== "DEX")].map((c) => (
           <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : (CAT_L[lang][c] ?? c)}</button>
         ))}
       </div>
 
       {/* filters */}
-      <div className="relative z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
+      <div data-tour="dex-filters" className="relative z-30 -mx-4 mt-4 flex flex-wrap items-center gap-2 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
         <input value={q} onChange={(e) => setQ(e.target.value)} aria-label={A.searchPool} placeholder={A.searchPool}
           className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />
         <Select label={A.chain} value={chain} onChange={setChain} className={sel}
           options={[{ value: "all", label: `${A.chain}: ${A.all}` }, ...chains.slice(0, 60).map((c) => ({ value: c, label: c }))]} />
         <Select label={A.minTvl} value={String(minTvl)} onChange={(v) => setMinTvl(Number(v))} className={sel}
           options={TVLS.map((v) => ({ value: String(v), label: `${A.minTvl} ${compactUsd(v)}` }))} />
-        <label className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
+        <label data-tour="dex-amount" className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           {C.amount}
           <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal" placeholder="1000" aria-label={C.amount}
             className="h-8 w-24 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
         </label>
         <button className={toggle(stable)} onClick={() => setStable((x) => !x)} aria-pressed={stable}>{A.stable}</button>
         <button className={toggle(noIl)} onClick={() => setNoIl((x) => !x)} aria-pressed={noIl}>{A.noIl}</button>
-        <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1 sm:ml-auto">
+        <div data-tour="dex-sort" className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1 sm:ml-auto">
           {(["apy", "tvl", "reward"] as Sort[]).map((s) => (
             <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s} className={`h-full rounded-lg px-3 text-xs font-bold ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
               {s === "apy" ? A.sortApy : s === "tvl" ? A.sortTvl : A.sortReward}
@@ -197,11 +197,11 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       {/* phone: cards (a 940px table is unreadable on a 390px screen) */}
       {list.length > 0 && (
         <div className="mt-4 grid gap-3 sm:hidden">
-          {list.slice(0, limit).map((p) => {
+          {list.slice(0, limit).map((p, pi) => {
             const pc = dexPC(lang, p);
             const open = openId === p.id;
             return (
-              <div key={p.id} className="card p-4 hover:transform-none">
+              <div key={p.id} data-tour={pi === 0 ? "dex-cols" : undefined} className="card p-4 hover:transform-none">
                 <div className="flex items-start gap-3">
                   <VenueLogo v={logo(p)} size={32} rounded="rounded-lg" />
                   <div className="min-w-0 flex-1">
@@ -219,7 +219,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                   <div><div className="font-sans text-ink-3">{A.colTvl}</div>{compactUsd(p.tvl)}</div>
                   <div><div className="font-sans text-ink-3">{A.colAvg}</div>{pct(p.apy30d)}</div>
                 </div>
-                <div className="mt-3">{pcButton(p, pc, open, "w-full justify-center")}</div>
+                <div data-tour={pi === 0 ? "dex-actions" : undefined} className="mt-3">{pcButton(p, pc, open, "w-full justify-center")}</div>
                 {open && <div className="mt-3">{detail(p, pc)}</div>}
               </div>
             );
@@ -230,14 +230,14 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       {/* table */}
       <div className={`mt-4 overflow-x-auto rounded-2xl border border-line max-sm:hidden ${list.length === 0 ? "hidden" : ""}`}>
         <table className="w-full min-w-[940px] text-left text-sm">
-          <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+          <thead data-tour="dex-cols" className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
             <tr>
               <th className="px-4 py-3">{A.colPool}</th><th className="px-4 py-3">{A.colChain}</th><th className="px-4 py-3 text-right"><Term k="tvl" lang={lang} align="right">{A.colTvl}</Term></th>
               <th className="px-4 py-3 text-right"><Term k="apy" lang={lang} align="right">{A.colApy}</Term></th><th className="px-4 py-3 text-right text-lime">{C.col(money(amount))}</th><th className="px-4 py-3 text-right">{A.colSplit}</th><th className="px-4 py-3 text-right">{A.colAvg}</th><th className="px-4 py-3"><span className="sr-only">{({ uk: "Посилання", en: "Link", ru: "Ссылка" } as const)[lang]}</span></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {list.slice(0, limit).map((p) => {
+            {list.slice(0, limit).map((p, pi) => {
               const pc = dexPC(lang, p);
               const open = openId === p.id;
               return (
@@ -267,7 +267,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                   {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-success">{pct(p.apyReward ?? 0)}</span></>}
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-3">{pct(p.apy30d)}</td>
-                <td className="px-4 py-3 text-right">
+                <td data-tour={pi === 0 ? "dex-actions" : undefined} className="px-4 py-3 text-right">
                   <div className="flex justify-end">{pcButton(p, pc, open, "whitespace-nowrap")}</div>
                 </td>
               </tr>
@@ -284,7 +284,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
           </tbody>
         </table>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-3 text-xs text-ink-3">
+      <div data-tour="dex-more" className="mt-4 flex items-center justify-between gap-3 text-xs text-ink-3">
         <span className="font-mono">{A.shown.charAt(0).toUpperCase()}{A.shown.slice(1)} {Math.min(limit, list.length)} {A.of} {total.toLocaleString(lang === "en" ? "en-US" : "uk-UA")}{minTvl > 0 ? ` · TVL ≥ $${minTvl >= 1e6 ? `${minTvl / 1e6}M` : `${minTvl / 1e3}K`}` : ""}</span>
         {(list.length > limit || (!touched && total > list.length)) && <button onClick={() => setLimit((l) => l + PAGE)} className="btn btn-ghost h-10 px-5 text-sm">{A.more}</button>}
       </div>

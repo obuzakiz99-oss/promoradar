@@ -10,6 +10,9 @@ import { CalAdd } from "@/components/CalAdd";
 import { Hint } from "@/components/Hint";
 import { Icon } from "@/components/Icon";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { SALES_TOUR } from "@/lib/tours/sales";
+import { tourOf } from "@/lib/tours/types";
 import { coinMonogram } from "@/lib/coinlogo";
 import { VENUES, SITE, venueOf } from "@/config/site";
 
@@ -72,7 +75,7 @@ export default async function SalesPage({ params }: { params: Params }) {
   const Row = ({ s }: { s: Sale }) => {
     const at = s.status === "upcoming" ? s.startsAt : s.endsAt;
     return (
-      <li className="card flex flex-wrap items-center gap-x-4 gap-y-3 p-4 hover:transform-none">
+      <li data-tour="sales-row" className="card flex flex-wrap items-center gap-x-4 gap-y-3 p-4 hover:transform-none">
         <VenueLogo v={logoOf(s)} size={40} rounded="rounded-xl" />
         <div className="min-w-0 flex-1 basis-56">
           <div className="flex flex-wrap items-center gap-2">
@@ -81,7 +84,7 @@ export default async function SalesPage({ params }: { params: Params }) {
           </div>
           <div className="mt-0.5 text-sm text-ink-2">{s.where}{s.category ? <span className="text-ink-3"> · {s.category}</span> : null}</div>
         </div>
-        <div className="min-w-32 text-sm">
+        <div data-tour="sales-time" className="min-w-32 text-sm">
           <div className={`font-mono font-bold ${at && at - now < 2 * 86400_000 ? "text-amber" : "text-ink"}`}>
             {at ? `${s.status === "upcoming" ? T.starts : T.ends} ${duration(at - now, t.time)}` : <span className="font-sans font-normal text-ink-3">{T.noDate}</span>}
           </div>
@@ -89,7 +92,7 @@ export default async function SalesPage({ params }: { params: Params }) {
             <div className="mt-0.5 font-mono text-xs text-ink-3">{s.raised ? `${T.raised} ${s.raised}` : ""}{s.raised && s.valuation ? " · " : ""}{s.valuation ? `${T.val} ${s.valuation}` : ""}</div>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div data-tour="sales-actions" className="flex items-center gap-2">
           {at && at > now && <CalAdd lang={lang} file={`sale-${s.ticker ?? s.name}`} ev={{
             uid: s.id.replace(/[^a-z0-9]/gi, "-"), at: s.status === "upcoming" ? at - 3600_000 : at - 6 * 3600_000,
             title: T.cal(s.ticker ?? s.name), description: `${s.where}${s.raised ? ` · ${s.raised}` : ""}`,
@@ -110,22 +113,23 @@ export default async function SalesPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <CalendarTabs lang={lang} active="sales" updated={fetchedAt} />
+        <div data-tour="sales-tabs"><CalendarTabs lang={lang} active="sales" updated={fetchedAt} /></div>
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
+        <TourButton lang={lang} className="mt-3" />
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-          <ol className="card space-y-2.5 p-5 text-sm hover:transform-none">
+          <ol data-tour="sales-how" className="card space-y-2.5 p-5 text-sm hover:transform-none">
             {T.how.map((h, i) => (
               <li key={i} className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-md bg-lime/10 font-mono text-xs font-bold text-lime">{i + 1}</span><span className="text-ink-2">{h}</span></li>
             ))}
           </ol>
-          <p className="rounded-2xl border border-amber/30 bg-amber/[0.05] p-5 text-sm leading-relaxed text-ink-2"><Icon name="alert" className="text-amber" /> {T.risk}</p>
+          <p data-tour="sales-risk" className="rounded-2xl border border-amber/30 bg-amber/[0.05] p-5 text-sm leading-relaxed text-ink-2"><Icon name="alert" className="text-amber" /> {T.risk}</p>
         </div>
 
         {/* pre-IPO tokens: one block per company, every exchange that has it (owner 13.11) */}
         {preIpo.map((g) => (
-          <section key={g.company} className="mt-10 rounded-2xl border border-lime/25 bg-lime/[0.04] p-5">
+          <section key={g.company} data-tour="sales-preipo" className="mt-10 rounded-2xl border border-lime/25 bg-lime/[0.04] p-5">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{PI.title(g.company, g.ticker)} <span className="font-mono text-base text-ink-3">· {g.venues.length} {({ uk: g.venues.length === 1 ? "біржа" : g.venues.length < 5 ? "біржі" : "бірж", en: g.venues.length === 1 ? "exchange" : "exchanges", ru: g.venues.length === 1 ? "биржа" : g.venues.length < 5 ? "биржи" : "бирж" } as const)[lang]}</span></h2>
             <p className="mt-1 max-w-3xl text-sm text-ink-2">{PI.sub}</p>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -149,7 +153,7 @@ export default async function SalesPage({ params }: { params: Params }) {
         {!icoOk && <p className="mt-6 text-xs text-ink-3">{T.noIco}</p>}
         {sales.length === 0 ? <p className="mt-10 rounded-2xl border border-dashed border-line-2 p-8 text-center text-ink-2">{T.none}</p> : groups.filter(([, l]) => l.length).map(([h, l]) => (
           <section key={h} className="mt-10">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">{h} <span className="font-mono text-base text-ink-3">{l.length}</span></h2>
+            <h2 data-tour="sales-group" className="font-display text-2xl font-semibold tracking-tight">{h} <span className="font-mono text-base text-ink-3">{l.length}</span></h2>
             <ul className="mt-4 space-y-2">{l.map((s) => <Row key={s.id} s={s} />)}</ul>
           </section>
         ))}
@@ -157,6 +161,7 @@ export default async function SalesPage({ params }: { params: Params }) {
         <div className="mt-6 text-xs text-ink-3"><a href={SALES_SRC} target="_blank" rel="noopener" className="font-bold text-ink-2 hover:text-ink">{T.src} ↗</a> <Hint lang={lang}>{T.risk}</Hint></div>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(SALES_TOUR, lang)} />
     </>
   );
 }

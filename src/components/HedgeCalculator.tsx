@@ -72,7 +72,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
   return (
     <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.1fr]">
       <div className="card p-5 hover:transform-none sm:p-6">
-        <div>
+        <div data-tour="hedge-pick">
           <span className="text-xs font-semibold text-ink-3">{T.pickPool}</span>
           <div className="mt-1">
             <Select label={T.pickPool} value={sel} onChange={pick} className="h-11 rounded-xl border border-line bg-surface px-3 text-sm font-bold text-ink"
@@ -80,7 +80,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
               options={[...options.map((o) => ({ value: o.key, label: o.label })), { value: "custom", label: T.custom }]} />
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div data-tour="hedge-inputs" className="mt-4 grid grid-cols-2 gap-3">
           {field("capital", T.capital, "100")}
           {field("price", T.price)}
           {field("apr", T.apr)}
@@ -94,7 +94,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
       </div>
 
       <div className="space-y-4">
-        <div className="card p-5 hover:transform-none sm:p-6">
+        <div data-tour="hedge-plan" className="card p-5 hover:transform-none sm:p-6">
           <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.plan}</h2>
           <ol className="mt-3 space-y-2.5 text-sm">
             {[T.step1, T.step2, T.step3, T.step4, T.step5].map((s, i) => (
@@ -105,14 +105,14 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
             const up = (r.liq / r.c.price - 1) * 100;
             const risky = up < 15;
             return (
-              <div className={`mt-4 rounded-xl px-4 py-3 text-sm ${risky ? "bg-rose/10" : "bg-white/[0.03]"}`}>
+              <div data-tour="hedge-liq" className={`mt-4 rounded-xl px-4 py-3 text-sm ${risky ? "bg-rose/10" : "bg-white/[0.03]"}`}>
                 {T.liq}: <span className={`font-mono font-bold ${risky ? "text-rose" : "text-ink"}`}>${num(r.liq)}</span> <span className="text-ink-3">{T.liqUp.replace("{x}", `${up.toLocaleString(lc, { maximumFractionDigits: 0 })}%`)}</span>
                 {risky && <p className="mt-1 text-xs font-semibold text-rose">{CT.risky}</p>}
               </div>
             );
           })()}
         </div>
-        <div className="card p-5 hover:transform-none sm:p-6">
+        <div data-tour="hedge-result" className="card p-5 hover:transform-none sm:p-6">
           <dl className="space-y-2 text-sm">
             {[[T.capitalTotal, usd(r.total)], [T.rewards, `+${usd(r.rewards)}`], [T.fundingTotal, `${r.funding >= 0 ? "+" : ""}${usd(r.funding)}`], [T.costs, `−${usd(r.costs)}`]].map(([k, x]) => (
               <div key={k} className="flex justify-between gap-4"><dt className="text-ink-3">{k}</dt><dd className="font-mono font-bold">{x}</dd></div>

@@ -11,6 +11,9 @@ import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { CalendarBoard, type CalEvent } from "@/components/CalendarBoard";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { CALENDAR_TOUR } from "@/lib/tours/calendar";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -44,13 +47,15 @@ export default async function Calendar({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <header>
-          <CalendarTabs lang={lang} active="calendar" updated={fetchedAt} />
+          <div data-tour="calendar-tabs"><CalendarTabs lang={lang} active="calendar" updated={fetchedAt} /></div>
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.calTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.calSub}</p>
+          <TourButton lang={lang} className="mt-3" />
         </header>
         <CalendarBoard events={events} lang={lang} now={now} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(CALENDAR_TOUR, lang)} />
     </>
   );
 }

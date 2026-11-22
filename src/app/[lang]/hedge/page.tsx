@@ -8,6 +8,9 @@ import { getPools } from "@/lib/pools";
 import { HedgeCalculator } from "@/components/HedgeCalculator";
 import { hedgeOptions } from "@/lib/hedge-options";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { HEDGE_TOUR } from "@/lib/tours/hedge";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 300;
 type Params = Promise<{ lang: string }>;
@@ -32,10 +35,12 @@ export default async function HedgePage({ params }: { params: Params }) {
           <YieldTabs lang={lang} active="hedge" />
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.hedgeTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.hedgeSub}</p>
+          <TourButton lang={lang} className="mt-3" />
         </header>
         <HedgeCalculator options={options} lang={lang} />
       </main>
       <Footer t={t} fetchedAt={pools.fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(HEDGE_TOUR, lang)} />
     </>
   );
 }

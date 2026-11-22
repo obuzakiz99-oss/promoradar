@@ -17,6 +17,9 @@ import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { PROX } from "@/lib/i18n-pro";
 import { Icon, type IconName } from "@/components/Icon";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { LAUNCHPOOLS_TOUR } from "@/lib/tours/launchpools";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 300; // pools move fast: 5 min
 
@@ -89,13 +92,14 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* hero */}
         <section className="relative mx-auto max-w-7xl px-4 pb-8 pt-10 sm:px-6">
           <div className="pointer-events-none absolute right-0 top-0 -z-10 size-[28rem] rounded-full bg-lime/10 blur-3xl" />
-          <div className="mb-8"><YieldTabs lang={lang} active="lp" updated={fetchedAt} /></div>
+          <div data-tour="launchpools-tabs" className="mb-8"><YieldTabs lang={lang} active="lp" updated={fetchedAt} /></div>
           <h1 className="mt-5 max-w-3xl font-display text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
             <span className="text-gradient">Launchpool</span> Radar
             <span className="mt-2 block text-[0.55em] font-medium leading-tight text-ink-2">{L.title}</span>
           </h1>
           <p className="mt-5 max-w-2xl text-ink-2 sm:text-lg">{L.sub}</p>
-          <dl className="mt-6 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+          <div className="mt-3"><TourButton lang={lang} /></div>
+          <dl data-tour="launchpools-stats" className="mt-6 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
             {[
               [String(livePools.length), L.statLive],
               [rewardsUsd ? compactUsd(rewardsUsd) : "—", L.statRewards],
@@ -155,7 +159,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         </section>
 
         {/* exchanges without an API: their cards are mixed into the board above; here — links to their official pages */}
-        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+        <section data-tour="launchpools-ann" className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
           <p className="text-sm text-ink-3">{L.annSub}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {ANN_IDS.map((id) => (
@@ -184,8 +188,8 @@ export default async function Launchpools({ params }: { params: Params }) {
         <section className="adv mx-auto max-w-7xl px-4 pt-16 sm:px-6">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.statsTitle}</h2>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.id} className="card p-5 hover:transform-none" style={{ ["--tint" as string]: exchanges[s.id].color }}>
+            {stats.map((s, si) => (
+              <div key={s.id} data-tour={si === 0 ? "launchpools-exstats" : undefined} className="card p-5 hover:transform-none" style={{ ["--tint" as string]: exchanges[s.id].color }}>
                 <div className="flex items-center gap-3">
                   <VenueLogo v={exchanges[s.id]} size={34} />
                   <span className="font-bold">{exchanges[s.id].name}</span>
@@ -206,10 +210,10 @@ export default async function Launchpools({ params }: { params: Params }) {
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{L.archive}</h2>
           <p className="mt-1.5 text-sm text-ink-3">{L.archiveSub}</p>
           {(() => {
-            const tableOf = (rows: typeof archive) => (
+            const tableOf = (rows: typeof archive, first = false) => (
             <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-6 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[760px] text-left text-sm">
-                <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
+                <thead data-tour={first ? "launchpools-archive" : undefined} className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[L.colToken, L.colEx, L.colDate, L.colStake, L.colApr, L.colReward, L.colUsers].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
                 </thead>
                   <tbody className="divide-y divide-line">
@@ -238,7 +242,7 @@ export default async function Launchpools({ params }: { params: Params }) {
             );
             return (
               <>
-                {tableOf(archive.slice(0, 10))}
+                {tableOf(archive.slice(0, 10), true)}
                 {archive.length > 10 && (
                   <details className="group mt-3">
                     <summary className="btn btn-ghost mx-auto flex h-11 w-fit cursor-pointer list-none px-5 text-sm [&::-webkit-details-marker]:hidden">
@@ -267,6 +271,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         </section>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(LAUNCHPOOLS_TOUR, lang)} />
     </>
   );
 }

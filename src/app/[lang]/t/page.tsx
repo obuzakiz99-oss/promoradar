@@ -7,6 +7,9 @@ import { getTokens, isStableSym } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
 import { TokenIndex, type TokenRow } from "@/components/TokenIndex";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { TOKENS_TOUR } from "@/lib/tours/tokens";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -42,6 +45,7 @@ export default async function Tokens({ params }: { params: Params }) {
         <PromoTabs lang={lang} active="tokens" />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-2 max-w-2xl text-ink-2">{T.sub}</p>
+        <TourButton lang={lang} className="mt-2" />
         <TokenIndex rows={rows} labels={{ search: T.search, promos: T.promos, lp: T.lp, earn: T.earn, empty: T.empty, ...({
           uk: { gPromos: "З акціями", gLp: "З Launchpool", gEarn: "Лише Earn", more: "Показати ще {n}" },
           en: { gPromos: "With promos", gLp: "With a Launchpool", gEarn: "Earn only", more: "Show {n} more" },
@@ -49,6 +53,7 @@ export default async function Tokens({ params }: { params: Params }) {
         } as const)[lang] }} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(TOKENS_TOUR, lang)} />
     </>
   );
 }

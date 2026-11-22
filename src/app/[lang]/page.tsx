@@ -16,6 +16,8 @@ import { getPools } from "@/lib/pools";
 import { HowItWorks, ProSection, AdsSection, Footer } from "@/components/Sections";
 import { SiteTour } from "@/components/SiteTour";
 import { TOUR_LABEL, tourHref } from "@/lib/tour";
+import { HOME_TOUR } from "@/lib/tours/home";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900; // 15 min, same as SITE.revalidateSeconds
 
@@ -64,7 +66,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
       {/* owner 21.11: first-visit "how to use the site" tour (asks first; replay via ?tour=1) */}
-      <SiteTour lang={lang} />
+      <SiteTour lang={lang} {...tourOf(HOME_TOUR, lang)} />
     </>
   );
 }

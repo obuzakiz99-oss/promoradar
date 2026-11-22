@@ -16,6 +16,9 @@ import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
 import { Hint } from "@/components/Hint";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { HISTORY_TOUR } from "@/lib/tours/history";
+import { tourOf } from "@/lib/tours/types";
 
 type Params = Promise<{ lang: string }>;
 const COINS = ["USDT", "USDC", "BTC", "ETH"];
@@ -99,6 +102,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <YieldTabs lang={lang} active="history" updated={pools.fetchedAt} />
           <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.histTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{T.histSub}</p>
+          <TourButton lang={lang} className="mt-3" />
         </header>
 
         {/* ---- how APR is falling now ---- */}
@@ -106,8 +110,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.drop} <Hint lang={lang}>{X.dropSub}</Hint></h2>
           {S.drop.length === 0 ? <p className="mt-6 rounded-2xl border border-dashed border-line-2 px-6 py-10 text-center text-ink-2">{X.dropNone}</p> : (
             <>
-              <div className="card mt-5 p-5 hover:transform-none"><ChartPicker series={dropSeries} lang={lang} locale={locale} height={260} signed /></div>
-              <div tabIndex={0} role="region" aria-label={`${X.drop} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} className="mt-4 overflow-x-auto rounded-2xl border border-line">
+              <div data-tour="history-drop-chart" className="card mt-5 p-5 hover:transform-none"><ChartPicker series={dropSeries} lang={lang} locale={locale} height={260} signed /></div>
+              <div tabIndex={0} role="region" aria-label={`${X.drop} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} data-tour="history-drop-table" className="mt-4 overflow-x-auto rounded-2xl border border-line">
                 <table className="w-full min-w-[620px] text-left text-sm">
                   <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.dropCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
                   <tbody className="divide-y divide-line">
@@ -131,7 +135,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
         {/* ---- typical decay curve: shown only once ≥ 10 pools back it (audit 08.11: ×1.25 / ×0.09 on 3 pools misled) ---- */}
         {Math.max(0, ...curve.map((c) => c.n ?? 0)) >= 10 && <section className="mt-14">
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.curve} <Hint lang={lang}>{X.curveSub}</Hint></h2>
-          <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+          <div data-tour="history-curve" className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {curve.map((c) => (
               <div key={c.h} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
                 <div className={`font-display text-2xl font-semibold ${c.ratio === undefined ? "text-ink-3" : c.ratio < 0.7 ? "text-rose" : c.ratio < 0.95 ? "text-amber" : "text-lime"}`}>{c.ratio === undefined ? "…" : `×${c.ratio.toFixed(2)}`}</div>
@@ -145,6 +149,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
         {/* ---- 3-month statistics ---- */}
         <section className="mt-16">
           <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{X.past} <Hint lang={lang}>{X.pastSub}</Hint></h2>
+          <div data-tour="history-stats">
           <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {([
               [String(S.totals.projects), X.tiles[0]], [String(S.totals.pools), X.tiles[1]],
@@ -181,10 +186,11 @@ export default async function HistoryPage({ params }: { params: Params }) {
               </div>
             </div>
           )}
+          </div>
 
           {/* per exchange */}
           <h3 className="mt-10 text-lg font-bold">{X.exTitle}</h3>
-          <div tabIndex={0} role="region" aria-label={`${X.exTitle} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} className="mt-3 overflow-x-auto rounded-2xl border border-line">
+          <div tabIndex={0} role="region" aria-label={`${X.exTitle} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} data-tour="history-ex" className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[600px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.exCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">
@@ -204,7 +210,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
 
           {/* every pool */}
           <h3 className="mt-10 text-lg font-bold">{X.list}</h3>
-          <div tabIndex={0} role="region" aria-label={`${X.list} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} className="mt-3 overflow-x-auto rounded-2xl border border-line">
+          <div tabIndex={0} role="region" aria-label={`${X.list} — ${({ uk: "гортайте вбік", en: "scroll sideways", ru: "листайте вбок" } as const)[lang]}`} data-tour="history-list" className="mt-3 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3"><tr>{X.listCols.map((c, i) => <th key={c} className={`px-4 py-3 ${i >= 4 ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
               <tbody className="divide-y divide-line">
@@ -243,6 +249,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
         {snaps.length > 0 && <p className="mt-6 font-mono text-xs text-ink-3">{snaps.length} snapshots · {new Date(snaps[0].t).toISOString().slice(0, 16)} → {new Date(snaps[snaps.length - 1].t).toISOString().slice(0, 16)} UTC</p>}
       </main>
       <Footer t={t} fetchedAt={pools.fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(HISTORY_TOUR, lang)} />
     </>
   );
 }

@@ -10,6 +10,9 @@ import { EarnBoard } from "@/components/EarnBoard";
 import { Footer } from "@/components/Sections";
 import { withBase } from "@/lib/base";
 import { plural } from "@/lib/format";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { EARN_TOUR } from "@/lib/tours/earn";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -39,11 +42,12 @@ export default async function EarnPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <YieldTabs lang={lang} active="earn" updated={fetchedAt} />
+        <div data-tour="earn-tabs"><YieldTabs lang={lang} active="earn" updated={fetchedAt} /></div>
         <header className="mt-8">
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{t.aprHub.earnTitle}</h1>
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{t.aprHub.earnSub}</p>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-3"><TourButton lang={lang} /></div>
+          <div data-tour="earn-venues" className="mt-5 flex flex-wrap gap-2">
             {ids.map((id) => (
               <span key={id} className="flex h-9 items-center gap-2 rounded-xl border border-line bg-white/[0.02] pl-1.5 pr-3 text-sm font-bold text-ink-2">
                 <span className={`size-1.5 rounded-full ${status[id]?.ok ? "bg-lime" : "bg-rose"}`} />
@@ -59,6 +63,7 @@ export default async function EarnPage({ params }: { params: Params }) {
         <p className="mt-8 text-xs text-ink-3">{t.aprHub.note}</p>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(EARN_TOUR, lang)} />
     </>
   );
 }

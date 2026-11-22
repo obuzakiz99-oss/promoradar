@@ -1,71 +1,48 @@
 "use client";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { TourStep } from "@/lib/tours/types";
 
 /**
- * "How to use the site" tour (owner 21.11): on the first visit a small prompt asks "first time here?"; yes → a step-by-step
- * walk over the home page that highlights one element at a time and says what it is for. Nothing is hidden or changed
- * (unlike the beginner mode removed 06.11). Replay: any link to `?tour=1` (hero, footer, /learn/).
- * Targets are `[data-tour=…]` attributes; a step whose element is missing or not visible (the radar on phones) is skipped.
+ * "How to use the site" tours (owner 21.11, per page since 22.11): one element highlighted at a time with a short
+ * explanation; nothing on the page is hidden or changed (unlike the beginner mode removed 06.11).
+ *  • steps come from src/lib/tours/<page>.ts — the server page passes only its own language;
+ *  • targets are `[data-tour=…]`; a step whose element is missing or invisible is skipped;
+ *  • start: <TourButton> on the page (event "pr:tour"), `?tour=<anything>` in the address, or the prompt below.
+ * Prompts (localStorage):
+ *  `pr:tour` unset          → "First time on PromoRadar?" (yes → this page's tour; no → never ask again);
+ *  `pr:tour` = done         → a newcomer: on the first visit of each other page "Explain this page?" (`pr:tour:<id>`);
+ *  `pr:tour` = no / qa      → never ask (qa = automated tests).
  */
 type L = "uk" | "en" | "ru";
-type Step = { sel?: string; title: string; text: string };
 const KEY = "pr:tour";
 const TOP = 76;                                   // below the sticky 64px header
+export const TOUR_EVENT = "pr:tour";
 
-const UI: Record<L, { ask: string; askSub: string; yes: string; no: string; next: string; back: string; done: string; skip: string; of: string; label: string }> = {
-  uk: { ask: "Вперше на PromoRadar?", askSub: "Покажемо за хвилину, що тут для чого.", yes: "Так, покажіть", no: "Ні, я розберусь", next: "Далі", back: "Назад", done: "Зрозуміло", skip: "Пропустити", of: "з", label: "Як користуватися сайтом" },
-  en: { ask: "First time on PromoRadar?", askSub: "A one-minute tour of what is where.", yes: "Yes, show me", no: "No thanks", next: "Next", back: "Back", done: "Got it", skip: "Skip", of: "of", label: "How to use the site" },
-  ru: { ask: "Впервые на PromoRadar?", askSub: "Покажем за минуту, что здесь для чего.", yes: "Да, покажите", no: "Нет, разберусь", next: "Далее", back: "Назад", done: "Понятно", skip: "Пропустить", of: "из", label: "Как пользоваться сайтом" },
+const UI: Record<L, { ask: string; askSub: string; yes: string; no: string; page: (n: string) => string; pageSub: string; later: string; never: string; next: string; back: string; done: string; skip: string; of: string }> = {
+  uk: { ask: "Вперше на PromoRadar?", askSub: "Покажемо, що на цій сторінці для чого.", yes: "Так, покажіть", no: "Ні, я розберусь", page: (n) => `Пояснити сторінку «${n}»?`, pageSub: "Коротко покажемо, що тут для чого.", later: "Не зараз", never: "Більше не питати", next: "Далі", back: "Назад", done: "Зрозуміло", skip: "Пропустити", of: "з" },
+  en: { ask: "First time on PromoRadar?", askSub: "A quick tour of what is where on this page.", yes: "Yes, show me", no: "No thanks", page: (n) => `Explain the “${n}” page?`, pageSub: "A quick tour of what is where here.", later: "Not now", never: "Don’t ask again", next: "Next", back: "Back", done: "Got it", skip: "Skip", of: "of" },
+  ru: { ask: "Впервые на PromoRadar?", askSub: "Покажем, что на этой странице для чего.", yes: "Да, покажите", no: "Нет, разберусь", page: (n) => `Объяснить страницу «${n}»?`, pageSub: "Коротко покажем, что здесь для чего.", later: "Не сейчас", never: "Больше не спрашивать", next: "Далее", back: "Назад", done: "Понятно", skip: "Пропустить", of: "из" },
 };
 
-const STEPS: Record<L, Step[]> = {
-  uk: [
-    { sel: "radar", title: "Радар бірж", text: "Кожна точка — біржа. Що ближче до центру, то більше в неї зараз акцій. Натисніть на точку, щоб побачити її найкращі акції." },
-    { sel: "stats", title: "Коротко про зараз", text: "Скільки акцій активні, найбільша сума, яку може отримати одна людина, і зі скількох бірж ми збираємо дані. Нижче — коли список оновився востаннє." },
-    { sel: "sections", title: "Розділи акцій", text: "«Усі акції» — повний список. «Аірдропи» — роздачі токенів. «0% комісії» — де зараз торгувати без комісії. «За монетою» — усе по одному токену." },
-    { sel: "tools", title: "Пошук, сортування, фільтри", text: "Шукайте біржу чи монету. «Найвигідніші» ставить першими акції, де звичайний учасник реально отримає більше. «Фільтри» — без вкладень, поріг до $100, для нових користувачів, тип біржі, ваша країна." },
-    { sel: "cats", title: "Типи акцій", text: "Змагання, бонуси за депозит, Earn, реферальні та інші. Число поруч — скільки таких акцій активні зараз." },
-    { sel: "card", title: "Картка акції", text: "Зверху біржа, тип акції і позначки: «Нова», «Скоро кінець». Заголовок — суть акції простими словами, без рекламних слів біржі." },
-    { sel: "card-money", title: "Скільки можна отримати", text: "«≈ $…» — наша оцінка, скільки отримає звичайний учасник після витрат. «На 1 людину» — максимум за правилами, «Фонд» — на всіх учасників. Справа — скільки часу лишилось. Кнопка нижче відкриває умови й кроки участі." },
-    { sel: "card-actions", title: "Зберегти або приховати", text: "★ зберігає акцію в «Мої» — там зручно стежити за тим, що вам цікаво. Перекреслене око прибирає акцію зі стрічки." },
-    { sel: "nav", title: "Інші розділи", text: "«Дохідність» — Launchpool, Earn і DeFi-пули з відсотками. «Розлоки» — коли розблоковуються токени. «Новачкам» — основи крипти й безпеки. «Мої» — збережені акції." },
-    { title: "Готово", text: "Почніть із сортування «Найвигідніші» і фільтра «Без вкладень». Повторити тур можна за посиланням «Як користуватися сайтом» вгорі й унизу головної." },
-  ],
-  en: [
-    { sel: "radar", title: "Exchange radar", text: "Each dot is an exchange. The closer to the centre, the more promos it runs right now. Tap a dot to see its best promos." },
-    { sel: "stats", title: "Right now", text: "How many promos are live, the most one person can get, and how many exchanges we collect from. Below: when the list was last updated." },
-    { sel: "sections", title: "Promo sections", text: "“All promos” is the full list. “Airdrops” are token giveaways. “0% fees” shows where to trade with no fees. “By coin” gathers everything for one token." },
-    { sel: "tools", title: "Search, sort, filters", text: "Search for an exchange or a coin. “Best value” puts first the promos where an ordinary participant actually gets more. “Filters”: no deposit, entry under $100, new users, exchange type, your country." },
-    { sel: "cats", title: "Promo types", text: "Competitions, deposit bonuses, Earn, referrals and more. The number shows how many are live now." },
-    { sel: "card", title: "Promo card", text: "At the top: the exchange, the promo type and tags like “New” or “Ending soon”. The title is the gist in plain words, without the exchange’s ad copy." },
-    { sel: "card-money", title: "What you can get", text: "“≈ $…” is our estimate of what an ordinary participant gets after costs. “Per person” is the maximum by the rules, “Pool” is shared by everyone. On the right: time left. The button below opens the rules and steps." },
-    { sel: "card-actions", title: "Save or hide", text: "★ saves the promo to “Saved”, handy for keeping track. The crossed-out eye removes it from your feed." },
-    { sel: "nav", title: "Other sections", text: "“Yield”: Launchpool, Earn and DeFi pools with interest. “Unlocks”: when tokens unlock. “Beginners”: crypto and safety basics. “Saved”: your saved promos." },
-    { title: "Done", text: "Start with the “Best value” sort and the “No deposit” filter. You can replay this tour with the “How to use the site” link at the top and bottom of the home page." },
-  ],
-  ru: [
-    { sel: "radar", title: "Радар бирж", text: "Каждая точка — биржа. Чем ближе к центру, тем больше у неё сейчас акций. Нажмите на точку, чтобы увидеть её лучшие акции." },
-    { sel: "stats", title: "Коротко о сейчас", text: "Сколько акций активны, наибольшая сумма, которую может получить один человек, и со скольких бирж мы собираем данные. Ниже — когда список обновился в последний раз." },
-    { sel: "sections", title: "Разделы акций", text: "«Все акции» — полный список. «Аирдропы» — раздачи токенов. «0% комиссии» — где сейчас торговать без комиссии. «По монете» — всё по одному токену." },
-    { sel: "tools", title: "Поиск, сортировка, фильтры", text: "Ищите биржу или монету. «Самые выгодные» ставит первыми акции, где обычный участник реально получит больше. «Фильтры» — без вложений, порог до $100, для новых пользователей, тип биржи, ваша страна." },
-    { sel: "cats", title: "Типы акций", text: "Соревнования, бонусы за депозит, Earn, реферальные и другие. Число рядом — сколько таких акций активны сейчас." },
-    { sel: "card", title: "Карточка акции", text: "Сверху биржа, тип акции и пометки: «Новая», «Скоро конец». Заголовок — суть акции простыми словами, без рекламных слов биржи." },
-    { sel: "card-money", title: "Сколько можно получить", text: "«≈ $…» — наша оценка, сколько получит обычный участник после затрат. «На 1 человека» — максимум по правилам, «Фонд» — на всех участников. Справа — сколько времени осталось. Кнопка ниже открывает условия и шаги участия." },
-    { sel: "card-actions", title: "Сохранить или скрыть", text: "★ сохраняет акцию в «Мои» — там удобно следить за тем, что вам интересно. Перечёркнутый глаз убирает акцию из ленты." },
-    { sel: "nav", title: "Другие разделы", text: "«Доходность» — Launchpool, Earn и DeFi-пулы с процентами. «Разлоки» — когда разблокируются токены. «Новичкам» — основы крипты и безопасности. «Мои» — сохранённые акции." },
-    { title: "Готово", text: "Начните с сортировки «Самые выгодные» и фильтра «Без вложений». Повторить тур можно по ссылке «Как пользоваться сайтом» вверху и внизу главной." },
-  ],
-};
-
-const visible = (el: Element) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== "hidden"; };
+const visible = (el: Element) => { const r = el.getBoundingClientRect(); return r.width > 4 && r.height > 4 && getComputedStyle(el).visibility !== "hidden"; };
 const find = (sel?: string) => (sel ? [...document.querySelectorAll(`[data-tour="${sel}"]`)].find(visible) ?? null : null);
-const store = (v: string) => { try { localStorage.setItem(KEY, v); } catch { /* storage blocked */ } };
+const get = (k: string) => { try { return localStorage.getItem(k); } catch { return "no"; } };   // storage blocked → don't nag
+const put = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* storage blocked */ } };
 
 type Box = { top: number; left: number; width: number; height: number };
 
-export function SiteTour({ lang }: { lang: L }) {
-  const U = UI[lang], steps = STEPS[lang];
-  const [ask, setAsk] = useState(false);
+/** «Term — explanation» → the term in bold. */
+function Point({ s }: { s: string }) {
+  const k = s.indexOf(" — ");
+  return <li className="relative pl-3.5 before:absolute before:left-0 before:top-[0.6em] before:size-1.5 before:rounded-full before:bg-lime/70">{k > 0 ? <><b className="font-bold text-ink">{s.slice(0, k)}</b>{s.slice(k)}</> : s}</li>;
+}
+
+export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; name: string; steps: TourStep[] }) {
+  const U = UI[lang];
+  // only the steps whose element is on this page right now (a promo without a calculator, an empty table…), so that
+  // «3 of 7» counts what the user will see
+  const [steps, setSteps] = useState<TourStep[]>(all);
+  const [ask, setAsk] = useState<"" | "new" | "page">("");
   const [i, setI] = useState(-1);                 // -1 = tour closed
   const [box, setBox] = useState<Box | null>(null);
   const [card, setCard] = useState<{ top: number; left: number } | null>(null);
@@ -74,29 +51,35 @@ export function SiteTour({ lang }: { lang: L }) {
   const back = useRef<Element | null>(null);
   const dir = useRef(1);
 
-  // first visit → the prompt; `?tour=1` → straight into the tour
+  const start = useCallback(() => { back.current = document.activeElement; setSteps(all.filter((s) => !s.sel || find(s.sel))); setAsk(""); dir.current = 1; setI(0); }, [all]);
+
+  // `?tour=…` → straight into the tour; else the prompt (see the header comment)
   useEffect(() => {
+    // before 22.11 only the home page had a tour: anyone who answered then has seen it
+    if (get(KEY) && !get(`${KEY}:v`)) { put(`${KEY}:home`, "done"); put(`${KEY}:v`, "2"); }
     const q = new URLSearchParams(location.search);
-    if (q.get("tour") === "1") {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    if (q.has("tour")) {
       q.delete("tour");
       history.replaceState(null, "", location.pathname + (q.size ? `?${q}` : "") + location.hash);
-      const t = setTimeout(() => start(), 400);
-      return () => clearTimeout(t);
+      t = setTimeout(start, 400);
+    } else {
+      const g = get(KEY);
+      const mode = g === null ? "new" : g === "done" && get(`${KEY}:${id}`) === null ? "page" : "";
+      if (mode) t = setTimeout(() => setAsk(mode), 1500);
     }
-    let seen = true;
-    try { seen = localStorage.getItem(KEY) !== null; } catch { /* storage blocked → don't nag */ }
-    if (seen) return;
-    const t = setTimeout(() => setAsk(true), 1500);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const onStart = () => start();
+    addEventListener(TOUR_EVENT, onStart);
+    return () => { clearTimeout(t); removeEventListener(TOUR_EVENT, onStart); };
+  }, [id, start]);
 
-  const start = () => { back.current = document.activeElement; setAsk(false); dir.current = 1; setI(0); };
   const close = useCallback(() => {
-    store("done"); setI(-1); setBox(null); setCard(null);
+    if (get(KEY) !== "no" && get(KEY) !== "qa") put(KEY, "done");
+    put(`${KEY}:${id}`, "done"); put(`${KEY}:v`, "2");
+    setI(-1); setBox(null); setCard(null);
     const el = back.current as HTMLElement | null;
     if (el && typeof el.focus === "function" && document.contains(el)) el.focus({ preventScroll: true });
-  }, []);
+  }, [id]);
   const go = useCallback((d: number) => { dir.current = d; setI((x) => Math.min(steps.length - 1, Math.max(0, x + d))); }, [steps.length]);
 
   // a step whose element is missing / hidden is skipped in the direction of travel
@@ -143,7 +126,7 @@ export function SiteTour({ lang }: { lang: L }) {
     return () => cancelAnimationFrame(raf);
   }, [i, steps]);
 
-  // place the explanation card below the element, else above, else docked (phones: above the bottom tab bar)
+  // place the explanation card below the element, else above, else beside, else docked (phones: above the tab bar)
   useLayoutEffect(() => {
     if (i < 0) return;
     const c = cardRef.current;
@@ -151,16 +134,15 @@ export function SiteTour({ lang }: { lang: L }) {
     const vw = innerWidth, vh = innerHeight, ch = c.offsetHeight, cw = c.offsetWidth, gap = 12, g = 16;
     const bottomBar = vw < 768 ? 72 : 0;
     if (!box) { setCard({ top: Math.max(g, (vh - ch) / 2), left: (vw - cw) / 2 }); return; }
-    const clampTop = (t: number) => Math.min(Math.max(g, t), vh - bottomBar - g - ch);
+    const clampTop = (t: number) => Math.max(g, Math.min(t, vh - bottomBar - g - ch));
     let left = Math.min(Math.max(g, box.left + box.width / 2 - cw / 2), vw - cw - g);
     const below = box.top + box.height + gap, above = box.top - gap - ch;
     let top: number;
     if (below + ch <= vh - bottomBar - g) top = below;
     else if (above >= g) top = above;
-    // no room above or below: beside the element when the screen is wide enough, else docked at the bottom
     else if (box.left + box.width + gap + cw <= vw - g) { left = box.left + box.width + gap; top = clampTop(box.top); }
     else if (box.left - gap - cw >= g) { left = box.left - gap - cw; top = clampTop(box.top); }
-    else top = vh - bottomBar - g - ch;
+    else top = clampTop(vh - bottomBar - g - ch);
     setCard((p) => (p && Math.abs(p.top - top) < 0.5 && Math.abs(p.left - left) < 0.5 ? p : { top, left }));
   }, [i, box]);
 
@@ -182,15 +164,20 @@ export function SiteTour({ lang }: { lang: L }) {
 
   if (ask) return (
     <div role="dialog" aria-labelledby="tour-ask" className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-md animate-fade-up rounded-2xl border border-lime/30 bg-surface/95 p-4 shadow-2xl backdrop-blur-xl md:bottom-5 sm:p-5">
-      <p id="tour-ask" className="font-bold text-ink">{U.ask}</p>
-      <p className="mt-1 text-sm text-ink-2">{U.askSub}</p>
+      <p id="tour-ask" className="font-bold text-ink">{ask === "new" ? U.ask : U.page(name)}</p>
+      <p className="mt-1 text-sm text-ink-2">{ask === "new" ? U.askSub : U.pageSub}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" onClick={start} className="btn btn-primary h-11 px-5 text-sm">{U.yes}</button>
-        <button type="button" onClick={() => { store("no"); setAsk(false); }} className="btn btn-ghost h-11 px-4 text-sm">{U.no}</button>
+        {ask === "new"
+          ? <button type="button" onClick={() => { put(KEY, "no"); put(`${KEY}:v`, "2"); setAsk(""); }} className="btn btn-ghost h-11 px-4 text-sm">{U.no}</button>
+          : <>
+              <button type="button" onClick={() => { put(`${KEY}:${id}`, "no"); setAsk(""); }} className="btn btn-ghost h-11 px-4 text-sm">{U.later}</button>
+              <button type="button" onClick={() => { put(KEY, "no"); setAsk(""); }} className="inline-flex h-11 items-center px-2 text-sm font-semibold text-ink-3 hover:text-ink">{U.never}</button>
+            </>}
       </div>
     </div>
   );
-  if (i < 0) return null;
+  if (i < 0 || !steps.length) return null;
 
   const s = steps[i], last = i === steps.length - 1;
   return (
@@ -203,15 +190,18 @@ export function SiteTour({ lang }: { lang: L }) {
           style={{ top: box.top, left: box.left, width: box.width, height: box.height, boxShadow: "0 0 0 9999px rgb(3 5 8 / 0.72)" }} />
       )}
       <div ref={cardRef} role="dialog" aria-modal="true" aria-labelledby="tour-t" aria-describedby="tour-x"
-        className="fixed w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-lime/40 bg-surface p-5 shadow-2xl"
+        className="fixed flex max-h-[calc(100dvh-7rem)] w-[min(25rem,calc(100vw-2rem))] flex-col rounded-2xl border border-lime/40 bg-surface p-5 shadow-2xl md:max-h-[calc(100dvh-2rem)]"
         style={card ? { top: card.top, left: card.left } : { top: -9999, left: 0 }}>
         <div className="flex items-center justify-between gap-3 text-xs font-bold text-ink-3">
           <span>{i + 1} {U.of} {steps.length}</span>
           {!last && <button type="button" onClick={close} className="inline-flex min-h-6 items-center hover:text-ink">{U.skip}</button>}
         </div>
         <h2 id="tour-t" className="mt-2 text-lg font-bold text-ink">{s.title}</h2>
-        <p id="tour-x" className="mt-1.5 text-sm leading-relaxed text-ink-2">{s.text}</p>
-        <div className="mt-4 flex items-center justify-between gap-2">
+        <div id="tour-x" className="mt-1.5 min-h-0 overflow-y-auto text-sm leading-relaxed text-ink-2">
+          <p>{s.text}</p>
+          {s.points?.length ? <ul className="mt-2 space-y-1.5">{s.points.map((x) => <Point key={x} s={x} />)}</ul> : null}
+        </div>
+        <div className="mt-4 flex shrink-0 items-center justify-between gap-2">
           {i > 0 ? <button type="button" onClick={() => go(-1)} className="btn btn-ghost h-10 px-4 text-sm">{U.back}</button> : <span />}
           <button ref={primary} type="button" onClick={() => (last ? close() : go(1))} className="btn btn-primary h-10 px-5 text-sm">{last ? U.done : U.next}</button>
         </div>
@@ -220,3 +210,15 @@ export function SiteTour({ lang }: { lang: L }) {
   );
 }
 
+const BTN: Record<L, string> = { uk: "Як користуватися сторінкою", en: "How to use this page", ru: "Как пользоваться страницей" };
+
+/** The "how to use this page" button: starts the page's <SiteTour>. */
+export function TourButton({ lang, className = "" }: { lang: L; className?: string }) {
+  return (
+    <button type="button" onClick={() => dispatchEvent(new Event(TOUR_EVENT))}
+      className={`inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink-2 hover:text-ink md:min-h-8 ${className}`}>
+      <span aria-hidden="true" className="grid size-5 place-items-center rounded-full border border-line-2 text-xs text-lime">?</span>
+      {BTN[lang]}
+    </button>
+  );
+}

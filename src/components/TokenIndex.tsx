@@ -20,7 +20,7 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
   ];
   const [all, setAll] = useState<Record<string, boolean>>({});
   const tile = (r: TokenRow) => (
-    <a key={r.sym} href={r.href} className="card flex items-center gap-3 p-3">
+    <a key={r.sym} href={r.href} data-tour="tokens-tile" className="card flex items-center gap-3 p-3">
       <VenueLogo v={{ name: r.sym, logo: r.logo, color: "#2a3140", ink: "#e8ecf1", monogram: coinMonogram(r.sym) }} alts={coinLogos(r.sym)} size={34} rounded="rounded-full" />
       <div className="min-w-0">
         <div className="break-all font-bold">{r.sym}</div>
@@ -32,11 +32,11 @@ export function TokenIndex({ rows, labels }: { rows: TokenRow[]; labels: { searc
   );
   return (
     <>
-      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={labels.search} aria-label={labels.search}
+      <input data-tour="tokens-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={labels.search} aria-label={labels.search}
         className="mt-6 h-12 w-full max-w-md rounded-xl border border-line bg-white/[0.03] px-4 text-base font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
-      {list.length ? groups.filter(([, g]) => g.length).map(([h, g]) => (
+      {list.length ? groups.map(([h, g], gi) => [h, g, s ? "" : ["tokens-promos", "tokens-lp", "tokens-earn"][gi]] as const).filter(([, g]) => g.length).map(([h, g, tour]) => (
         <section key={h || "search"} className="mt-8">
-          {h && <h2 className="font-display text-xl font-semibold tracking-tight">{h} <span className="font-mono text-base text-ink-3">{g.length}</span></h2>}
+          {h && <h2 data-tour={tour || undefined} className="font-display text-xl font-semibold tracking-tight">{h} <span className="font-mono text-base text-ink-3">{g.length}</span></h2>}
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">{(s || all[h] ? g : g.slice(0, 30)).map(tile)}</div>
           {!s && !all[h] && g.length > 30 && <button type="button" onClick={() => setAll((x) => ({ ...x, [h]: true }))} className="btn btn-ghost mt-3 h-10 px-4 text-sm">{labels.more.replace("{n}", String(g.length - 30))}</button>}
         </section>

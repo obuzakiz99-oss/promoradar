@@ -36,6 +36,9 @@ import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
 import { EarnCalc } from "@/components/EarnCalc";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { PROMO_TOUR } from "@/lib/tours/promo";
+import { tourOf } from "@/lib/tours/types";
 import { titleOf } from "@/lib/titletpl";
 import { combosFor, type ComboWhy } from "@/lib/combos";
 import { FORM_BADGE, FORM_CLS, FORM_TEXT, timingChips } from "@/lib/payout-i18n";
@@ -373,7 +376,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           {venueCfg ? <Link href={`/${lang}/v/${p.venue.id}`} className="hover:text-ink">{p.venue.name}</Link> : <span>{p.venue.name}</span>}
         </nav>
 
-        <header className="mt-6 flex flex-col gap-6 md:flex-row md:items-start">
+        <header data-tour="promo-head" className="mt-6 flex flex-col gap-6 md:flex-row md:items-start">
           <VenueLogo v={p.venue} size={72} rounded="rounded-2xl" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
@@ -398,10 +401,11 @@ export default async function PromoPage({ params }: { params: Params }) {
                 ))}
               </div>
             )}
+            <TourButton lang={lang} className="mt-2" />
           </div>
         </header>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        <div data-tour="promo-actions" className="mt-8 flex flex-wrap items-center gap-3">
           <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
           {refUrl && <a href={refUrl} target="_blank" rel="sponsored noopener" className="btn btn-ghost h-12 px-6 text-base">{R.signup(p.venue.name)} ↗<span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span></a>}
           {p.category !== "farming" && <a href="#rules" className="btn btn-ghost h-12 px-6 text-base">{R.title} ↓</a>}
@@ -423,7 +427,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               how: "Как участвовать", hows: ["Нужен кошелёк (MetaMask, Rabby) с монетами в нужной сети.", `Откройте пул на сайте ${p.venue.name} кнопкой выше, подключите кошелёк и внесите сумму.`, "Начните с небольшой суммы и проверьте, что депозит виден в протоколе."], more: "Сравнить с другими DeFi-пулами →" },
           } as const)[lang];
           return (
-            <section className="card mt-6 grid gap-6 p-6 hover:transform-none md:grid-cols-3">
+            <section data-tour="promo-summary" className="card mt-6 grid gap-6 p-6 hover:transform-none md:grid-cols-3">
               <div><h2 className="font-bold">{F.what}</h2><p className="mt-2 text-sm leading-relaxed text-ink-2">{F.whatT}</p></div>
               <div><h2 className="font-bold">{F.risk}</h2><ul className="mt-2 space-y-1.5 text-sm text-ink-2">{F.risks.map((x) => <li key={x} className="flex gap-2"><span className="text-amber">•</span>{x}</li>)}</ul></div>
               <div><h2 className="font-bold">{F.how}</h2><ol className="mt-2 space-y-1.5 text-sm text-ink-2">{F.hows.map((x, i) => <li key={x} className="flex gap-2"><span className="shrink-0 whitespace-nowrap font-mono text-lime">{i + 1}.</span>{x}</li>)}</ol>
@@ -458,6 +462,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           const clean = (x: string) => noEmoji(x).replace(/^\s*[-–•]\s*/, "");
           const whoLines = m.geo?.text ? [m.geo.text] : (det?.facts ?? []).filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").map((f) => f.text).slice(0, 3);
           return (
+            <div data-tour="promo-summary">
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
@@ -496,6 +501,7 @@ export default async function PromoPage({ params }: { params: Params }) {
                 body: whoLines.length ? <>{whoLines.map((x) => <p key={x}>{clean(x)}</p>)}</> : undefined,
               },
             ]} />
+            </div>
           );
         })()}
 
@@ -528,7 +534,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           const warn = (ex?.watch?.length ? ex.watch : (det?.facts ?? []).map((f) => f.text).filter((x) => /\b(first|only|exclusive|not eligible|excluded|cannot|limited)\b|перш|лише|виключно|не можуть|обмежен|только|первых/i.test(x)))
             .map((x) => x.replace(/^\s*[-–•]\s*/, "")).filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
           return (
-            <section className="card mt-4 p-5 hover:transform-none sm:p-6">
+            <section data-tour="promo-steps" className="card mt-4 p-5 hover:transform-none sm:p-6">
               <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight"><Icon name="checkCircle" className="size-5 text-lime" /> {U.todo}</h2>
               <ol className={`mt-4 grid gap-3 sm:grid-cols-2 ${steps.length % 3 === 0 || steps.length === 5 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
                 {steps.map(([ic, x], i) => (
@@ -560,7 +566,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* mix promos (audit 12.11): same exchange, same time, the same action counts in each */}
         {combos.length > 0 && (
-          <section id="combo" className="card mt-6 scroll-mt-24 p-5 hover:transform-none sm:p-6">
+          <section id="combo" data-tour="promo-combo" className="card mt-6 scroll-mt-24 p-5 hover:transform-none sm:p-6">
             <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight"><Icon name="layers" className="size-5 text-lime" /> {C.title}</h2>
             <p className="mt-1.5 max-w-3xl text-sm text-ink-2">{C.sub(p.venue.name)}</p>
             <ul className="mt-4 divide-y divide-line">
@@ -581,11 +587,11 @@ export default async function PromoPage({ params }: { params: Params }) {
         {/* "how much would I get" — only when the amount you put in changes the result (audit 14.11: a calculator on fixed
             vouchers and points airdrops said "✓ threshold passed" for any number) */}
         {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || (m.tiers?.length ?? 0) > 1 || (m.minEntry?.amount ?? 0) > 0) && (
-          <EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} />
+          <div data-tour="promo-calc"><EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} /></div>
         )}
 
         {/* everything below is detail: folded by default (audit 12.11); #rules opens it (Chrome expands <details> on a fragment) */}
-        <details className="group mt-6 rounded-2xl border border-line bg-white/[0.015]">
+        <details data-tour="promo-more" className="group mt-6 rounded-2xl border border-line bg-white/[0.015]">
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-sm font-bold text-ink-2 hover:text-ink [&::-webkit-details-marker]:hidden">
             <span className="flex items-center gap-2"><Icon name="scroll" className="size-5 text-lime" /> {UI_TX[lang].more}</span>
             <Icon name="chevronDown" className="size-4 transition-transform group-open:rotate-180" />
@@ -744,7 +750,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* more questions — same AI explainer */}
         {faq.length > 0 && (
-          <section id="faq" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
+          <section id="faq" data-tour="promo-faq" className="card mt-4 scroll-mt-20 p-6 hover:transform-none">
             <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="help" className="size-5 text-lime" /> {FQ.title}</h2>
             <div className="mt-4 divide-y divide-line">
               {faq.map((x, i) => (
@@ -763,7 +769,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           </section>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+        <div data-tour="promo-share" className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
           <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>
         </div>
@@ -778,6 +784,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         )}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(PROMO_TOUR, lang)} />
     </>
   );
 }

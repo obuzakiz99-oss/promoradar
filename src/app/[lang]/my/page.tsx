@@ -9,6 +9,9 @@ import { withBase } from "@/lib/base";
 import { MyBoard, type MyPromo } from "@/components/MyBoard";
 import { PageHeader } from "@/components/PageHeader";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { MY_TOUR } from "@/lib/tours/my";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -31,9 +34,11 @@ export default async function My({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
         <PageHeader lang={lang} title={T.myTitle} sub={T.mySub} nav={<a href={withBase(`/${lang}/#promos`)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink-3 hover:text-ink">← {({"uk":"Усі акції","en":"All promos","ru":"Все акции"} as Record<string, string>)[lang]}</a>} />
+        <TourButton lang={lang} className="mt-2" />
         <MyBoard promos={light} lang={lang} />
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(MY_TOUR, lang)} />
     </>
   );
 }

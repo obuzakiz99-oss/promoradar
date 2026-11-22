@@ -10,6 +10,9 @@ import { Term } from "@/components/Term";
 import { Footer } from "@/components/Sections";
 import Link from "next/link";
 import { TableTools } from "@/components/TableTools";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { FIXED_TOUR } from "@/lib/tours/fixed";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 type Params = Promise<{ lang: string }>;
@@ -35,13 +38,16 @@ export default async function FixedPage({ params }: { params: Params }) {
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), P = PROX[lang];
   const { rows, fetchedAt } = await getFixed();
+  // the tour points at the row the table opens with (default sort: most liquidity first)
+  const top = rows.reduce<(typeof rows)[number] | undefined>((m, r) => (!m || r.liquidity > m.liquidity ? r : m), undefined);
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <YieldTabs lang={lang} active="fixed" updated={fetchedAt} />
+        <div data-tour="fixed-tabs"><YieldTabs lang={lang} active="fixed" updated={fetchedAt} /></div>
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{P.fixTitle}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.fixSub}</p>
-        <Link href={`/${lang}/learn/guide/pendle-pt`} className="btn btn-primary mt-5 inline-flex h-auto min-h-11 max-w-full whitespace-normal px-5 py-2 text-left text-sm">{P.fixGuide}</Link>
+        <div className="mt-3"><TourButton lang={lang} /></div>
+        <Link data-tour="fixed-guide" href={`/${lang}/learn/guide/pendle-pt`} className="btn btn-primary mt-5 inline-flex h-auto min-h-11 max-w-full whitespace-normal px-5 py-2 text-left text-sm">{P.fixGuide}</Link>
         {rows.length === 0 ? <p className="mt-8 text-ink-3">{P.noData}</p> : (
           <div className="mt-8">
           <TableTools lang={lang} storeKey="fixed" sorts={[
@@ -57,7 +63,7 @@ export default async function FixedPage({ params }: { params: Params }) {
               </thead>
               <tbody className="divide-y divide-line">
                 {rows.map((r) => (
-                  <tr key={r.url} className="hover:bg-white/[0.02]" data-row="" data-s-liq={r.liquidity} data-s-apy={r.apy} data-s-exp={r.expiry}
+                  <tr key={r.url} data-tour={r === top ? "fixed-row" : undefined} className="hover:bg-white/[0.02]" data-row="" data-s-liq={r.liquidity} data-s-apy={r.apy} data-s-exp={r.expiry}
                     data-f-chain={r.chain} data-f-term={FT[lang].terms[termOf((r.expiry - fetchedAt) / 86400_000)]} data-q={`pt-${r.name} ${r.chain}`}>
                     <td className="rt-wide px-4 py-3 font-bold"><a href={r.url} target="_blank" rel="noopener" className="hover:text-lime">PT-{r.name} ↗</a></td>
                     <td data-l={P.fixCols[1]} className="px-4 py-3 text-ink-2">{r.chain}</td>
@@ -72,9 +78,10 @@ export default async function FixedPage({ params }: { params: Params }) {
           </TableTools>
           </div>
         )}
-        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-ink-3">{P.fixNote}</p>
+        <p data-tour="fixed-note" className="mt-4 max-w-3xl text-xs leading-relaxed text-ink-3">{P.fixNote}</p>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(FIXED_TOUR, lang)} />
     </>
   );
 }

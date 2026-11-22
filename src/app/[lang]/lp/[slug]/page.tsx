@@ -18,6 +18,9 @@ import { Footer } from "@/components/Sections";
 import { LineChart, seriesColor, type Series } from "@/components/LineChart";
 import { readHistory } from "@/lib/history";
 import { Hint } from "@/components/Hint";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { LP_TOUR } from "@/lib/tours/lp";
+import { tourOf } from "@/lib/tours/types";
 
 export const revalidate = 900;
 export const dynamicParams = false; // static GitHub Pages export: every page is pre-rendered
@@ -200,9 +203,10 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
           </div>
         </header>
         <p className="mt-4 max-w-3xl text-ink-2">{T.sub(ex.name, p.token)}</p>
+        <div className="mt-3"><TourButton lang={lang} /></div>
 
         {/* key facts */}
-        <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <dl data-tour="lp-facts" className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.start}</dt><dd className="mt-1 font-mono font-bold">{shortDate(p.start, lang)}</dd>
             {!live && !ended && <dd className="text-xs text-sky">{T.startsIn} {duration(p.start - now, t.time)}</dd>}</div>
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.end}</dt><dd className="mt-1 font-mono font-bold">{shortDate(p.end, lang)}</dd>
@@ -213,7 +217,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         </dl>
 
         {/* CTA */}
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div data-tour="lp-cta" className="mt-6 flex flex-wrap gap-2">
           {!ended && <a href={p.url} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{T.go(ex.name)} ↗</a>}
           {rulesPromo && <a href={withBase(`/${lang}/p/${slugOf(rulesPromo)}/`)} className="btn btn-ghost h-12 px-5">{T.rulesOur}</a>}
           {p.rulesUrl && <a href={p.rulesUrl} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-5">{T.rulesOrig}</a>}
@@ -225,8 +229,8 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
           <h2 className="font-display text-2xl font-semibold tracking-tight">{T.poolsTitle}</h2>
           <p className="mt-1 text-sm text-ink-3">{T.poolsSub}</p>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {p.pools.map((x) => (
-              <div key={x.stake} className="card p-5 hover:transform-none">
+            {p.pools.map((x, xi) => (
+              <div key={x.stake} data-tour={xi === 0 ? "lp-pool" : undefined} className="card p-5 hover:transform-none">
                 <div className="flex items-center gap-3">
                   <VenueLogo v={{ name: x.stake, logo: x.stakeLogo, color: "#2a313b", ink: "#eef2f6", monogram: x.stake.slice(0, 3) }} size={36} rounded="rounded-full" />
                   <div className="min-w-0">
@@ -279,7 +283,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
           <section className="mt-14">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{CHART_TX[lang].title}</h2>
             <p className="mt-1 text-sm text-ink-3">{CHART_TX[lang].sub}</p>
-            <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div data-tour="lp-charts" className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
               {([[CHART_TX[lang].apr, aprSeries, "pct"], [CHART_TX[lang].users, usersSeries, "num"], [CHART_TX[lang].staked, stakedSeries, "usd"]] as const).map(([title, ser, kind]) => ser.length > 0 && (
                 <div key={title} className="card p-4 hover:transform-none">
                   <h3 className="mb-2 text-sm font-bold">{title}</h3>
@@ -294,7 +298,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {!ended && (
           <section className="mt-12">
             <h2 className="flex flex-wrap items-center gap-2 font-display text-2xl font-semibold tracking-tight">{T.calcTitle} <Hint lang={lang}>{T.calcSub}</Hint></h2>
-            <div tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-4 overflow-x-auto rounded-2xl border border-line">
+            <div data-tour="lp-calc" tabIndex={0} role="region" aria-label={({ uk: "Таблиця — гортайте вбік", en: "Table — scroll sideways", ru: "Таблица — листайте вбок" } as const)[lang]} className="mt-4 overflow-x-auto rounded-2xl border border-line">
               <table className="w-full min-w-[520px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr><th className="px-4 py-3">{T.stake}</th><th className="px-4 py-3">{T.with("$100")}</th><th className="px-4 py-3">{T.with(`$${num(1000, lang, 0)}`)}</th><th className="px-4 py-3">{T.withMax}</th></tr>
@@ -327,7 +331,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {steps && steps.length > 0 && (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.stepsTitle}</h2>
-            <ol className="mt-4 space-y-3">
+            <ol data-tour="lp-steps" className="mt-4 space-y-3">
               {steps.map((s, i) => (
                 <li key={i} className="card flex gap-4 p-4 hover:transform-none">
                   <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
@@ -347,8 +351,8 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
           <h2 className="font-display text-2xl font-semibold tracking-tight">{T.prosTitle}</h2>
           <p className="mt-1 text-sm text-ink-3">{T.prosSub}</p>
           <div className="mt-4 space-y-4">
-            {p.pools.map((x) => (
-              <div key={x.stake} className="card p-5 hover:transform-none">
+            {p.pools.map((x, xi) => (
+              <div key={x.stake} data-tour={xi === 0 ? "lp-pros" : undefined} className="card p-5 hover:transform-none">
                 {p.pools.length > 1 && <div className="mb-3 font-bold">{T.stake} {x.stake}</div>}
                 <ProsCons lang={lang} max={12} pc={poolPC(lang, p, x, { now, chgStake: data.changes[x.stake], chgReward: data.changes[p.token], price: data.prices[x.stake] ?? (isStable(x.stake) ? 1 : undefined), hedge: data.hedge, amountUsd: 1000 })} />
               </div>
@@ -359,7 +363,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         {/* how launchpools work */}
         <section className="mt-12">
           <h2 className="font-display text-2xl font-semibold tracking-tight">{t.lp.howTitle}</h2>
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div data-tour="lp-how" className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
             {t.lp.how.map(([h, b]) => (
               <div key={h} className="card p-5 hover:transform-none"><h3 className="font-bold">{h}</h3><p className="mt-2 text-sm leading-relaxed text-ink-2">{b}</p></div>
             ))}
@@ -374,6 +378,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
         <p className="mt-6 text-xs text-ink-3">{T.disclaimer}</p>
       </main>
       <Footer t={t} fetchedAt={now} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(LP_TOUR, lang)} />
     </>
   );
 }

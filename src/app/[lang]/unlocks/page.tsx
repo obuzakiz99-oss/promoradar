@@ -14,6 +14,9 @@ import { compactUsd, duration } from "@/lib/format";
 import { deadlineReminder } from "@/lib/ics";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { UNLOCKS_TOUR } from "@/lib/tours/unlocks";
+import { tourOf } from "@/lib/tours/types";
 import { impactOf, impactText, LEVEL_CLS, LEVEL_TXT } from "@/lib/unlock-impact";
 import { coinLogos, coinMonogram } from "@/lib/coinlogo";
 
@@ -95,10 +98,11 @@ export default async function UnlocksPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
-        <CalendarTabs lang={lang} active="unlocks" updated={fetchedAt} />
+        <div data-tour="unlocks-tabs"><CalendarTabs lang={lang} active="unlocks" updated={fetchedAt} /></div>
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
-        <details className="mt-2 max-w-3xl text-sm text-ink-3">
+        <TourButton lang={lang} className="mt-3" />
+        <details data-tour="unlocks-how" className="mt-2 max-w-3xl text-sm text-ink-3">
           <summary className="cursor-pointer font-semibold text-ink-2 hover:text-ink">{({ uk: "Як читати таблицю", en: "How to read the table", ru: "Как читать таблицу" } as const)[lang]}</summary>
           <p className="mt-2">{T.how}</p>
           <p className="mt-2">{T.impactNote}</p>
@@ -107,7 +111,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
         {!ok && <p className="mt-8 rounded-2xl border border-dashed border-line-2 p-5 text-ink-2">{T.none}</p>}
 
         {big.length > 0 && (
-          <section className="mt-10">
+          <section data-tour="unlocks-big" className="mt-10">
             <h2 className="font-display text-2xl font-semibold tracking-tight">{T.big}</h2>
             <p className="mt-1 text-sm text-ink-3">{T.bigSub}</p>
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -143,7 +147,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
               { key: "kind", label: UT[lang].kind, all: UT[lang].anyKind, options: [...new Set(rows.map((u) => T.type[u.type]))] },
               { key: "who", label: UT[lang].who, all: UT[lang].anyWho, options: [...new Set(rows.map((u) => (u.sale ? trs(u.sale) : "")).filter(Boolean))].sort() },
             ]}>
-            <div className="overflow-x-auto rounded-2xl border border-line">
+            <div data-tour="unlocks-table" className="overflow-x-auto rounded-2xl border border-line">
               <table className="rt w-full min-w-[860px] text-left text-sm">
                 <thead className="bg-white/[0.03] text-xs font-bold uppercase tracking-wider text-ink-3">
                   <tr>{[T.date, T.token, T.amount, T.pressure, T.who, T.kind, T.impact, ""].map((h, i) => <th key={i} className="relative px-4 py-3">{h || <span className="sr-only">{CAL[lang].col}</span>}</th>)}</tr>
@@ -168,10 +172,10 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
                         <td data-l={T.who} className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
                         <td data-l={T.kind} className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
-                        <td data-l={T.impact} className="px-4 py-3">
+                        <td data-l={T.impact} data-tour="unlocks-impact" className="px-4 py-3">
                           <span title={impactText(u, lang)} className={`cursor-help rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[impactOf(u).level]}`}>{LEVEL_TXT[lang][impactOf(u).level]}</span>
                         </td>
-                        <td className="rt-act px-2 py-3 text-right">
+                        <td data-tour={u.date > fetchedAt ? "unlocks-cal" : undefined} className="rt-act px-2 py-3 text-right">
                           {u.date > fetchedAt && <CalAdd lang={lang} file={`unlock-${u.sym}`} ev={{
                             uid: `unlock-${u.sym}-${u.date}`, at: deadlineReminder(u.date, fetchedAt),
                             title: CAL[lang].title(u.sym, compactUsd(u.usd), day(u.date, lang)),
@@ -190,11 +194,12 @@ export default async function UnlocksPage({ params }: { params: Params }) {
           </section>
         )}
 
-        <p className="mt-4 text-xs text-ink-3">
+        <p data-tour="unlocks-src" className="mt-4 text-xs text-ink-3">
           <a href={UNLOCK_SRC} target="_blank" rel="noopener" className="font-bold text-ink-2 hover:text-ink">{T.src} ↗</a> · {T.note}
         </p>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(UNLOCKS_TOUR, lang)} />
     </>
   );
 }

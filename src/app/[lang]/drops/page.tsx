@@ -13,6 +13,9 @@ import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Updated } from "@/components/Updated";
 import { Footer } from "@/components/Sections";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { DROPS_TOUR } from "@/lib/tours/drops";
+import { tourOf } from "@/lib/tours/types";
 import { Icon, type IconName } from "@/components/Icon";
 
 export const revalidate = 900;
@@ -50,9 +53,9 @@ export default async function DropsPage({ params }: { params: Params }) {
         <PromoTabs lang={lang} active="drops" />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{P.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{P.sub}</p>
-        <div className="mt-4"><Updated at={fetchedAt} lang={lang} /></div>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1"><Updated at={fetchedAt} lang={lang} /><TourButton lang={lang} /></div>
         {/* jump links */}
-        <nav aria-label={({ uk: "На цій сторінці", en: "On this page", ru: "На этой странице" } as const)[lang]} className="mt-6 flex flex-wrap gap-2">
+        <nav aria-label={({ uk: "На цій сторінці", en: "On this page", ru: "На этой странице" } as const)[lang]} data-tour="drops-jump" className="mt-6 flex flex-wrap gap-2">
           {sections.filter((s) => s.list.length).map((s) => (
             <a key={s.id} href={`#${s.id}`} className={`${s.level === "hard" ? "adv " : ""}flex h-9 items-center gap-1.5 rounded-full border border-line bg-white/[0.02] px-3.5 text-xs font-bold text-ink-2 hover:text-ink`}>
               <Icon name={s.icon} /> {s.text.title} <span className="font-mono text-ink-3">{s.list.length}</span>
@@ -64,14 +67,14 @@ export default async function DropsPage({ params }: { params: Params }) {
         {sections.filter((s) => s.list.length).map(({ id: k, icon, text: T, level: lvl, list }) => {
           return (
             <section key={k} id={k} className={`mt-14 scroll-mt-20 ${lvl === "hard" ? "adv" : ""}`}>
-              <div className="flex flex-wrap items-center gap-3">
+              <div data-tour="drops-head" className="flex flex-wrap items-center gap-3">
                 <h2 className="font-display text-2xl font-semibold tracking-tight"><Icon name={icon} className="size-6 text-lime" /> {T.title} <span className="font-mono text-base text-ink-3">{list.length}</span></h2>
                 <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
               </div>
               <p className="mt-2 max-w-3xl text-ink-2">{T.what}</p>
               <div className="mt-5 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)]">
                 {/* phones: the promos come first, the how-to after them (audit 14.11: ~80 % explanation before 1–2 items) */}
-                <div className="card p-5 hover:transform-none max-lg:order-2 lg:sticky lg:top-24">
+                <div data-tour="drops-how" className="card p-5 hover:transform-none max-lg:order-2 lg:sticky lg:top-24">
                   <div className="text-xs font-bold uppercase tracking-wider text-lime">{P.how}</div>
                   <ol className="mt-3 space-y-2.5 text-sm">
                     {T.how.map((s, i) => (
@@ -82,7 +85,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                 </div>
                 <div className="group max-lg:order-1">
                   {list.length === 0 ? <p className="rounded-2xl border border-dashed border-line-2 px-5 py-8 text-center text-sm text-ink-3">{P.none}</p> : (
-                    <ul className="space-y-2">
+                    <ul data-tour="drops-list" className="space-y-2">
                       {list.map((p, i) => (
                         <li key={p.id} className={i >= FIRST ? "hidden group-has-[:checked]:block" : ""}>
                           <a href={withBase(`/${lang}/p/${slugOf(p)}/`)} className="card flex items-center gap-3 p-3.5">
@@ -99,7 +102,7 @@ export default async function DropsPage({ params }: { params: Params }) {
                   )}
                   {/* all of them, so the count in the jump link matches the list (owner 13.11); the rest open without JS */}
                   {list.length > FIRST && (
-                    <label className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-lime">
+                    <label data-tour="drops-more" className="btn btn-ghost mt-3 h-10 cursor-pointer px-4 text-sm has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-lime">
                       <input type="checkbox" className="sr-only" />
                       <span className="group-has-[:checked]:hidden">{MORE[lang](list.length - FIRST)}</span>
                       <span className="hidden group-has-[:checked]:inline">{LESS[lang]}</span>
@@ -113,6 +116,7 @@ export default async function DropsPage({ params }: { params: Params }) {
 
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(DROPS_TOUR, lang)} />
     </>
   );
 }

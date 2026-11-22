@@ -43,16 +43,16 @@ export function LearnCards({ cards, lang, startTotal, promosHref }: { cards: Lea
   const next = done ? cards.find((c) => !done.has(c.id))?.id : cards[0].id;
   return (
     <>
-      <div className="mt-8 flex flex-wrap items-center gap-3 text-sm font-semibold text-ink-3">
+      <div data-tour="learn-progress" className="mt-8 flex flex-wrap items-center gap-3 text-sm font-semibold text-ink-3">
         <div className="h-2 w-48 overflow-hidden rounded-full bg-white/5"><div className="h-full rounded-full bg-lime transition-all" style={{ width: `${(n / cards.length) * 100}%` }} /></div>
         <span className="text-ink-2">{L.progress(n, cards.length)}</span>
         <span className="font-normal">{next ? L.hint : <Link href={promosHref} className="font-bold text-lime hover:underline">{L.all} →</Link>}</span>
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div data-tour="learn-cards" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c, i) => {
           const isNext = c.id === next, isDone = !!done?.has(c.id);
           return (
-            <Link key={c.id} href={c.href}
+            <Link key={c.id} href={c.href} data-tour={isNext ? "learn-next" : c.id === "check" ? "learn-check" : undefined}
               className={`card group relative flex flex-col p-6 ${isNext ? "border-lime/60 bg-lime/[0.06] shadow-[0_0_0_1px_rgba(214,255,90,0.25),0_12px_40px_-12px_rgba(214,255,90,0.35)]" : isDone ? "opacity-75" : ""}`}>
               {isNext && <span className="absolute -top-3 left-5 rounded-md bg-lime px-2 py-0.5 text-xs font-bold text-on-accent">{L.next}</span>}
               <span className="flex items-center justify-between">

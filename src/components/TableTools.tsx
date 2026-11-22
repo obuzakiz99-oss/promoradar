@@ -50,7 +50,7 @@ export function TableTools({ lang, sorts, filters = [], search = true, storeKey,
   const ctl = "h-10 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink";
   return (
     <div ref={box}>
-      <div className="flex flex-wrap items-center gap-2">
+      <div data-tour="table-tools" className="flex flex-wrap items-center gap-2">
         {search && (
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L.search} aria-label={L.search}
             className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm font-medium text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none sm:w-56" />

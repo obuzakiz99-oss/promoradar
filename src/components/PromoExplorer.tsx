@@ -259,7 +259,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
       {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
       <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">
         <div data-tour="tools" className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
-          <label className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
+          <label data-tour="search" className="relative w-full lg:w-auto lg:max-w-sm lg:flex-1">
             <span className="sr-only">{t.filters.search}</span>
             <svg className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.4 9.83l3.64 3.63a.75.75 0 1 0 1.06-1.06l-3.63-3.64A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clipRule="evenodd" /></svg>
             <input
@@ -271,12 +271,12 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
             />
             {q && <button onClick={() => setQ("")} className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-lg text-ink-3 hover:bg-white/5 hover:text-ink" aria-label={t.filters.reset}>✕</button>}
           </label>
-          <div className="min-w-0 flex-1 sm:w-56 sm:flex-none lg:ml-auto">
+          <div data-tour="sort" className="min-w-0 flex-1 sm:w-56 sm:flex-none lg:ml-auto">
             <Select label={t.filters.sort} value={sort} onChange={setSort} align="right"
               className="h-11 rounded-xl border border-line bg-surface pl-3 pr-2.5 text-sm font-bold text-ink"
               options={(["best", "newest", "ending", "biggest", "perUser", "minEntry"] as Sort[]).map((s) => ({ value: s, label: s === "best" ? G.best : s === "perUser" ? G.perUser : s === "minEntry" ? G.minEntry : t.filters[s] }))} />
           </div>
-          <button type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel} aria-controls="promo-filters"
+          <button data-tour="filters" type="button" onClick={() => setPanel((x) => !x)} aria-expanded={panel} aria-controls="promo-filters"
             className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-xl border pl-4 pr-3 text-sm font-bold text-ink ${panel || activeN ? "border-lime/60 bg-lime/10" : "border-line bg-surface hover:border-line-2"}`}>
             {FILT[lang]}{activeN ? <span className="rounded-md bg-lime/20 px-1.5 font-mono text-xs text-lime">{activeN}</span> : null}
             <Icon name="chevronDown" className={`size-4 text-ink-3 transition-transform ${panel ? "rotate-180" : ""}`} />

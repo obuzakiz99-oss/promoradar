@@ -8,6 +8,9 @@ import { PromoCard } from "@/components/PromoCard";
 import { Updated } from "@/components/Updated";
 import { Footer } from "@/components/Sections";
 import type { Promo } from "@/lib/types";
+import { SiteTour, TourButton } from "@/components/SiteTour";
+import { ZEROFEES_TOUR } from "@/lib/tours/zerofees";
+import { tourOf } from "@/lib/tours/types";
 
 /**
  * "0% fees" page (owner 21.11: the "0% комісії" tab on the promo list was hard to find — own page + menu entry).
@@ -88,19 +91,21 @@ export default async function ZeroFees({ params }: { params: Params }) {
         <PromoTabs lang={lang} active="zerofee" />
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-tight sm:text-5xl">{T.title}</h1>
         <p className="mt-3 max-w-3xl text-ink-2 sm:text-lg">{T.sub}</p>
-        <div className="mt-4"><Updated at={fetchedAt} lang={lang} /></div>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1"><Updated at={fetchedAt} lang={lang} /><TourButton lang={lang} /></div>
 
         {live.length === 0 ? <p className="mt-10 text-ink-3">{T.none}</p> : groups.filter((g) => g.list.length).map((g) => (
           <section key={g.id} id={g.id} className="mt-12 scroll-mt-20">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">{g.title} <span className="font-mono text-base text-ink-3">{g.list.length}</span></h2>
-            <p className="mt-2 max-w-3xl text-ink-2">{g.sub}</p>
+            <div data-tour={`zerofees-${g.id}`}>
+              <h2 className="font-display text-2xl font-semibold tracking-tight">{g.title} <span className="font-mono text-base text-ink-3">{g.list.length}</span></h2>
+              <p className="mt-2 max-w-3xl text-ink-2">{g.sub}</p>
+            </div>
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {g.list.map((p, i) => <PromoCard key={p.id} p={p} t={t} lang={lang} now={fetchedAt} index={i} />)}
             </div>
           </section>
         ))}
 
-        <section className="card mt-14 max-w-3xl p-6 hover:transform-none">
+        <section data-tour="zerofees-tips" className="card mt-14 max-w-3xl p-6 hover:transform-none">
           <h2 className="text-lg font-bold">{T.watch}</h2>
           <ul className="mt-3 space-y-2 text-ink-2">
             {T.tips.map((x) => <li key={x} className="flex gap-2"><span className="text-lime" aria-hidden="true">•</span><span>{x}</span></li>)}
@@ -109,6 +114,7 @@ export default async function ZeroFees({ params }: { params: Params }) {
         <p className="mt-8 text-xs text-ink-3">{t.footer.disclaimer}</p>
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
+      <SiteTour lang={lang} {...tourOf(ZEROFEES_TOUR, lang)} />
     </>
   );
 }
