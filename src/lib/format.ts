@@ -56,6 +56,9 @@ export function aprText(x: number, lang: string, digits = 1): string {
   if (x >= 10_000) return `>${num(10_000, lang)}%`;
   return `${num(x >= 100 ? Math.round(x) : x, lang, x >= 100 ? 0 : digits)}%`;
 }
+/** Decimal comma for uk/ru in an already formatted string ("7.05%" → "7,05%"); audit 23.11: boards mixed "7.05%" with
+ *  translated "4,25%". */
+export const dec = (s: string, lang: string) => (lang === "en" ? s : s.replace(/(\d)\.(\d)/g, "$1,$2"));
 /** Money: "$50 000" for dollars, "50 000 USDT" for coins. */
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;

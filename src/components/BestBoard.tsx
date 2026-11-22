@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { nfLocale } from "@/lib/format";
+import { nfLocale, dec } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import type { Hedge, PoolProject } from "@/lib/pools";
@@ -13,13 +13,16 @@ import { lpSlug } from "@/lib/lpslug";
 export interface SafeItem { key: string; venue: Venue; title: string; sub: string; apr: number; aprMax?: number; capUsd?: number; url: string }
 export interface PromoItem { key: string; venue: Venue; title: string; usd: number; label: string; href: string }
 
-const pct = (x: number) => `${x >= 100 ? Math.round(x) : x.toFixed(x >= 10 ? 1 : 2)}%`;
-const usd = (x: number) => (x >= 1e6 ? `$${(x / 1e6).toFixed(1)}M` : x >= 1e4 ? `$${Math.round(x / 1e3)}K` : `$${x.toFixed(x < 10 ? 2 : 0)}`);
+const pct0 = (x: number) => `${x >= 100 ? Math.round(x) : x.toFixed(x >= 10 ? 1 : 2)}%`;
+const usd0 = (x: number) => (x >= 1e6 ? `$${(x / 1e6).toFixed(1)}M` : x >= 1e4 ? `$${Math.round(x / 1e3)}K` : `$${x.toFixed(x < 10 ? 2 : 0)}`);
 
 export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos, now }: {
   lang: Locale; safe: SafeItem[]; pools: PoolProject[]; hedge: Record<string, Hedge>; prices: Record<string, number>;
   exchanges: Record<string, Venue>; promos: PromoItem[]; now: number;
 }) {
+  // audit 23.11: decimal comma on uk/ru
+  const pct = (...a: Parameters<typeof pct0>) => dec(pct0(...a), lang);
+  const usd = (...a: Parameters<typeof usd0>) => dec(usd0(...a), lang);
   const T = TOOLS[lang];
   const [text, setText] = useState("1000");
   const amount = Math.max(0, Number(text.replace(/[^\d.]/g, "")) || 0);

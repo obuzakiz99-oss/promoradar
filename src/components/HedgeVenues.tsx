@@ -1,3 +1,4 @@
+import { dec } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Hedge } from "@/lib/pools";
 
@@ -15,10 +16,12 @@ const TX: Record<Locale, { hedge: (c: string) => string; none: (c: string) => st
   en: { hedge: (c) => `Hedge ${c} with futures:`, none: (c) => `No futures for ${c} — the price risk can't be hedged`, tip: "A short of the same size removes the price risk. The number is the yearly funding for a short.", recv: "short receives funding", pay: "short pays funding" },
   ru: { hedge: (c) => `Хедж ${c} фьючерсом:`, none: (c) => `Фьючерса на ${c} нет — защититься от падения цены не получится`, tip: "Шорт на ту же сумму снимает ценовой риск. Число — фандинг за год для шорта.", recv: "шорт получает фандинг", pay: "шорт платит фандинг" },
 };
-const fmt = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(x) >= 100 ? Math.round(Math.abs(x)) : Math.abs(x).toFixed(1)}%`;
+const fmt0 = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(x) >= 100 ? Math.round(Math.abs(x)) : Math.abs(x).toFixed(1)}%`;
 
 /** Exchanges where `coin` can be shorted (perpetual futures), best funding first, each linking to that futures pair. */
 export function HedgeVenues({ coin, hedge, lang, className = "" }: { coin: string; hedge?: Hedge; lang: Locale; className?: string }) {
+  // audit 23.11: decimal comma on uk/ru
+  const fmt = (...a: Parameters<typeof fmt0>) => dec(fmt0(...a), lang);
   const T = TX[lang];
   if (!hedge) return null;
   const perps = [...hedge.perps].sort((a, b) => b.fundingApr - a.fundingApr);

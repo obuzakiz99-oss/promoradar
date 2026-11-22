@@ -1,5 +1,5 @@
 import type { Promo } from "./types";
-import { money } from "./format";
+import { money, num } from "./format";
 
 /**
  * Our own short card title, built from the parsed facts instead of a raw headline (audits 08.11):
@@ -17,9 +17,9 @@ const DO: Record<L, Record<"trade" | "deposit" | "stake" | "hold" | "buy", (x: s
 };
 const FREE: Record<L, string> = { uk: "Без вкладень", en: "No deposit", ru: "Без вложений" };
 const KIND: Record<L, Record<Promo["category"], string>> = {
-  uk: { competition: "Змагання", airdrop: "Аірдроп", bonus: "Бонус", earn: "Earn", listing: "Лістинг", referral: "Реферальна програма", other: "Акція", farming: "Фарм" },
+  uk: { competition: "Змагання", airdrop: "Аірдроп", bonus: "Бонус", earn: "Earn", listing: "Лістинг", referral: "Реферальна програма", other: "Промоакція", farming: "Фарм" },
   en: { competition: "Competition", airdrop: "Airdrop", bonus: "Bonus", earn: "Earn", listing: "Listing", referral: "Referral programme", other: "Promo", farming: "Farm" },
-  ru: { competition: "Соревнование", airdrop: "Аирдроп", bonus: "Бонус", earn: "Earn", listing: "Листинг", referral: "Реферальная программа", other: "Акция", farming: "Фарм" },
+  ru: { competition: "Соревнование", airdrop: "Аирдроп", bonus: "Бонус", earn: "Earn", listing: "Листинг", referral: "Реферальная программа", other: "Промоакция", farming: "Фарм" },
 };
 const PER: Record<L, (x: string) => string> = { uk: (x) => `до ${x} на 1 людину`, en: (x) => `up to ${x} per person`, ru: (x) => `до ${x} на 1 человека` };
 const POOL: Record<L, (x: string) => string> = { uk: (x) => `фонд ${x}`, en: (x) => `pool ${x}`, ru: (x) => `фонд ${x}` };
@@ -40,7 +40,8 @@ const PRODUCTS: Array<[RegExp, Record<L, string>]> = [
 ];
 const PRIZE = /\b(iPhone(?: \d+)?(?: Pro(?: Max)?)?|MacBook(?: \w+)?|iPad(?: \w+)?|PlayStation ?\d?|Tesla(?: Model \w)?|Rolex|AirPods(?: \w+)?)\b/i;
 // tickers: $ABC, or 2–10 capitals/digits that are not ordinary words
-const STOP = new Set("NEW NOW LIVE THE AND FOR WITH VIP APR APY TGE CEX DEX UTC KYC AMA FAQ USD USDT USDC FDUSD UP TO OF IN ON AT BY GET WIN JOIN EARN SHARE TRADE TRADING DAY DAYS TOP HOT EXCLUSIVE ONLY MENA SEA CIS EU UK US WEEK FREE BONUS NFT AI ALL YOUR OUR YOU IS IT ARE BE DEPOSIT SPOT TASK TASKS REWARD REWARDS PRIZE POOL ROUND PHASE SEASON EVENT CAMPAIGN PROMO PROMOTION PART ETF GO VS IPO PRE DOWN".split(" "));
+const STOP = new Set("NEW NOW LIVE THE AND FOR WITH VIP APR APY TGE CEX DEX UTC KYC AMA FAQ USD USDT USDC FDUSD UP TO OF IN ON AT BY GET WIN JOIN EARN SHARE TRADE TRADING DAY DAYS TOP HOT EXCLUSIVE ONLY MENA SEA CIS EU UK US WEEK FREE BONUS NFT AI ALL YOUR OUR YOU IS IT ARE BE DEPOSIT SPOT TASK TASKS REWARD REWARDS PRIZE POOL ROUND PHASE SEASON EVENT CAMPAIGN PROMO PROMOTION PART ETF GO VS IPO PRE DOWN NOT CEE LATAM APAC DUO NO YES OFF MAX MIN".split(" "));
+// audit 23.11: region codes (CEE, LATAM) and words like "is NOT just" were read as coins
 function subject(title: string, lang: L, venue: string, noPrize = false): { text: string; specific: boolean } | undefined {
   const parts: string[] = [];
   let specific = false;
@@ -79,8 +80,12 @@ export function titleOf(p: Promo, lang: L): string | undefined {
   if (many && showHeadline(p, lang)) return undefined;
   const apy = /\bAPY\b/.test(head) && !/\bAPR\b/.test(head) ? "APY" : "APR";
   const upTo = /\bup to\b/i.test(head) ? ({ uk: "до ", en: "up to ", ru: "до " } as const)[lang] : "";
-  const much = m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
-    : m.aprPct !== undefined ? `${upTo || "+"}${m.aprPct}% ${apy}` : p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined;
+  // audit 23.11: an Earn product is about its rate — "USDT до 10% APR" lost the 10 % when a per-person cap existed;
+  // rates use the reader's decimal comma (4,25 %), like the translated headline next to them
+  const rate = m.aprPct !== undefined ? `${upTo || "+"}${num(m.aprPct, lang)}% ${apy}` : undefined;
+  const much = p.category === "earn" && rate ? rate
+    : m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
+    : rate ?? (p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined);
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;
   // an iPhone in an Earn headline is a side prize, not what the product pays
   const sj = subject(head, lang, p.venue.name, p.category === "earn");

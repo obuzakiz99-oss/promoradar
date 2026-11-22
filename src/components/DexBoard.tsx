@@ -5,7 +5,7 @@ import type { DexPool } from "@/lib/dexpools";
 import { VenueLogo } from "./VenueLogo";
 import { Term } from "./Term";
 import { ProsCons } from "./ProsCons";
-import { compactUsd, num } from "@/lib/format";
+import { compactUsd, num, dec } from "@/lib/format";
 import { dexPC } from "@/lib/proscons";
 import type { Hedge } from "@/lib/pools";
 import { dexHedge } from "@/lib/dexhedge";
@@ -49,7 +49,7 @@ const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 // the default filter; dex/page.tsx ships the top pools above it (audit 18.11: `touched` compared against TVLS[0], so the
 // full list always swapped in on load and re-sorted the table, CLS 0.26)
 const TVL0 = 1_000_000;
-const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
+const pct0 = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
 function logo(p: DexPool) {
   let h = 0; for (const c of p.slug) h = (h * 31 + c.charCodeAt(0)) % 360;
@@ -57,6 +57,8 @@ function logo(p: DexPool) {
 }
 
 export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl, hedge = {} }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string; hedge?: Record<string, Hedge> }) {
+  // audit 23.11: decimal comma on uk/ru
+  const pct = (...a: Parameters<typeof pct0>) => dec(pct0(...a), lang);
   // the page ships only the top pools (light HTML); the full list (~1500) loads right after from the static JSON
   const [full, setFull] = useState<DexPool[] | null>(null);
   useEffect(() => {

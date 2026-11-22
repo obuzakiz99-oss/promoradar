@@ -10,7 +10,7 @@ import { dropstabCoin, getUnlocks, isBig, UNLOCK_SRC, type Unlock } from "@/lib/
 import { trList } from "@/lib/translate";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
-import { compactUsd, duration } from "@/lib/format";
+import { compactUsd, duration, num } from "@/lib/format";
 import { deadlineReminder } from "@/lib/ics";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
@@ -123,7 +123,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
                         <span className="font-bold">{u.sym}</span>
-                        <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}% {T.ofCap}</span>
+                        <span className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{num(u.pctCap, lang, 2)}% {T.ofCap}</span>
                       </span>
                       <span className="mt-1 block text-sm text-ink-2">{day(u.date, lang)} · {T.down} {duration(Math.max(0, u.date - fetchedAt), t.time)} · <span className="font-mono">{compactUsd(u.usd)}</span></span>
                       <span className="mt-0.5 block break-words text-xs text-ink-3">{trs(u.sale)} · {T.type[u.type]}</span>
@@ -169,7 +169,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                           </div>
                         </td>
                         <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
-                        <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{u.pctCap.toFixed(2)}%</span></td>
+                        <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{num(u.pctCap, lang, 2)}%</span></td>
                         <td data-l={T.who} className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
                         <td data-l={T.kind} className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>
                         <td data-l={T.impact} data-tour="unlocks-impact" className="px-4 py-3">
@@ -179,7 +179,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                           {u.date > fetchedAt && <CalAdd lang={lang} file={`unlock-${u.sym}`} ev={{
                             uid: `unlock-${u.sym}-${u.date}`, at: deadlineReminder(u.date, fetchedAt),
                             title: CAL[lang].title(u.sym, compactUsd(u.usd), day(u.date, lang)),
-                            description: `${u.sale ? `${trs(u.sale)} · ` : ""}${u.pctCap.toFixed(2)}% · ${LEVEL_TXT[lang][impactOf(u).level]}`,
+                            description: `${u.sale ? `${trs(u.sale)} · ` : ""}${num(u.pctCap, lang, 2)}% · ${LEVEL_TXT[lang][impactOf(u).level]}`,
                             url: `https://${SITE.domain}/${lang}/${tokens.has(u.sym) ? `t/${u.sym}` : "unlocks"}/`,
                           }} />}
                         </td>

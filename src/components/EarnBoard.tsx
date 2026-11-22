@@ -1,4 +1,5 @@
 "use client";
+import { dec } from "@/lib/format";
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
@@ -25,7 +26,7 @@ const COLS: Record<Locale, { ex: string; income: string; limits: string }> = {
 };
 const DWMY: Record<Locale, string[]> = { uk: ["день", "тиждень", "місяць", "рік"], en: ["day", "week", "month", "year"], ru: ["день", "неделя", "месяц", "год"] };
 const EX_ALL: Record<Locale, string> = { uk: "Усі біржі", en: "All exchanges", ru: "Все биржи" };
-const pct = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
+const pct0 = (x: number) => `${x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)}%`;
 
 const CALC: Record<Locale, { amount: string; mo: string; yr: string; note: string }> = {
   uk: { amount: "Сума", mo: "/міс", yr: "/рік", note: "Дохід рахується в тій самій монеті, яку ви вкладаєте; у доларах — за поточною ціною." },
@@ -33,14 +34,18 @@ const CALC: Record<Locale, { amount: string; mo: string; yr: string; note: strin
   ru: { amount: "Сумма", mo: "/мес", yr: "/год", note: "Доход считается в той же монете, которую вы вкладываете; в долларах — по текущей цене." },
 };
 const STABLE = /^(USDT|USDC|FDUSD|USD1|DAI|USDS|USDE|PYUSD|TUSD)$/;
-const fmtCoin = (n: number) => (n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
-const fmtUsd = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
+const fmtCoin0 = (n: number) => (n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
+const fmtUsd0 = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
 
 /**
  * `offers` may be only the popular coins (the page ships those in its HTML, audit 14.11: all ~2,100 offers made /earn/
  * 550 KB); `allCoins` lists every coin for the search box and `src` is the full list, loaded right after the page appears.
  */
 export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge = {}, prices = {}, allCoins, src }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge>; prices?: Record<string, number>; allCoins?: string[]; src?: string }) {
+  // audit 23.11: decimal comma on uk/ru
+  const pct = (...a: Parameters<typeof pct0>) => dec(pct0(...a), lang);
+  const fmtCoin = (...a: Parameters<typeof fmtCoin0>) => dec(fmtCoin0(...a), lang);
+  const fmtUsd = (...a: Parameters<typeof fmtUsd0>) => dec(fmtUsd0(...a), lang);
   const [offers, setOffers] = useState(initial);
   useEffect(() => {
     if (!src) return;
