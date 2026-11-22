@@ -93,6 +93,14 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
     }
     const el = find(s.sel);
     if (el) {
+      // a cell of a wide table can sit past the right edge of its sideways-scrolling box (tablet): bring it in
+      for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+        if (p.scrollWidth <= p.clientWidth + 1 || !/auto|scroll/.test(getComputedStyle(p).overflowX)) continue;
+        const pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
+        if (er.right > pr.right) p.scrollLeft += Math.min(er.right - pr.right + 16, er.left - pr.left);
+        else if (er.left < pr.left) p.scrollLeft -= pr.left - er.left + 16;
+        break;
+      }
       // scroll so that the element AND the card below it fit between the sticky header and the phone tab bar
       // (centring the element alone left no room for the card next to tall targets — tour test 21.11)
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -104,7 +112,8 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
         const off = h + 12 + ch <= room ? TOP + (room - h - 12 - ch) / 2 : TOP;
         const to = Math.max(0, scrollY + r.top - 6 - off);
         // a long way (the source line at the end of a 50-row table) jumps: a 10 000px smooth scroll took seconds
-        scrollTo({ top: to, behavior: reduce || Math.abs(to - scrollY) > vh * 1.5 ? "auto" : "smooth" });
+        // ("instant", not "auto": the site sets `scroll-behavior: smooth` on <html>, which makes "auto" smooth too)
+        scrollTo({ top: to, behavior: reduce || Math.abs(to - scrollY) > vh * 1.5 ? "instant" : "smooth" });
       }
     }
   }, [i, steps]);
