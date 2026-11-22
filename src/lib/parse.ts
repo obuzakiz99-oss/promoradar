@@ -12,11 +12,18 @@ export function isPromo(title: string): boolean {
   return !has(title, NOISE) && has(title, PROMO);
 }
 
+const REFERRAL = /(referral|invite friends|affiliate|refer )/i;
 export function classify(title: string, hint?: string): Category {
-  const t = `${title} ${hint ?? ""}`;
-  if (has(t, /(referral|invite friends|affiliate|refer )/i)) return "referral";
+  if (has(title, REFERRAL)) return "referral";
+  // audit 22.11: a "refer" somewhere in the message text made an OKX liquidity campaign a referral programme —
+  // the message text decides "referral" only when the title itself says nothing about the kind of promo
+  if (hint && has(hint, REFERRAL)) { const own = kindOf(title); return own === "other" ? "referral" : own; }
+  return kindOf(`${title} ${hint ?? ""}`);
+}
+
+function kindOf(t: string): Category {
   if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
-  if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
+  if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn))/i)) return "bonus";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
   if (has(t, /deposit/i)) return "bonus";
