@@ -16,7 +16,20 @@ export function PopoverClose() {
     const out = (e: FocusEvent) => { const d = (e.target as HTMLElement)?.closest?.("details[data-pop][open]") as HTMLDetailsElement | null; if (d && !d.contains(e.relatedTarget as Node | null) && e.relatedTarget) d.open = false; };
     document.addEventListener("focusout", out);
     document.addEventListener("focusin", on);
-    const toggle = (e: Event) => { const d = e.target as HTMLDetailsElement; if (d.matches?.("details[data-pop]") && d.open) open().forEach((x) => { if (x !== d && !x.contains(d)) x.open = false; }); };
+    const toggle = (e: Event) => {
+      const d = e.target as HTMLDetailsElement;
+      if (!d.matches?.("details[data-pop]") || !d.open) return;
+      open().forEach((x) => { if (x !== d && !x.contains(d)) x.open = false; });
+      // "?" hints near the bottom of the screen open upwards (audit 22.11: the panel opened below the viewport)
+      if (d.matches("[data-hint]")) {
+        d.removeAttribute("data-up");
+        const panel = d.querySelector<HTMLElement>(":scope > div");
+        if (panel && getComputedStyle(panel).position === "absolute") {
+          const r = panel.getBoundingClientRect(), s = d.getBoundingClientRect();
+          if (r.bottom > innerHeight - 8 && s.top - r.height - 12 > 64) d.setAttribute("data-up", "");
+        }
+      }
+    };
     document.addEventListener("pointerdown", down);
     document.addEventListener("keydown", key);
     document.addEventListener("toggle", toggle, true);

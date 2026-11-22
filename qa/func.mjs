@@ -675,11 +675,12 @@ S.popovers = async () => {
     await withCtx(kind, async (c) => {
       const p = await newPage(c);
       // a live pool (ended pools have fewer hints; the first sitemap entry can be an ended one — 21.11)
-      const lp0 = (await lpSample())[0];
-      await go(p, lp0 ? `/uk/lp/${lp0}/` : "/uk/launchpools/");
+      // the second hint ("real APR") shows only when the exchange gives the data for it (Gate yes, Bitget no — 22.11):
+      // take the first live pool page with at least two
       const hs = p.locator("details[data-pop] > summary[aria-label='Пояснення']");
-      const n = await hs.count();
-      check(p, "Hint «?» present", n >= 2, `${n}`);
+      let n = 0;
+      for (const sl of (await livePools()).slice(0, 6)) { await go(p, `/uk/lp/${sl}/`); n = await hs.count(); if (n >= 2) break; }
+      check(p, "Hint «?» present", n >= 2, `${n} on ${pathOnly(p.url())}`);
       if (n >= 2) {
         const tapOrClick = (l) => (kind === "phone" ? l.tap() : l.click());
         await hs.nth(0).scrollIntoViewIfNeeded(); await tapOrClick(hs.nth(0)); await p.waitForTimeout(150);
@@ -1599,6 +1600,12 @@ async function lpSample() {
   LPS = [live, ended].filter(Boolean).map((x) => slug(x.id));
   if (!LPS.length) LPS = [...paths].slice(0, 2);
   return LPS;
+}
+async function livePools() {
+  const paths = new Set((await sitemapPaths()).filter((u) => /^\/uk\/lp\/[^/]+\/$/.test(u)).map((u) => u.split("/")[3]));
+  const d = await (await fetch(`${BASE}/api/pools.json?ts=${Date.now()}`)).json().catch(() => ({ projects: [] }));
+  const slug = (id) => id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return (d.projects ?? []).filter((x) => x.status !== "ended").map((x) => slug(x.id)).filter((x) => paths.has(x));
 }
 async function sitemapPaths() {
   if (SITEMAP) return SITEMAP;
