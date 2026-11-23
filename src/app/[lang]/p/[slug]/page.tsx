@@ -1,3 +1,5 @@
+import { endedBySlug, endedPromos } from "@/lib/archive";
+import { EndedPromo } from "./ended";
 import { geoAllowed } from "@/lib/geo";
 import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -53,7 +55,8 @@ export const dynamicParams = false; // every page is pre-rendered at build (requ
 /** Pre-render every current promo (needed for the static GitHub Pages build). */
 export async function generateStaticParams() {
   const { promos } = await getPromos();
-  return promos.map((p) => ({ slug: slugOf(p) }));
+  // + pages of promos that ended in the last 90 days ("Акція завершилась" instead of a 404)
+  return [...promos.map((p) => ({ slug: slugOf(p) })), ...endedPromos(promos).map((e) => ({ slug: e.slug }))];
 }
 
 type Params = Promise<{ lang: string; slug: string }>;
@@ -61,8 +64,14 @@ type Params = Promise<{ lang: string; slug: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!isLocale(lang)) return {};
-  const p = findBySlug((await getPromos(lang)).promos, slug);
-  if (!p) return { title: "404" };
+  const live = (await getPromos(lang)).promos;
+  const p = findBySlug(live, slug);
+  if (!p) {
+    const e = endedBySlug(live, slug);
+    if (!e) return { title: "404" };
+    const tt = (lang === "en" ? undefined : e.titles[lang]) ?? e.title;
+    return { title: `${({ uk: "Завершилась", en: "Ended", ru: "Завершилась" } as const)[lang]}: ${tt}`, robots: { index: false, follow: true }, alternates: alt(lang, `/p/${slug}`) };
+  }
   const t = getDict(lang);
   // a real sentence instead of "Bybit · Реферальна · 250 USDT" (audit 14.11): reward, what to do, deadline, what the page gives
   const D = ({
@@ -297,7 +306,11 @@ export default async function PromoPage({ params }: { params: Params }) {
   const t = getDict(lang);
   const { promos, fetchedAt, details, faq: faqs } = await getPromos(lang);
   const p = findBySlug(promos, slug);
-  if (!p) notFound();
+  if (!p) {
+    const e = endedBySlug(promos, slug);
+    if (!e) notFound();
+    return <EndedPromo e={e} lang={lang} t={t} live={promos} now={fetchedAt} />;
+  }
   const now = fetchedAt;
   const m = p.meta ?? {};
   const st = statusOf(p, now);

@@ -1,3 +1,4 @@
+import { recordLive } from "./archive";
 import { buildShared } from "./sources/util";
 import fs from "node:fs";
 import path from "node:path";
@@ -310,6 +311,7 @@ async function getPromosLive(): Promise<Collected> {
   const i18n = await translateAll({ uk: [...texts, ...rules], ru: [...texts, ...rules] }).catch(() => undefined);
   // "Часті питання" written by Claude from the original rules (cached in data/faq.json), most valuable promos first
   const faq = await getFaqs([...promos].sort((a, b) => worth(b) - worth(a)), details).catch(() => undefined);
+  recordLive(promos, i18n);
   return { ...data, promos, details, i18n, faq };
 }
 
