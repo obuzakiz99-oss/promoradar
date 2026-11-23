@@ -39,7 +39,7 @@ export function ChartPicker({ series, lang, locale, height, signed }: { series: 
             <button key={s.name} type="button" onClick={() => setOnly(only === s.name ? null : s.name)} aria-pressed={only === s.name} title={only === s.name ? T.reset : T.only}
               className={`inline-flex min-h-8 items-center gap-1.5 rounded-lg px-2 transition-opacity hover:bg-white/5 ${on ? "" : "opacity-40"}`}>
               <span className="size-2.5 rounded-full" style={{ background: s.color }} />{s.name}
-              {last !== undefined && <span className="font-mono text-ink-3">{signed && last > 0 ? "+" : ""}{Math.abs(last) >= 10 ? last.toFixed(1) : last.toFixed(1)}%</span>}
+              {last !== undefined && <span className="font-mono text-ink-3">{signed && last > 0 ? "+" : last < 0 ? "−" : ""}{Math.abs(last).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>}
             </button>
           );
         })}
