@@ -149,6 +149,16 @@ async function getPromosLive(): Promise<Collected> {
           if (mEnd >= 0 && dEnd >= 1 && dEnd <= 31 && Number.isFinite(end) && (!p.endsAt || end > p.endsAt)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
+      // audit 23.11: BTSE "… closes tomorrow" had no end date, so it could never expire on the site
+      if (!p.endsAt && p.publishedAt && !p.evergreen) {
+        const head = [p.titleOrig ?? p.title, ...d.blocks.slice(0, 4).map((b) => b.x)].join(" ");
+        const when = /\b(closes?|ends?|ending|finish(es)?|last day( is)?)\s+(tomorrow|today|tonight)\b|\b(tomorrow|today) is the last day\b/i.exec(head);
+        if (when) {
+          const pub = new Date(p.publishedAt), plus = /tomorrow/i.test(when[0]) ? 1 : 0;
+          p.endsAt = Date.UTC(pub.getUTCFullYear(), pub.getUTCMonth(), pub.getUTCDate() + plus, 23, 59);
+          meta.datesFromRules = true;
+        }
+      }
       // "PS5 Slim drop today" — a one-day drop ends the day after it was posted
       if (!p.endsAt && p.publishedAt && /\b(drop|giveaway|airdrop|flash)\b[^.]{0,30}\btoday\b|\btoday only\b/i.test(p.titleOrig ?? p.title)) {
         p.endsAt = Date.UTC(new Date(p.publishedAt).getUTCFullYear(), new Date(p.publishedAt).getUTCMonth(), new Date(p.publishedAt).getUTCDate() + 1, 23, 59);

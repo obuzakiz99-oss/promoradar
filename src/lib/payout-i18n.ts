@@ -37,11 +37,13 @@ export const FORM_TEXT: Record<L, Record<PayoutForm | "unknown", string>> = {
   },
 };
 
-const days = (lang: L, n: number) => {
-  if (lang === "en") return `${n} day${n === 1 ? "" : "s"}`;
+const days = (lang: L, n: number, biz = false) => {
+  if (lang === "en") return `${n} ${biz ? "business " : ""}day${n === 1 ? "" : "s"}`;
   const m10 = n % 10, m100 = n % 100;
   const one = m10 === 1 && m100 !== 11, few = m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14);
-  return lang === "uk" ? `${n} ${one ? "день" : few ? "дні" : "днів"}` : `${n} ${one ? "день" : few ? "дня" : "дней"}`;
+  // audit 23.11: Hotcoin "7 business days" showed as "7 днів"
+  const b = !biz ? "" : lang === "uk" ? (one ? "робочий " : few ? "робочі " : "робочих ") : (one ? "рабочий " : "рабочих ");
+  return lang === "uk" ? `${n} ${b}${one ? "день" : few ? "дні" : "днів"}` : `${n} ${b}${one ? "день" : few ? "дня" : "дней"}`;
 };
 
 /** Small timing chips: claim manually within N days / arrives automatically / review / paid within. */
@@ -52,10 +54,12 @@ export function timingChips(po: Payout, lang: L): string[] {
     en: { claim: (d: string) => `Claim manually within ${d}`, manual: "Must be claimed manually", auto: "Paid automatically", review: (d: string) => `Review up to ${d}`, pay: (d: string) => `Paid within ${d}` },
     ru: { claim: (d: string) => `Забрать вручную за ${d}`, manual: "Нужно забрать вручную", auto: "Приходит автоматически", review: (d: string) => `Проверка — до ${d.replace(/ (день|дня)$/, (_, w) => (w === "день" ? " дня" : " дней"))}`, pay: (d: string) => `Выплата в течение ${d}` },
   }[lang];
-  if (po.claimDays) out.push(T.claim(days(lang, po.claimDays)));
+  const biz = !!po.business;
+  if (po.claimDays) out.push(T.claim(days(lang, po.claimDays, biz)));
   else if (po.manual) out.push(T.manual);
   else if (po.auto) out.push(T.auto);
-  if (po.reviewDays) out.push(T.review(days(lang, po.reviewDays)));
-  if (po.payDays) out.push(T.pay(po.payDays === 1 && !po.reviewDays ? (lang === "en" ? "24 hours" : lang === "uk" ? "доби" : "суток") : days(lang, po.payDays)));
+  if (po.reviewDays) out.push(T.review(days(lang, po.reviewDays, biz)));
+  const hours = (h: number) => (lang === "en" ? `${h} hours` : lang === "uk" ? `${h} ${h % 10 === 1 && h % 100 !== 11 ? "години" : "годин"}` : `${h} ${h % 10 === 1 && h % 100 !== 11 ? "часа" : "часов"}`);
+  if (po.payDays) out.push(T.pay(po.payHours ? hours(po.payHours) : po.payDays === 1 && !po.reviewDays ? (lang === "en" ? "24 hours" : lang === "uk" ? "доби" : "суток") : days(lang, po.payDays, biz)));
   return out;
 }

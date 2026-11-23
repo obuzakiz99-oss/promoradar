@@ -30,10 +30,10 @@ const [{ promos }, details] = await Promise.all([getJson(SITE), getJson(DETAILS)
 const size = (id) => (details[id]?.blocks ?? []).reduce((n, b) => n + b.x.length, 0);
 
 // 23.11: exchanges whose announcement pages GitHub's build can't read at all (Hotcoin) — their rules come from here too
-const BLOCKED = new Set(["hotcoin"]);
+const BLOCKED = new Set(["hotcoin", "bybit"]);   // bybit: its API gives only a summary (audit 23.11, WSOT)
 const todo = promos
   .filter((p) => (p.id.startsWith("tg:") || BLOCKED.has(p.venue?.id)) && !p.url.startsWith("https://t.me/") && !NOT_CAMPAIGN.test(new URL(p.url.replace(/&amp;/g, "&")).pathname))
-  .filter((p) => size(p.id) < (p.id.startsWith("tg:") ? 1500 : 300))
+  .filter((p) => (p.id.startsWith("tg:") ? size(p.id) < 1500 : size(p.id) < 300 || details[p.id]?.partial))
   .filter((p) => { const r = db[key(p.url)]; return !r || (!r.html && Date.now() - r.at > 2 * DAY); })   // retry empty reads every 2 days
   .sort((a, b) => b.publishedAt - a.publishedAt)
   .slice(0, MAX);

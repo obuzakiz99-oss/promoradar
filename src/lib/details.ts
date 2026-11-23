@@ -611,7 +611,10 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
     }
     blocks = dropTail(dropChrome(blocks), EX_HEAD);
     if (blocks[blocks.length - 1]?.x === EX_HEAD) blocks = blocks.slice(0, -1);
-    out[p.id] = { ...store[p.id], blocks, facts: factsOf(blocks) };
+    // audit 23.11: the FAQ said "only a one-line preview was available" for Bybit WSOT / Bitrue ANTX although the laptop had read
+    // the full exchange page — once a real page (> 600 chars) is appended the rules are no longer partial
+    const full = page.reduce((n, b) => n + b.x.length, 0) > 600;
+    out[p.id] = { ...store[p.id], ...(full ? { partial: false } : {}), blocks, facts: factsOf(blocks) };
   }
   return out;
 }

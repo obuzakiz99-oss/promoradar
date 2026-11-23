@@ -17,6 +17,8 @@ export interface Payout {
   auto?: boolean;
   reviewDays?: number;
   payDays?: number;
+  payHours?: number;      // "within 48 hours" (audit 23.11: it was shown as "24 hours")
+  business?: boolean;     // the day counts are business / working days
   quotes: string[];
 }
 
@@ -29,7 +31,7 @@ const D = String.raw`(?:${W}\s*(?:to|-|–)\s*)?(\d{1,3}|one|two|three|four|five
 // voucher-like: the reward cannot be withdrawn as such ("token vouchers" are NOT here: they redeem into real tokens)
 const VOUCHER = /\b(futures (trial )?bonus(es)?|bonus (voucher|credit)s?|(futures|trading|deduction|fee|copy ?trad\w*|margin|position|interest[- ]free|apr|earn|crypto) (vouchers?|coupons?)|(?<!token )vouchers?|coupons?|position airdrops?|fee savers?|trial funds?|experience (funds?|money)|bonus(es)? (can only|cannot|can't|are non-withdrawable|is non-withdrawable)|non-withdrawable|cannot be withdrawn|can ?not be withdrawn|not withdrawable)\b/i;
 // cash-like: explicitly withdrawable, or paid straight into a normal balance
-const CASH = /\b((can|may) be (freely )?(withdrawn|transferred out)|withdrawable|fully owned by you|paid (directly )?into your (existing )?balance|in the same (stablecoin|asset) you hold|token vouchers?|[\d,.]+ ?(USDT|USDC|USD) in cash|(distributed|credited|airdropped|paid|sent) (directly )?(in|as) (USDT|USDC|FDUSD|USD1|[A-Z]{2,10} tokens?)\b(?! (bonus|voucher|coupon|trial))|wallet address(es)?)\b/i;
+const CASH = /\b((can|may) be (freely )?(withdrawn|transferred out)|withdrawable|fully owned by you|paid (directly )?into your (existing )?balance|in the same (stablecoin|asset) you hold|token vouchers?|[\d,.]+ ?(USDT|USDC|USD) in cash|(distributed|credited|airdropped|paid|sent) (directly )?(in|as) (USDT|USDC|FDUSD|USD1|[A-Z]{2,10} tokens?)\b(?! (bonus|voucher|coupon|trial))|wallet address(es)?|[\d,.]+ (in|of) (crypto|bitcoin)|tokeni[sz]ed (stocks?|shares?|equit\w*))\b/i;
 // "… distributed to users' Spot Accounts …", "credited in USDT to your Funding account" — a normal wallet, not a bonus balance
 const TO_WALLET = {
   test: (x: string) => /\b(distribut\w*|credit\w*|airdrop\w*|issued|paid|sent|deposited|given)\b/i.test(x)
@@ -74,7 +76,9 @@ export function payoutOf(lines: string[]): Payout | undefined {
   const auto = !manual && !!hit(AUTO);
   const reviewDays = num(REVIEW);
   let payDays = num(PAY);
-  if (payDays === undefined && hit(PAY_HOURS)) payDays = 1;
+  let payHours: number | undefined;
+  if (payDays === undefined) { const s = hit(PAY_HOURS); if (s) { payHours = Number(s.match(PAY_HOURS)![1]); payDays = Math.max(1, Math.ceil(payHours / 24)); } }
+  const business = [...quotes].some((q) => /\b(business|working)[- ]days?\b/i.test(q)) || undefined;
   if (!form && claimDays === undefined && !manual && !auto && reviewDays === undefined && payDays === undefined) return undefined;
-  return { form, claimDays, manual: manual || undefined, auto: auto || undefined, reviewDays, payDays, quotes: [...quotes] };
+  return { form, claimDays, manual: manual || undefined, auto: auto || undefined, reviewDays, payDays, payHours, business, quotes: [...quotes] };
 }
