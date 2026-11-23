@@ -169,7 +169,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       {/* category tabs */}
       <div data-tour="dex-cats" className="scroll-x flex gap-1.5 md:flex-wrap">
         {["all", "DEX", ...categories.filter((c) => c !== "DEX")].map((c) => (
-          <button key={c} className="chip" data-on={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : (CAT_L[lang][c] ?? c)}</button>
+          <button key={c} className="chip" data-on={cat === c} aria-pressed={cat === c} onClick={() => setCat(c)}>{c === "all" ? A.all : (CAT_L[lang][c] ?? c)}</button>
         ))}
       </div>
 
