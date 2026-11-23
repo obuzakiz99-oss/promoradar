@@ -1,1 +1,1 @@
-{"id":"hotcoin:tradfi-0-fee-carnival","h":"xEQ4bci2hrfEVUjB","v":1,"at":1795242515454,"data":{"isPromo":true,"socialOnly":false,"mech":"unknown","act":{"kind":"other"},"pool":{"amount":500000,"unit":"USDT"}}}
+{"id":"hotcoin:tradfi-0-fee-carnival","h":"XDZN6xEmdNw5lbfc","v":1,"at":1795439452912,"data":{"isPromo":true,"socialOnly":false,"mech":"tiers","act":{"kind":"trade_futures","usd":1000},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":100,"unit":"USDT"},"pool":{"amount":500000,"unit":"USDT"},"days":14}}
