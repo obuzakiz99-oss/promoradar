@@ -143,7 +143,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
             <TableTools lang={lang} storeKey="unlocks" sorts={[
               { key: "date", label: UT[lang].sDate }, { key: "usd", label: UT[lang].sUsd, desc: true }, { key: "press", label: UT[lang].sPress, desc: true },
             ]} filters={[
-              { key: "impact", label: UT[lang].impact, all: UT[lang].anyImpact, options: [...new Set(rows.map((u) => LEVEL_TXT[lang][impactOf(u).level]))] },
+              { key: "impact", label: UT[lang].impact, all: UT[lang].anyImpact, options: LEVEL_TXT[lang].filter((_, lv) => rows.some((u) => impactOf(u).level === lv)) },
               { key: "kind", label: UT[lang].kind, all: UT[lang].anyKind, options: [...new Set(rows.map((u) => T.type[u.type]))] },
               { key: "who", label: UT[lang].who, all: UT[lang].anyWho, options: [...new Set(rows.map((u) => (u.sale ? trs(u.sale) : "")).filter(Boolean))].sort() },
             ]}>

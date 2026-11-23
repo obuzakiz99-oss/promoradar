@@ -64,7 +64,7 @@ export function HedgeCalculator({ options, lang }: { options: HedgeOption[]; lan
   const field = (k: keyof typeof v, label: string, step = "any") => (
     <label className="block">
       <span className="text-xs font-semibold text-ink-3">{label}</span>
-      <input type="number" step={step} min={LIM[k]?.[0]} max={LIM[k]?.[1]} value={v[k] as number} onChange={(e) => { setSel("custom"); setV((s) => ({ ...s, [k]: Number(e.target.value) })); }}
+      <input type="number" step={step} min={LIM[k]?.[0]} max={LIM[k]?.[1]} value={v[k] as number} onChange={(e) => { if (k !== "capital" && k !== "leverage") setSel("custom"); setV((s) => ({ ...s, [k]: Number(e.target.value) })); }}
         className="mt-1 h-11 w-full rounded-xl border border-line bg-white/[0.03] px-3 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
     </label>
   );

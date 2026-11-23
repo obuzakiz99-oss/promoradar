@@ -1,3 +1,4 @@
+import { geoAllowed } from "@/lib/geo";
 import { alt } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -6,7 +7,7 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
 import { compactUsd, duration, fmtLabel, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
-import { SITE, VENUES } from "@/config/site";
+import { SITE, VENUES, HAS_TG } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
 // fact labels get an SVG icon instead of the emoji that used to be part of the text
@@ -329,9 +330,11 @@ export default async function PromoPage({ params }: { params: Params }) {
   const combos = combosFor(p, promos, now);
   const C = COMBO_TX[lang];
   const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.perUser?.usd ?? 0), 0);
+  // audit 23.11: on uk pages a Brazil-only promo showed under "Схожі акції" — the default country there is Ukraine
+  const relOk = (x: (typeof promos)[number]) => lang !== "uk" || geoAllowed(x, "ua");
   const related = [
-    ...promos.filter((x) => x.id !== p.id && x.venue.id === p.venue.id),
-    ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category),
+    ...promos.filter((x) => x.id !== p.id && x.venue.id === p.venue.id && relOk(x)),
+    ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category && relOk(x)),
   ].slice(0, 6);
 
   // dollar value of coin amounts: the exchange's own figure, else the current Gate price of the coin (audit 12.11)
@@ -771,7 +774,8 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         <div data-tour="promo-share" className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
-          <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>
+          {/* audit 23.11: with no channel set the link opened Telegram's front page */}
+          {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>}
         </div>
 
         {related.length > 0 && (
