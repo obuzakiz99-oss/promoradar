@@ -115,7 +115,9 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
   useEffect(() => {
     let src = new URLSearchParams(location.search);
     const key = `pr:filters:${location.pathname}`;
-    if (![...src.keys()].some((k) => FILTER_KEYS.includes(k))) { try { src = new URLSearchParams(localStorage.getItem(key) ?? ""); } catch { /* blocked */ } }
+    // audit 23.11: opening plain /uk/ reopened the last category (43 cards instead of all) — a plain link shows everything;
+    // only the chosen sort order is remembered between visits
+    if (![...src.keys()].some((k) => FILTER_KEYS.includes(k))) { try { const so = new URLSearchParams(localStorage.getItem(key) ?? "").get("sort"); src = new URLSearchParams(so ? { sort: so } : {}); } catch { /* blocked */ } }
     const one = <T extends string>(k: string, ok: readonly T[]) => { const v = src.get(k); return v && (ok as readonly string[]).includes(v) ? (v as T) : undefined; };
     const many = (k: string) => (src.get(k) ?? "").split(",").map((x) => x.trim()).filter(Boolean);
     const k = one("kind", [...KINDS, "saved", "hidden"] as Kind[]); if (k && showKinds) setKind(k);
@@ -313,7 +315,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
           <div className="sm:ml-auto sm:min-w-44">
             <Select label={t.status.all} value={status} onChange={setStatus} align="right"
               className="h-10 rounded-xl border border-line bg-surface pl-4 pr-3 text-sm font-bold text-ink"
-              options={STATUSES.map((s) => ({ value: s, label: s === "all" ? t.status.all : t.status[s] }))} />
+              options={STATUSES.filter((s) => s === "all" || s === status || geoAll.some((p) => statusOf(p, now) === s || (s === "live" && statusOf(p, now) === "ongoing"))).map((s) => ({ value: s, label: s === "all" ? t.status.all : t.status[s] }))} />
           </div>
         </div>
   

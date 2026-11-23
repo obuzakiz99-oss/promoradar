@@ -49,9 +49,10 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
   const cardRef = useRef<HTMLDivElement>(null);
   const primary = useRef<HTMLButtonElement>(null);
   const back = useRef<Element | null>(null);
+  const startY = useRef(0);
   const dir = useRef(1);
 
-  const start = useCallback(() => { back.current = document.activeElement; setSteps(all.filter((s) => !s.sel || find(s.sel))); setAsk(""); dir.current = 1; setI(0); }, [all]);
+  const start = useCallback(() => { back.current = document.activeElement; startY.current = scrollY; setSteps(all.filter((s) => !s.sel || find(s.sel))); setAsk(""); dir.current = 1; setI(0); }, [all]);
 
   // `?tour=…` → straight into the tour; else the prompt (see the header comment)
   useEffect(() => {
@@ -73,12 +74,23 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
     return () => { clearTimeout(t); removeEventListener(TOUR_EVENT, onStart); };
   }, [id, start]);
 
+  // audit 23.11: the fixed "First time on PromoRadar?" card covered the footer links and the search row — while it is up the
+  // page gets room at the bottom so everything under it can be scrolled into view
+  useEffect(() => {
+    if (!ask) return;
+    const prev = document.body.style.paddingBottom;
+    document.body.style.paddingBottom = "11rem";
+    return () => { document.body.style.paddingBottom = prev; };
+  }, [ask]);
+
   const close = useCallback(() => {
     if (get(KEY) !== "no" && get(KEY) !== "qa") put(KEY, "done");
     put(`${KEY}:${id}`, "done"); put(`${KEY}:v`, "2");
     setI(-1); setBox(null); setCard(null);
     const el = back.current as HTMLElement | null;
-    if (el && typeof el.focus === "function" && document.contains(el)) el.focus({ preventScroll: true });
+    // audit 23.11: the page stayed ~15 000 px down after "Зрозуміло" and focus went to <body> — return to where the tour began
+    scrollTo({ top: startY.current, behavior: "instant" as ScrollBehavior });
+    if (el && el !== document.body && typeof el.focus === "function" && document.contains(el)) el.focus({ preventScroll: true });
   }, [id]);
   const go = useCallback((d: number) => { dir.current = d; setI((x) => Math.min(steps.length - 1, Math.max(0, x + d))); }, [steps.length]);
 

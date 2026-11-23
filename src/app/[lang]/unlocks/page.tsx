@@ -177,7 +177,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                         </td>
                         <td data-tour={u.date > fetchedAt ? "unlocks-cal" : undefined} className="rt-act px-2 py-3 text-right">
                           {u.date > fetchedAt && <CalAdd lang={lang} file={`unlock-${u.sym}`} ev={{
-                            uid: `unlock-${u.sym}-${u.date}`, at: deadlineReminder(u.date, fetchedAt),
+                            uid: `unlock-${u.sym}-${u.date}`, at: u.date,   // audit 23.11: the event is the unlock itself — not a reminder 1 h early
                             title: CAL[lang].title(u.sym, compactUsd(u.usd, lang), day(u.date, lang)),
                             description: `${u.sale ? `${trs(u.sale)} · ` : ""}${num(u.pctCap, lang, 2)}% · ${LEVEL_TXT[lang][impactOf(u).level]}`,
                             url: `https://${SITE.domain}/${lang}/${tokens.has(u.sym) ? `t/${u.sym}` : "unlocks"}/`,
