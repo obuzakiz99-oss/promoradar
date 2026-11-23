@@ -1,1 +1,1 @@
-{"id":"bydfi:17827791534737","h":"xLsv3OBCWUMZqe7x","v":1,"at":1794703866407,"data":{"isPromo":true,"socialOnly":false,"mech":"unknown","act":{"kind":"trade_futures"},"pool":{"amount":100000,"unit":"USDT"}}}
+{"id":"bydfi:17827791534737","h":"oEcKTlXZVvwo9mF8","v":1,"at":1795477114419,"data":{"isPromo":true,"socialOnly":false,"mech":"top_n","act":{"kind":"trade_futures","usd":500},"max":{"amount":3300,"unit":"USDT"},"pool":{"amount":100000,"unit":"USDT"},"winners":113,"days":31}}
