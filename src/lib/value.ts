@@ -207,9 +207,11 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   // audit 23.11: position vouchers, interest-free coupons and futures bonuses were counted as cash ("$500, sure" for a
   // BingX voucher) — they can only be used for trading and most expire unused; points are worth even less
   const fk = ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? "cash"] ?? 1;
+  // audit 23.11 (round 5): an "up to" APR is a ceiling — an estimate from it is never better than "low"
+  const capConf = (c: Conf): Conf => (mech === "apr" && m.aprUpTo ? "low" : c);
   const out = (g0: number | undefined, c0: Conf, basis: Value["basis"]): Value => {
     const gross = g0 === undefined ? undefined : g0 * fk;
-    const conf: Conf = fk < 1 && c0 === "high" ? "mid" : c0;
+    const conf: Conf = capConf(fk < 1 && c0 === "high" ? "mid" : c0);
     return { gross: gross === undefined ? undefined : round(gross), cost: round(cost), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai };
   };
 

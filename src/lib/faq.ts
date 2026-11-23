@@ -1,6 +1,6 @@
 import { readStore, writeStore } from "./store";
 import { readHand, writeTodo } from "./ai-hand";
-import { localNums } from "./format";
+import { fixWording, localNums } from "./format";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -123,7 +123,7 @@ function localFaq(f: Faq): Faq {
   const o = { ...f };
   for (const l of ["uk", "ru"] as const) {
     const e = f[l]; if (!e) continue;
-    const n = (x: string) => localNums(x, l);
+    const n = (x: string) => fixWording(localNums(x, l), l);
     o[l] = { summary: n(e.summary), steps: e.steps.map(n), watch: e.watch.map(n),
       payout: { when: n(e.payout.when), form: n(e.payout.form), how: n(e.payout.how) },
       faq: e.faq.map((x) => ({ q: n(x.q), a: n(x.a) })) };

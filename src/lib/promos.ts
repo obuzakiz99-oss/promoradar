@@ -125,11 +125,16 @@ async function getPromosLive(): Promise<Collected> {
       // "2026.10.20 00:00:00 - 2026.10.27 23:59:59 (UTC+8)" — a dotted range the terms parser misses (audit 14.11: an
       // ended BingX promo showed as running); only the end matters here, read in the stated offset
       if (!p.endsAt) {
-        const R = /(\d{4})[./-](\d{1,2})[./-](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./-](\d{1,2})[./-](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*[(（]?\s*UTC\s*([+-]\d{1,2})?/i;
+        // audit 23.11 (round 5): the end time is optional ("2026/10/31 00:00 – 2026/12/01 (UTC+8)" → end of that day) and
+        // KuCoin's US-style "10/28/2026 08:00 ~ 11/27/2026 15:59:59 (UTC)" is read too
+        const R = /(\d{4})[./-](\d{1,2})[./-](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./-](\d{1,2})[./-](\d{1,2})\s*(?:(\d{1,2}):(\d{2})(?::\d{2})?)?\s*[(（]?\s*(?:UTC|GMT)\s*([+-]\d{1,2})?/i;
+        const US = /(\d{1,2})\/(\d{1,2})\/(\d{4})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{1,2})\/(\d{1,2})\/(\d{4})\s*(?:(\d{1,2}):(\d{2})(?::\d{2})?)?\s*[(（]?\s*(?:UTC|GMT)\s*([+-]\d{1,2})?/i;
         // the range is often split over two lines ("⏰ 2026.10.20 00:00:00 -" / "2026.10.27 23:59:59（UTC+8）")
-        const r = d.blocks.slice(0, 40).map((b) => b.x).join(" ").match(R);
-        if (r) {
-          const end = Date.UTC(+r[4], +r[5] - 1, +r[6], +r[7], +r[8]) - (r[9] ? +r[9] * 3600_000 : 0);
+        const txt0 = d.blocks.slice(0, 40).map((b) => b.x).join(" ");
+        const r = txt0.match(R), u = r ? null : txt0.match(US);
+        const e = r ? { y: +r[4], m: +r[5], d: +r[6], h: r[7], mi: r[8], tz: r[9] } : u ? { y: +u[6], m: +u[4], d: +u[5], h: u[7], mi: u[8], tz: u[9] } : null;
+        if (e && e.m >= 1 && e.m <= 12) {
+          const end = Date.UTC(e.y, e.m - 1, e.d, e.h ? +e.h : 23, e.mi ? +e.mi : 59) - (e.tz ? +e.tz * 3600_000 : 0);
           if (Number.isFinite(end) && end > Date.UTC(2020, 0, 1)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
@@ -193,6 +198,8 @@ async function getPromosLive(): Promise<Collected> {
       if (tiers.length) meta.tiers = tiers;
       const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
       if (apr !== undefined && meta.apr === undefined) meta.aprPct = apr;
+      // audit 23.11 (round 5): MEXC "up to 20% APR" (base 5%), KuCoin Dual "up to 250%" were calculated as flat rates
+      if (meta.aprPct !== undefined && /\bup to\b[^.%]{0,25}\d+(\.\d+)?\s?%|\bmax(imum)?\b[^.%]{0,15}\d+(\.\d+)?\s?%/i.test(p.titleOrig ?? p.title)) meta.aprUpTo = true;
       // audit 23.11: OKX "8% APR paid over 3 months" was counted only until the promo's end (17 days)
       const over = (p.titleOrig ?? p.title).match(/\bpaid over (\d{1,2}) (month|week|day)s?\b/i);
       if (over && meta.aprPct !== undefined) meta.aprDays = +over[1] * ({ month: 30, week: 7, day: 1 } as Record<string, number>)[over[2].toLowerCase()];

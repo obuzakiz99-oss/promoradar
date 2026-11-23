@@ -69,11 +69,15 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
   const lines: Array<{ text: string; tone?: "good" | "bad" | "muted" }> = [];
   let big: string | undefined;
 
-  if (m.aprPct !== undefined) {
+  if (m.aprPct !== undefined && m.minEntry && v < m.minEntry.amount) {
+    // audit 23.11 (round 5): KuCoin KCUSD showed "+$5,75 for 30 days" on $1 000 although no bonus is paid below 50 000 USDT
+    lines.push({ text: T.short(usd(m.minEntry.amount - v)), tone: "bad" });
+  } else if (m.aprPct !== undefined) {
     const day = (v * m.aprPct) / 100 / 365;
     const left = m.aprDays ?? (endsAt && endsAt > now ? Math.max(1, Math.round((endsAt - now) / 86400_000)) : undefined);
     // boosted promo rates (> 50 %) last days and apply to a capped amount — show per day, not "a month" (audit 14.11: +$205)
-    big = m.aprPct > 50 ? `+${usd(day)} ${T.perDay}` : `+${usd(day * 30)} ${T.perMonth}`;
+    big = `${m.aprUpTo ? "≤ " : "+"}${m.aprPct > 50 ? `${usd(day)} ${T.perDay}` : `${usd(day * 30)} ${T.perMonth}`}`;
+    if (m.aprUpTo) lines.push({ text: ({ uk: "Це максимальна ставка («до»): базова зазвичай значно нижча, решта — за умови (обсяг, рівень, позиція).", en: "This is the maximum (“up to”) rate: the base is usually much lower, the rest depends on conditions.", ru: "Это максимальная ставка («до»): базовая обычно значительно ниже, остальное — при условиях." } as const)[lang], tone: "bad" });
     if (m.aprPct > 50) lines.push({ text: ({ uk: "Підвищена ставка зазвичай діє кілька днів і на обмежену суму — строк і ліміт дивіться в умовах.", en: "A boosted rate usually lasts a few days and covers a capped amount — check the term and limit in the rules.", ru: "Повышенная ставка обычно действует несколько дней и на ограниченную сумму — срок и лимит смотрите в условиях." } as const)[lang], tone: "bad" });
     lines.push({ text: m.aprPct > 50 ? `${m.aprPct}% APR` : `+${usd(day)} ${T.perDay} · ${m.aprPct}% APR` });
     if (left && m.aprPct <= 50) lines.push({ text: m.aprDays

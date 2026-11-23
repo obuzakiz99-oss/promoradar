@@ -92,3 +92,28 @@ function sentenceCase1(s: string, min: number): string {
 
 /** A source label in the reader's number format: "5,000 USDT" → "5 000 USDT" on uk/ru (audit 14.11: mixed formats). */
 export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s.replace(/\d{1,3}(?:,\d{3})+(?:\.\d+)?/g, (m) => Number(m.replace(/,/g, "")).toLocaleString(nfLocale(lang))));
+
+/**
+ * audit 23.11 (round 5): machine-translation slips that came back in new translations / AI texts — fixed at render time so
+ * every new text gets them too. Cashtags ($BTC), hashtags and @handles lose their sigils ("$BTC" next to "$1 000" read as money).
+ */
+const WORDING: Record<string, Array<[RegExp, string]>> = {
+  uk: [
+    [/(^|[^а-яіїєґ'])Підпишіть(?=[^а-яіїєґ'])/g, "$1Внесіть"], [/(^|[^а-яіїєґ'])підпишіть(?=[^а-яіїєґ'])/g, "$1внесіть"],
+    [/відповідних (нових )?користувачів/g, "допущених $1користувачів"], [/відповідні (нові )?користувачі/g, "допущені $1користувачі"],
+    [/Відповідні (нові )?користувачі/g, "Допущені $1користувачі"], [/вносячи відповідну криптовалюту/g, "вносячи підтримувану криптовалюту"],
+    [/відповідних активів/g, "зарахованих активів"], [/(^|\s)Season (\d+)/g, "$1Сезон $2"], [/передплат(и|у|а)(?= Kraken)/g, "підписк$1"],
+    [/(розділіть|щоб розділити) /g, "отримайте частку з "],
+  ],
+  ru: [
+    [/(^|[^а-яё])Подпишите(?=[^а-яё])/g, "$1Внесите"], [/(^|[^а-яё])подпишите(?=[^а-яё])/g, "$1внесите"],
+    [/соответствующих (новых )?пользователей/g, "допущенных $1пользователей"], [/соответствующие (новые )?пользователи/g, "допущенные $1пользователи"],
+    [/(^|\s)Season (\d+)/g, "$1Сезон $2"],
+  ],
+};
+export function fixWording(s: string, lang: string): string {
+  if (lang === "en") return s;
+  let x = s.replace(/(^|[\s(«"])\$([A-Z][A-Z0-9]{1,9})\b/g, "$1$2").replace(/(^|\s)#([A-Za-z][\w]{2,30})\b/g, "$1$2").replace(/(^|\s)@([A-Za-z][\w]{2,30})\b/g, "$1$2");
+  for (const [re, to] of WORDING[lang] ?? []) x = x.replace(re, to);
+  return x;
+}

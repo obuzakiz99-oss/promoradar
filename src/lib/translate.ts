@@ -1,4 +1,4 @@
-import { localNums } from "./format";
+import { fixWording, localNums } from "./format";
 import { readStore, writeStore } from "./store";
 import fs from "node:fs";
 import path from "node:path";
@@ -22,10 +22,10 @@ import MANUAL_JSON from "@/config/translations-manual.json";
  * ("VVV、IDOL"), "MNT,TUSD" without a space and English number style ("5,000 USDT", "1.5%").
  */
 function polish(t: string, lang: string): string {
-  return localNums(t
+  return fixWording(localNums(t
     .replace(/\[([^\]\n]{1,60})\][<(]https?:\/\/[^\s>)]+[>)]/g, "$1")
     .replace(/\s*、\s*/g, ", ")
-    .replace(/\b([A-Z]{2,10}),(?=[A-Z]{2,10}\b)/g, "$1, "), lang);
+    .replace(/\b([A-Z]{2,10}),(?=[A-Z]{2,10}\b)/g, "$1, "), lang), lang);
 }
 
 export type TLang = "uk" | "ru";
