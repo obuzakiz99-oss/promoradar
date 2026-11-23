@@ -200,3 +200,10 @@ main :where(p, li, dd, blockquote) { overflow-wrap: anywhere; }
   .overflow-x-auto > table thead :is(th):first-child { background-color: var(--color-surface); }
   .overflow-x-auto:has(> table) { mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent); }
 }
+
+/* audit 23.11 (phone): sort buttons, amount inputs, FAQ rows, "Пояснення", tour "Пропустити" were 16–36px tall.
+   On touch screens every control gets at least a 40px tap height; inline text buttons stay inline. */
+@media (pointer: coarse) {
+  button, [role="button"], input:not([type="checkbox"]):not([type="radio"]), select, summary { min-height: 2.5rem; }
+  p > button { min-height: 0; padding-block: 0.6rem; margin-block: -0.6rem; }
+}

@@ -79,7 +79,9 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
     if (left && m.aprPct <= 50) lines.push({ text: `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });
     lines.push({ text: lock === "futures" ? T.keepFut : lock === "dual" ? T.keepDual : lock === "lock" ? T.keepLock : T.keep, tone: lock ? "bad" : "muted" });
   } else {
-    const min = m.minEntry?.amount ?? m.tiers?.[0]?.min ?? 0;
+    // audit 23.11: $100 below the first tier (Toobit: >= $1 000 -> 60 USDT) fell through to the top prize "<= $12 000" --
+    // the first reward tier is the real threshold when it is above the stated minimum
+    const min = Math.max(m.minEntry?.amount ?? 0, m.tiers?.[0]?.min ?? 0);
     let rewardUsd: number | undefined;
     if (v < min) {
       lines.push({ text: T.short(usd(min - v)), tone: "bad" });
