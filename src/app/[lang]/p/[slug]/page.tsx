@@ -85,14 +85,21 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const bits = `${p.venue.name} · ${t.cat[p.category]}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
   const head = sentenceCase(noEmoji(p.title)).replace(/\s{2,}/g, " ").trim();
-  const short = head.length > 90 ? `${head.slice(0, 88).replace(/[\s,.:;—–-]+\S*$/, "")}…` : head;
-  const title = p.venue.kind === "airdrop" ? `${short} Airdrop` : `${short} — ${p.venue.name}`;
+  // audit 23.11 (SEO): titles ran 24–118 characters and Google cuts at ~60 — our structured title ("Earn: USDT → до 10% APR")
+  // with the venue in front says the same in half the length; the raw headline stays the fallback
+  const tpl = titleOf(p, lang);
+  const base = tpl ?? head;
+  const named = base.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? base : `${p.venue.name}: ${base}`;
+  const cap = (x: string, n: number) => (x.length > n ? `${x.slice(0, n - 2).replace(/[\s,.:;—–-]+\S*$/, "")}…` : x);
+  const title = p.venue.kind === "airdrop" ? `${cap(head, 60)} Airdrop` : cap(named, 65);
+  // audit 23.11 (SEO): 9 Biconomy pages shared one description — the promo's own headline makes each unique
+  const desc = cap(`${tpl && tpl !== head ? `${head}. ` : ""}${bits}`, 200);
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
   return {
-    title, description: bits, alternates: alt(lang, `/p/${slug}`),
-    openGraph: { title, description: bits, images: [{ url: image, width: 1200, height: 630 }] },
-    twitter: { card: "summary_large_image", title, description: bits, images: [image] },
+    title, description: desc, alternates: alt(lang, `/p/${slug}`),
+    openGraph: { title, description: desc, images: [{ url: image, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title, description: desc, images: [image] },
   };
 }
 
@@ -387,6 +394,15 @@ export default async function PromoPage({ params }: { params: Params }) {
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
+        {/* audit 23.11 (SEO): breadcrumbs for search results — Home › exchange › promo */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org", "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "PromoRadar", item: `https://${SITE.domain}/${lang}/` },
+            ...(venueCfg ? [{ "@type": "ListItem", position: 2, name: p.venue.name, item: `https://${SITE.domain}/${lang}/v/${p.venue.id}/` }] : []),
+            { "@type": "ListItem", position: venueCfg ? 3 : 2, name: own ?? p.title, item: `https://${SITE.domain}/${lang}/p/${slug}/` },
+          ],
+        }).replace(/</g, "\\u003c") }} />
         <nav aria-label={({ uk: "Навігація", en: "Breadcrumbs", ru: "Навигация" } as const)[lang]} className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ink-3">
           <Link href={`/${lang}#promos`} className="inline-flex min-h-8 items-center hover:text-ink">← {t.detail.back}</Link>
           <span>/</span>

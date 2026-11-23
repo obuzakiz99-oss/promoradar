@@ -15,7 +15,7 @@ const html = `<!doctype html>
   :root{color-scheme:dark}
   html,body{margin:0;min-height:100%;background:#06080b;color:#a6b0bd;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
   main{max-width:34rem;margin:0 auto;padding:18vh 16px 40px;text-align:center}
-  b{display:block;font-size:1.6rem;color:#eef2f6;margin-bottom:.5rem}
+  h1{display:block;font-size:1.6rem;color:#eef2f6;margin:0 0 .5rem}
   a{display:inline-block;margin:.4rem .3rem;padding:.7rem 1.1rem;border-radius:12px;border:1px solid #232a33;color:#eef2f6;text-decoration:none;font-weight:700}
   a.p{background:#c8ff3d;border-color:#c8ff3d;color:#0b0f05}
 </style>
@@ -41,7 +41,7 @@ const html = `<!doctype html>
 </head>
 <body>
 <main id="m">
-  <b>Сторінку не знайдено</b>
+  <h1>Сторінку не знайдено</h1>
   <p>Можливо, акція вже завершилась або сторінку перенесли.</p>
   <a class="p" href="/promoradar/uk/">На головну</a><a href="/promoradar/uk/launchpools/">Launchpool</a><a href="/promoradar/uk/drops/">Аірдропи</a>
 </main>
@@ -56,7 +56,7 @@ const html = `<!doctype html>
   if (!T) return;
   document.documentElement.lang = l;
   var m = document.getElementById("m");
-  m.querySelector("b").textContent = T[0];
+  m.querySelector("h1").textContent = T[0]; document.title = T[0] + " — PromoRadar";
   m.querySelector("p").textContent = T[1];
   var a = m.querySelectorAll("a"), href = ["/", "/launchpools/", "/drops/"];
   for (var i = 0; i < a.length; i++) { a[i].textContent = T[2 + i]; a[i].href = "/promoradar/" + l + href[i]; }

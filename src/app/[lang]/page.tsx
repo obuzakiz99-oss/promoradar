@@ -5,7 +5,7 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos, topVenues } from "@/lib/promos";
 import { Hero } from "@/components/Hero";
 import type { RadarItem } from "@/components/RadarPicker";
-import { HAS_PRO, HAS_TG, VENUES } from "@/config/site";
+import { HAS_PRO, HAS_TG, SITE, VENUES } from "@/config/site";
 import { todayPins } from "@/components/TodayTop";
 import { slugOf } from "@/lib/slug";
 import { promoLevel } from "@/lib/level";
@@ -51,6 +51,14 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   return (
     <>
       <main>
+        {/* audit 23.11 (SEO): who publishes the site and what it is called */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "Organization", "@id": `https://${SITE.domain}/#org`, name: "PromoRadar", url: `https://${SITE.domain}/${lang}/` },
+            { "@type": "WebSite", name: "PromoRadar", url: `https://${SITE.domain}/${lang}/`, inLanguage: lang, publisher: { "@id": `https://${SITE.domain}/#org` } },
+          ],
+        }).replace(/</g, "\\u003c") }} />
         <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "максимум на 1 людину", en: "most for one person", ru: "максимум на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}

@@ -15,19 +15,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { promos } = await getPromos();
   const { tokens } = await getTokens();
   const lps = lpPaged(await getPools());
+  // audit 23.11 (SEO): Google ignores changefreq/priority; it reads lastmod — every page is rebuilt with fresh data each run
+  const now = new Date();
   const out: MetadataRoute.Sitemap = [];
   for (const l of LOCALES) {
-    out.push({ url: `${base}/${l}`, changeFrequency: "hourly", priority: l === "uk" ? 1 : 0.9 });
+    out.push({ url: `${base}/${l}`, lastModified: now });
     for (const s of ["launchpools", "earn", "dex", "calendar", "bonuses", "history", "hedge", "learn", "learn/start", "learn/how", "learn/safety", "learn/rewards", "check", "learn/quiz", "learn/glossary", "fixed", "drops", "zero-fees", "unlocks", "sales", "about", "privacy", "terms", "api"])
-      out.push({ url: `${base}/${l}/${s}`, changeFrequency: s.startsWith("learn") ? "weekly" : "hourly", priority: s.startsWith("learn") ? 0.6 : 0.8 });
-    for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, changeFrequency: "hourly", priority: 0.7 });
-    out.push({ url: `${base}/${l}/t`, changeFrequency: "hourly", priority: 0.8 });
-    for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, changeFrequency: "weekly", priority: 0.6 });
+      out.push({ url: `${base}/${l}/${s}`, lastModified: now });
+    for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, lastModified: now });
+    out.push({ url: `${base}/${l}/t`, lastModified: now });
+    for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, lastModified: now });
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
-    // out.push({ url: `${base}/${l}/exchanges`, changeFrequency: "hourly", priority: 0.8 });
-    for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, changeFrequency: "hourly", priority: 0.7 });
-    for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, changeFrequency: "hourly", priority: 0.7 });
-    for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : undefined, changeFrequency: "daily", priority: 0.6 });
+    // out.push({ url: `${base}/${l}/exchanges`, lastModified: now });
+    for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, lastModified: now });
+    for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, lastModified: now });
+    for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : now });
   }
   // trailing slash = the canonical URL (trailingSlash export); without it every sitemap line was a 301 hop
   return out.map((e) => ({ ...e, url: e.url.endsWith("/") ? e.url : `${e.url}/` }));

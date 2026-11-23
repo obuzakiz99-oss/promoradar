@@ -114,7 +114,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const ex = venueOf(p.exchange).name;
   const stakes = [...new Set(p.pools.map((x) => x.stake))].join(", ");
   const best = Math.max(0, ...p.pools.map((x) => x.apr ?? 0));
-  const title = `${p.name} (${p.token}) Launchpool — ${ex}`;
+  // audit 23.11 (SEO): three Bitget pools were all "USDT (USDT) Launchpool — Bitget" — the staked coin tells them apart
+  const title = p.name.toUpperCase() === p.token.toUpperCase() ? `${ex} Launchpool: ${stakes} → ${p.token}` : `${p.name} (${p.token}) Launchpool — ${ex}`;
   const description = [X[lang].title(stakes, p.token), best ? `APR ${fmtApr(best, lang)}` : "", `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`].filter(Boolean).join(" · ");
   return withOg({ title, description, alternates: alt(lang, `/lp/${slug}`) });
 }
