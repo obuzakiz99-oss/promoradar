@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { VenuePayout } from "@/components/VenuePayout";
-import { PROMO_PAGES, VENUES, venueOf } from "@/config/site";
+import { PROMO_PAGES, TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Locale } from "@/lib/i18n";
 
 const NOAUTO: Record<Locale, { browser: (v: string) => string; manual: (v: string) => string; open: (v: string) => string }> = {
@@ -85,6 +85,27 @@ export default async function VenuePage({ params }: { params: Params }) {
 
         {/* how this exchange pays: verified facts + what its promos' rules say */}
         <VenuePayout venueId={id} venueName={v.name} promos={mine} lang={lang} />
+        {/* audit 23.11 (UX): a newcomer from a shared link had no way to tell the real exchange from a copy — the official
+            addresses we already use for the "Це справжня біржа?" checker, shown here (only facts we hold, no ratings) */}
+        {(() => {
+          const host = (() => { try { return new URL(cfg.site).hostname.replace(/^www\./, ""); } catch { return ""; } })();
+          const tgs = TELEGRAM.filter((x) => x.venue === id).map((x) => x.channel);
+          const TT = ({
+            uk: { title: "Офіційні адреси", site: "Сайт", tg: "Telegram", check: "Перевірити інше посилання", warn: "Підробні сайти й «служба підтримки» в особистих повідомленнях — найчастіший спосіб втратити гроші. Заходьте лише за цими адресами." },
+            en: { title: "Official addresses", site: "Website", tg: "Telegram", check: "Check another link", warn: "Fake sites and \"support\" in private messages are the most common way to lose money. Use only these addresses." },
+            ru: { title: "Официальные адреса", site: "Сайт", tg: "Telegram", check: "Проверить другую ссылку", warn: "Поддельные сайты и «поддержка» в личных сообщениях — самый частый способ потерять деньги. Заходите только по этим адресам." },
+          } as const)[lang];
+          return host ? (
+            <section className="mt-6 rounded-2xl border border-line bg-white/[0.02] p-5">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{TT.title}</h2>
+              <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-[8rem_1fr]">
+                <dt className="font-semibold text-ink-3">{TT.site}</dt><dd className="font-mono font-bold text-ink">{host}</dd>
+                {tgs.length > 0 && <><dt className="font-semibold text-ink-3">{TT.tg}</dt><dd className="font-mono font-bold text-ink">{tgs.map((c) => `@${c}`).join(", ")}</dd></>}
+              </dl>
+              <p className="mt-3 text-sm text-ink-2">{TT.warn} <Link href={`/${lang}/check/`} className="font-semibold text-lime underline-offset-2 hover:underline">{TT.check} →</Link></p>
+            </section>
+          ) : null;
+        })()}
 
         <section className="mt-10">
           <h2 data-tour="venue-promos" className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>

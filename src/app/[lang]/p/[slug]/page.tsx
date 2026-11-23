@@ -696,8 +696,13 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* key points pulled from the official rules */}
         {det && det.facts.length > 0 && (
-          <section className="card mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
-            <h2 className="font-display text-xl font-semibold tracking-tight"><Icon name="pin" className="size-5 text-lime" /> {R.keyTitle}</h2>
+          // audit 23.11 (texts): with the plain explainer above, these rule lines repeated the same steps a third time —
+          // they stay one tap away instead of filling the page
+          <details open={!ex} className="card group mt-4 p-6 hover:transform-none ring-1 ring-lime/15">
+            <summary className="cursor-pointer list-none">
+              <h2 className="inline font-display text-xl font-semibold tracking-tight"><Icon name="pin" className="size-5 text-lime" /> {R.keyTitle}</h2>
+              {ex && <span className="ml-2 text-sm font-semibold text-ink-3 group-open:hidden">{({ uk: "показати", en: "show", ru: "показать" } as const)[lang]} ▾</span>}
+            </summary>
             <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0 ? R.keySubTr : R.keySub}</p>
             <dl className="mt-4 divide-y divide-line">
               {factGroups(det.facts).map(([k, lines]) => (
@@ -709,7 +714,7 @@ export default async function PromoPage({ params }: { params: Params }) {
                 </div>
               ))}
             </dl>
-          </section>
+          </details>
         )}
 
 

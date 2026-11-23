@@ -1,4 +1,4 @@
-import { rankOf } from "@/lib/rank";
+import { rankOf, friendlyRank } from "@/lib/rank";
 import { notFound } from "next/navigation";
 import { PromoTabs } from "@/components/SectionTabs";
 import { getDict, isLocale } from "@/lib/i18n";
@@ -36,7 +36,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   // first screen of the feed (best value first, as the feed sorts by default); the rest is loaded from /api/promos.json
   const pins = todayPins(promos, lang, fetchedAt);
   const pinned = promos.filter((p) => pins.some((x) => x.id === p.id));
-  const firstCards = [...pinned, ...[...promos].filter((p) => !pinned.includes(p)).sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || Number(!!b.sponsored) - Number(!!a.sponsored) || rankOf(b.meta?.value) - rankOf(a.meta?.value) || b.publishedAt - a.publishedAt).slice(0, 24)];
+  const firstCards = [...pinned, ...[...promos].filter((p) => !pinned.includes(p)).sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || Number(!!b.sponsored) - Number(!!a.sponsored) || friendlyRank(b) - friendlyRank(a) || b.publishedAt - a.publishedAt).slice(0, 24)];
   // the hero's money figure: the most ONE person can get in a promo open to everyone (a prize-pool total says little)
   // (audit 14.11: a "win $30,000+" pool and an exchange-footer "$15,000 welcome rewards" were taken as per-person sums —
   // a per-person figure counts only when it is below the promo's pool, or the promo has no pool and is a bonus/referral)

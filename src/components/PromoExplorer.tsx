@@ -12,7 +12,7 @@ import { useSaved } from "./SaveButton";
 import { combosFor } from "@/lib/combos";
 import { clearHidden, HideToast, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
-import { rankOf } from "@/lib/rank";
+import { rankOf, friendlyRank } from "@/lib/rank";
 import { titleOf } from "@/lib/titletpl";
 import { plural } from "@/lib/format";
 
@@ -222,7 +222,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
     const sponsored = l.filter((p) => p.sponsored);
     const rest = l.filter((p) => !p.sponsored);
     // best first: expected net $ for one ordinary participant (value.ts), surer amounts ahead of estimates
-    if (sort === "best") rest.sort((a, b) => rankOf(b.meta?.value) - rankOf(a.meta?.value) || b.publishedAt - a.publishedAt);
+    if (sort === "best") rest.sort((a, b) => friendlyRank(b) - friendlyRank(a) || b.publishedAt - a.publishedAt);
     if (sort === "newest") rest.sort((a, b) => b.publishedAt - a.publishedAt || value(b) - value(a));
     if (sort === "ending") rest.sort((a, b) => (a.endsAt ?? Infinity) - (b.endsAt ?? Infinity) || b.publishedAt - a.publishedAt);
     if (sort === "biggest") rest.sort((a, b) => value(b) - value(a));
