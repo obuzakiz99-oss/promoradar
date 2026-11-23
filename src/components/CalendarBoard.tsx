@@ -4,7 +4,7 @@ import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import { TOOLS } from "@/lib/i18n-tools";
 import { VenueLogo } from "./VenueLogo";
-import { noEmoji } from "@/lib/format";
+import { noEmoji, sentenceCase } from "@/lib/format";
 import { SITE } from "@/config/site";
 
 export interface CalEvent { id: string; at: number; kind: "start" | "end"; venue: Venue; title: string; href: string; source: string }
@@ -18,7 +18,7 @@ const SITE_TX = { uk: ["Деталі й умови на PromoRadar", "Сторі
 const siteUrl = (e: CalEvent) => (/^https?:/.test(e.href) ? e.href : `https://${SITE.domain.split("/")[0]}${e.href}`);
 const details = (e: CalEvent, lang: Locale) => `${SITE_TX[lang][0]}: ${siteUrl(e)}\n${SITE_TX[lang][1]}: ${e.source}`;
 // audit 23.11: "Bitget: Bitget: $1M…" — titles often already start with the venue name
-const named = (e: CalEvent) => { const t = noEmoji(e.title); return t.toLowerCase().startsWith(e.venue.name.toLowerCase()) ? t : `${e.venue.name}: ${t}`; };
+const named = (e: CalEvent) => { const t = sentenceCase(noEmoji(e.title)); return t.toLowerCase().startsWith(e.venue.name.toLowerCase()) ? t : `${e.venue.name}: ${t}`; };
 const summary = (e: CalEvent, label: string) => `${label}: ${named(e)}`;
 
 function gcal(e: CalEvent, label: string, lang: Locale) {

@@ -34,6 +34,9 @@ export function VenueLogo({ v, size = 36, rounded = "rounded-xl", alts = [] }: {
           width={size}
           height={size}
           decoding="async"
+          // audit 23.11 (tech): 664 KB of unlock logos loaded up front and 16 logos were auto-preloaded in <head>
+          loading="lazy"
+          fetchPriority="low"
           onLoad={() => setState("ok")}
           onError={fail}
           className={`absolute inset-0 size-full bg-white object-cover transition-opacity duration-300 ${state === "ok" ? "opacity-100" : "opacity-0"}`}

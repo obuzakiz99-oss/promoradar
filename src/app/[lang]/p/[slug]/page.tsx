@@ -614,7 +614,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <Icon name="chevronDown" className="size-4 transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-1 pb-1 sm:px-2 sm:pb-2">
-            <p className="px-4 pt-1 text-sm text-ink-2"><span className="text-ink-3">{p.venue.name}:</span> {sentenceCase(p.title)}</p>
+            <p className="px-4 pt-1 text-sm text-ink-2">{/* audit 23.11: "OKX: OKX: 0% комісії" */}{!p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) && <span className="text-ink-3">{p.venue.name}: </span>}{sentenceCase(p.title)}</p>
         {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}
         {p.category !== "farming" && det && (() => {
           const po = m.payout;
@@ -787,7 +787,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         )}
 
         <div data-tour="promo-share" className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
-          <Share title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
+          <Share href={`https://${SITE.domain}/${lang}/p/${slug}/`} title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
           {/* audit 23.11: with no channel set the link opened Telegram's front page */}
           {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>}
         </div>

@@ -22,5 +22,6 @@ export const FONT_CSS = FAMILIES.flatMap(([family, file, weight]) => (["cyrillic
 /** The text and headings everyone sees first; the mono face is small and loads on demand. */
 export const fontPreloads = (lang: string) => {
   const subs: Array<"latin" | "cyrillic"> = lang === "en" ? ["latin"] : ["cyrillic", "latin"];
-  return [...["manrope", "unbounded"].flatMap((f) => subs.map((s) => fontFile(f, s))), fontFile("jetbrains-mono", "latin")];
+  // audit 23.11 (tech): the mono face was preloaded too (40 KB) although it is used only for numbers further down
+  return ["manrope", "unbounded"].flatMap((f) => subs.map((s) => fontFile(f, s)));
 };

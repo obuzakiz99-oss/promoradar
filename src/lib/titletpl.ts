@@ -67,7 +67,7 @@ function subject(title: string, lang: L, venue: string, noPrize = false): { text
 // bigger ones keep the compact K/M form
 const poolLabel = (r: NonNullable<Promo["reward"]>, lang: L) => (r.amount > 0 && r.amount < 1e4 ? money(r.amount, r.unit, lang) : r.label);
 const VAGUE = /\b(limited[- ]time|exclusive|special|rewards?|benefits?|perks?|offers?|bonanza|new and existing|all users|everyone)\b/i;
-const FRAG = /^(don'?t miss|do not miss|maximum reward|max(imum)? (prize|reward)s?\s*:|breakdown|what'?s more|here'?s (how|what)|plus[,:]|also[,:]|in addition|on top of that|for this occasion|to celebrate (this|the)|join us|read more|details)\b|[:…]\s*$/i;
+const FRAG = /^(don['’]?t miss|do not miss|maximum reward|max(imum)? (prize|reward)s?\s*:|breakdown|what['’]?s more|here['’]?s (how|what)|plus[,:]|also[,:]|in addition|on top of that|for this occasion|to celebrate (this|the)|join us|read more|details)\b|[:…]\s*$/i;
 const cyr = (s: string) => /[а-яіїєґё]/i.test(s);
 
 export function titleOf(p: Promo, lang: L): string | undefined {

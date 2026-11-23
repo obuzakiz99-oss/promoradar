@@ -115,6 +115,9 @@ async function getPromosLive(): Promise<Collected> {
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
     // exchange rating then see coin pools too (audit 12.11)
     if (p.reward && p.reward.usd === undefined && px[p.reward.unit.toUpperCase()]) p.reward = { ...p.reward, usd: Math.round(p.reward.amount * px[p.reward.unit.toUpperCase()]) };
+    // audit 23.11 (round 5): Gate "Unlock Mystery Boxes with $1" showed "Винагорода $1" / "фонд на всіх $1" — a sum under $5 is an
+    // entry price, never a promo's reward
+    if (p.reward?.usd !== undefined && p.reward.usd < 5) p.reward = undefined;
     const d = details[p.id];
     if (d) {
       // exact dates and the per-person maximum, read from the rules

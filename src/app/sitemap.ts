@@ -4,7 +4,7 @@ import { SITE, VENUES } from "@/config/site";
 import { LOCALES } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
-import { getTokens } from "@/lib/tokens";
+import { tokenRich, getTokens } from "@/lib/tokens";
 import { getPools, lpPaged, lpSlug } from "@/lib/pools";
 import { GUIDE_IDS } from "@/lib/guides";
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, changeFrequency: "weekly", priority: 0.6 });
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
     // out.push({ url: `${base}/${l}/exchanges`, changeFrequency: "hourly", priority: 0.8 });
-    for (const sym of tokens.keys()) out.push({ url: `${base}/${l}/t/${sym}`, changeFrequency: "hourly", priority: 0.7 });
+    for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, changeFrequency: "hourly", priority: 0.7 });
     for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, changeFrequency: "hourly", priority: 0.7 });
     for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : undefined, changeFrequency: "daily", priority: 0.6 });
   }

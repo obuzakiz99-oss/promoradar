@@ -103,3 +103,6 @@ export async function getTokens(lang?: string): Promise<{ tokens: Map<string, To
 function buildKeys(fresh: string[]): Promise<string[]> {
   return buildShared("tokens", async () => fresh);
 }
+
+/** audit 23.11 (tech/SEO): ~940 token pages had ~500 characters of template text — only tokens with a promo or a pool are indexed. */
+export const tokenRich = (t: TokenInfo) => t.promos.length + t.lpReward.length + t.lpStake.length > 0;

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { trList } from "@/lib/translate";
-import { getTokens, isStableSym } from "@/lib/tokens";
+import { getTokens, isStableSym, tokenRich } from "@/lib/tokens";
 import { venueOf } from "@/config/site";
 import { compactUsd, duration, nfLocale, num } from "@/lib/format";
 import { withBase } from "@/lib/base";
@@ -56,7 +56,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { lang, sym } = await params;
   if (!isLocale(lang)) return {};
   const T = TOKEN_TX[lang];
-  return withOg({ title: T.title(sym), description: T.desc(sym), alternates: alt(lang, `/t/${sym}`) });
+  const tk = (await getTokens(lang)).tokens.get(sym);
+  return withOg({ title: T.title(sym), description: T.desc(sym), alternates: alt(lang, `/t/${sym}`), ...(tk && !tokenRich(tk) ? { robots: { index: false, follow: true } } : {}) });
 }
 
 const UNLOCK_TX: Record<Locale, (d: string, left: string) => string> = { uk: (d, l) => `Наступний розлок: ${d} (через ${l})`, en: (d, l) => `Next unlock: ${d} (in ${l})`, ru: (d, l) => `Следующий разлок: ${d} (через ${l})` };

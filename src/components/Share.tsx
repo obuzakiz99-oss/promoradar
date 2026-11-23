@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export function Share({ title, label, copyLabel, copiedLabel }: { title: string; label: string; copyLabel: string; copiedLabel: string }) {
+export function Share({ title, label, copyLabel, copiedLabel, href }: { title: string; label: string; copyLabel: string; copiedLabel: string; href?: string }) {
   const [copied, setCopied] = useState<boolean | "fail">(false);
-  const [url, setUrl] = useState("");
-  useEffect(() => setUrl(window.location.href), []);
+  // audit 23.11 (tech): the share links had an empty url= until JS ran — the page URL is known at build time
+  const [url, setUrl] = useState(href ?? "");
+  useEffect(() => setUrl(window.location.href.split("#")[0]), []);
   const enc = (s: string) => encodeURIComponent(s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, ""));
   const btn = "flex h-10 items-center gap-2 rounded-xl border border-line bg-white/[0.02] px-3.5 text-sm font-bold text-ink-2 transition-colors hover:border-line-2 hover:text-ink";
   return (

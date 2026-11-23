@@ -13,6 +13,7 @@ export function LangSwitch({ current }: { current: Locale }) {
       {LOCALES.map((l) => (
         <Link
           key={l}
+          prefetch={false}
           href={`/${l}${rest}`}
           onClick={(e) => {
             try { localStorage.setItem("pr:lang", l); } catch {}
