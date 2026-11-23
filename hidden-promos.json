@@ -1,5 +1,5 @@
 {
- "at": 1795438485592,
+ "at": 1795438804999,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -142,8 +142,16 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1307.52,
+   "perUserUsd": 1308.48,
    "netUsd": 0.32
+  },
+  {
+   "id": "biconomy:64619559722777",
+   "venue": "Biconomy.com",
+   "title": "🏆 RIVER Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64619559722777--RIVER-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "netUsd": -0.11
   },
   {
    "id": "gate:102924",
@@ -226,7 +234,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1562,
+   "perUserUsd": 1562.4,
    "netUsd": 0.28
   },
   {
@@ -235,15 +243,6 @@
    "title": "The Daily Top 10 Trading Opportunities Contract Trading Competition Season 1 has officially concluded!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15882",
    "why": "news"
-  },
-  {
-   "id": "biconomy:64555499241625",
-   "venue": "Biconomy.com",
-   "title": "🏆 BLESS Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64555499241625--BLESS-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "perUserUsd": 2130,
-   "netUsd": 1.9
   },
   {
    "id": "tg:BingXAnnouncement/5400",
@@ -293,8 +292,8 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 62.87,
-   "netUsd": 0.84
+   "perUserUsd": 62.12,
+   "netUsd": 0.83
   },
   {
    "id": "biconomy:64537604172953",
@@ -302,7 +301,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1317,
+   "perUserUsd": 1319.3999999999999,
    "netUsd": -0.6
   },
   {
@@ -508,7 +507,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 900.7950490000001,
+   "perUserUsd": 897.7738476000001,
    "netUsd": -0.05
   },
   {
@@ -583,7 +582,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 23.02,
+   "perUserUsd": 22.71,
    "netUsd": -0.25
   },
   {
@@ -667,7 +666,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1145.1,
+   "perUserUsd": 1138.5,
    "netUsd": 1.81
   },
   {
@@ -702,6 +701,15 @@
    "why": "small",
    "perUserUsd": 60,
    "netUsd": 0.9
+  },
+  {
+   "id": "biconomy:64401563663641",
+   "venue": "Biconomy.com",
+   "title": "🏆 GMX Futures Carnival · Trade & Win Up to 2,130 USDT!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64401563663641--GMX-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
+   "why": "small",
+   "perUserUsd": 2130,
+   "netUsd": 1.9
   },
   {
    "id": "binance:7bc53180b9cd4a53a809f7066b79eb34",
@@ -812,7 +820,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1220.3999999999999,
+   "perUserUsd": 1223.2800000000002,
    "netUsd": 0.26
   },
   {
@@ -830,8 +838,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.344,
-   "netUsd": 2.54
+   "perUserUsd": 133.51199999999997,
+   "netUsd": 2.55
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -889,7 +897,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6122.25,
+   "perUserUsd": 6130.630000000001,
    "netUsd": 63.77
   },
   {
@@ -1161,15 +1169,6 @@
    "url": "https://www.bitget.com/events/activities/new/22caec1a8809533d8b7567fcd29c6b1b?color=dark&languageType=0",
    "why": "raffle",
    "netUsd": 5
-  },
-  {
-   "id": "tg:Bitget_Announcements/18361",
-   "venue": "Bitget",
-   "title": "Earnings Season Trading Challenge Is LIVE!",
-   "url": "https://www.bitget.com/events/super-pairs/task/234001",
-   "why": "raffle",
-   "perUserUsd": 3000,
-   "netUsd": 1.62
   },
   {
    "id": "tg:Phemex_Announcements/7959",
