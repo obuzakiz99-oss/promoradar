@@ -2,7 +2,10 @@ import type { Dict } from "./i18n";
 
 export function compactUsd(n: number, lang = "en"): string {
   const s = n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`;
-  return lang === "en" ? s : s.replace(".", ",");
+  if (lang === "en") return s;
+  // audit 23.11 (uk/ru editors): "$1,4 млн", "$60 тис." instead of the English K/M
+  const W = lang === "ru" ? { K: " тыс.", M: " млн", B: " млрд" } : { K: " тис.", M: " млн", B: " млрд" };
+  return s.replace(".", ",").replace(/([KMB])$/, (k) => W[k as "K" | "M" | "B"]);
 }
 
 /** "2д 4год" / "3год 12хв" / "18хв" */

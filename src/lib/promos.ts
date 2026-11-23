@@ -96,7 +96,7 @@ async function getPromosLive(): Promise<Collected> {
       // audit 23.11: a standing programme has no end — `until` is only our monthly re-check date, not a countdown
       endsAt: s.standing ? undefined : new Date(s.until).getTime(), evergreen: s.standing || undefined,
       reward: s.reward ? parseReward(s.reward) : undefined, tags: [],
-      meta: { source: `${venueOf(s.venue).name} · ${s.checked}`, ...(s.standing ? { standing: true } : {}), ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
+      meta: { source: `${venueOf(s.venue).name} · ${s.checked.split("-").reverse().join(".")}`, ...(s.standing ? { standing: true } : {}), ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
     } satisfies Promo;
   });
   const all = [...sponsored, ...manual, ...data.promos];

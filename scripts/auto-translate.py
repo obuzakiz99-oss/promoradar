@@ -45,6 +45,10 @@ Rules:
   обсяг торгівлі / объём торговли; voucher → ваучер; APR/APY stay as is; KYC stays as is; airdrop stays as airdrop.
 - "Subscribe" to an Earn product = put money in: uk "внесіть / вкладіть", ru "внесите / вложите" (never "підпишіть").
   "Eligible users" → uk "допущені користувачі" (never "відповідні користувачі"), ru "допущенные пользователи".
+- P2P "orders" → uk "ордери" (not "замовлення"); Earn "subscription" → uk "підписка" (not "передплата").
+  "Season 3" → "Сезон 3", "Event 1" → uk "Захід 1" / ru "Мероприятие 1", "SEA users" → "користувачі з Південно-Східної Азії".
+- Untranslatable puns and slogans ("What are you ordering? ☕", "X fever is here") → a plain statement of the offer.
+- Keep the meaning of time phrases: "following the IPO" = after it, not "are you following it?".
 - The sequence " ⏎ " marks a line break: keep it exactly where it is.
 - A line that is only hashtags, handles, tickers or a URL is copied as is.
 - If the English is truncated (ends with "…"), translate what is there and keep the "…".
