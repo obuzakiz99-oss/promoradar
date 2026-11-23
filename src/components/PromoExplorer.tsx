@@ -23,9 +23,9 @@ const GX: Record<Locale, {
   country: string; any: string; showAll: string; ua: string; eu: string; hidden: (n: number) => string;
   quick: Record<Quick, string>; perUser: string; minEntry: string; best: string;
 }> = {
-  uk: { country: "Країна", any: "Будь-яка", showAll: "Показати всі", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано ${n} ${plural(n, "uk", "promo")} лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг", best: "Найвигідніші" },
+  uk: { country: "Країна", any: "Будь-яка", showAll: "Показати всі", ua: "Україна", eu: "ЄС", hidden: (n) => `Сховано акцій: ${n} — лише для інших регіонів або з обмеженням для вашої країни`, quick: { noDeposit: "Без вкладень", low: "Поріг до $100", forNew: "Для нових", cash: "Тільки живі гроші" }, perUser: "Більше на 1 людину", minEntry: "Найменший поріг", best: "Найвигідніші" },
   en: { country: "Country", any: "Any", showAll: "Show all", ua: "Ukraine", eu: "EU", hidden: (n) => `${n} promos hidden: other regions only or restricted for your country`, quick: { noDeposit: "No deposit", low: "Entry under $100", forNew: "New users", cash: "Real money only" }, perUser: "Most per person", minEntry: "Lowest entry", best: "Best value" },
-  ru: { country: "Страна", any: "Любая", showAll: "Показать все", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} ${plural(n, "ru", "promo")} только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
+  ru: { country: "Страна", any: "Любая", showAll: "Показать все", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто акций: ${n} — только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
 };
 
 type Kind = VenueKind | "all" | "saved" | "hidden";

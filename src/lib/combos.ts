@@ -61,7 +61,7 @@ export const COMBO_WHY: Record<"uk" | "en" | "ru", Record<ComboWhy, string>> = {
   ru: { "trade-futures": "тот же объём фьючерсов", "trade-spot": "тот же объём спота", deposit: "тот же депозит", stake: "тот же стейк", free: "тоже без вложений" },
 };
 export const COMBO_UI = {
-  uk: { btn: (n: number) => `Можна поєднати ще з ${n}`, lead: (why: string) => `Одна дія — ${why} — зараховується одразу в ці акції:`, sum: (x: string) => `Разом до ≈${x} на людину`, check: "Перевірте в правилах, що біржа не забороняє участь у кількох кампаніях.", left: "залишилось" },
+  uk: { btn: (n: number) => `Можна поєднати ще з ${n} ${n % 10 === 1 && n % 100 !== 11 ? "акцією" : "акціями"}`, lead: (why: string) => `Одна дія — ${why} — зараховується одразу в ці акції:`, sum: (x: string) => `Разом до ≈${x} на людину`, check: "Перевірте в правилах, що біржа не забороняє участь у кількох кампаніях.", left: "залишилось" },
   en: { btn: (n: number) => `Combine with ${n} more`, lead: (why: string) => `One action — ${why} — counts in these promos at once:`, sum: (x: string) => `Up to ≈${x} per person in total`, check: "Check the rules: some exchanges forbid joining several campaigns.", left: "left" },
-  ru: { btn: (n: number) => `Можно совместить ещё с ${n}`, lead: (why: string) => `Одно действие — ${why} — засчитывается сразу в эти акции:`, sum: (x: string) => `Вместе до ≈${x} на человека`, check: "Проверьте в правилах, что биржа не запрещает участие в нескольких кампаниях.", left: "осталось" },
+  ru: { btn: (n: number) => `Можно совместить ещё с ${n} ${n % 10 === 1 && n % 100 !== 11 ? "акцией" : "акциями"}`, lead: (why: string) => `Одно действие — ${why} — засчитывается сразу в эти акции:`, sum: (x: string) => `Вместе до ≈${x} на человека`, check: "Проверьте в правилах, что биржа не запрещает участие в нескольких кампаниях.", left: "осталось" },
 };

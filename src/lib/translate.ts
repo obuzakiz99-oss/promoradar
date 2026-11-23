@@ -1,3 +1,4 @@
+import { localNums } from "./format";
 import { readStore, writeStore } from "./store";
 import fs from "node:fs";
 import path from "node:path";
@@ -16,6 +17,17 @@ import MANUAL_JSON from "@/config/translations-manual.json";
  * store) — they win over machine ones. Texts nobody translated yet are listed in data/translate-todo.json (priority order)
  * so the next session can translate them into the manual file.
  */
+/**
+ * audit 23.11: translated texts kept the source's leftovers — "[Забрати]<https://…>" markdown links, Chinese commas
+ * ("VVV、IDOL"), "MNT,TUSD" without a space and English number style ("5,000 USDT", "1.5%").
+ */
+function polish(t: string, lang: string): string {
+  return localNums(t
+    .replace(/\[([^\]\n]{1,60})\][<(]https?:\/\/[^\s>)]+[>)]/g, "$1")
+    .replace(/\s*、\s*/g, ", ")
+    .replace(/\b([A-Z]{2,10}),(?=[A-Z]{2,10}\b)/g, "$1, "), lang);
+}
+
 export type TLang = "uk" | "ru";
 const LANGS: TLang[] = ["uk", "ru"];
 const DEEPL_TARGET: Record<TLang, string> = { uk: "UK", ru: "RU" };
@@ -143,7 +155,7 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
   const out = { uk: {}, ru: {} } as Record<TLang, Record<string, string>>;
   for (const lang of LANGS) for (const s of want[lang]) {
     const k = key(s), t = MANUAL[lang]?.[k] ?? store[lang][k]?.t;
-    if (t) out[lang][s] = t;
+    if (t) out[lang][s] = polish(t, lang);
     else if (!isCyr(s)) TODO[lang].set(k, s);
   }
   // what's still untranslated (all calls of this build, most important first) → data/ for the next hand-translation pass

@@ -17,7 +17,9 @@ const SITE_TX = { uk: ["Деталі й умови на PromoRadar", "Сторі
 // href already carries the base path (/promoradar/…); the same value on the server and in the browser
 const siteUrl = (e: CalEvent) => (/^https?:/.test(e.href) ? e.href : `https://${SITE.domain.split("/")[0]}${e.href}`);
 const details = (e: CalEvent, lang: Locale) => `${SITE_TX[lang][0]}: ${siteUrl(e)}\n${SITE_TX[lang][1]}: ${e.source}`;
-const summary = (e: CalEvent, label: string) => `${label}: ${e.venue.name} — ${noEmoji(e.title)}`;
+// audit 23.11: "Bitget: Bitget: $1M…" — titles often already start with the venue name
+const named = (e: CalEvent) => { const t = noEmoji(e.title); return t.toLowerCase().startsWith(e.venue.name.toLowerCase()) ? t : `${e.venue.name}: ${t}`; };
+const summary = (e: CalEvent, label: string) => `${label}: ${named(e)}`;
 
 function gcal(e: CalEvent, label: string, lang: Locale) {
   const end = e.at + 30 * 60_000;
@@ -90,7 +92,7 @@ export function CalendarBoard({ events, lang, now }: { events: CalEvent[]; lang:
                     <VenueLogo v={e.venue} size={28} rounded="rounded-lg" />
                     <a href={e.href} className="min-w-0 flex-1 text-sm hover:text-lime">
                       <span className={`text-xs font-bold ${e.kind === "start" ? "text-sky" : "text-amber"}`}>{label}</span>
-                      <span className="line-clamp-2 break-words font-semibold">{e.venue.name}: {noEmoji(e.title)}</span>
+                      <span className="line-clamp-2 break-words font-semibold">{named(e)}</span>
                     </a>
                     <details data-tour="calendar-add" data-pop="" className="relative shrink-0">
                       <summary aria-label={L.add} title={L.add} className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-line text-ink-2 hover:border-line-2 hover:text-ink [&::-webkit-details-marker]:hidden">

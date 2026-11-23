@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import { localNums } from "./format";
 import type { Hedge, Pool, PoolProject } from "./pools";
 import type { EarnOffer } from "./earn";
 import type { DexPool } from "./dexpools";
@@ -156,7 +157,7 @@ const BIG = new Set(["BTC", "ETH", "BNB", "SOL", "XRP", "TRX", "TON", "DOGE", "A
 
 function make(lang: Locale) {
   const d = D[lang];
-  return (k: Key, x?: string | number, c?: string) => d[k].replace("{x}", String(x ?? "")).replace("{c}", c ?? "");
+  return (k: Key, x?: string | number, c?: string) => d[k].replace("{x}", localNums(String(x ?? ""), lang)).replace("{c}", c ?? "");
 }
 
 /* ---------------- hedge maths (shared with the board) ---------------- */

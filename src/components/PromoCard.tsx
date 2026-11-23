@@ -1,6 +1,6 @@
 import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
-import { ago, compactUsd, duration, fmtLabel, money, num, shortDate } from "@/lib/format";
+import { ago, compactUsd, duration, fmtLabel, money, num, shortDate, sentenceCase } from "@/lib/format";
 import { slugOf, statusOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "./VenueLogo";
@@ -17,11 +17,11 @@ import { regionName } from "@/lib/regions";
 
 /** "What you'd really get" line (value.ts): expected net $ for one ordinary participant, with how sure it is. */
 const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string; loss: string; flat: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
-  uk: { high: "Реально отримаєте", mid: "Найімовірніше отримаєте", low: "У середньому на учасника", apr: "на $1 000 понад звичайний earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
+  uk: { high: "Реально отримаєте", mid: "Найімовірніше отримаєте", low: "У середньому на учасника", apr: "на $1 000 понад звичайний Earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний Earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
     why: { stated: "сума з правил для мінімальної участі", max: "лише «до …» з правил — більшість отримує менше", chance: "пул ÷ приблизна кількість учасників (шанс)", apr: "дохід за строк акції на $1 000 понад звичайні 5% річних", none: "" } },
   en: { high: "You will really get", mid: "Most likely you get", low: "Average per participant", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", flat: "No better than regular earn", cost: (x) => `minus fees/lock-up ≈ ${x}`,
     why: { stated: "amount from the rules for the minimum entry", max: "only an 'up to' figure — most people get less", chance: "pool ÷ rough number of participants (a chance)", apr: "income for the period on $1,000 above a regular 5% a year", none: "" } },
-  ru: { high: "Реально получите", mid: "Скорее всего получите", low: "В среднем на участника", apr: "на $1 000 сверх обычного earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
+  ru: { high: "Реально получите", mid: "Скорее всего получите", low: "В среднем на участника", apr: "на $1 000 сверх обычного Earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного Earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
     why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
 };
 function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
@@ -101,7 +101,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   // SHOUTING HEADLINES ("YOUR WAVE OF AIRDROPS STARTS NOW!") → sentence case, tickers kept
   // audit 21.11: letters of all scripts count — Latin-only counting took a Ukrainian title with tickers (OKX, USDC-USDT) as SHOUTING
-  const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^\p{L}]/gu, ""); if (letters.length < 12 || (s.match(/\p{Lu}/gu)?.length ?? 0) / letters.length < 0.7) return s; const low = s.toLowerCase(); const i = low.search(/[a-zа-яіїєґ]/i); return i < 0 ? low : low.slice(0, i) + low[i].toUpperCase() + low.slice(i + 1); };
+  const calm = (raw: string) => { const s = raw.replace(/[🀀-🫿☀-➿️‍]/gu, "").replace(/\s{2,}/g, " ").trim(); const letters = s.replace(/[^\p{L}]/gu, ""); if (letters.length < 12 || (s.match(/\p{Lu}/gu)?.length ?? 0) / letters.length < 0.7) return s; return sentenceCase(s); };
 
   // audit 14.11: "$50 000" in big lime over a grey "≈ $10" read as what a beginner gets — the estimate leads then
   // owner 23.11: the likely amount is the headline number whenever the max is 2x it or more (was 10x)

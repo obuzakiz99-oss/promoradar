@@ -83,7 +83,8 @@ function sentenceCase1(s: string, min: number): string {
   const upper = letters.filter((c) => c !== c.toLowerCase() && c === c.toUpperCase()).length;
   if (upper / letters.length < 0.7) return s;
   const low = s.replace(/\p{L}+/gu, (w) => (/^[A-Z0-9]{2,5}$/.test(w) ? w : w.toLowerCase()));
-  return low.replace(/\p{L}/u, (c) => c.toUpperCase());
+  // audit 23.11: "ПРИЗОВИЙ ФОНД 500 000 USDT. ТРЕЙДЕРИ, ВАШ ХІД." — a new sentence starts with a capital too
+  return low.replace(/\p{L}/u, (c) => c.toUpperCase()).replace(/([.!?]\s+)(\p{Ll})/gu, (_, a: string, c: string) => a + c.toUpperCase());
 }
 
 /** A source label in the reader's number format: "5,000 USDT" → "5 000 USDT" on uk/ru (audit 14.11: mixed formats). */

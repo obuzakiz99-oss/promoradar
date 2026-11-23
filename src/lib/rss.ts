@@ -12,7 +12,7 @@ export async function rssResponse(lang: Locale): Promise<Response> {
   const { promos } = await getPromos(lang);
   const items = promos.filter((p) => p.publishedAt > 0).slice(0, 60).map((p) => `
     <item>
-      <title>${esc(`${p.venue.name}: ${p.title}`)}</title>
+      <title>${esc(p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? p.title : `${p.venue.name}: ${p.title}`)}</title>
       <link>${base}/${lang}/p/${slugOf(p)}/</link>
       <guid isPermaLink="false">${esc(p.id)}</guid>
       <pubDate>${new Date(p.publishedAt).toUTCString()}</pubDate>

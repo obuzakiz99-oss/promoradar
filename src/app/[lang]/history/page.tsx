@@ -10,7 +10,7 @@ import { getInsights } from "@/lib/insights";
 import { InsightsSections } from "@/components/InsightsSections";
 import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
-import { compactUsd, shortDate } from "@/lib/format";
+import { compactUsd, shortDate, dec } from "@/lib/format";
 import { LineChart, seriesColor, thinPoints, type Series } from "@/components/LineChart";
 import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -62,7 +62,7 @@ const H: Record<Locale, {
   },
 };
 
-const pct = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(1)}%`);
+const pct = (x?: number, lang = "en") => dec(String((x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(1)}%`)), lang);
 const chg = (x?: number) => (x === undefined ? <span className="text-ink-3">—</span> : <span className={x < 0 ? "text-rose" : "text-lime"}>{x > 0 ? "+" : ""}{x.toFixed(0)}%</span>);
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -118,8 +118,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
                     {S.drop.map((d) => (
                       <tr key={d.key} className="hover:bg-white/[0.02]">
                         <td className="px-4 py-2.5"><span className="flex items-center gap-2 font-bold"><VenueLogo v={venueOf(d.exchange)} size={20} rounded="rounded-md" />{d.name}</span></td>
-                        <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(d.first)} <span className="text-ink-3">· {shortDate(d.firstT, lang)}</span></td>
-                        <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{pct(d.now)}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(d.first, lang)} <span className="text-ink-3">· {shortDate(d.firstT, lang)}</span></td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{pct(d.now, lang)}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{chg(d.change)}</td>
                         <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{d.launch ? chg((d.now / d.launch - 1) * 100) : <span className="text-ink-3">—</span>}</td>
                       </tr>
@@ -153,7 +153,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {([
               [String(S.totals.projects), X.tiles[0]], [String(S.totals.pools), X.tiles[1]],
-              [pct(S.totals.medStable), X.tiles[2]], [pct(S.totals.medOther), X.tiles[3]],
+              [pct(S.totals.medStable, lang), X.tiles[2]], [pct(S.totals.medOther, lang), X.tiles[3]],
               [S.totals.medDays ? S.totals.medDays.toFixed(0) : "—", X.tiles[4]],
               [S.totals.medDecay ? `×${S.totals.medDecay.toFixed(2)}` : "—", X.tiles[5]],
             ] as const).map(([v, l]) => (
@@ -177,7 +177,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
                       {exList.map((ex) => m.byEx[ex] ? <div key={ex} title={`${exName(ex)}: ${m.byEx[ex]}`} style={{ height: `${(m.byEx[ex] / m.pools) * 100}%`, background: venueOf(ex).color }} /> : null)}
                     </div>
                     <span className="text-xs font-semibold text-ink-3">{new Date(m.t).toLocaleString(locale, { month: "short", timeZone: "UTC" })}</span>
-                    <span className="font-mono text-xs text-lime">{pct(m.medApr)}</span>
+                    <span className="font-mono text-xs text-lime">{pct(m.medApr, lang)}</span>
                   </div>
                 ))}
               </div>
@@ -198,8 +198,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
                   <tr key={e.exchange} className="hover:bg-white/[0.02]">
                     <td className="px-4 py-2.5"><span className="flex items-center gap-2 font-bold"><VenueLogo v={venueOf(e.exchange)} size={20} rounded="rounded-md" />{exName(e.exchange)}</span></td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{e.pools} <span className="text-ink-3">/ {e.projects}</span></td>
-                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medStable)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medOther)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medStable, lang)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medOther, lang)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{e.avgDays.toFixed(0)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{e.rewardUsd ? compactUsd(e.rewardUsd, lang) : "—"}</td>
                   </tr>
@@ -220,8 +220,8 @@ export default async function HistoryPage({ params }: { params: Params }) {
                     <td className="px-4 py-2.5"><span className="flex items-center gap-2 text-ink-2"><VenueLogo v={venueOf(r.exchange)} size={18} rounded="rounded-md" />{exName(r.exchange)}</span></td>
                     <td className="px-4 py-2.5 font-bold">{r.token}</td>
                     <td className="px-4 py-2.5 text-ink-2">{r.stake} {r.stable && <span className="ml-1 rounded bg-teal/10 px-1 text-xs font-bold text-teal">{X.stable}</span>}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(r.aprStart)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{pct(r.apr)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(r.aprStart, lang)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{pct(r.apr, lang)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs font-bold">{r.aprStart && r.apr ? chg((r.apr / r.aprStart - 1) * 100) : <span className="text-ink-3">—</span>}</td>
                   </tr>
                 ))}

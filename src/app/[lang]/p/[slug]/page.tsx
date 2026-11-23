@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, fmtLabel, money, nfLocale, noEmoji, sentenceCase } from "@/lib/format";
+import { compactUsd, duration, fmtLabel, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
 import { SITE, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     ru: { per: (x: string) => `до ${x} на 1 человека`, pool: (x: string) => `фонд ${x}`, till: (d: string) => `до ${d}`, tail: "Условия по-русски, риски и как забрать награду." },
   } as const)[lang];
   const pm = p.meta;
-  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(p.reward.label) : pm?.apr ? `+${pm.apr}% APR` : "";
+  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(p.reward.label) : pm?.apr ? `+${num(pm.apr, lang)}% APR` : "";
   const till = p.endsAt ? D.till(new Date(p.endsAt).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" })) : "";
   const bits = `${p.venue.name} · ${t.cat[p.category]}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
@@ -357,7 +357,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   ) : <span className="font-normal text-ink-2">{p.category === "earn" ? ({ uk: "Дохід залежить від суми й ставки — див. калькулятор нижче.", en: "Income depends on the amount and the rate — see the calculator below.", ru: "Доход зависит от суммы и ставки — см. калькулятор ниже." } as const)[lang]
     : p.category === "referral" ? ({ uk: "Нагорода — за кожного друга, який виконав умову.", en: "The reward is per friend who meets the condition.", ru: "Награда — за каждого друга, выполнившего условие." } as const)[lang] : R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{num(m.apr, lang)}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],

@@ -1,5 +1,5 @@
 import { alt, withOg } from "@/lib/seo";
-import { plural } from "@/lib/format";
+import { plural, dec } from "@/lib/format";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -92,8 +92,8 @@ const X: Record<Locale, {
   },
 };
 
-const fmtNum = (n?: number) => (n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
-const fmtApr = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
+const fmtNum = (n?: number, lang = "en") => dec(String((n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`)), lang);
+const fmtApr = (x?: number, lang = "en") => dec(String((x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`)), lang);
 // site-wide number format: uk/ru "$1 000", en "$1,000"
 const usd = (x: number, lang: string) => (x >= 100 ? `$${num(Math.round(x), lang, 0)}` : `$${x.toFixed(2)}`);
 const STAKE_OF: Record<string, (x: string) => string> = { uk: (x) => `стейк ${x}`, en: (x) => `stake ${x}`, ru: (x) => `стейк ${x}` };
@@ -115,7 +115,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const stakes = [...new Set(p.pools.map((x) => x.stake))].join(", ");
   const best = Math.max(0, ...p.pools.map((x) => x.apr ?? 0));
   const title = `${p.name} (${p.token}) Launchpool — ${ex}`;
-  const description = [X[lang].title(stakes, p.token), best ? `APR ${fmtApr(best)}` : "", `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`].filter(Boolean).join(" · ");
+  const description = [X[lang].title(stakes, p.token), best ? `APR ${fmtApr(best, lang)}` : "", `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`].filter(Boolean).join(" · ");
   return withOg({ title, description, alternates: alt(lang, `/lp/${slug}`) });
 }
 
@@ -212,8 +212,8 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.end}</dt><dd className="mt-1 font-mono font-bold">{shortDate(p.end, lang)}</dd>
             {!ended && <dd className="text-xs text-lime">{T.endsIn} {duration(p.end - now, t.time)}</dd>}</div>
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.fund}</dt><dd className="mt-1 font-mono font-bold">{p.rewardUsd ? compactUsd(p.rewardUsd, lang) : "—"}</dd>
-            {p.rewardTotal ? <dd className="text-xs text-ink-3">{fmtNum(p.rewardTotal)} {p.token}</dd> : null}</div>
-          <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.users}</dt><dd className="mt-1 font-mono font-bold">{fmtNum(participants)}</dd></div>
+            {p.rewardTotal ? <dd className="text-xs text-ink-3">{fmtNum(p.rewardTotal, lang)} {p.token}</dd> : null}</div>
+          <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.users}</dt><dd className="mt-1 font-mono font-bold">{fmtNum(participants, lang)}</dd></div>
         </dl>
 
         {/* CTA */}
@@ -235,11 +235,11 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <VenueLogo v={{ name: x.stake, logo: x.stakeLogo, color: "#2a313b", ink: "#eef2f6", monogram: x.stake.slice(0, 3) }} size={36} rounded="rounded-full" />
                   <div className="min-w-0">
                     <div className="font-bold">{T.stake} {x.stake} → {p.token}</div>
-                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward)} {p.token}{pxOf(p.token) ? ` ≈ ${compactUsd(x.reward * pxOf(p.token)!, lang)}` : ""}</div> : null}
+                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward, lang)} {p.token}{pxOf(p.token) ? ` ≈ ${compactUsd(x.reward * pxOf(p.token)!, lang)}` : ""}</div> : null}
                   </div>
                   <div className="ml-auto text-right">
-                    <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr)}</div>
-                    <div className="text-xs text-ink-3">{ended ? "APR" : T.apr}{x.aprStart ? ` · ${T.aprStart} ${fmtApr(x.aprStart)}` : ""}</div>
+                    <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr, lang)}</div>
+                    <div className="text-xs text-ink-3">{ended ? "APR" : T.apr}{x.aprStart ? ` · ${T.aprStart} ${fmtApr(x.aprStart, lang)}` : ""}</div>
                     {!ended && (() => {
                       const hc = hedgeCalc(x, p, data.hedge, 1000, now);
                       if (!hc.needed) return null;
@@ -247,7 +247,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                       if (hc.possible && hc.hedgedApr !== undefined && hc.hedgedApr <= 0) return <div className="mt-1 text-xs font-semibold text-ink-3" title={t.lp.hedgeNote}>{HEDGE_LOSS_LP[lang]}</div>;
                       return (
                         <div className={`mt-1 font-mono text-sm font-bold ${hc.possible && (hc.hedgedApr ?? 0) > 0 ? "text-teal" : "text-ink-3"}`} title={t.lp.hedgeNote}>
-                          {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
+                          {hc.possible && hc.hedgedApr !== undefined ? fmtApr(hc.hedgedApr, lang) : "—"} <span className="font-sans text-xs font-semibold">{t.lp.hedgeApr}</span>
                         </div>
                       );
                     })()}
@@ -255,9 +255,9 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
-                    <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
+                    <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake, lang)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake, lang)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
-                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!, lang)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants >= 1000 ? 5 : x.participants, lang, "participant")   /* shown as "2.3K" → «учасників» */}` : ""}</dd></div>
+                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked, lang)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!, lang)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants, lang)} ${plural(x.participants >= 1000 ? 5 : x.participants, lang, "participant")   /* shown as "2.3K" → «учасників» */}` : ""}</dd></div>
                 </dl>
                 {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
                   <div className="mt-3 flex flex-col gap-1.5">
@@ -267,7 +267,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                 )}
                 {!ended && realApr(x) !== undefined && (
                   <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-ink-3">
-                    {CHART_TX[lang].real}: <span className={`font-mono font-bold ${realApr(x)! >= (x.apr ?? 0) * 0.7 ? "text-ink" : "text-amber"}`}>{fmtApr(realApr(x))}</span>
+                    {CHART_TX[lang].real}: <span className={`font-mono font-bold ${realApr(x)! >= (x.apr ?? 0) * 0.7 ? "text-ink" : "text-amber"}`}>{fmtApr(realApr(x), lang)}</span>
                     <Hint lang={lang}>{CHART_TX[lang].realNote}</Hint>
                   </div>
                 )}
@@ -313,7 +313,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                           <td key={i} className="px-4 py-3">
                             {!x.apr ? <span className="text-ink-3">{T.noApr}</span>
                               : !c ? <span className="text-ink-3">—</span>
-                              : c.below ? <span className="text-xs font-semibold text-amber">{T.belowMin(`${fmtNum(x.minStake)} ${x.stake}`)}</span>
+                              : c.below ? <span className="text-xs font-semibold text-amber">{T.belowMin(`${fmtNum(x.minStake, lang)} ${x.stake}`)}</span>
                               : <><div className="font-mono font-bold text-ink">≈ {usd(c.total, lang)}</div>
                                   <div className="font-mono text-xs text-ink-3">{i === 2 ? `${STAKE_OF[lang](usd(c.amount, lang))} · ` : ""}{usd(c.perDay, lang)}{T.perDay} · {T.untilEnd}</div></>}
                           </td>

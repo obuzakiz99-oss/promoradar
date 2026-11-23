@@ -7,7 +7,7 @@ import { TOOLS } from "@/lib/i18n-tools";
 import { getPromos } from "@/lib/promos";
 import { VENUES } from "@/config/site";
 import { slugOf } from "@/lib/slug";
-import { compactUsd, fmtLabel, money, noEmoji } from "@/lib/format";
+import { compactUsd, fmtLabel, money, noEmoji, plural } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PageHeader } from "@/components/PageHeader";
 import { withBase } from "@/lib/base";
@@ -61,7 +61,7 @@ export default async function Bonuses({ params }: { params: Params }) {
                     <VenueLogo v={v} size={44} />
                     <div>
                       <div className="text-lg font-bold">{v.name}</div>
-                      <div className="text-xs font-semibold text-ink-3">{T.colOffers}: {list.length}</div>
+                      <div className="text-xs font-semibold text-ink-3">{list.length} {plural(list.length, lang, "promo")}</div>
                       {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best), lang)}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{({ uk: "новачку", en: "per newcomer", ru: "новичку" } as const)[lang]}</span></div>}
                     </div>
                   </div>

@@ -10,7 +10,7 @@ import { dropstabCoin, getUnlocks, isBig, UNLOCK_SRC, type Unlock } from "@/lib/
 import { trList } from "@/lib/translate";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
-import { compactUsd, duration, num } from "@/lib/format";
+import { compactUsd, duration, num, dec } from "@/lib/format";
 import { deadlineReminder } from "@/lib/ics";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return withOg({ title: X[lang].title, description: X[lang].sub, alternates: alt(lang, "/unlocks") });
 }
 
-const fmtNum = (n: number) => (n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
+const fmtNum = (n: number, lang = "en") => dec(String((n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`)), lang);
 const pressCls = (x: number) => (x >= 5 ? "bg-rose/15 text-rose" : x >= 1 ? "bg-amber/15 text-amber" : "bg-white/5 text-ink-2");
 const day = (ms: number, lang: Locale) => new Date(ms).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 
@@ -168,7 +168,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                             </div>
                           </div>
                         </td>
-                        <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd, lang)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
+                        <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd, lang)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens, lang)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
                         <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{num(u.pctCap, lang, 2)}%</span></td>
                         <td data-l={T.who} className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
                         <td data-l={T.kind} className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>

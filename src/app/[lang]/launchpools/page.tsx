@@ -1,5 +1,5 @@
 import { alt, withOg } from "@/lib/seo";
-import { plural } from "@/lib/format";
+import { plural, dec } from "@/lib/format";
 import type { Metadata } from "next";
 import { YieldTabs } from "@/components/SectionTabs";
 import { notFound } from "next/navigation";
@@ -34,10 +34,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 const EX_IDS = LP_API;
 const ANN_IDS = Object.keys(LP_ANN);
-const fmtNum = (n?: number) => (n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`);
+const fmtNum = (n?: number, lang = "en") => dec(String((n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`)), lang);
 
-const aprFmt = (x: number) => (x >= 100 ? x.toFixed(0) : x.toFixed(1));
-const aprRange = (lo: number, hi: number) => (aprFmt(lo) === aprFmt(hi) ? `${aprFmt(hi)}%` : `${aprFmt(lo)}–${aprFmt(hi)}%`);
+const aprFmt = (x: number, lang = "en") => dec(String((x >= 100 ? x.toFixed(0) : x.toFixed(1))), lang);
+const aprRange = (lo: number, hi: number, lang = "en") => dec(String((aprFmt(lo, lang) === aprFmt(hi, lang) ? `${aprFmt(hi, lang)}%` : `${aprFmt(lo, lang)}–${aprFmt(hi, lang)}%`)), lang);
 
 function period(p: PoolProject, lang: Locale) {
   return `${shortDate(p.start, lang)} – ${shortDate(p.end, lang)}`;
@@ -230,9 +230,9 @@ export default async function Launchpools({ params }: { params: Params }) {
                         <td className="px-4 py-3"><span className="flex items-center gap-2 font-semibold text-ink-2"><VenueLogo v={exchanges[p.exchange]} size={20} rounded="rounded-md" />{exchanges[p.exchange].name}</span></td>
                         <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-ink-2">{period(p, lang)}</td>
                         <td className="px-4 py-3 text-ink-2">{[...new Set(p.pools.map((x) => x.stake))].join(", ")}</td>
-                        <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{aprs.length ? aprRange(Math.min(...aprs), Math.max(...aprs)) : <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span>}</td>
-                        <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd, lang) : `${fmtNum(p.rewardTotal)} ${p.token}`}</td>
-                        <td className="px-4 py-3 font-mono text-ink-2">{(() => { const n = p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined); return n === undefined ? <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span> : fmtNum(n); })()}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{aprs.length ? aprRange(Math.min(...aprs), Math.max(...aprs), lang) : <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span>}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd, lang) : `${fmtNum(p.rewardTotal, lang)} ${p.token}`}</td>
+                        <td className="px-4 py-3 font-mono text-ink-2">{(() => { const n = p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined); return n === undefined ? <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span> : fmtNum(n, lang); })()}</td>
                       </tr>
                     );
                   })}

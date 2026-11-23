@@ -7,7 +7,7 @@ import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { trList } from "@/lib/translate";
 import { getTokens, isStableSym } from "@/lib/tokens";
 import { venueOf } from "@/config/site";
-import { compactUsd, duration, nfLocale } from "@/lib/format";
+import { compactUsd, duration, nfLocale, num } from "@/lib/format";
 import { withBase } from "@/lib/base";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
@@ -109,7 +109,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         {unlock && (
           <a data-tour="token-unlock" href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
             <span className="font-bold text-amber">{UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
-            <span className="font-mono text-ink-2">{compactUsd(unlock.usd, lang)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
+            <span className="font-mono text-ink-2">{compactUsd(unlock.usd, lang)} · {num(unlock.pctCap, lang, 2)}% {UNLOCK_CAP[lang]}</span>
             <span className="text-ink-3">{trs(unlock.sale)}</span>
           </a>
         )}
@@ -130,7 +130,7 @@ export default async function TokenPage({ params }: { params: Params }) {
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold">{venueOf(p.exchange).name} · {p.name}</div>
                   <div className="mt-0.5 flex flex-wrap gap-x-3 font-mono text-xs text-ink-3">
-                    {p.pools.map((x) => <span key={x.stake}>{T.stake} {x.stake}{x.apr ? ` · ${x.apr.toFixed(1)}%` : ""}{x.newUsers ? ` · ${T.newUsers}` : ""}</span>)}
+                    {p.pools.map((x) => <span key={x.stake}>{T.stake} {x.stake}{x.apr ? ` · ${num(x.apr, lang, 1)}%` : ""}{x.newUsers ? ` · ${T.newUsers}` : ""}</span>)}
                   </div>
                 </div>
                 <span className="shrink-0 font-mono text-xs font-bold text-ink-2">{p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</span>
@@ -148,7 +148,7 @@ export default async function TokenPage({ params }: { params: Params }) {
                   <div className="text-sm font-bold">{T.stake} {pool.stake} → {p.token}</div>
                   <div className="mt-0.5 font-mono text-xs text-ink-3">{venueOf(p.exchange).name}{pool.maxStake ? ` · ${T.cap} ${pool.maxStake.toLocaleString(nfLocale(lang))} ${pool.stake}` : ""}{pool.newUsers ? ` · ${T.newUsers}` : ""} · {p.start > now ? `${T.starts} ${duration(p.start - now, t.time)}` : `${T.ends} ${duration(p.end - now, t.time)}`}</div>
                 </div>
-                {pool.apr !== undefined && <span className="shrink-0 font-mono text-lg font-bold text-lime">{pool.apr.toFixed(1)}%</span>}
+                {pool.apr !== undefined && <span className="shrink-0 font-mono text-lg font-bold text-lime">{num(pool.apr, lang, 1)}%</span>}
               </a>
             ))}
           </div>
@@ -161,7 +161,7 @@ export default async function TokenPage({ params }: { params: Params }) {
                 <VenueLogo v={venueOf(o.exchange)} size={28} rounded="rounded-lg" />
                 <span className="text-sm font-bold">{venueOf(o.exchange).name}</span>
                 <span className="text-xs text-ink-3">{o.type === "fixed" ? T.fixed(o.days ?? 0) : o.type === "onchain" ? T.onchain : T.flexible}{o.newUsers ? ` · ${T.newUsers}` : ""}{o.maxAmount ? ` · ${T.cap} ${o.maxAmount.toLocaleString(nfLocale(lang))}` : ""}</span>
-                <span className="ml-auto font-mono text-lg font-bold text-lime">{o.apr.toFixed(2)}%</span>
+                <span className="ml-auto font-mono text-lg font-bold text-lime">{num(o.apr, lang, 2)}%</span>
               </a>
             ))}
           </div>

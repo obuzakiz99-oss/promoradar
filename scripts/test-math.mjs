@@ -23,7 +23,8 @@ const eq = (name, got, want, tol = 0.01) => {
 };
 
 /* ---- hedge maths (src/lib/proscons.ts) ---- */
-const pc = await load("src/lib/proscons.ts");
+await load("src/lib/format.ts");   // proscons localizes numbers through it
+const pc = await load("src/lib/proscons.ts", { '"./format"': '"./format.mjs"' });
 const now = Date.UTC(2026, 10, 5);
 const p = { id: "t", exchange: "gate", token: "KOR", name: "KOR", start: now - 86400e3, end: now + 28 * 86400e3, status: "live", pools: [], url: "" };
 const pool = { stake: "KOR", apr: 1000, maxStake: 500000 };
