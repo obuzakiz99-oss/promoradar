@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   // with the venue in front says the same in half the length; the raw headline stays the fallback
   const tpl = titleOf(p, lang);
   const base = tpl ?? head;
-  const named = base.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? base : `${p.venue.name}: ${base}`;
+  const named = base.toLowerCase().includes(p.venue.name.toLowerCase()) ? base : `${p.venue.name}: ${base}`;
   const cap = (x: string, n: number) => (x.length > n ? `${x.slice(0, n - 2).replace(/[\s,.:;—–-]+\S*$/, "")}…` : x);
   const title = p.venue.kind === "airdrop" ? `${cap(head, 60)} Airdrop` : cap(named, 65);
   // audit 23.11 (SEO): 9 Biconomy pages shared one description — the promo's own headline makes each unique
