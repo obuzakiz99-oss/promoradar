@@ -68,9 +68,11 @@ export default async function VenuePage({ params }: { params: Params }) {
             </div>
             <div className="flex flex-wrap gap-3">
               <a href={cfg.refUrl || cfg.site} target="_blank" rel={cfg.refUrl ? "sponsored noopener" : "noopener"} className="btn btn-primary h-12 px-6">{VENUES[id].kind === "cex" ? t.venue.join : ({ uk: `Відкрити ${VENUES[id].name}`, en: `Open ${VENUES[id].name}`, ru: `Открыть ${VENUES[id].name}` } as const)[lang]} ↗{cfg.refUrl && <span className="ml-1.5 rounded bg-white/10 px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-ink-3" title={({ uk: "Реферальне посилання: ми можемо отримати комісію від біржі. Для вас умови ті самі.", en: "Referral link: we may earn a commission from the exchange. Your terms are the same.", ru: "Реферальная ссылка: мы можем получить комиссию от биржи. Для вас условия те же." } as const)[lang]}>{({ uk: "реф.", en: "ref", ru: "реф." } as const)[lang]}</span>}</a>
-              <a href={cfg.site} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6">{t.venue.site} ↗</a>
+              {cfg.refUrl && <a href={cfg.site} target="_blank" rel="noopener" className="btn btn-ghost h-12 px-6">{t.venue.site} ↗</a>}
               {GUIDES[lang].some((g) => g.id === id || g.venue === id) && <Link href={`/${lang}/learn/guide/${GUIDES[lang].find((g) => g.id === id || g.venue === id)!.id}`} className="btn btn-ghost h-12 px-6">{LEARN[lang].cards.how[0]}</Link>}
             </div>
+            {/* audit 23.11: signing up here instead of through the promo's own link lost a newcomer the MEXC 150 USDT bonus */}
+            {VENUES[id].kind === "cex" && mine.some((p) => p.meta?.forNew) && <p className="mt-3 max-w-xl text-sm font-semibold text-amber">{({ uk: "Новачкам: щоб отримати бонус, реєструйтеся за посиланням з акції нижче — після звичайної реєстрації він може не нарахуватися.", en: "New users: sign up through the link in the promo below to get the bonus — a plain sign-up may not qualify.", ru: "Новичкам: чтобы получить бонус, регистрируйтесь по ссылке из акции ниже — после обычной регистрации он может не начислиться." } as const)[lang]}</p>}
           </div>
         </header>
 

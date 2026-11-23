@@ -344,7 +344,8 @@ export default async function PromoPage({ params }: { params: Params }) {
   const C = COMBO_TX[lang];
   const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.perUser?.usd ?? 0), 0);
   // audit 23.11: on uk pages a Brazil-only promo showed under "Схожі акції" — the default country there is Ukraine
-  const relOk = (x: (typeof promos)[number]) => lang !== "uk" || geoAllowed(x, "ua");
+  // audit 23.11: also no promo the site itself marks as "no better than regular Earn" / "costs eat the bonus"
+  const relOk = (x: (typeof promos)[number]) => (lang !== "uk" || geoAllowed(x, "ua")) && !(x.meta?.value?.net !== undefined && x.meta.value.net <= 0);
   const related = [
     ...promos.filter((x) => x.id !== p.id && x.venue.id === p.venue.id && relOk(x)),
     ...promos.filter((x) => x.id !== p.id && x.venue.id !== p.venue.id && x.category === p.category && relOk(x)),

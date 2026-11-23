@@ -232,8 +232,11 @@ async function getPromosLive(): Promise<Collected> {
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
     // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
     const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
-    if (!meta.minEntry && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)
-      && !costs.test(p.title) && !/\b(trade|trading|swap|deposit|stake|buy)\b/i.test(p.titleOrig ?? p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x))) meta.noDeposit = true;
+    // audit 23.11 (beginner persona): HTX NVDA "free airdrop" needs a stock-token trade, a referral needs the friend to act —
+    // both were tagged "Без вкладень"
+    const mustAct = /\b(must|need to|required to|have to) (trade|deposit|buy|stake|subscribe|hold)\b|\b(complete|make) (a|any|one|your first|at least one) (trade|deposit|purchase|swap)\b|\bfirst (trade|deposit|purchase)\b|\b(trade|buy|swap) (any|eligible|designated|selected)\b/i;
+    if (!meta.minEntry && p.category !== "referral" && /\b(quiz|learn|word of the day|register to (claim|get|win)|check[- ]?in|giveaway|lucky draw|free|no deposit|feedback|survey)\b/i.test(p.title)
+      && !costs.test(p.title) && !/\b(trade|trading|swap|deposit|stake|buy)\b/i.test(p.titleOrig ?? p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x) || mustAct.test(b.x))) meta.noDeposit = true;
     const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
     // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
     if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;

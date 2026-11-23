@@ -269,7 +269,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
         <div className="relative z-10 mt-4 grid">
           <a href={href} className="btn btn-ghost">
             {MORE[lang]}
-            <Arrow className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            {/* audit 23.11: "↗" read as an external link — this one opens our own explanation page */}
+            <svg className="size-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
           </a>
         </div>
         {m.source && (
