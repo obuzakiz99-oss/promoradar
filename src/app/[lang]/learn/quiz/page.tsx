@@ -45,7 +45,9 @@ export default async function LearnQuiz({ params }: { params: Params }) {
   const stableEarn = earn.offers.filter((o) => SAFE.test(o.coin) && o.apr > 0).sort((a, b) => b.apr - a.apr);
   for (const o of stableEarn) {
     const kind = o.newUsers ? "newEarn" : o.type === "fixed" ? "fixed" : o.type === "flexible" ? "earn" : null;
-    if (!kind || (!o.newUsers && o.apr > 30)) continue;
+    // audit 23.11: the "safest" pick for $100 was Dolomite on Ethereum, where gas eats the deposit — the quiz recommends
+    // exchange Earn only (on-chain products stay on the Earn / DEX pages)
+    if (!kind || (!o.newUsers && o.apr > 30) || venueOf(o.exchange).kind !== "cex") continue;
     items.push({ key: `e:${o.exchange}:${o.coin}:${o.type}:${o.apr}`, kind, venue: venueOf(o.exchange), title: `${o.coin} · ${venueOf(o.exchange).name} Earn (${TYPE[lang][o.type]}${o.days ? `, ${o.days} ${lang === "en" ? "d" : lang === "ru" ? "дн." : "дн."}` : ""})`, apr: o.apr, capUsd: o.maxAmount, days: o.type === "fixed" ? o.days : undefined, url: o.url, external: true });
   }
   // live Launchpools: stablecoin stake (easy) and big-coin stake (medium)

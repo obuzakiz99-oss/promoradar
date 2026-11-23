@@ -37,7 +37,7 @@ function Point({ s }: { s: string }) {
   return <li className="relative pl-3.5 before:absolute before:left-0 before:top-[0.6em] before:size-1.5 before:rounded-full before:bg-lime/70">{k > 0 ? <><b className="font-bold text-ink">{s.slice(0, k)}</b>{s.slice(k)}</> : s}</li>;
 }
 
-export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; name: string; steps: TourStep[] }) {
+export function SiteTour({ lang, id, name, steps: all, noAsk }: { lang: L; id: string; name: string; steps: TourStep[]; noAsk?: boolean }) {
   const U = UI[lang];
   // only the steps whose element is on this page right now (a promo without a calculator, an empty table…), so that
   // «3 of 7» counts what the user will see
@@ -67,7 +67,8 @@ export function SiteTour({ lang, id, name, steps: all }: { lang: L; id: string; 
     } else {
       const g = get(KEY);
       const mode = g === null ? "new" : g === "done" && get(`${KEY}:${id}`) === null ? "page" : "";
-      if (mode) t = setTimeout(() => setAsk(mode), 1500);
+      // audit 23.11: on a promo page opened from a friend's link the prompt covered the key facts — it is never asked there
+      if (mode && !noAsk) t = setTimeout(() => setAsk(mode), 1500);
     }
     const onStart = () => start();
     addEventListener(TOUR_EVENT, onStart);

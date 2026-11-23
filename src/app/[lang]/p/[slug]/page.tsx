@@ -802,7 +802,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         )}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
-      <SiteTour lang={lang} {...tourOf(PROMO_TOUR, lang)} />
+      <SiteTour lang={lang} {...tourOf(PROMO_TOUR, lang)} noAsk />
     </>
   );
 }

@@ -182,7 +182,10 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
 
   const pickedRow = picked ? rows.find((r) => rowKey(r) === picked) : undefined;
   // "best" = the most profitable pool (its badge); the summary line shows the picked pool when there is one
-  const top = rows.reduce<Row | undefined>((m, r) => ((r.profit ?? 0) > (m?.profit ?? 0) ? r : m), undefined);
+  // audit 23.11: INFI→INFI (271%) was "Best" at +$114 while its own line said "−$141 if prices move like the last 24h" —
+  // a pool flagged dangerous is never the badge; among the rest the worse of profit and price-adjusted profit counts
+  const safe = (r: Row) => Math.min(r.profit ?? 0, r.adjusted ?? Infinity);
+  const top = rows.filter((r) => !r.danger).reduce<Row | undefined>((m, r) => (safe(r) > (m ? safe(m) : 0) ? r : m), undefined);
   const best = pickedRow ?? top;
 
   return (

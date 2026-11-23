@@ -50,6 +50,9 @@ const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 // the default filter; dex/page.tsx ships the top pools above it (audit 18.11: `touched` compared against TVLS[0], so the
 // full list always swapped in on load and re-sorted the table, CLS 0.26)
 const TVL0 = 1_000_000;
+// audit 23.11: Raydium NVDAX-USDC showed 291% and "$242/міс" while its 30-day average was 54% — today's spike is not
+// what a deposit earns; income and ranking use the lower of today's and the 30-day average APY
+const est = (p: { apy: number; apy30d?: number }) => (p.apy30d !== undefined && p.apy30d > 0 ? Math.min(p.apy, p.apy30d) : p.apy);
 const pct0 = (x?: number) => (x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`);
 
 function logo(p: DexPool) {
@@ -98,7 +101,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     const s = q.trim().toLowerCase();
     const l = pools.filter((p) => (cat === "all" || p.category === cat) && (chain === "all" || p.chain === chain) && (!stable || p.stable) && (!noIl || !p.il)
       && p.tvl >= minTvl && (!s || `${p.symbol} ${p.project} ${p.meta ?? ""}`.toLowerCase().includes(s)));
-    if (sort === "apy") l.sort((a, b) => b.apy - a.apy);
+    if (sort === "apy") l.sort((a, b) => est(b) - est(a));
     if (sort === "tvl") l.sort((a, b) => b.tvl - a.tvl);
     if (sort === "reward") l.sort((a, b) => (b.apyReward ?? 0) - (a.apyReward ?? 0));
     return l;
@@ -119,10 +122,10 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
     <div className="space-y-4">
     {/* the calculator, in detail */}
     <div className="rounded-xl border border-lime/30 bg-lime/[0.05] p-4">
-      <div className="flex items-center gap-2 text-sm font-bold">{C.title(money(amount), pct(p.apy))} <Hint lang={lang}>{C.note}{p.il ? ` ${C.il}` : ""}</Hint></div>
+      <div className="flex items-center gap-2 text-sm font-bold">{C.title(money(amount), pct(est(p)))} <Hint lang={lang}>{C.note}{p.il ? ` ${C.il}` : ""}</Hint></div>
       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {([[C.d, 365], [C.w, 52], [C.mo.replace("/", ""), 12], [C.yr.replace("/", ""), 1]] as const).map(([k, n]) => (
-          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * p.apy) / 100 / n)}</div></div>
+          <div key={k} className="rounded-lg bg-white/[0.04] px-3 py-2"><div className="text-xs font-bold uppercase tracking-wider text-ink-3">{k}</div><div className="font-mono text-base font-bold text-lime">+{money((amount * est(p)) / 100 / n)}</div></div>
         ))}
       </div>
     </div>
@@ -225,7 +228,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                   <div className="text-right"><div className={`font-mono text-lg font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}</div>{(() => { const hd = dexHedge(p.symbol, p.apy, hedge); return hd?.hedgedApy !== undefined ? <div className="text-xs font-semibold text-teal">{HX[lang].short} {pct(hd.hedgedApy)}</div> : null; })()}</div>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2 font-mono text-xs">
-                  <div><div className="font-sans text-ink-3">{C.col(money(amount))}</div><span className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}</span>{C.mo}</div>
+                  <div><div className="font-sans text-ink-3">{C.col(money(amount))}</div><span className="font-bold text-lime">{money((amount * est(p)) / 100 / 12)}</span>{C.mo}</div>
                   <div><div className="font-sans text-ink-3">{A.colTvl}</div>{compactUsd(p.tvl, lang)}</div>
                   <div><div className="font-sans text-ink-3">{A.colAvg}</div>{pct(p.apy30d)}</div>
                 </div>
@@ -270,8 +273,8 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                 <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl, lang)}</td>
                 <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}{(() => { const hd = dexHedge(p.symbol, p.apy, hedge); return hd?.hedgedApy !== undefined ? <div className="text-xs font-semibold text-teal">{HX[lang].short} {pct(hd.hedgedApy)}</div> : null; })()}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
-                  <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>
-                  <div className="text-xs text-ink-3">{money((amount * p.apy) / 100)}{C.yr}</div>
+                  <div className="font-bold text-lime">{money((amount * est(p)) / 100 / 12)}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>
+                  <div className="text-xs text-ink-3">{money((amount * est(p)) / 100)}{C.yr}</div>
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">
                   {p.apyBase === undefined && p.apyReward === undefined ? <span className="text-ink-3">—</span> : <>{pct(p.apyBase ?? 0)} + <span className="text-success">{pct(p.apyReward ?? 0)}</span></>}
