@@ -1,5 +1,5 @@
 {
- "at": 1795454476965,
+ "at": 1795454678962,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -44,6 +44,15 @@
    "why": "raffle",
    "perUserUsd": 10,
    "netUsd": 0.01
+  },
+  {
+   "id": "gate:102937",
+   "venue": "Gate",
+   "title": "Comment and Earn: 10 USDT for Your First Comment, Up to 100 USDT and Merch Weekly",
+   "url": "https://www.gate.com/announcements/article/102937",
+   "why": "small",
+   "perUserUsd": 100,
+   "netUsd": 4
   },
   {
    "id": "tg:LBanknews/20931",
@@ -108,6 +117,24 @@
    "netUsd": 7.98
   },
   {
+   "id": "gate:102933",
+   "venue": "Gate",
+   "title": "Gate ETF Welcome Back Rewards: Get 10 USDT on Your First Trade, Up to 120 USDT",
+   "url": "https://www.gate.com/announcements/article/102933",
+   "why": "small",
+   "perUserUsd": 120,
+   "netUsd": 1.1
+  },
+  {
+   "id": "gate:102931",
+   "venue": "Gate",
+   "title": "SNDK ETF Trading Challenge: Unlock 3x Reward Points and Win Up to 500 USDT",
+   "url": "https://www.gate.com/announcements/article/102931",
+   "why": "small",
+   "perUserUsd": 500,
+   "netUsd": 1.08
+  },
+  {
    "id": "binance:25e018b13a394e609d25cf66a0db0faa",
    "venue": "Binance",
    "title": "Share Your Agentic Wallet Experience for Rewards",
@@ -124,6 +151,33 @@
    "why": "small",
    "perUserUsd": 50,
    "netUsd": 9.95
+  },
+  {
+   "id": "gate:102930",
+   "venue": "Gate",
+   "title": "NVDA Futures Trading Challenge: 3 USDT on Your First Trade, Up to 8,000 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/102930",
+   "why": "small",
+   "perUserUsd": 8000,
+   "netUsd": 1
+  },
+  {
+   "id": "gate:102928",
+   "venue": "Gate",
+   "title": "PIEVERSE & EVAA Futures Hot Coin Airdrop: Register to Get 5 USDT, Up to 240 USDT Per Person",
+   "url": "https://www.gate.com/announcements/article/102928",
+   "why": "small",
+   "perUserUsd": 240,
+   "netUsd": 0
+  },
+  {
+   "id": "gate:102927",
+   "venue": "Gate",
+   "title": "Gate ANTON Trading Competition, Trade for a Share of 50,000 USDT",
+   "url": "https://www.gate.com/announcements/article/102927",
+   "why": "small",
+   "perUserUsd": 8000,
+   "netUsd": -8.5
   },
   {
    "id": "biconomy:64620266097817",
@@ -144,13 +198,40 @@
    "netUsd": 1.89
   },
   {
+   "id": "gate:102924",
+   "venue": "Gate",
+   "title": "ETH Futures × Options Rewards Program: Trade Futures for Options Vouchers and Share 15,500 USDT",
+   "url": "https://www.gate.com/announcements/article/102924",
+   "why": "small",
+   "perUserUsd": 20,
+   "netUsd": -0.29
+  },
+  {
+   "id": "gate:102923",
+   "venue": "Gate",
+   "title": "Trenches BSC Chain Peak Trading Competition: Easily Unlock Prize Pools, Champion Wins Up to 10,000 U...",
+   "url": "https://www.gate.com/announcements/article/102923",
+   "why": "small",
+   "perUserUsd": 10000,
+   "netUsd": -0.58
+  },
+  {
    "id": "binance:f4e10dc4e2d643eab9e98f89589f77cc",
    "venue": "Binance",
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.65,
+   "perUserUsd": 5.64,
    "netUsd": 0.03
+  },
+  {
+   "id": "gate:102922",
+   "venue": "Gate",
+   "title": "Gate Prediction Markets CS2 Trading Challenge: Rewards for the First Trade, Loss Compensation, and a...",
+   "url": "https://www.gate.com/announcements/article/102922",
+   "why": "small",
+   "perUserUsd": 150,
+   "netUsd": 2.4
   },
   {
    "id": "zoomex:64612993255577",
@@ -167,15 +248,6 @@
    "why": "raffle",
    "perUserUsd": 5,
    "netUsd": 0.1
-  },
-  {
-   "id": "gate:102916",
-   "venue": "Gate",
-   "title": "Gate Square × Trader Champions League S2: Share Strategies, Split 50,000 USDT & Win 10 GT",
-   "url": "https://www.gate.com/announcements/article/102916",
-   "why": "social",
-   "perUserUsd": 200,
-   "netUsd": 1.33
   },
   {
    "id": "tg:Kucoin_News/37276",
@@ -264,8 +336,8 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 65.76,
-   "netUsd": 0.88
+   "perUserUsd": 65.3,
+   "netUsd": 0.87
   },
   {
    "id": "biconomy:64537604172953",
@@ -273,7 +345,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1313.8500000000001,
+   "perUserUsd": 1315.05,
    "netUsd": -0.6
   },
   {
@@ -336,13 +408,6 @@
    "why": "small",
    "perUserUsd": 10,
    "netUsd": 0
-  },
-  {
-   "id": "gate:102883",
-   "venue": "Gate",
-   "title": "Gate IPO Access Phase 3: Anthropic (ANT) Share Allocation Confirmed, Total Allocation: 92,100 ANT Sh...",
-   "url": "https://www.gate.com/announcements/article/102883",
-   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/37246",
@@ -486,7 +551,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 927.9063563000001,
+   "perUserUsd": 925.441692,
    "netUsd": -0.04
   },
   {
@@ -561,7 +626,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 20.89,
+   "perUserUsd": 20.47,
    "netUsd": -0.52
   },
   {
@@ -645,7 +710,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1173.6,
+   "perUserUsd": 1175.1000000000001,
    "netUsd": 1.81
   },
   {
@@ -664,15 +729,6 @@
    "why": "small",
    "perUserUsd": 3000,
    "netUsd": -4.85
-  },
-  {
-   "id": "gate:102812",
-   "venue": "Gate",
-   "title": "Gate Prediction Markets Crypto Kickoff Week: 20,000 USDT in First-Trade and Leaderboard Rewards",
-   "url": "https://www.gate.com/announcements/article/102812",
-   "why": "small",
-   "perUserUsd": 5000,
-   "netUsd": 1.2
   },
   {
    "id": "zoomex:64403337588121",
@@ -808,7 +864,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1233.84,
+   "perUserUsd": 1233.1200000000001,
    "netUsd": 0.27
   },
   {
@@ -826,8 +882,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 135.576,
-   "netUsd": 2.59
+   "perUserUsd": 135.432,
+   "netUsd": 2.58
   },
   {
    "id": "tg:MEXCofficialNews/38824",
@@ -885,7 +941,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6194.9800000000005,
+   "perUserUsd": 6187.240000000001,
    "netUsd": 63.77
   },
   {
@@ -1181,7 +1237,7 @@
    "title": "OKX Flash Earn Lite (NIGHT) is Now Live! Subscribe BTC, SOL, OKB or NIGHT to share 12,500,000 NIGHT",
    "url": "https://www.okx.com/help/okx-flash-earn-lite-night-is-now-live-subscribe-btc-sol-okb-or-night-to-share-12500000-night",
    "why": "small",
-   "netUsd": 10.23
+   "netUsd": 10.22
   },
   {
    "id": "tg:Phemex_Announcements/7956",
@@ -1232,7 +1288,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.95,
+   "perUserUsd": 7.94,
    "netUsd": 2.74
   },
   {
