@@ -43,6 +43,8 @@ Rules:
 - Dates in words: "November 3, 2026" → uk "3 листопада 2026", ru "3 ноября 2026"; numeric dates as DD.MM.YYYY.
 - Terms: Futures → ф'ючерси / фьючерсы; Spot → спот; prize pool → призовий фонд / призовой фонд; trading volume →
   обсяг торгівлі / объём торговли; voucher → ваучер; APR/APY stay as is; KYC stays as is; airdrop stays as airdrop.
+- "Subscribe" to an Earn product = put money in: uk "внесіть / вкладіть", ru "внесите / вложите" (never "підпишіть").
+  "Eligible users" → uk "допущені користувачі" (never "відповідні користувачі"), ru "допущенные пользователи".
 - The sequence " ⏎ " marks a line break: keep it exactly where it is.
 - A line that is only hashtags, handles, tickers or a URL is copied as is.
 - If the English is truncated (ends with "…"), translate what is there and keep the "…".

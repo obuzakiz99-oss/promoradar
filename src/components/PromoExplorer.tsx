@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import type { Category, Promo, Venue, VenueKind } from "@/lib/types";
+import { geoAllowed, type Country } from "@/lib/geo";
 import type { Dict, Locale } from "@/lib/i18n";
 import { PromoCard, CAT_STYLE } from "./PromoCard";
 import { PROX } from "@/lib/i18n-pro";
@@ -16,7 +17,6 @@ import { titleOf } from "@/lib/titletpl";
 import { plural } from "@/lib/format";
 
 type Sort = "best" | "newest" | "ending" | "biggest" | "perUser" | "minEntry";
-type Country = "any" | "ua" | "eu";
 type Quick = "noDeposit" | "low" | "forNew" | "cash";
 
 const GX: Record<Locale, {
@@ -28,15 +28,6 @@ const GX: Record<Locale, {
   ru: { country: "Страна", any: "Любая", showAll: "Показать все", ua: "Украина", eu: "ЕС", hidden: (n) => `Скрыто ${n} ${plural(n, "ru", "promo")} только для других регионов или с ограничением для вашей страны`, quick: { noDeposit: "Без вложений", low: "Порог до $100", forNew: "Для новых", cash: "Только живые деньги" }, perUser: "Больше на 1 человека", minEntry: "Наименьший порог", best: "Самые выгодные" },
 };
 
-/** Regions whose "exclusive" promos may include each country (CEE/CIS lists usually include Ukraine). */
-const OK_FOR: Record<Exclude<Country, "any">, RegExp> = { ua: /^(CEE|CIS.*|Europe|Ukraine|region)$/i, eu: /^(CEE|CIS & CEE|Europe|EEA|region)$/i };
-export function geoAllowed(p: Promo, c: Country): boolean {
-  const g = p.meta?.geo;
-  if (!g || c === "any") return true;
-  if (c === "ua" && g.noUA) return false;
-  if (c === "eu" && g.noEU) return false;
-  return !g.only || OK_FOR[c].test(g.only);
-}
 type Kind = VenueKind | "all" | "saved" | "hidden";
 const STATUSES: Array<Status | "all"> = ["all", "live", "upcoming", "ending"];
 const CATS: Category[] = ["airdrop", "competition", "bonus", "earn", "farming", "listing", "referral", "other"];

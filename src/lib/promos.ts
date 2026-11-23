@@ -122,7 +122,7 @@ async function getPromosLive(): Promise<Collected> {
       // "2026.10.20 00:00:00 - 2026.10.27 23:59:59 (UTC+8)" — a dotted range the terms parser misses (audit 14.11: an
       // ended BingX promo showed as running); only the end matters here, read in the stated offset
       if (!p.endsAt) {
-        const R = /(\d{4})[./](\d{1,2})[./](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./](\d{1,2})[./](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*[(（]?\s*UTC\s*([+-]\d{1,2})?/i;
+        const R = /(\d{4})[./-](\d{1,2})[./-](\d{1,2})[^\d]{0,4}(?:\d{1,2}:\d{2}(?::\d{2})?)?\s*[-–~]\s*(\d{4})[./-](\d{1,2})[./-](\d{1,2})\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*[(（]?\s*UTC\s*([+-]\d{1,2})?/i;
         // the range is often split over two lines ("⏰ 2026.10.20 00:00:00 -" / "2026.10.27 23:59:59（UTC+8）")
         const r = d.blocks.slice(0, 40).map((b) => b.x).join(" ").match(R);
         if (r) {
@@ -150,6 +150,9 @@ async function getPromosLive(): Promise<Collected> {
         p.endsAt = Date.UTC(new Date(p.publishedAt).getUTCFullYear(), new Date(p.publishedAt).getUTCMonth(), new Date(p.publishedAt).getUTCDate() + 1, 23, 59);
         meta.datesFromRules = true;
       }
+      // "Last 5 days to enjoy up to 7% APR" (KuCoin KCUSD, audit 23.11) — ends N days after the post
+      const lastN = (p.titleOrig ?? p.title).match(/\b(?:last|final|only) (\d{1,2}) days?\b/i);
+      if (!p.endsAt && p.publishedAt && lastN) { p.endsAt = p.publishedAt + +lastN[1] * 86400_000; meta.datesFromRules = true; }
       // audit 19.11: a timeline of bare dates with no "period" line ("Subscription channel closes 2026-11-18") — when every
       // date in the rules is over a day old the campaign is over (a Bitget IPO challenge kept saying «Триває» after it closed)
       if (!p.endsAt && !p.evergreen) {

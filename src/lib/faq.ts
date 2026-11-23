@@ -1,5 +1,6 @@
 import { readStore, writeStore } from "./store";
 import { readHand, writeTodo } from "./ai-hand";
+import { localNums } from "./format";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -116,6 +117,19 @@ async function ask(client: Anthropic, p: Promo, d: PromoDetails): Promise<Faq | 
  * FAQ for the given promos (pass them most valuable first): cached answers + up to FAQ_PER_BUILD new ones. Never throws.
  * `details` must be the ORIGINAL (untranslated) rules.
  */
+/** uk/ru answers keep English number style from the rules ("$2,500", "1.5%") — localize at render. */
+function localFaq(f: Faq): Faq {
+  const o = { ...f };
+  for (const l of ["uk", "ru"] as const) {
+    const e = f[l]; if (!e) continue;
+    const n = (x: string) => localNums(x, l);
+    o[l] = { summary: n(e.summary), steps: e.steps.map(n), watch: e.watch.map(n),
+      payout: { when: n(e.payout.when), form: n(e.payout.form), how: n(e.payout.how) },
+      faq: e.faq.map((x) => ({ q: n(x.q), a: n(x.a) })) };
+  }
+  return o;
+}
+
 export async function getFaqs(promos: Promo[], details: Record<string, PromoDetails>): Promise<Record<string, Faq>> {
   const store = load();
   const now = Date.now();
@@ -153,8 +167,8 @@ export async function getFaqs(promos: Promo[], details: Record<string, PromoDeta
   const out: Record<string, Faq> = {};
   for (const p of eligible) {
     const e = hand.get(p.id);
-    if (e && e.v === VER) out[p.id] = e.data;
-    else if (store[p.id]) out[p.id] = store[p.id].faq;
+    const f = e && e.v === VER ? e.data : store[p.id]?.faq;
+    if (f) out[p.id] = localFaq(f);
   }
   return out;
 }

@@ -156,7 +156,9 @@ export async function telegram(): Promise<{ promos: Promo[]; status: TgStatus }>
     if (r.status === "rejected") { status[key] = { ok: false, count: 0, error: String(r.reason).slice(0, 120) }; return; }
     status[key] = { ok: true, count: 0 };
     // stored posts are re-checked against the current filter (it gets stricter over time, e.g. hack/breach news)
-    promos.push(...r.value.filter((p) => isPromo(p.title)));
+    // audit 23.11: a title picked from mid-post ("What's more? You can continue earning…") — drop the connector
+    promos.push(...r.value.map((p) => ({ ...p, title: p.title.replace(/^(what'?s more|plus|also|moreover|in addition|on top of that)\s*[?!:,.—–-]*\s*/i, "") }))
+      .filter((p) => p.title.length >= 12 && !/^(breakdown|details|rules|terms|how to|note)\b/i.test(p.title) && isPromo(p.title)));
   });
   return { promos, status };
 }

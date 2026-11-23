@@ -59,6 +59,10 @@ export function aprText(x: number, lang: string, digits = 1): string {
 /** Decimal comma for uk/ru in an already formatted string ("7.05%" → "7,05%"); audit 23.11: boards mixed "7.05%" with
  *  translated "4,25%". */
 export const dec = (s: string, lang: string) => (lang === "en" ? s : s.replace(/(\d)\.(\d)/g, "$1,$2"));
+/** AI texts in uk/ru: "$2,500" -> "$2 500", "1.5%" -> "1,5%" (dates like 16.11.2026 stay). */
+export const localNums = (s: string, lang: string) => (lang === "en" ? s : s
+  .replace(/\b([1-9]\d{0,2})((?:,\d{3})+)(?![,\d]|\s?%)/g, (_, a: string, b: string) => a + b.replace(/,/g, "\u00a0"))
+  .replace(/(?<![.\d])(\d+)\.(\d+)(?![.\d])/g, "$1,$2"));
 /** Money: "$50 000" for dollars, "50 000 USDT" for coins. */
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;

@@ -11,6 +11,7 @@ import { slugOf } from "@/lib/slug";
 import { promoLevel } from "@/lib/level";
 import { withBase } from "@/lib/base";
 import { PromoExplorer } from "@/components/PromoExplorer";
+import { geoAllowed } from "@/lib/geo";
 import { LaunchpoolTeaser } from "@/components/LaunchpoolTeaser";
 import { getPools } from "@/lib/pools";
 import { HowItWorks, ProSection, AdsSection, Footer } from "@/components/Sections";
@@ -49,7 +50,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   return (
     <>
       <main>
-        <Hero t={t} active={promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "максимум на 1 людину", en: "most for one person", ru: "максимум на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
+        <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "максимум на 1 людину", en: "most for one person", ru: "максимум на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
           tour={{ href: tourHref(withBase(""), lang), label: TOUR_LABEL[lang] }} />
