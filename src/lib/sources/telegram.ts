@@ -56,7 +56,7 @@ function pickTitle(text: string): string {
 const STORE = () => path.join(process.cwd(), "data", "telegram.json");
 const BACK_MS = 14 * 86400_000;
 type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
-const TG_VER = 2;   // bump when post parsing changes → stored promos are re-read from Telegram
+const TG_VER = 3;   // 3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
 let STORE_MEM: TgStore | null = null;
 function loadStore(): TgStore {
   if (STORE_MEM) return STORE_MEM;
@@ -128,7 +128,9 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const mine = links.filter((u) => { try { const h = new URL(u).hostname; return h === own || h.endsWith("." + own); } catch { return false; } });
     // audit 23.11: the first own link was often a button (deposit, referral landing, m-score) — prefer the article / event page
     const path = (u: string) => u.split(/[?#]/)[0];   // utm_campaign=… is not a campaign page
-    const url = mine.find((u) => /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/news\//i.test(path(u)))
+    // audit 23.11 (round 5): Bitrue "/referral/landing?inviteCode=…" won over "/land/Bitrue-Thanksgiving-Month" — referral pages never count
+    const ref = (u: string) => /referr|invite|register|sign-?up/i.test(path(u));
+    const url = mine.find((u) => !ref(u) && /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/land\/|\/news\//i.test(path(u)))
       ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(path(u)))
       ?? mine[0] ?? `https://t.me/${post}`;
     out.push({

@@ -17,7 +17,7 @@ import { decodeEntities, getJson, getText } from "./sources/util";
 export type Block = { t: "h" | "p" | "li" | "tr"; x: string; cells?: string[] };
 export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "kyc";
 export interface Fact { k: FactKey; text: string }
-export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number }
+export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number; u?: string }
 
 const VER = 5;               // bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
@@ -553,7 +553,9 @@ function load(): Record<string, PromoDetails> {
 export async function getDetails(promos: Promo[]): Promise<Record<string, PromoDetails>> {
   const now = Date.now();
   const store = load();
-  const want = promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen && (store[p.id]?.v !== VER || (store[p.id]?.partial && /binance\.com\/[a-z-]+\/support\/announcement/.test(p.url)))).slice(0, MAX_NEW);
+  const want = promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen && (store[p.id]?.v !== VER || (store[p.id]?.partial && /binance\.com\/[a-z-]+\/support\/announcement/.test(p.url))
+    // audit 23.11 (round 5): a promo whose link changed (Bitrue: referral page → campaign page) is read again
+    || (p.id.startsWith("tg:") && store[p.id]?.u !== p.url))).slice(0, MAX_NEW);
   let feedP: Promise<Map<string, string>> | null = null;
   const feeds = () => (feedP ??= feedMap());
   const queue = [...want];
@@ -563,7 +565,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
         const r = await fetchHtml(p, feeds);
         if (!r) continue;
         const blocks = htmlToBlocks(r.html);
-        if (blocks.length) store[p.id] = { blocks, facts: factsOf(blocks), at: now, partial: r.partial, v: VER };
+        if (blocks.length) store[p.id] = { blocks, facts: factsOf(blocks), at: now, partial: r.partial, v: VER, u: p.url };
       } catch { /* leave for the next build */ }
     }
   };
