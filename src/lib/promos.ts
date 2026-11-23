@@ -91,7 +91,9 @@ async function getPromosLive(): Promise<Collected> {
     if (blocks.length) manualDetails[s.id] = { blocks, facts: factsOf(blocks), at: now, partial: true };
     return {
       id: s.id, venue: venueOf(s.venue), title: s.title, url: s.url, category: s.category,
-      publishedAt: s.from ? new Date(s.from).getTime() : now, startsAt: s.from ? new Date(s.from).getTime() : undefined, endsAt: new Date(s.until).getTime(),
+      publishedAt: s.from ? new Date(s.from).getTime() : now, startsAt: s.from ? new Date(s.from).getTime() : undefined,
+      // audit 23.11: a standing programme has no end — `until` is only our monthly re-check date, not a countdown
+      endsAt: s.standing ? undefined : new Date(s.until).getTime(), evergreen: s.standing || undefined,
       reward: s.reward ? parseReward(s.reward) : undefined, tags: [],
       meta: { source: `${venueOf(s.venue).name} · ${s.checked}`, ...(s.standing ? { standing: true } : {}), ...(s.perUser ? { perUser: { ...s.perUser, usd: s.perUser.unit === "USD" ? s.perUser.amount : undefined, text: s.rules?.find((r) => /place|prize/i.test(r)) ?? "" } } : {}) },
     } satisfies Promo;

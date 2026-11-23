@@ -213,7 +213,7 @@ export const MANUAL: Array<{
       "Rewards from this promotion cannot be combined with the trial VIP pass benefits.",
       "The public page does not say how soon rewards are credited or which ones can be withdrawn: the welcome pack is a futures position voucher (not cash). Check each reward's details in the Rewards Center after logging in.",
     ],
-    checked: "2026-11-07",
+    checked: "2026-11-07", standing: true,
   },
   {
     id: "mexc:rewards-hub-new-user", venue: "mexc", category: "bonus",
@@ -232,7 +232,7 @@ export const MANUAL: Array<{
       "Token Vouchers are the exception: redeem within 14 days in the Voucher Center and the tokens become fully yours (tradable and withdrawable). Fee vouchers only reduce futures trading fees.",
       "Net deposit = on-chain deposits + P2P/fiat buys + airdrops − withdrawals − P2P/fiat sells − transfers out. Internal transfers do not count as deposits. The offer is only for invited users in designated regions; users where derivatives are banned may not get futures rewards.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "cryptocom:app-referral", venue: "cryptocom", category: "referral",
@@ -249,7 +249,7 @@ export const MANUAL: Array<{
       "Payout: each step's reward is credited to both wallets within 24 hours after the step is reached. Leaderboard and lucky-draw prizes are paid to the app wallet within 7 days after the monthly campaign ends.",
       "You must have an active account to receive any bonus. Referral and welcome bonuses cannot be combined.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "kraken:app-referral", venue: "kraken", category: "referral",
@@ -264,7 +264,7 @@ export const MANUAL: Array<{
       "Payout: the bonus is credited within 14 days after the conditions are met, as a fixed $20 in your default currency (e.g. €20 worth of BTC or $20 USDG).",
       "Referral bonuses are subject to programme limits and Kraken's discretion and are not guaranteed.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "bybit:referral-250", venue: "bybit", category: "referral",
@@ -283,7 +283,7 @@ export const MANUAL: Array<{
       "Referrers also earn 20% of the friend's net trading fees (25–30% at higher levels), paid daily at 04:00 UTC, for 365 days after the friend registers.",
       "Only for Bybit Global users — not available on Bybit EU / in the EEA and other restricted regions.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "kraken:stablecoin-rewards", venue: "kraken", category: "earn",
@@ -296,7 +296,7 @@ export const MANUAL: Array<{
       "Rewards are paid in the same stablecoin you hold, directly into your existing balance (Stablecoin Rewards must be enabled). Your stablecoins are not lent out.",
       "Rates may change; Kraken can change or end the programme at any time. Rewards are funded by Kraken and are not bank deposits (no FDIC/FSCS cover). Geographic restrictions apply.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     // official: bitfinex.com/zero-fee-trading — standing policy, no end date; re-checked monthly like the referral entries
@@ -379,7 +379,7 @@ export const MANUAL: Array<{
       "Gemini is not available in every country — check that your country is supported before signing up.",
       "The public referral page does not say when the $50 is credited or whether it can be withdrawn right away — check the referral terms in the Gemini app before counting on it.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "hyperliquid:referrals", venue: "hyperliquid", category: "referral",
@@ -390,7 +390,7 @@ export const MANUAL: Array<{
       "You can create your own referral code after $10,000 in trading volume; you then receive 10% of referred users' fees (less their discount) for their first $1B in volume.",
       "Referral rewards accrue in all quote assets and can be claimed once above $1 (manually, on the Referrals page). Discounts do not apply to vaults or sub-accounts.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   /* ---- perp-DEX points & reward programmes (official docs, checked 07.11.2026) ---- */
   {
@@ -417,7 +417,7 @@ export const MANUAL: Array<{
       "Trading rewards require trading on at least 2 days per week with at least 50,000 USD weekly volume. Holding rewards are calculated hourly from snapshots of your holdings.",
       "Payout: last week's rewards are sent automatically in USDF to your Futures account within 7 business days after the week ends; see [Rewards History].",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "aster:referral-program", venue: "aster", category: "referral",
@@ -430,7 +430,7 @@ export const MANUAL: Array<{
       "Payout: rebates are calculated in real time and transferred to your Aster account by the next day, in the same asset your friend paid fees in.",
       "Only new users who sign up through your link count; there is no limit on how many you invite. The referral link stays valid for 365 days by default.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "paradex:xp-season-3", venue: "paradex", category: "airdrop",
@@ -455,7 +455,7 @@ export const MANUAL: Array<{
       "Affiliates in the Token-Aligned Affiliate Program also earn a pro-rata share of 1.0% of the DIME supply via TAP Points (1M TAP Points every 2 weeks).",
       "Payout: referral XP arrives with the weekly XP drop (Wednesdays) — it is points, not money. TAP Points are distributed every 2 weeks; the DIME tokens they lead to have a 3-month lock-up after the programme ends.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
   {
     id: "lighter:referral-program", venue: "lighter", category: "referral",
@@ -467,7 +467,7 @@ export const MANUAL: Array<{
       "Referred users get a 10% discount on fees, rebated every Monday. Attribution is permanent — the code must be used at sign-up.",
       "Payout: kickbacks and rebates are paid every Monday as L2 transfers in LIT tokens, covering fees from Monday 00:00 to Sunday 23:59 UTC of the previous week. Minimum payout $1. The value of LIT can change.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-08", standing: true,
   },
 ];
 

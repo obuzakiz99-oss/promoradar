@@ -214,14 +214,22 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   };
 
   switch (mech) {
-    case "fixed": case "tiers": case "referral":
+    case "referral": {
+      // audit 23.11 (round 3): referral money depends on friends who sign up AND deposit/trade — "up to 10,000 USDT for you
+      // and your friend" (Binance Referral Rush: a friend really gets ≤ $25 boxes), HTX "≈ $100 average" = the maximum.
+      // An ordinary person brings one friend at best: count half of one friend's reward, never above $50, always "low".
+      const per = typical ?? max;
+      return per === undefined ? out(undefined, "low", "none") : out(Math.min(per / 2, 50), "low", typical !== undefined ? "stated" : "max");
+    }
+    case "fixed": case "tiers":
       // the smallest tier is certain, but the bigger tiers are within reach too → not "surely small"
-      if (typical !== undefined) return out(typical, mech === "tiers" || (max !== undefined && max > typical * 2) ? "mid" : "high", "stated");
+      // audit 23.11: MEXC "up to 150 USDT" (100 of it a trading bonus) showed "you will really get" — any "up to" above the typical is not sure
+      if (typical !== undefined) return out(typical, mech === "tiers" || (max !== undefined && max > typical) ? "mid" : "high", "stated");
       // only an "up to" figure: the top tier / an affiliate's best month is not what a typical person gets
       // (an affiliate "up to $3,000" is a best month, not one friend: capped until Claude reads the per-friend amount)
       // audit 23.11: Bitget "up to $12,800" (needs $5M of holdings) read as "≈ $3,200 likely" — a quarter of a big top tier
       // is still far above what the entry tiers pay, so an unknown tier ladder is capped at $250
-      if (max !== undefined) return out(mech === "tiers" ? Math.min(max / 4, 250) : mech === "referral" ? Math.min(max, 100) : max, mech === "fixed" && a ? "high" : "low", "max");
+      if (max !== undefined) return out(mech === "tiers" ? Math.min(max / 4, 250) : max, mech === "fixed" && a ? "mid" : "low", "max");
       return out(undefined, "low", "none");
     case "first_n": {
       const per = typical ?? max ?? (pool && a?.winners ? pool / a.winners : undefined);
@@ -235,7 +243,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       if (pool === undefined) return out(max !== undefined ? Math.min(max, 1e9) * 0.05 : undefined, "low", max !== undefined ? "chance" : "none");
       // expected share of a typical small participant: the pool spread over the crowd, never above the per-person cap.
       // Rankings reward the biggest traders: an ordinary participant's real chance is a fraction of the average.
-      const avg = pool / crowd(p.venue.id) * (mech === "top_n" ? 0.2 : 1);
+      // audit 23.11: a pool shared by volume/holdings goes mostly to whales too (Aster 6.25M → "≈ $417 likely")
+      const avg = pool / crowd(p.venue.id) * (mech === "top_n" ? 0.2 : mech === "pool_share" ? 0.25 : 1);
       return out(max !== undefined ? Math.min(avg, max) : avg, "low", "chance");
     }
     case "apr": {
