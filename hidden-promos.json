@@ -1,5 +1,5 @@
 {
- "at": 1795435877576,
+ "at": 1795436044167,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -137,7 +137,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1566,
+   "perUserUsd": 1565.6000000000001,
    "netUsd": 0.28
   },
   {
@@ -204,7 +204,7 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 60.09,
+   "perUserUsd": 60.08,
    "netUsd": 0.8
   },
   {
@@ -213,7 +213,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1366.3500000000001,
+   "perUserUsd": 1361.25,
    "netUsd": -0.6
   },
   {
@@ -331,7 +331,7 @@
    "title": "🎁 Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 883.25406778,
+   "perUserUsd": 879.7188187200001,
    "netUsd": -0.06
   },
   {
@@ -342,6 +342,13 @@
    "why": "raffle",
    "perUserUsd": 2050,
    "netUsd": 2.5
+  },
+  {
+   "id": "okx:put-your-tokenized-stocks-to-work-simple-earn-and-flexible-loan-now-supports-tokenized-stocks",
+   "venue": "OKX",
+   "title": "Put your tokenized stocks to work: Simple Earn and Flexible Loan now supports tokenized stocks",
+   "url": "https://www.okx.com/help/put-your-tokenized-stocks-to-work-simple-earn-and-flexible-loan-now-supports-tokenized-stocks",
+   "why": "news"
   },
   {
    "id": "tg:Bybit_Announcements/10143",
@@ -405,8 +412,8 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 910.2561797000001,
-   "netUsd": -0.04
+   "perUserUsd": 907.7915154,
+   "netUsd": -0.05
   },
   {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
@@ -473,7 +480,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 22.42,
+   "perUserUsd": 22.37,
    "netUsd": -0.26
   },
   {
@@ -492,6 +499,14 @@
    "why": "small",
    "perUserUsd": 2,
    "netUsd": 0.08
+  },
+  {
+   "id": "okx:okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
+   "venue": "OKX",
+   "title": "OKX × ANTHROPICUSDT Trade to Earn: Trade to Share 200,000 USDT",
+   "url": "https://www.okx.com/help/okx-anthropicusdt-trade-to-earn-trade-to-share-200-000-usdt",
+   "why": "small",
+   "netUsd": 13.33
   },
   {
    "id": "tg:Bitget_Announcements/18437",
@@ -549,7 +564,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1174.95,
+   "perUserUsd": 1172.15,
    "netUsd": 1.81
   },
   {
@@ -686,7 +701,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1223.0400000000002,
+   "perUserUsd": 1222.32,
    "netUsd": 0.26
   },
   {
@@ -704,7 +719,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.44,
+   "perUserUsd": 133.344,
    "netUsd": 2.54
   },
   {
@@ -763,7 +778,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6141.860000000001,
+   "perUserUsd": 6133.1,
    "netUsd": 63.77
   },
   {
@@ -1096,7 +1111,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.79,
+   "perUserUsd": 7.81,
    "netUsd": 2.74
   },
   {
