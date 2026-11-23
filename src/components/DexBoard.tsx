@@ -1,4 +1,5 @@
 "use client";
+import { useUrlState } from "@/lib/useUrlState";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import type { Dict, Locale } from "@/lib/i18n";
 import type { DexPool } from "@/lib/dexpools";
@@ -76,6 +77,13 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
   const [sort, setSort] = useState<Sort>("apy");
   const [limit, setLimit] = useState(PAGE);
   const [amtText, setAmt] = useState("1000");
+  useUrlState({ cat, chain, stable: stable ? "1" : "", noil: noIl ? "1" : "", tvl: String(minTvl), q: q.trim(), sort },
+    { cat: "all", chain: "all", stable: "", noil: "", tvl: String(TVL0), q: "", sort: "apy" },
+    (u) => {
+      if (u.cat) setCat(u.cat); if (u.chain) setChain(u.chain); if (u.stable) setStable(true); if (u.noil) setNoIl(true);
+      if (u.tvl && TVLS.includes(Number(u.tvl))) setMinTvl(Number(u.tvl)); if (u.q) setQ(u.q);
+      if (u.sort === "apy" || u.sort === "tvl" || u.sort === "reward") setSort(u.sort);
+    });
   // empty field → the default amount (the placeholder), never "$0.00" everywhere
   const amount = Math.min(1e9, Number(digits(amtText)) || 1000);
   const C = CALC[lang];

@@ -27,8 +27,32 @@ export function TableTools({ lang, sorts, filters = [], search = true, storeKey,
   const [count, setCount] = useState<[number, number] | null>(null);   // null until the rows are counted (no "0 of 0" in the static HTML)
   const key = `pr:table:${storeKey}:${lang}`;
 
-  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(key) || "{}"); if (sorts.some((s) => s.key === v.sort)) setSort(v.sort); if (v.f) setF(Object.fromEntries(Object.entries(v.f as Record<string, string>).filter(([k, x]) => filters.some((d) => d.key === k && d.options.includes(x))))); } catch {} }, [key, sorts, filters]);
-  useEffect(() => { try { localStorage.setItem(key, JSON.stringify({ sort, f })); } catch {} }, [key, sort, f]);
+  // audit 23.11: filters lived only in localStorage — they came back silently on reload and could not be shared.
+  // Now they are in the URL (?sort=…&f-impact=…&q=…); from an earlier visit only the sort order is remembered.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    try {
+      const u = new URLSearchParams(location.search);
+      const okF = (k: string, x: string) => filters.some((d) => d.key === k && d.options.includes(x));
+      const so = u.get("sort") ?? JSON.parse(localStorage.getItem(key) || "{}").sort;
+      if (sorts.some((s) => s.key === so)) setSort(so);
+      const ff = Object.fromEntries([...u.entries()].filter(([k]) => k.startsWith("f-")).map(([k, x]) => [k.slice(2), x]).filter(([k, x]) => okF(k, x)));
+      if (Object.keys(ff).length) setF(ff);
+      const qq = u.get("q"); if (qq) setQ(qq.slice(0, 80));
+    } catch { /* blocked */ }
+    setReady(true);
+  }, [key, sorts, filters]);
+  useEffect(() => {
+    if (!ready) return;
+    try { localStorage.setItem(key, JSON.stringify({ sort })); } catch { /* blocked */ }
+    const u = new URLSearchParams(location.search);
+    [...u.keys()].filter((k) => k === "sort" || k === "q" || k.startsWith("f-")).forEach((k) => u.delete(k));
+    if (sort && sort !== sorts[0]?.key) u.set("sort", sort);
+    Object.entries(f).forEach(([k, x]) => { if (x) u.set(`f-${k}`, x); });
+    if (q.trim()) u.set("q", q.trim());
+    const qs = u.toString();
+    history.replaceState(history.state, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
+  }, [ready, key, sort, f, q, sorts]);
 
   useEffect(() => {
     const tbody = box.current?.querySelector("tbody");

@@ -1,4 +1,5 @@
 "use client";
+import { useUrlState } from "@/lib/useUrlState";
 import { dec } from "@/lib/format";
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
@@ -77,6 +78,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
   }, [q]);
   const [type, setType] = useState<"all" | EarnOffer["type"]>("all");
   const [exPick, setEx] = useState("all");
+  useUrlState({ coin: coinPick, type, ex: exPick, q: q.trim() }, { coin: "USDT", type: "all", ex: "all", q: "" },
+    (u) => { if (u.coin) setCoin(u.coin.toUpperCase()); if (u.type) setType(u.type as typeof type); if (u.ex) setEx(u.ex); if (u.q) setQ(u.q); });
   const [openId, setOpenId] = useState<string | null>(null);   // exchange filter (chips + clickable exchange names)
 
   const byCoin = useMemo(() => {
