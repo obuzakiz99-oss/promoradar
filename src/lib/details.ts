@@ -587,7 +587,8 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
       store[p.id] = { ...post, blocks: i >= 0 ? post.blocks.slice(0, i) : post.blocks, partial: true, ex: undefined };
     }
     if (store[p.id]?.partial && pageOf(p).length) continue;
-    const r = BR[browserKey(p.url)];
+    // a non-Telegram page the build can't read (Hotcoin) — the laptop reads it into the relay rules (tg-enrich.mjs)
+    const r = BR[browserKey(p.url)]?.html ? BR[browserKey(p.url)] : !p.id.startsWith("tg:") ? RR[browserKey(p.url)] : undefined;
     if (!r?.html) continue;
     const blocks = htmlToBlocks(r.html);
     const cur = store[p.id];
