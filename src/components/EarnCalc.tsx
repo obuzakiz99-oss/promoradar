@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { nfLocale } from "@/lib/format";
+import { nfLocale, num } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Promo } from "@/lib/types";
 
@@ -71,12 +71,14 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
 
   if (m.aprPct !== undefined) {
     const day = (v * m.aprPct) / 100 / 365;
-    const left = endsAt && endsAt > now ? Math.max(1, Math.round((endsAt - now) / 86400_000)) : undefined;
+    const left = m.aprDays ?? (endsAt && endsAt > now ? Math.max(1, Math.round((endsAt - now) / 86400_000)) : undefined);
     // boosted promo rates (> 50 %) last days and apply to a capped amount — show per day, not "a month" (audit 14.11: +$205)
     big = m.aprPct > 50 ? `+${usd(day)} ${T.perDay}` : `+${usd(day * 30)} ${T.perMonth}`;
     if (m.aprPct > 50) lines.push({ text: ({ uk: "Підвищена ставка зазвичай діє кілька днів і на обмежену суму — строк і ліміт дивіться в умовах.", en: "A boosted rate usually lasts a few days and covers a capped amount — check the term and limit in the rules.", ru: "Повышенная ставка обычно действует несколько дней и на ограниченную сумму — срок и лимит смотрите в условиях." } as const)[lang], tone: "bad" });
     lines.push({ text: m.aprPct > 50 ? `${m.aprPct}% APR` : `+${usd(day)} ${T.perDay} · ${m.aprPct}% APR` });
-    if (left && m.aprPct <= 50) lines.push({ text: `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });
+    if (left && m.aprPct <= 50) lines.push({ text: m.aprDays
+      ? `+${usd(day * left)} ${({ uk: "загалом", en: "in total", ru: "всего" } as const)[lang]} (${T.days(left)}, ${num(m.aprPct * left / 365, lang)}% ${({ uk: "від суми", en: "of the amount", ru: "от суммы" } as const)[lang]})`
+      : `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });
     lines.push({ text: lock === "futures" ? T.keepFut : lock === "dual" ? T.keepDual : lock === "lock" ? T.keepLock : T.keep, tone: lock ? "bad" : "muted" });
   } else {
     // audit 23.11: $100 below the first tier (Toobit: >= $1 000 -> 60 USDT) fell through to the top prize "<= $12 000" --

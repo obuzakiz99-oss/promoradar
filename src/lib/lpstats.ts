@@ -52,7 +52,7 @@ export function lpStats(data: PoolsData, snaps: Snap[], now = data.fetchedAt): L
   const drop: DropRow[] = [];
   const keys = new Set(snaps.flatMap((s) => Object.keys(s.pools ?? {})));
   for (const key of keys) {
-    const pts = snaps.filter((s) => s.pools?.[key]).map((s) => [s.t, s.pools![key].apr] as [number, number]).filter(([, v]) => v > 0);
+    const pts = snaps.filter((s) => s.pools?.[key]).map((s) => [s.t, s.pools![key].apr] as [number, number]).filter(([, v]) => v > 0 && v <= 10_000);   // audit 23.11: a just-opened pool reads millions of % APR (empty pool) -> every later point looked like -100%
     if (pts.length < 2 || !live.has(key)) continue;
     const [firstT, first] = pts[0], last = pts[pts.length - 1][1];
     const name = snaps.filter((s) => s.pools?.[key]).at(-1)!.pools![key].name;

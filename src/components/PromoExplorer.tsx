@@ -10,7 +10,7 @@ import { Select } from "./Select";
 import { Icon } from "./Icon";
 import { useSaved } from "./SaveButton";
 import { combosFor } from "@/lib/combos";
-import { clearHidden, useHidden } from "./HideButton";
+import { clearHidden, HideToast, useHidden } from "./HideButton";
 import { statusOf, type Status } from "@/lib/slug";
 import { rankOf } from "@/lib/rank";
 import { titleOf } from "@/lib/titletpl";
@@ -245,6 +245,7 @@ export function PromoExplorer({ promos: initial, t, lang, serverNow, showKinds =
 
   return (
     <div>
+      <HideToast lang={lang} />
       {/* toolbar */}
       {/* phones: search + one row of sort / filters, sticky only from sm up (it used to take ~190px of a phone screen) */}
       <div className="relative z-30 -mx-4 mt-4 border-b border-line/60 bg-bg/85 px-4 py-3 backdrop-blur-xl lg:sticky lg:top-16 [@media(max-height:640px)]:relative sm:-mx-6 sm:px-6">

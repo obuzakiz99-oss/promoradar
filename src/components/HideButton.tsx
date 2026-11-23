@@ -1,5 +1,5 @@
 "use client";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 /**
  * Hidden promos (audit 12.11: "not for me" next to the ★): kept in localStorage per browser, like saved ones.
@@ -53,6 +53,7 @@ export function HideButton({ id, lang, size = "sm" }: { id: string; lang: "uk" |
         const card = e.currentTarget.closest("article");
         const near = (card?.nextElementSibling ?? card?.previousElementSibling)?.querySelector<HTMLElement>("h3 a, a");
         toggleHidden(id);
+        if (!hidden) window.dispatchEvent(new CustomEvent("pr:hidden-toast", { detail: id }));
         if (!hidden && near) setTimeout(() => near.focus(), 0);
       }}
       aria-pressed={hidden}
@@ -66,5 +67,29 @@ export function HideButton({ id, lang, size = "sm" }: { id: string; lang: "uk" |
           : <path d="M10.7 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.9 0 3.6-.6 5-1.4M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20" />}
       </svg>
     </button>
+  );
+}
+
+const TOAST = {
+  uk: { done: "Акцію приховано", undo: "Скасувати" },
+  en: { done: "Promo hidden", undo: "Undo" },
+  ru: { done: "Акция скрыта", undo: "Отменить" },
+} as const;
+
+/** audit 23.11: a hidden card just vanished, the only way back was a tiny line near the filters — offer undo right away. */
+export function HideToast({ lang }: { lang: "uk" | "en" | "ru" }) {
+  const [id, setId] = useState<string | null>(null);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const on = (e: Event) => { setId((e as CustomEvent<string>).detail); clearTimeout(timer); timer = setTimeout(() => setId(null), 6000); };
+    window.addEventListener("pr:hidden-toast", on);
+    return () => { window.removeEventListener("pr:hidden-toast", on); clearTimeout(timer); };
+  }, []);
+  if (!id) return null;
+  return (
+    <div role="status" className="fixed inset-x-4 bottom-20 z-50 mx-auto flex max-w-sm items-center justify-between gap-3 rounded-2xl border border-line-2 bg-surface px-4 py-2 text-sm font-semibold text-ink shadow-xl sm:bottom-6">
+      <span>{TOAST[lang].done}</span>
+      <button type="button" className="min-h-10 rounded-lg px-3 font-bold text-lime hover:bg-white/5" onClick={() => { if (snapshot().includes(id)) toggleHidden(id); setId(null); }}>{TOAST[lang].undo}</button>
+    </div>
   );
 }

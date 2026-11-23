@@ -62,6 +62,7 @@ export interface Promo {
     forNew?: boolean;          // only for new users
     tiers?: Array<{ min: number; reward: string; amount: number; unit: string }>;   // threshold → reward table from the rules
     aprPct?: number;           // advertised APR of an interest-type promo
+    aprDays?: number;          // the APR is paid for this many days ("8% APR paid over 3 months" = 90), not until the promo ends
     futures?: boolean;         // the trading requirement is on futures (lower fees than spot)
     noDeposit?: boolean;       // quiz / register-to-claim / check-in style: no money needed
     payout?: import("./payout").Payout;   // what the reward really is & how it is paid (read from the rules)

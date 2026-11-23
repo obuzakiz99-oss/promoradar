@@ -171,12 +171,21 @@ async function getPromosLive(): Promise<Collected> {
         const u = usdOf(tm.perUser, px);
         meta.perUser = { ...tm.perUser, usd: u !== undefined ? Math.round(u * 100) / 100 : undefined };
       }
+      // audit 23.11: "Earn Up to 1,000 USDT Extra" (Bybit MENA VIP) is what one person can get, not a shared pool —
+      // the page said «фонд 1 000 USDT»
+      if (!meta.perUser && p.reward && /\b(earn|get|receive|claim) up to\b[^.|]{0,30}\b(extra|bonus|each|per (user|person))\b|\bup to [\d,.]+ ?[A-Z]{2,6} (extra|each|per (user|person))\b/i.test(p.titleOrig ?? p.title)) {
+        meta.perUser = { amount: p.reward.amount, unit: p.reward.unit, usd: p.reward.usd, text: "" };
+        p.reward = undefined;
+      }
       if (tm.minEntry) meta.minEntry = tm.minEntry;
       // calculator inputs: reward tiers, advertised APR, futures vs spot (fees)
       const tiers = tiersOf(d.blocks);
       if (tiers.length) meta.tiers = tiers;
       const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
       if (apr !== undefined && meta.apr === undefined) meta.aprPct = apr;
+      // audit 23.11: OKX "8% APR paid over 3 months" was counted only until the promo's end (17 days)
+      const over = (p.titleOrig ?? p.title).match(/\bpaid over (\d{1,2}) (month|week|day)s?\b/i);
+      if (over && meta.aprPct !== undefined) meta.aprDays = +over[1] * ({ month: 30, week: 7, day: 1 } as Record<string, number>)[over[2].toLowerCase()];
       // what is actually paid (cash / voucher / points), claim window, review & payout days — with the quoted sentences
       const po = payoutOf(d.blocks.map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x)));
       if (po) meta.payout = po;
