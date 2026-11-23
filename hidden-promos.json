@@ -1,5 +1,5 @@
 {
- "at": 1795458319761,
+ "at": 1795458629925,
  "items": [
   {
    "id": "mexc:rewards-hub-new-user",
@@ -180,12 +180,20 @@
    "netUsd": -8.5
   },
   {
+   "id": "tg:Bitget_Announcements/18470",
+   "venue": "Bitget",
+   "title": "1,000 USDT Prize Pool",
+   "url": "https://www.bitget.com/campaigns/0a2717c1f8294aa09eecb05731e14e7a",
+   "why": "small",
+   "netUsd": 0.02
+  },
+  {
    "id": "biconomy:64620266097817",
    "venue": "Biconomy.com",
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1349.76,
+   "perUserUsd": 1344.64,
    "netUsd": 0.34
   },
   {
@@ -207,6 +215,14 @@
    "netUsd": -0.29
   },
   {
+   "id": "tg:Bybit_Announcements/10170",
+   "venue": "Bybit",
+   "title": "Trade with your AI Subaccount and compete for up to 1,000,000 USDT. Top 200 by P&L win.",
+   "url": "https://t.me/Bybit_Announcements/10170",
+   "why": "small",
+   "netUsd": 13.33
+  },
+  {
    "id": "gate:102923",
    "venue": "Gate",
    "title": "Trenches BSC Chain Peak Trading Competition: Easily Unlock Prize Pools, Champion Wins Up to 10,000 U...",
@@ -221,7 +237,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.62,
+   "perUserUsd": 5.61,
    "netUsd": 0.03
   },
   {
@@ -278,7 +294,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1622.8,
+   "perUserUsd": 1620.8,
    "netUsd": 0.31
   },
   {
@@ -287,6 +303,14 @@
    "title": "The Daily Top 10 Trading Opportunities Contract Trading Competition Season 1 has officially concluded!",
    "url": "https://t.me/HTXGlobalAnnouncementChannel/15882",
    "why": "news"
+  },
+  {
+   "id": "tg:KCEX_announcements/5757",
+   "venue": "KCEX",
+   "title": "Trade $ICP Spot and share a 2,000 USDT Futures Bonus pool! 💰",
+   "url": "https://www.kcex.com/zh-TW/hot-coin-special",
+   "why": "small",
+   "netUsd": 0.08
   },
   {
    "id": "tg:BingXAnnouncement/5400",
@@ -336,8 +360,8 @@
    "title": "Binance Alpha Trading Competition: Trade Pieverse (PIEVERSE) and Share $200K Worth of Rewards (2026-11-20)",
    "url": "https://www.binance.com/en/support/announcement/detail/4b72a90be21942bfa22eca0f0748dfcf",
    "why": "small",
-   "perUserUsd": 63.48,
-   "netUsd": 0.85
+   "perUserUsd": 63.2,
+   "netUsd": 0.84
   },
   {
    "id": "biconomy:64537604172953",
@@ -345,7 +369,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1356.6,
+   "perUserUsd": 1358.8500000000001,
    "netUsd": -0.6
   },
   {
@@ -374,6 +398,13 @@
    "netUsd": 2.9
   },
   {
+   "id": "tg:Kucoin_News/37249",
+   "venue": "KuCoin",
+   "title": "Community Weekly Activity: Referral Rush 🟩",
+   "url": "https://t.me/Kucoin_News/37249",
+   "why": "social"
+  },
+  {
    "id": "tg:Bitget_Announcements/18460",
    "venue": "Bitget",
    "title": "Futures Mining: A New Cycle Begins｜Thanksgiving Special, Share a 100,000 USDT Super Prize Pool!",
@@ -400,15 +431,6 @@
    "netUsd": 1.05
   },
   {
-   "id": "tg:Bitget_Announcements/18457",
-   "venue": "Bitget",
-   "title": "Prize Pool: 100 USDT",
-   "url": "https://www.bitget.com/aboutus",
-   "why": "small",
-   "perUserUsd": 10,
-   "netUsd": 0
-  },
-  {
    "id": "tg:Kucoin_News/37246",
    "venue": "KuCoin",
    "title": "Thinking That Free Airdrop Is Money in Your Pocket? Think Again!",
@@ -431,13 +453,13 @@
    "netUsd": 0.1
   },
   {
-   "id": "tg:LBanknews/20892",
-   "venue": "LBank",
-   "title": "New users: register for a $5 futures bonus. Net deposit 100 USDT to Futures + trade 100 USDT in Futures to unlock 50 points.",
-   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "id": "tg:Phemex_Announcements/8010",
+   "venue": "Phemex",
+   "title": "Phemex Rewards Bot | Referral Boost",
+   "url": "https://t.me/Phemex_Announcements/8010",
    "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
+   "perUserUsd": 20,
+   "netUsd": 9.8
   },
   {
    "id": "tg:MEXCofficialNews/38840",
@@ -496,14 +518,6 @@
    "why": "news"
   },
   {
-   "id": "tg:Bitget_Announcements/18448",
-   "venue": "Bitget",
-   "title": "Trade ANTUSDT and compete for a share of the 50,000 USDT prize pool!",
-   "url": "https://www.bitget.com/support/articles/12560603900341",
-   "why": "small",
-   "netUsd": 0.83
-  },
-  {
    "id": "tg:LBanknews/20879",
    "venue": "LBank",
    "title": "20,000 USDT in rewards. $XLA traders, you’re up. 👀",
@@ -513,13 +527,11 @@
    "netUsd": 0.5
   },
   {
-   "id": "tg:Phemex_Announcements/8001",
-   "venue": "Phemex",
-   "title": "Phemex Rewards Bot | Referral Boost",
-   "url": "https://phemex.com/?group=8156&referralCode=BG79H9",
-   "why": "small",
-   "perUserUsd": 20,
-   "netUsd": 5
+   "id": "tg:Bitrue_official/11254",
+   "venue": "Bitrue",
+   "title": "30D backtested grid APY.",
+   "url": "https://www.bitrue.com/bitrue-ai-strategy?cn=399990",
+   "why": "news"
   },
   {
    "id": "tg:KCEX_announcements/5737",
@@ -529,12 +541,12 @@
    "why": "news"
   },
   {
-   "id": "tg:Bybit_Announcements/10139",
-   "venue": "Bybit",
-   "title": "Trade with your AI Subaccount and compete for up to 1,000,000 USDT. Top 200 by P&L win.",
-   "url": "https://t.me/Bybit_Announcements/10139",
+   "id": "tg:Bitget_Announcements/18444",
+   "venue": "Bitget",
+   "title": "Predict whether XAUUSD (Gold) will move UP or DOWN and compete for a prize pool of up to $10,000! 💰",
+   "url": "https://www.bitget.com/events/activities/new/eb4813ac88be544e8eb2265dd758afcf?color=dark",
    "why": "small",
-   "netUsd": 13.33
+   "netUsd": 0.17
   },
   {
    "id": "tg:Bybit_Announcements/10138",
@@ -550,7 +562,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 908.5070631,
+   "perUserUsd": 904.8498193,
    "netUsd": -0.05
   },
   {
@@ -625,7 +637,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 22.01,
+   "perUserUsd": 21.91,
    "netUsd": -0.52
   },
   {
@@ -671,14 +683,6 @@
    "netUsd": 4.17
   },
   {
-   "id": "tg:Kucoin_News/37211",
-   "venue": "KuCoin",
-   "title": "Get started with TradFi Futures Trading with as low as $100 to unlock a lucky draw spin",
-   "url": "https://www.kucoin.com/campaigns/futures_lego_tradfi261030?utm_source=global_futures_lego_tradfi261030futuresTG&appNeedLang=true&loading=2&transparentTitle=true",
-   "why": "raffle",
-   "netUsd": -0.03
-  },
-  {
    "id": "tg:Toobit_announcements/6103",
    "venue": "Toobit",
    "title": "We're celebrating this exciting listing with a $30,000 reward pool and plenty of opportunities to grab extra rewards.",
@@ -709,7 +713,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1172.4,
+   "perUserUsd": 1174,
    "netUsd": 1.81
   },
   {
@@ -826,18 +830,10 @@
    "netUsd": 0.8
   },
   {
-   "id": "tg:Kucoin_News/37192",
-   "venue": "KuCoin",
-   "title": "Enjoy a boosted 10K USDT cash reward + Futures Points for the Top 3 Winners in the Solo Contest, new Copy Trading integration, and an upgraded 100K USDT new-user…",
-   "url": "https://www.kucoin.com/competition/futures_proof_TisSeason261116?utm_source=FuturesTG&utm_medium=TG&utm_campaign=TisTheSeason&transparentTitle=true&loading=2&appNeedLang=true",
-   "why": "raffle",
-   "netUsd": 64.12
-  },
-  {
    "id": "tg:Bitget_Announcements/18403",
    "venue": "Bitget",
    "title": "Get ready to compete for a share of the $75,000 prize pool! 🚀",
-   "url": "https://www.bitget.com/launchhub/trading-club/234024",
+   "url": "https://www.bitget.com/support/articles/12560603900607",
    "why": "raffle",
    "perUserUsd": 4000,
    "netUsd": 6.25
@@ -863,7 +859,7 @@
    "title": "🏆 ASTER Trading Competition — Share 15,000 ASTER!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64378795293721--ASTER-Trading-Competition-Share-15-000-ASTER",
    "why": "small",
-   "perUserUsd": 1236.72,
+   "perUserUsd": 1235.76,
    "netUsd": 0.27
   },
   {
@@ -881,17 +877,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 134.952,
+   "perUserUsd": 134.664,
    "netUsd": 2.57
-  },
-  {
-   "id": "tg:MEXCofficialNews/38824",
-   "venue": "MEXC",
-   "title": "Share Your VVIP Story: 500 USDT Prize Pool",
-   "url": "https://www.mexc.com/?utm_source=community&utm_medium=tg",
-   "why": "small",
-   "perUserUsd": 20,
-   "netUsd": 0.01
   },
   {
    "id": "tg:MEXCofficialNews/38822",
@@ -940,7 +927,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6170.080000000001,
+   "perUserUsd": 6154.32,
    "netUsd": 63.77
   },
   {
@@ -985,13 +972,12 @@
    "perUserUsd": 26
   },
   {
-   "id": "tg:Kucoin_News/37168",
-   "venue": "KuCoin",
-   "title": "Visors down, bricks up! The build is in full swing, so are YOU snapping up those Futures vouchers? 💚",
-   "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
+   "id": "tg:KCEX_announcements/5707",
+   "venue": "KCEX",
+   "title": "Trade $AVAX Spot and share a 2,000 USDT Futures Bonus pool! 💰",
+   "url": "https://kcex.com/hot-coin-special",
    "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
+   "netUsd": 0.2
   },
   {
    "id": "tg:LBanknews/20838",
@@ -1000,6 +986,13 @@
    "url": "https://www.lbank.com/event-new/10003865-eftts-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "raffle",
    "netUsd": -0.14
+  },
+  {
+   "id": "tg:Bitget_Announcements/18397",
+   "venue": "Bitget",
+   "title": "$8,425 (after fees) stays unallocated → earns 10% APY while you wait → +$34.62",
+   "url": "https://www.bitget.com/aboutus",
+   "why": "news"
   },
   {
    "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
@@ -1030,13 +1023,6 @@
    "why": "news"
   },
   {
-   "id": "tg:Kucoin_News/37153",
-   "venue": "KuCoin",
-   "title": "Community Weekly Activity: Referral Rush 🟩",
-   "url": "https://t.me/Kucoin_News/37153",
-   "why": "social"
-  },
-  {
    "id": "kraken:https://blog.kraken.com/product/promotions/black-friday-deposit-trade-bonus",
    "venue": "Kraken",
    "title": "Get up to $100 in BTC with our Black Friday Deposit & Trade Bonus",
@@ -1044,13 +1030,6 @@
    "why": "small",
    "perUserUsd": 100,
    "netUsd": 7.4
-  },
-  {
-   "id": "tg:MEXCofficialNews/38816",
-   "venue": "MEXC",
-   "title": "AI chips get the spotlight. What about the machines behind them? 👀",
-   "url": "https://www.mexc.com/futures/AMATSTOCK_USDT?utm_source=community&utm_medium=tg&utm_campaign=q3_earning_season",
-   "why": "news"
   },
   {
    "id": "bybit:fiat-to-crypto-frenzy-complete-simple-tasks-for-a-chance-to-win-a-share-of-80-000-usdt--art9bfd4ee5f492",
@@ -1236,7 +1215,7 @@
    "title": "OKX Flash Earn Lite (NIGHT) is Now Live! Subscribe BTC, SOL, OKB or NIGHT to share 12,500,000 NIGHT",
    "url": "https://www.okx.com/help/okx-flash-earn-lite-night-is-now-live-subscribe-btc-sol-okb-or-night-to-share-12500000-night",
    "why": "small",
-   "netUsd": 10.2
+   "netUsd": 10.11
   },
   {
    "id": "tg:Phemex_Announcements/7956",
@@ -1287,7 +1266,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.89,
+   "perUserUsd": 7.87,
    "netUsd": 2.74
   },
   {
