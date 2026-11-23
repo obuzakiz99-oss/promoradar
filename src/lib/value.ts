@@ -203,6 +203,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   const lock = a?.act.lockDays ?? a?.days ?? 14;
   const cost = kind === "trade_spot" ? need * FEE.spot : kind === "trade_futures" ? need * FEE.futures
     : kind === "deposit" || kind === "stake" || kind === "hold" ? need * IDLE_APR * (lock / 365) : 0;
+  // + the trading volume the rules require on top of a deposit (Bitget: deposit 1,000 + 300,000 futures volume ≈ $150 in fees)
+  const volCost = (m.needVol?.futures ?? 0) * FEE.futures + (m.needVol?.spot ?? 0) * FEE.spot;
   const ai = !!a;
   // audit 23.11: position vouchers, interest-free coupons and futures bonuses were counted as cash ("$500, sure" for a
   // BingX voucher) — they can only be used for trading and most expire unused; points are worth even less
@@ -212,7 +214,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   const out = (g0: number | undefined, c0: Conf, basis: Value["basis"]): Value => {
     const gross = g0 === undefined ? undefined : g0 * fk;
     const conf: Conf = capConf(fk < 1 && c0 === "high" ? "mid" : c0);
-    return { gross: gross === undefined ? undefined : round(gross), cost: round(cost), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - cost), conf, mech, basis, ai };
+    const c = Math.max(cost, kind.startsWith("trade") ? cost : cost + volCost);
+    return { gross: gross === undefined ? undefined : round(gross), cost: round(c), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - c), conf, mech, basis, ai };
   };
 
   switch (mech) {

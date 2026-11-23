@@ -197,6 +197,14 @@ async function getPromosLive(): Promise<Collected> {
       }
       if (tm.minEntry) meta.minEntry = tm.minEntry;
       // calculator inputs: reward tiers, advertised APR, futures vs spot (fees)
+      // audit 23.11 (round 5): Bitget Rewards Center — "50 USDT … 300,000 USDT or more of futures trading volume" read as free
+      // money (cost 0): the smallest volume named for futures / spot is a fee the participant pays
+      {
+        const vols = (re: RegExp) => d.blocks.slice(0, 80).flatMap((b) => [...b.x.matchAll(re)]).map((x) => Number((x[1] || x[2]).replace(/,/g, ""))).filter((n) => n >= 100 && n < 1e9);
+        const fut = vols(/([\d,]{3,})\s*(?:USDT|USD|USDC)?\s*(?:or more |and above )?(?:of |in )?(?:cumulative )?futures trading volume|futures trading volume (?:of |reaches )?(?:at least |≥\s*|over )?\$?([\d,]{3,})/gi);
+        const spot = vols(/([\d,]{3,})\s*(?:USDT|USD|USDC)?\s*(?:or more |and above )?(?:of |in )?(?:cumulative )?spot trading volume|spot trading volume (?:of |reaches )?(?:at least |≥\s*|over )?\$?([\d,]{3,})/gi);
+        if (fut.length || spot.length) meta.needVol = { futures: fut.length ? Math.min(...fut) : undefined, spot: spot.length ? Math.min(...spot) : undefined };
+      }
       const tiers = tiersOf(d.blocks);
       if (tiers.length) meta.tiers = tiers;
       const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
@@ -240,6 +248,9 @@ async function getPromosLive(): Promise<Collected> {
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
+    // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
+    const AUD = /\b(P2P )?merchants?\b|\bVIP ?\d*\+?\s*(users|clients|members)?\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
+    if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text)))) meta.audience = true;
     // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
     const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
     // audit 23.11 (beginner persona): HTX NVDA "free airdrop" needs a stock-token trade, a referral needs the friend to act —

@@ -398,7 +398,14 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
   // "[MENA Exclusive] …", "SEA Festival …", "Binance P2P Kenya: …", "CIS & CEE Exclusive: …"
   if (r && (/exclusive|only\b|\bP2P\b/i.test(title) || title.search(REGION_TITLE) < 14)) g.only = r.length <= 4 ? r.toUpperCase() : r.replace(/\s+/g, " ");
   else if (/region[- ]exclusive/i.test(title)) g.only = "region";
-  for (const b of d?.blocks ?? []) {
+  const bl = d?.blocks ?? [];
+  // audit 23.11 (round 5): CEX.IO listed the countries where the offer runs — Ukraine was not on it, the page said "✓ Україна"
+  const allow = bl.findIndex((b) => /\b(available|eligible|open|valid|applies)\b[^.]{0,40}\b(following|these|listed|supported|selected) (countries|regions|jurisdictions|markets)\b|\b(supported|eligible|participating) (countries|regions|jurisdictions)\s*[:：]/i.test(b.x));
+  if (allow >= 0 && !g.only) {
+    const list = bl.slice(allow, allow + 4).map((b) => b.x).join(" ");
+    if (!/\bUkraine\b/i.test(list) && (list.match(/,/g)?.length ?? 0) >= 2) { g.only = "region"; g.text ??= bl[allow].x; }
+  }
+  for (const b of bl) {
     // audit 23.11: "Only available to users in France, Italy, Spain…" (OKX), "for users in South Asia" (Binance) left no mark
     const only = !g.only && b.x.match(/\b(?:only (?:available|open|eligible) (?:to|for)|exclusively (?:available )?for|open only to) (?:users|residents|customers|participants) (?:in|from|of|located in|residing in) (?:the )?([A-Z][^.;:!?]{2,70})/);
     // the card says "Лише для окремих регіонів"; the exact list is the quoted line (g.text), translated on the promo page

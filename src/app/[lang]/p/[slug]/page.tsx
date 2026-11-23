@@ -474,7 +474,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           if (m.geo?.noUA) whoParts.push([U.notUA, "text-rose"]);
           else if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
           else if (det) whoParts.push([U.uaOk, "text-ink"]);
-          whoParts.push(m.forNew ? [U.onlyNew, "text-sky"] : [U.allUsers, "text-ink"]);
+          whoParts.push(m.forNew ? [U.onlyNew, "text-sky"] : m.audience ? [({ uk: "Лише окремі користувачі", en: "Only some users", ru: "Только отдельные пользователи" } as const)[lang], "text-amber"] : [U.allUsers, "text-ink"]);
           if (kyc) whoParts.push([U.kyc, "text-ink"]);
           const clean = (x: string) => noEmoji(x).replace(/^\s*[-–•]\s*/, "");
           const whoLines = m.geo?.text ? [m.geo.text] : (det?.facts ?? []).filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").map((f) => f.text).slice(0, 3);
