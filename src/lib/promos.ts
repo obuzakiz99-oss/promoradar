@@ -135,7 +135,8 @@ async function getPromosLive(): Promise<Collected> {
       }
       // audit 23.11: month-name periods in Telegram posts ("📅 September 12–18 (UTC)", "Nov 20 – Dec 4", "until November 24")
       // left no end date, so ended promos stayed up (Phemex Deposit Week, Hotcoin, LBank). The year defaults to the post's.
-      if (!p.endsAt && !p.evergreen) {
+      // audit 23.11: Bybit's feed end (30.11) was the listing end, the rules said "Nov 3 – Dec 7" — a later rules end wins there
+      if ((!p.endsAt || p.venue.id === "bybit") && !p.evergreen) {
         const M = "[Jj]an|[Ff]eb|[Mm]ar|[Aa]pr|May|[Jj]un|[Jj]ul|[Aa]ug|[Ss]ept?|[Oo]ct|[Nn]ov|[Dd]ec";   // "May" capitalised only ("users may 1…")
         const mon = (s: string) => ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].indexOf(s.slice(0, 3).toLowerCase());
         const txt = d.blocks.slice(0, 40).map((b) => b.x).join(" ");
@@ -145,7 +146,7 @@ async function getPromosLive(): Promise<Collected> {
         if (range) {
           const mEnd = mon(range[4] || range[1]), dEnd = +range[5], yEnd = +(range[6] || range[3] || y0);
           const end = Date.UTC(yEnd, mEnd, dEnd, 23, 59);
-          if (mEnd >= 0 && dEnd >= 1 && dEnd <= 31 && Number.isFinite(end)) { p.endsAt = end; meta.datesFromRules = true; }
+          if (mEnd >= 0 && dEnd >= 1 && dEnd <= 31 && Number.isFinite(end) && (!p.endsAt || end > p.endsAt)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
       // "PS5 Slim drop today" — a one-day drop ends the day after it was posted
