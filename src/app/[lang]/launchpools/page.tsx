@@ -102,7 +102,7 @@ export default async function Launchpools({ params }: { params: Params }) {
           <dl data-tour="launchpools-stats" className="mt-6 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
             {[
               [String(livePools.length), L.statLive],
-              [rewardsUsd ? compactUsd(rewardsUsd) : "—", L.statRewards],
+              [rewardsUsd ? compactUsd(rewardsUsd, lang) : "—", L.statRewards],
               [bestApr ? `${bestApr >= 100 ? Math.round(bestApr) : bestApr.toFixed(1)}%` : "—", L.statBest],
               [String(EX_IDS.length + ANN_IDS.length), L.statEx],
             ].map(([v, l]) => (
@@ -231,7 +231,7 @@ export default async function Launchpools({ params }: { params: Params }) {
                         <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-ink-2">{period(p, lang)}</td>
                         <td className="px-4 py-3 text-ink-2">{[...new Set(p.pools.map((x) => x.stake))].join(", ")}</td>
                         <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{aprs.length ? aprRange(Math.min(...aprs), Math.max(...aprs)) : <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span>}</td>
-                        <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd) : `${fmtNum(p.rewardTotal)} ${p.token}`}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-mono">{p.rewardUsd ? compactUsd(p.rewardUsd, lang) : `${fmtNum(p.rewardTotal)} ${p.token}`}</td>
                         <td className="px-4 py-3 font-mono text-ink-2">{(() => { const n = p.participants ?? (p.pools.reduce((s, x) => s + (x.participants ?? 0), 0) || undefined); return n === undefined ? <span className="font-sans text-xs font-semibold text-ink-3" title={NO_DATA[lang][1]}>{NO_DATA[lang][0]}</span> : fmtNum(n); })()}</td>
                       </tr>
                     );

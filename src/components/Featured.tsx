@@ -74,7 +74,7 @@ export function TopPools({ promos, t, lang }: { promos: Promo[]; t: Dict; lang: 
               <span className="text-sm font-bold">{p.venue.name}</span>
               <span className={`ml-auto text-xs font-semibold ${CAT_STYLE[p.category].text}`}>{t.cat[p.category]}</span>
             </div>
-            <div className="mt-5 font-display text-4xl font-semibold tracking-tight text-gradient">{compactUsd(p.reward!.usd!)}</div>
+            <div className="mt-5 font-display text-4xl font-semibold tracking-tight text-gradient">{compactUsd(p.reward!.usd!, lang)}</div>
             <p className="mt-3 text-sm font-semibold leading-snug text-ink-2 group-hover:text-ink">{p.title}</p>
           </a>
         ))}

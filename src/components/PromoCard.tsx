@@ -27,7 +27,7 @@ const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string;
 function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
   if (!v || v.net === undefined || v.gross === undefined) return null;
   const L = VAL[lang];
-  const usd = (x: number) => (x >= 1000 ? compactUsd(x) : `$${x >= 10 ? Math.round(x) : x.toFixed(x >= 1 ? 1 : 2)}`);
+  const usd = (x: number) => (x >= 1000 ? compactUsd(x, lang) : `$${x >= 10 ? Math.round(x) : x.toFixed(x >= 1 ? 1 : 2)}`);
   const title = [L.why[v.basis], v.cost ? L.cost(usd(v.cost)) : ""].filter(Boolean).join("; ");
   if (v.net <= 0) return v.mech === "apr" ? <div className="mb-2 text-xs font-semibold text-ink-3">{L.flat}</div> : <div title={title} className="mb-2 text-xs font-bold text-amber">{L.loss}</div>;
   const tone = v.conf === "high" ? "text-lime" : v.conf === "mid" ? "text-ink" : "text-ink-2";
@@ -198,21 +198,21 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
           ) : m.perUser && p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
-              {!samePool && <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd)}` : ""}</div>}
+              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd, lang)}</span> : null}</div>
+              {!samePool && <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd, lang)}` : ""}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.pool}</div>
-              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(p.reward.usd)}</span> : null}</div>
+              <div className="mt-0.5 font-mono text-xl font-bold tracking-tight text-ink">{fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(p.reward.usd, lang)}</span> : null}</div>
               {m.perUser && <div className="mt-0.5 font-mono text-xs font-bold text-lime">{PER[lang](money(m.perUser.amount, m.perUser.unit, lang))}</div>}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : m.perUser ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
-              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd)}</span> : null}</div>
+              <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd, lang)}</span> : null}</div>
             </div>
           ) : m.zeroFee ? (
             <div>
@@ -232,7 +232,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             {isFarm ? (
               <>
                 <div className="text-ink-3">{t.card.tvl}</div>
-                <div className="mt-0.5 font-mono text-sm font-bold text-ink">{compactUsd(m.tvlUsd ?? 0)}</div>
+                <div className="mt-0.5 font-mono text-sm font-bold text-ink">{compactUsd(m.tvlUsd ?? 0, lang)}</div>
               </>
             ) : m.standing ? (
               <>

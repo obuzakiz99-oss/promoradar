@@ -49,7 +49,7 @@ export default async function DexPage({ params }: { params: Params }) {
           <p className="mt-3 max-w-2xl text-ink-2 sm:text-lg">{t.aprHub.dexSub}</p>
           <div className="mt-3"><TourButton lang={lang} /></div>
           <dl data-tour="dex-stats" className="mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-            {[[pools.length.toLocaleString(nfLocale(lang)), plural(pools.length, lang, "pool")], [String(protocols), plural(protocols, lang, "protocol")], [String(chains.length), plural(chains.length, lang, "chain")], [compactUsd(tvl), t.aprHub.colTvl]].map(([v, l]) => (
+            {[[pools.length.toLocaleString(nfLocale(lang)), plural(pools.length, lang, "pool")], [String(protocols), plural(protocols, lang, "protocol")], [String(chains.length), plural(chains.length, lang, "chain")], [compactUsd(tvl, lang), t.aprHub.colTvl]].map(([v, l]) => (
               <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3">
                 <dd className="font-display text-2xl font-semibold tracking-tight">{v}</dd>
                 <dt className="mt-0.5 text-xs font-semibold text-ink-3">{l}</dt>

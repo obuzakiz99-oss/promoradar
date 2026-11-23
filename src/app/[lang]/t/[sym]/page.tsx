@@ -109,7 +109,7 @@ export default async function TokenPage({ params }: { params: Params }) {
         {unlock && (
           <a data-tour="token-unlock" href={withBase(`/${lang}/unlocks/`)} className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-amber/30 bg-amber/[0.06] px-5 py-3.5 text-sm">
             <span className="font-bold text-amber">{UNLOCK_TX[lang](new Date(unlock.date).toISOString().slice(0, 10), duration(unlock.date - now, t.time))}</span>
-            <span className="font-mono text-ink-2">{compactUsd(unlock.usd)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
+            <span className="font-mono text-ink-2">{compactUsd(unlock.usd, lang)} · {unlock.pctCap.toFixed(2)}% {UNLOCK_CAP[lang]}</span>
             <span className="text-ink-3">{trs(unlock.sale)}</span>
           </a>
         )}

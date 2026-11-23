@@ -62,7 +62,7 @@ export default async function Bonuses({ params }: { params: Params }) {
                     <div>
                       <div className="text-lg font-bold">{v.name}</div>
                       <div className="text-xs font-semibold text-ink-3">{T.colOffers}: {list.length}</div>
-                      {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best))}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{({ uk: "новачку", en: "per newcomer", ru: "новичку" } as const)[lang]}</span></div>}
+                      {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best), lang)}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{({ uk: "новачку", en: "per newcomer", ru: "новичку" } as const)[lang]}</span></div>}
                     </div>
                   </div>
                   <ul className="space-y-1.5 text-sm">

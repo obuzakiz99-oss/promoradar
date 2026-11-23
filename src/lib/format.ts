@@ -1,10 +1,8 @@
 import type { Dict } from "./i18n";
 
-export function compactUsd(n: number): string {
-  if (n >= 1e9) return `$${+(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `$${+(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`;
-  return `$${Math.round(n)}`;
+export function compactUsd(n: number, lang = "en"): string {
+  const s = n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`;
+  return lang === "en" ? s : s.replace(".", ",");
 }
 
 /** "2д 4год" / "3год 12хв" / "18хв" */

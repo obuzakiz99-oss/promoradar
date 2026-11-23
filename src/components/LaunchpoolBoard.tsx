@@ -12,7 +12,7 @@ import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
 import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
-import { aprText, compactUsd, duration, money } from "@/lib/format";
+import { aprText, compactUsd, dec, duration, money } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 import { Icon } from "./Icon";
 
@@ -47,7 +47,7 @@ const TH: Record<Locale, { pool: string; time: string; more: string; rules: stri
 };
 const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
 const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
-const fmtUsd = (n: number) => (n >= 1000 ? compactUsd(n) : `$${n.toFixed(n < 10 ? 2 : 0)}`);
+const fmtUsd0 = (n: number, lang: string) => (n >= 1000 ? compactUsd(n, lang) : dec(`$${n.toFixed(n < 10 ? 2 : 0)}`, lang));
 
 interface Row {
   p: PoolProject; pool: Pool; price?: number; stakeCoins?: number; usd?: number; perDay?: number; profit?: number; capped: boolean; belowMin: boolean;
@@ -60,7 +60,8 @@ interface Row {
 const fmtPct = (x: number) => `${x >= 100 || x <= -100 ? Math.round(x) : x.toFixed(1)}%`;
 
 /** "Hedged APR" panel: where to short, funding, entry/exit cost and the size up to which it still makes sense. */
-function HedgeBox({ r, L }: { r: Row; L: Dict["lp"] }) {
+function HedgeBox({ r, L, lang }: { r: Row; L: Dict["lp"]; lang: Locale }) {
+  const fmtUsd = (n: number) => fmtUsd0(n, lang);
   const hc = r.hc;
   if (!hc.needed) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-2">{L.hedgeNotNeeded}</div>;
   if (!hc.possible) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-3">{L.hedgeImpossible.replace("{c}", r.pool.stake)}</div>;
@@ -92,6 +93,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   projects: PoolProject[]; prices: Record<string, number>; changes?: Record<string, number>; hedge?: Record<string, Hedge>;
   exchanges: Record<string, Venue>; t: Dict; lang: Locale; serverNow: number; sparks?: Record<string, number[]>; extra?: AnnPool[];
 }) {
+  const fmtUsd = (n: number) => fmtUsd0(n, lang);
   const L = t.lp;
   const [now, setNow] = useState(serverNow);
   const [text, setText] = useState("1000");
@@ -394,7 +396,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
               )}
                 </div>
                 <div className="nov-1col mt-3 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
-                  <div className="adv"><HedgeBox r={r} L={L} /></div>
+                  <div className="adv"><HedgeBox r={r} L={L} lang={lang} /></div>
                   <ProsCons lang={lang} pc={poolPC(lang, p, pool, { now, chgStake: r.chgStake, chgReward: r.chgReward, price: r.price, hedge, amountUsd: r.usd ?? amount })} more="+" />
                 </div>
               </details>
@@ -513,7 +515,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                       <td colSpan={6} className="px-4 pb-4 pt-1">
                         <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
                           <div className="space-y-3">
-                            <div className="adv"><HedgeBox r={r} L={L} /></div>
+                            <div className="adv"><HedgeBox r={r} L={L} lang={lang} /></div>
                             {(hedge[pool.stake] || (pool.stake !== p.token && hedge[p.token])) && (
                               <div className="flex flex-col gap-1.5">
                                 <HedgeVenues coin={pool.stake} hedge={hedge[pool.stake]} lang={lang} />

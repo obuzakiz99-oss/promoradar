@@ -55,7 +55,7 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
           const href = withBase(`/${lang}/p/${slugOf(p!)}/`);
           const pu = p!.meta?.perUser;
           const hours = p!.endsAt ? Math.max(1, Math.round((p!.endsAt - now) / 3600_000)) : undefined;
-          const main = pu ? `${T.perPerson} ${pu.usd !== undefined ? compactUsd(pu.usd) : `${pu.amount.toLocaleString(nfLocale(lang))} ${pu.unit}`}` : p!.reward ? `${T.pool} ${p!.reward.label}` : T.noDep;
+          const main = pu ? `${T.perPerson} ${pu.usd !== undefined ? compactUsd(pu.usd, lang) : `${pu.amount.toLocaleString(nfLocale(lang))} ${pu.unit}`}` : p!.reward ? `${T.pool} ${p!.reward.label}` : T.noDep;
           return (
             <article key={p!.id} className="card relative flex flex-col p-5" style={{ ["--tint" as string]: p!.venue.color }}>
               <div className={`text-xs font-extrabold uppercase tracking-wider ${tone}`}>{label}</div>

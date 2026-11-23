@@ -172,7 +172,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
         <Select label={A.chain} value={chain} onChange={setChain} className={sel}
           options={[{ value: "all", label: `${A.chain}: ${A.all}` }, ...chains.slice(0, 60).map((c) => ({ value: c, label: c }))]} />
         <Select label={A.minTvl} value={String(minTvl)} onChange={(v) => setMinTvl(Number(v))} className={sel}
-          options={TVLS.map((v) => ({ value: String(v), label: `${A.minTvl} ${compactUsd(v)}` }))} />
+          options={TVLS.map((v) => ({ value: String(v), label: `${A.minTvl} ${compactUsd(v, lang)}` }))} />
         <label data-tour="dex-amount" className="flex h-10 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           {C.amount}
           <input value={amtText} onChange={(e) => setAmt(digits(e.target.value).slice(0, 10))} inputMode="decimal" placeholder="1000" aria-label={C.amount}
@@ -218,7 +218,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2 font-mono text-xs">
                   <div><div className="font-sans text-ink-3">{C.col(money(amount))}</div><span className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}</span>{C.mo}</div>
-                  <div><div className="font-sans text-ink-3">{A.colTvl}</div>{compactUsd(p.tvl)}</div>
+                  <div><div className="font-sans text-ink-3">{A.colTvl}</div>{compactUsd(p.tvl, lang)}</div>
                   <div><div className="font-sans text-ink-3">{A.colAvg}</div>{pct(p.apy30d)}</div>
                 </div>
                 <div data-tour={pi === 0 ? "dex-actions" : undefined} className="mt-3">{pcButton(p, pc, open, "w-full justify-center")}</div>
@@ -259,7 +259,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                   </div>
                 </td>
                 <td className="px-4 py-3 text-ink-2">{p.chain}</td>
-                <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl)}</td>
+                <td className="px-4 py-3 text-right font-mono">{compactUsd(p.tvl, lang)}</td>
                 <td className={`px-4 py-3 text-right font-mono text-base font-bold ${p.apy >= 20 ? "text-lime" : "text-ink"}`}>{pct(p.apy)}{(() => { const hd = dexHedge(p.symbol, p.apy, hedge); return hd?.hedgedApy !== undefined ? <div className="text-xs font-semibold text-teal">{HX[lang].short} {pct(hd.hedgedApy)}</div> : null; })()}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
                   <div className="font-bold text-lime">{money((amount * p.apy) / 100 / 12)}<span className="text-xs font-semibold text-ink-3">{C.mo}</span></div>

@@ -43,7 +43,7 @@ export function Hero({ t, active, poolsUsd, poolsLabel, sources, radar, radarVen
         <dl data-tour="stats" className="mt-8 grid max-w-xl grid-cols-3 gap-3">
           {[
             [String(active), t.hero.statActive],
-            [poolsUsd > 0 ? compactUsd(poolsUsd) : "—", poolsLabel ?? t.hero.statPools],
+            [poolsUsd > 0 ? compactUsd(poolsUsd, live?.lang) : "—", poolsLabel ?? t.hero.statPools],
             [String(sources), t.hero.statSources],
           ].map(([v, l]) => (
             <div key={l} className="flex min-w-0 flex-col rounded-2xl border border-line bg-white/[0.02] px-3 py-3 sm:px-4 sm:py-3.5">

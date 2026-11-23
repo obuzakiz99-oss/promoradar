@@ -201,7 +201,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medStable)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{pct(e.medOther)}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-xs">{e.avgDays.toFixed(0)}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-xs">{e.rewardUsd ? compactUsd(e.rewardUsd) : "—"}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-xs">{e.rewardUsd ? compactUsd(e.rewardUsd, lang) : "—"}</td>
                   </tr>
                 ))}
               </tbody>

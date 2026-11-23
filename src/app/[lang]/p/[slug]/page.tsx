@@ -351,20 +351,20 @@ export default async function PromoPage({ params }: { params: Params }) {
   const perUserCell: React.ReactNode = pu ? (
     <span>
       <span className="text-lime">{R.upTo} {pu.amount.toLocaleString(nfLocale(lang))} {pu.unit}</span>
-      {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd)})</span>}
+      {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd, lang)})</span>}
       {pu.text.trim() && <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>}
     </span>
   ) : <span className="font-normal text-ink-2">{p.category === "earn" ? ({ uk: "Дохід залежить від суми й ставки — див. калькулятор нижче.", en: "Income depends on the amount and the rate — see the calculator below.", ru: "Доход зависит от суммы и ставки — см. калькулятор ниже." } as const)[lang]
     : p.category === "referral" ? ({ uk: "Нагорода — за кожного друга, який виконав умову.", en: "The reward is per friend who meets the condition.", ru: "Награда — за каждого друга, выполнившего условие." } as const)[lang] : R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd)}</span> : null}</> : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{m.apr}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],
     [t.detail.published, p.publishedAt ? dateFull(p.publishedAt, lang) : t.detail.noData],
   ];
   if (m.chain) facts.push([t.detail.chain, m.chain]);
-  if (m.tvlUsd) facts.push([t.card.tvl, compactUsd(m.tvlUsd)]);
+  if (m.tvlUsd) facts.push([t.card.tvl, compactUsd(m.tvlUsd, lang)]);
   facts.push([t.detail.source, m.source ?? `${p.venue.name} · ${new URL(p.url).hostname}`]);
 
   return (
@@ -467,7 +467,7 @@ export default async function PromoPage({ params }: { params: Params }) {
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
                 value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : m.zeroFee ? ({ uk: "0% комісії за торгівлю", en: "0% trading fees", ru: "0% комиссии за торговлю" } as const)[lang] : U.noAmount}
-                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!)}</span> : null}
+                  {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!, lang)}</span> : null}
                   {/* the maximum is the top tier, not what the minimum entry gets (audit 14.11: "до 500 USDT" next to "від 50 USDT") */}
                   {pu && (m.tiers?.length ?? 0) > 1 && <span className="block text-sm font-normal text-ink-3">{({ uk: "за найвищий рівень; поріг входу дає менше", en: "for the top tier; the entry threshold pays less", ru: "за высший уровень; порог входа даёт меньше" } as const)[lang]}</span>}</>,
                 body: <>
@@ -574,12 +574,12 @@ export default async function PromoPage({ params }: { params: Params }) {
                 <li key={q.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-3">
                   <Link href={`/${lang}/p/${slugOf(q)}/`} className="min-w-0 flex-1 font-semibold hover:text-lime">{titleOf(q, lang) ?? q.title}</Link>
                   <span className="rounded-md border border-line px-2 py-0.5 text-xs font-semibold text-ink-2">{C.why[why]}</span>
-                  {q.meta?.perUser?.usd ? <span className="font-mono text-sm font-bold text-lime">{C.upTo} {compactUsd(q.meta.perUser.usd)}</span> : null}
+                  {q.meta?.perUser?.usd ? <span className="font-mono text-sm font-bold text-lime">{C.upTo} {compactUsd(q.meta.perUser.usd, lang)}</span> : null}
                   {q.endsAt ? <span className="font-mono text-xs text-ink-3">{duration(q.endsAt - now, t.time)}</span> : null}
                 </li>
               ))}
             </ul>
-            {comboSum > 0 && <p className="mt-3 text-sm font-semibold">{C.sum(compactUsd(comboSum), combos.length + 1)}</p>}
+            {comboSum > 0 && <p className="mt-3 text-sm font-semibold">{C.sum(compactUsd(comboSum, lang), combos.length + 1)}</p>}
             <p className="mt-2 text-xs text-ink-3"><Icon name="alert" /> {C.note}</p>
           </section>
         )}

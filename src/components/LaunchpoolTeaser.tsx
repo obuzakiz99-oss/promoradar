@@ -20,7 +20,7 @@ export function LaunchpoolTeaser({ t, lang, data }: { t: Dict; lang: Locale; dat
         <div>
           <div className="text-xs font-extrabold uppercase tracking-wider text-lime">{t.lp.kicker}</div>
           <div className="mt-2 font-display text-2xl font-semibold tracking-tight sm:text-3xl"><span className="text-gradient">Launchpool</span> Radar</div>
-          <p className="mt-2 max-w-md text-sm text-ink-2">{t.lp.title} · {live.flatMap((p) => p.pools).length} {t.lp.statLive}{rewards ? ` · ${compactUsd(rewards)}` : ""}</p>
+          <p className="mt-2 max-w-md text-sm text-ink-2">{t.lp.title} · {live.flatMap((p) => p.pools).length} {t.lp.statLive}{rewards ? ` · ${compactUsd(rewards, lang)}` : ""}</p>
           <span className="btn btn-primary mt-5 h-11 px-5">{t.lp.calc} →</span>
         </div>
         <div className="grid gap-2">

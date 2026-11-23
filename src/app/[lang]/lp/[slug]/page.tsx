@@ -211,7 +211,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
             {!live && !ended && <dd className="text-xs text-sky">{T.startsIn} {duration(p.start - now, t.time)}</dd>}</div>
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.end}</dt><dd className="mt-1 font-mono font-bold">{shortDate(p.end, lang)}</dd>
             {!ended && <dd className="text-xs text-lime">{T.endsIn} {duration(p.end - now, t.time)}</dd>}</div>
-          <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.fund}</dt><dd className="mt-1 font-mono font-bold">{p.rewardUsd ? compactUsd(p.rewardUsd) : "—"}</dd>
+          <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.fund}</dt><dd className="mt-1 font-mono font-bold">{p.rewardUsd ? compactUsd(p.rewardUsd, lang) : "—"}</dd>
             {p.rewardTotal ? <dd className="text-xs text-ink-3">{fmtNum(p.rewardTotal)} {p.token}</dd> : null}</div>
           <div className={tile}><dt className="text-xs font-semibold text-ink-3">{T.users}</dt><dd className="mt-1 font-mono font-bold">{fmtNum(participants)}</dd></div>
         </dl>
@@ -235,7 +235,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <VenueLogo v={{ name: x.stake, logo: x.stakeLogo, color: "#2a313b", ink: "#eef2f6", monogram: x.stake.slice(0, 3) }} size={36} rounded="rounded-full" />
                   <div className="min-w-0">
                     <div className="font-bold">{T.stake} {x.stake} → {p.token}</div>
-                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward)} {p.token}{pxOf(p.token) ? ` ≈ ${compactUsd(x.reward * pxOf(p.token)!)}` : ""}</div> : null}
+                    {x.reward ? <div className="text-xs text-ink-3">{T.fund}: {fmtNum(x.reward)} {p.token}{pxOf(p.token) ? ` ≈ ${compactUsd(x.reward * pxOf(p.token)!, lang)}` : ""}</div> : null}
                   </div>
                   <div className="ml-auto text-right">
                     <div className={`font-mono text-2xl font-bold ${(x.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{fmtApr(x.apr)}</div>
@@ -257,7 +257,7 @@ export default async function LaunchpoolPage({ params }: { params: Params }) {
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.limits}</dt>
                     <dd className="font-mono">{x.minStake || x.maxStake ? [x.minStake ? `${T.min} ${fmtNum(x.minStake)}` : "", x.maxStake ? `${T.max} ${fmtNum(x.maxStake)}` : ""].filter(Boolean).join(" · ") + ` ${x.stake}` : T.noLimit}</dd></div>
                   <div><dt className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.staked}</dt>
-                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants >= 1000 ? 5 : x.participants, lang, "participant")   /* shown as "2.3K" → «учасників» */}` : ""}</dd></div>
+                    <dd className="font-mono">{x.staked ? `${fmtNum(x.staked)} ${x.stake}${pxOf(x.stake) && !isStable(x.stake) ? ` ≈ ${compactUsd(x.staked * pxOf(x.stake)!, lang)}` : ""}` : "—"}{x.participants ? ` · ${fmtNum(x.participants)} ${plural(x.participants >= 1000 ? 5 : x.participants, lang, "participant")   /* shown as "2.3K" → «учасників» */}` : ""}</dd></div>
                 </dl>
                 {!ended && (data.hedge[x.stake] || (x.stake !== p.token && data.hedge[p.token])) && (
                   <div className="mt-3 flex flex-col gap-1.5">
