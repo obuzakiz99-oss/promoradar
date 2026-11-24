@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const OUT = "out", BASE = "/promoradar";
+const OUT = "out", BASE = process.env.SITE_HOST ? "" : "/promoradar";
 const UA = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0; +https://promoradar.example)", Accept: "text/html,application/json;q=0.9,*/*;q=0.8" };
 const noExternal = process.argv.includes("--no-external");
 

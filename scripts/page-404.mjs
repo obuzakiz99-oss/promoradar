@@ -4,6 +4,7 @@
 // - anything else: a short message in the visitor's language with links home.
 import fs from "node:fs";
 
+const B = process.env.SITE_HOST ? "" : "/promoradar"; // base path (empty on the own domain)
 const html = `<!doctype html>
 <html lang="uk">
 <head>
@@ -21,7 +22,7 @@ const html = `<!doctype html>
 </style>
 <script>
 (function () {
-  var base = "/promoradar";
+  var base = "${B}";
   var path = location.pathname.indexOf(base) === 0 ? location.pathname.slice(base.length) : location.pathname;
   var m = path.match(/^\\/(uk|en|ru)(\\/.*)?$/);
   var saved = null; try { saved = localStorage.getItem("pr:lang"); } catch (e) {}
@@ -43,7 +44,7 @@ const html = `<!doctype html>
 <main id="m">
   <h1>Сторінку не знайдено</h1>
   <p>Можливо, акція вже завершилась або сторінку перенесли.</p>
-  <a class="p" href="/promoradar/uk/">На головну</a><a href="/promoradar/uk/launchpools/">Launchpool</a><a href="/promoradar/uk/drops/">Аірдропи</a>
+  <a class="p" href="${B}/uk/">На головну</a><a href="${B}/uk/launchpools/">Launchpool</a><a href="${B}/uk/drops/">Аірдропи</a>
 </main>
 <script>
 (function () {
@@ -59,7 +60,7 @@ const html = `<!doctype html>
   m.querySelector("h1").textContent = T[0]; document.title = T[0] + " — PromoRadar";
   m.querySelector("p").textContent = T[1];
   var a = m.querySelectorAll("a"), href = ["/", "/launchpools/", "/drops/"];
-  for (var i = 0; i < a.length; i++) { a[i].textContent = T[2 + i]; a[i].href = "/promoradar/" + l + href[i]; }
+  for (var i = 0; i < a.length; i++) { a[i].textContent = T[2 + i]; a[i].href = "${B}/" + l + href[i]; }
 })();
 </script>
 </body>

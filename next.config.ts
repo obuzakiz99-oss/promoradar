@@ -5,7 +5,8 @@ import type { NextConfig } from "next";
  * Otherwise a normal Next.js server build (local `next start`, or any Node host).
  */
 const pages = process.env.GITHUB_PAGES === "1";
-const base = pages ? "/promoradar" : "";
+// SITE_HOST (repo variable, e.g. promoradar.xyz) = own domain served from the root; unset = github.io/promoradar
+const base = pages ? (process.env.SITE_HOST ? "" : "/promoradar") : "";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
