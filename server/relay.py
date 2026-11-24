@@ -3,7 +3,7 @@ Runs on Linux (free VPS in Europe) or Windows. Every 30 min fetches the official
 US servers, force-pushes relay.json (+ rules.json from scripts/tg-enrich.mjs) to the `relay` branch and asks GitHub
 for a site rebuild. Needs: python3, git, node, gh (logged in), chromium. State/log: $RELAY_DIR (default ./prrelay)."""
 import json, os, shutil, subprocess, sys, time, urllib.request
-sys.stdout.reconfigure(encoding='utf-8')
+if sys.stdout: sys.stdout.reconfigure(encoding='utf-8')   # None under pythonw
 WIN = os.name == 'nt'
 HERE = os.path.dirname(os.path.abspath(__file__))
 D = os.environ.get('RELAY_DIR') or os.path.join(HERE, 'prrelay'); REPO = os.path.join(D, 'repo')
