@@ -14,9 +14,9 @@ const OUT = process.env.OUT_DIR || "out";
 const STATE = path.join("data", "posted.json");
 
 const L = {
-  uk: { promo: "🆕 Нова акція", lp: "🚀 Новий Launchpool", earn: "🏦 Висока ставка Earn", pool: "Фонд", stake: "Стейк", apr: "APR", ends: "До", more: "Деталі" },
-  en: { promo: "🆕 New promo", lp: "🚀 New Launchpool", earn: "🏦 High Earn rate", pool: "Pool", stake: "Stake", apr: "APR", ends: "Until", more: "Details" },
-  ru: { promo: "🆕 Новая акция", lp: "🚀 Новый Launchpool", earn: "🏦 Высокая ставка Earn", pool: "Фонд", stake: "Стейк", apr: "APR", ends: "До", more: "Подробнее" },
+  uk: { promo: "🆕 Нова акція", lp: "🚀 Новий Launchpool", earn: "🏦 Висока ставка Earn", pool: "Фонд", stake: "Стейк", apr: "APR", ends: "До", more: "Деталі", est: "У середньому на людину", onK: "Дохід на $1 000" },
+  en: { promo: "🆕 New promo", lp: "🚀 New Launchpool", earn: "🏦 High Earn rate", pool: "Pool", stake: "Stake", apr: "APR", ends: "Until", more: "Details", est: "Typical per person", onK: "Extra on $1,000" },
+  ru: { promo: "🆕 Новая акция", lp: "🚀 Новый Launchpool", earn: "🏦 Высокая ставка Earn", pool: "Фонд", stake: "Стейк", apr: "APR", ends: "До", more: "Подробнее", est: "В среднем на человека", onK: "Доход на $1 000" },
 }[LANG];
 
 const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
@@ -40,8 +40,12 @@ const promos = feed.promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergr
 for (const p of promos) {
   const key = `promo:${p.id}`; if (seen.has(key)) continue;
   if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
+  // 24.11: no empty teasers, nothing ending within a day; the realistic per-person estimate is the point of the channel
+  if (p.meta?.thin || (p.endsAt && p.endsAt - Date.now() < 86400_000)) continue;
+  const net = p.meta?.value?.net, apr = p.meta?.value?.mech === "apr";
+  const est = net !== undefined && net > 0 ? `${apr ? L.onK : L.est}: <b>≈ $${Math.round(net)}</b>` : "";
   msgs.push([key, [
-    `<b>${L.promo} · ${esc(p.venue.name)}</b>`, esc(trTitle(p)),
+    `<b>${L.promo} · ${esc(p.venue.name)}</b>`, esc(trTitle(p)), est,
     p.reward ? `${L.pool}: <b>${esc(p.reward.label)}</b>` : "", p.endsAt ? `${L.ends}: ${date(p.endsAt)}` : "",
     SITE ? `<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : `<a href="${esc(p.url)}">${L.more} →</a>`,
   ].filter(Boolean).join("\n")]);
