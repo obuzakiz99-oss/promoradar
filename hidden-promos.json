@@ -1,5 +1,5 @@
 {
- "at": 1795552436348,
+ "at": 1795552647882,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -394,13 +394,6 @@
    "why": "news"
   },
   {
-   "id": "mexc:17827791539676",
-   "venue": "MEXC",
-   "title": "TAP Carnival: Trade Daily, Climb the Leaderboard & Share 625,000 TAP",
-   "url": "https://www.mexc.com/announcements/article/tap-carnival-17827791539676",
-   "why": "news"
-  },
-  {
    "id": "bitget:12560603900320",
    "venue": "Bitget",
    "title": "BDT & PKR Exclusive: Spend $1 to Receive 10,000USDT Rewards!",
@@ -464,10 +457,10 @@
    "why": "news"
   },
   {
-   "id": "mexc:17827791539539",
+   "id": "mexc:17827791539537",
    "venue": "MEXC",
-   "title": "Alpha Quest: Unlock Alpha Trader Benefits and Share a $30,000 Prize Pool",
-   "url": "https://www.mexc.com/announcements/article/alpha-quest-17827791539539",
+   "title": "MEXC Card Events Hub: Explore Trending Events and Exclusive Rewards in One Place",
+   "url": "https://www.mexc.com/announcements/article/mexc-card-events-hub-17827791539537",
    "why": "news"
   },
   {
@@ -492,11 +485,25 @@
    "why": "region"
   },
   {
+   "id": "mexc:17827791539462",
+   "venue": "MEXC",
+   "title": "Canton 0-Fee Carnival Now Live: $1,000,000 Up for Grabs",
+   "url": "https://www.mexc.com/announcements/article/canton-0-fee-carnival-now-live-17827791539462",
+   "why": "news"
+  },
+  {
    "id": "binance:8466c6c384054e499890d0b1f3883eda",
    "venue": "Binance",
    "title": "Binance P2P Kenya: Earn USDT Rewards with Lightning Instant M-pesa & Instant M-pesa Paybill",
    "url": "https://www.binance.com/en/support/announcement/detail/8466c6c384054e499890d0b1f3883eda",
    "why": "region"
+  },
+  {
+   "id": "mexc:17827791539413",
+   "venue": "MEXC",
+   "title": "Earnings Season Battle: Join a Team & Share $100,000 in Rewards",
+   "url": "https://www.mexc.com/announcements/article/earnings-season-battle-17827791539413",
+   "why": "news"
   },
   {
    "id": "bybit:the-stage-is-set-the-countdown-is-over-wsot-2026-is-here--art1de9a88502d2",
@@ -583,14 +590,6 @@
    "url": "https://www.binance.com/en/support/announcement/detail/780b2bb98e514095aff94db557083994",
    "why": "small",
    "netUsd": 1.33
-  },
-  {
-   "id": "mexc:17827791539925",
-   "venue": "MEXC",
-   "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
-   "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
-   "why": "small",
-   "netUsd": 3.97
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -819,7 +818,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1302.08,
+   "perUserUsd": 1299.84,
    "netUsd": 0.31
   },
   {
@@ -985,16 +984,8 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1204.95,
+   "perUserUsd": 1206.45,
    "netUsd": -0.6
-  },
-  {
-   "id": "mexc:17827791539878",
-   "venue": "MEXC",
-   "title": "$200,000 Futures League: Choose Your Team and Compete to Win a Share",
-   "url": "https://www.mexc.com/announcements/article/200-000-futures-league-17827791539878",
-   "why": "small",
-   "netUsd": 8.33
   },
   {
    "id": "biconomy:64536163317529",
@@ -1168,13 +1159,6 @@
    "why": "raffle",
    "perUserUsd": 2050,
    "netUsd": 2.5
-  },
-  {
-   "id": "mexc:17827791539811",
-   "venue": "MEXC",
-   "title": "Q4 Spotlights: New Listings Lucky Wheel",
-   "url": "https://www.mexc.com/announcements/article/q4-spotlights-17827791539811",
-   "why": "raffle"
   },
   {
    "id": "tg:Bybit_Announcements/10143",
@@ -1519,7 +1503,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 131.304,
+   "perUserUsd": 131.184,
    "netUsd": 2.5
   },
   {
