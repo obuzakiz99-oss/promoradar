@@ -1,1 +1,1 @@
-{"id":"bitget:12560603900389","h":"-PivFc55JNEBCc57","v":1,"at":1795536626258,"data":{"isPromo":true,"socialOnly":false,"mech":"lucky_draw","act":{"kind":"other"},"max":{"amount":500,"unit":"USDC"}}}
+{"id":"bitget:12560603900389","h":"bw1jkK9gBC9e29Ov","v":1,"at":1795537227828,"data":{"isPromo":true,"socialOnly":false,"mech":"first_n","act":{"kind":"other","usd":5},"typical":{"amount":5,"unit":"USDC"},"max":{"amount":500,"unit":"USDC"},"winners":1000,"days":19}}
