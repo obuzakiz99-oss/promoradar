@@ -1,5 +1,5 @@
 {
- "at": 1795540427495,
+ "at": 1795540956174,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -62,6 +62,13 @@
    "venue": "Binance",
    "title": "Africa Mobile Money Buy Crypto: Unlock a 20% Bonus Tiered APR on USDC Simple Earn Flexible",
    "url": "https://www.binance.com/en/support/announcement/detail/3de1570577714ebea0ef67ab4aad554a",
+   "why": "region"
+  },
+  {
+   "id": "bitget:12560603900320",
+   "venue": "Bitget",
+   "title": "BDT & PKR Exclusive: Spend $1 to Receive 10,000USDT Rewards!",
+   "url": "https://www.bitget.com/support/articles/12560603900320",
    "why": "region"
   },
   {
@@ -177,7 +184,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4
+   "netUsd": 3.98
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -200,8 +207,8 @@
    "title": "🏆 MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1128.96,
-   "netUsd": 0.21
+   "perUserUsd": 1123.3600000000001,
+   "netUsd": 0.2
   },
   {
    "id": "gate:102962",
@@ -469,7 +476,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1298.24,
+   "perUserUsd": 1297.6,
    "netUsd": 0.31
   },
   {
@@ -486,7 +493,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.5,
+   "perUserUsd": 5.47,
    "netUsd": 0.03
   },
   {
@@ -543,7 +550,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1604.3999999999999,
+   "perUserUsd": 1605.2,
    "netUsd": 0.3
   },
   {
@@ -617,7 +624,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1164.4499999999998,
+   "perUserUsd": 1177.8,
    "netUsd": -0.6
   },
   {
@@ -852,7 +859,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 816.8374522,
+   "perUserUsd": 816.0423992000001,
    "netUsd": -0.09
   },
   {
@@ -888,6 +895,15 @@
    "url": "https://phemex.com/en/promo/activity/993",
    "why": "raffle",
    "netUsd": 25
+  },
+  {
+   "id": "tg:HTXGlobalAnnouncementChannel/15859",
+   "venue": "HTX",
+   "title": "Refer a friend to HTX and you could both unlock up to 100 USDT, plus a lucky draw entry",
+   "url": "https://www.htx.com/en-us/topic/activities/h5/inviteEarnCoin",
+   "why": "raffle",
+   "perUserUsd": 100,
+   "netUsd": 50
   },
   {
    "id": "tg:Bitrue_official/11249",
@@ -935,7 +951,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 17.97,
+   "perUserUsd": 17.48,
    "netUsd": -0.53
   },
   {
@@ -1002,7 +1018,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 989.85,
+   "perUserUsd": 982.95,
    "netUsd": 1.81
   },
   {
@@ -1027,7 +1043,7 @@
    "venue": "Bitget",
    "title": "Apply for a Bitget Wallet Card for a chance to win the 500 USDC grand prize",
    "url": "https://www.bitget.com/support/articles/12560603900389",
-   "why": "small",
+   "why": "raffle",
    "perUserUsd": 500,
    "netUsd": 1.5
   },
@@ -1141,8 +1157,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 132,
-   "netUsd": 2.52
+   "perUserUsd": 131.35199999999998,
+   "netUsd": 2.5
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -1421,14 +1437,6 @@
    "why": "raffle"
   },
   {
-   "id": "bitget:12560603900320",
-   "venue": "Bitget",
-   "title": "BDT & PKR Exclusive: Spend $1 to Receive 10,000USDT Rewards!",
-   "url": "https://www.bitget.com/support/articles/12560603900320",
-   "why": "raffle",
-   "netUsd": 0.33
-  },
-  {
    "id": "tg:Toobit_announcements/6027",
    "venue": "Toobit",
    "title": "Big Trades, Bigger Perks! — Put your trading volume to work and unlock more rewards! Eligible VIPs can get their first lucky draw with just 20,000 USDT in qualifying…",
@@ -1450,7 +1458,7 @@
    "title": "OKX Flash Earn Lite (NIGHT) is Now Live! Subscribe BTC, SOL, OKB or NIGHT to share 12,500,000 NIGHT",
    "url": "https://www.okx.com/help/okx-flash-earn-lite-night-is-now-live-subscribe-btc-sol-okb-or-night-to-share-12500000-night",
    "why": "small",
-   "netUsd": 10.02
+   "netUsd": 10
   },
   {
    "id": "bitbase:5792472385182",
@@ -1500,7 +1508,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.69,
+   "perUserUsd": 7.68,
    "netUsd": 2.74
   },
   {
