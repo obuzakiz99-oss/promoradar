@@ -1,5 +1,5 @@
 {
- "at": 1795536916508,
+ "at": 1795537106535,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -170,6 +170,14 @@
    "title": "NVIDIA Momentum Trading Challenge : Trade NVIDIA, 100% Win Rate",
    "url": "https://www.gate.com/announcements/article/102964",
    "why": "raffle"
+  },
+  {
+   "id": "mexc:17827791539925",
+   "venue": "MEXC",
+   "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
+   "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
+   "why": "small",
+   "netUsd": 3.97
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -383,6 +391,14 @@
    "netUsd": 0.01
   },
   {
+   "id": "bitget:12560603901336",
+   "venue": "Bitget",
+   "title": "Candybomb Carnival (Episode 16): Trade to share 80,000 USDT",
+   "url": "https://www.bitget.com/support/articles/12560603901336",
+   "why": "small",
+   "netUsd": 1.67
+  },
+  {
    "id": "tg:btsenews/5738",
    "venue": "BTSE",
    "title": "Date and time - Friday (20.11.2026) at 10:00 UTC 🔹 Topic - Security in Crypto 🔹 Place - this chat 🔹 The quiz will take place here in real time. This quiz not only…",
@@ -402,6 +418,15 @@
    "title": "Limited-Time Stock Rewards | AI Models 🤩",
    "url": "https://www.bitget.com/launchhub/trading-club/234041",
    "why": "raffle"
+  },
+  {
+   "id": "bitget:12560603901284",
+   "venue": "Bitget",
+   "title": "Bitget CFD Championship (phase 23): Four reward pools, 75,000 USDT to share",
+   "url": "https://www.bitget.com/support/articles/12560603901284",
+   "why": "raffle",
+   "perUserUsd": 4000,
+   "netUsd": 4.25
   },
   {
    "id": "tg:Toobit_announcements/6166",
@@ -444,7 +469,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1283.2,
+   "perUserUsd": 1286.72,
    "netUsd": 0.3
   },
   {
@@ -518,7 +543,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1605.2,
+   "perUserUsd": 1604.8,
    "netUsd": 0.3
   },
   {
@@ -592,7 +617,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1142.85,
+   "perUserUsd": 1146.6,
    "netUsd": -0.6
   },
   {
@@ -601,7 +626,7 @@
    "title": "$200,000 Futures League: Choose Your Team and Compete to Win a Share",
    "url": "https://www.mexc.com/announcements/article/200-000-futures-league-17827791539878",
    "why": "small",
-   "netUsd": 6.67
+   "netUsd": 8.33
   },
   {
    "id": "biconomy:64536163317529",
@@ -634,8 +659,8 @@
    "title": "BYDFi Black Friday Carnival: Win Prizes from a 200,000 USDT Pool!",
    "url": "https://www.bydfi.com/announcements/article/bydfi-black-friday-carnival-17827791534773",
    "why": "small",
-   "perUserUsd": 3300,
-   "netUsd": 6.75
+   "perUserUsd": 800,
+   "netUsd": 3.5
   },
   {
    "id": "tg:Kucoin_News/37249",
@@ -683,6 +708,14 @@
    "title": "Anthropic is Live on Bybit: More Reasons to Trade",
    "url": "https://announcements.bybit.com/en-US/article/anthropic-is-live-on-bybit-more-reasons-to-trade--art4312c89a5fc6/",
    "why": "news"
+  },
+  {
+   "id": "bitget:12560603901036",
+   "venue": "Bitget",
+   "title": "Candybomb Carnival (Episode 15): Trade to share 60,000 USDT",
+   "url": "https://www.bitget.com/support/articles/12560603901036",
+   "why": "small",
+   "netUsd": 1.25
   },
   {
    "id": "tg:Phemex_Announcements/8011",
@@ -760,6 +793,13 @@
    "why": "news"
   },
   {
+   "id": "mexc:17827791539811",
+   "venue": "MEXC",
+   "title": "Q4 Spotlights: New Listings Lucky Wheel",
+   "url": "https://www.mexc.com/announcements/article/q4-spotlights-17827791539811",
+   "why": "raffle"
+  },
+  {
    "id": "tg:Bybit_Announcements/10143",
    "venue": "Bybit",
    "title": "Thank you for joining our ANT IPO livestream. Now it's time for the quiz. Please note that quiz will only be open for 30 mins. Good luck. Quiz Link:…",
@@ -812,7 +852,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 816.519431,
+   "perUserUsd": 816.1219045,
    "netUsd": -0.09
   },
   {
@@ -821,7 +861,7 @@
    "title": "CFD Super Wednesday (Round 4): Call XAUUSD up or down. Share a prize pool of up to $10,000!",
    "url": "https://www.bitget.com/support/articles/12560603900856",
    "why": "small",
-   "netUsd": 0.17
+   "netUsd": 0.21
   },
   {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
@@ -895,7 +935,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 17.09,
+   "perUserUsd": 17.75,
    "netUsd": -0.53
   },
   {
@@ -987,8 +1027,9 @@
    "venue": "Bitget",
    "title": "Apply for a Bitget Wallet Card for a chance to win the 500 USDC grand prize",
    "url": "https://www.bitget.com/support/articles/12560603900389",
-   "why": "small",
-   "perUserUsd": 5
+   "why": "raffle",
+   "perUserUsd": 500,
+   "netUsd": 0.04
   },
   {
    "id": "zoomex:64403337588121",
@@ -1100,8 +1141,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 130.728,
-   "netUsd": 2.49
+   "perUserUsd": 130.896,
+   "netUsd": 2.5
   },
   {
    "id": "tg:Bybit_Announcements/10115",
@@ -1183,7 +1224,7 @@
    "title": "Anthropic Pre-IPO Showdown: 20,000 USDT Taker & PnL Clash",
    "url": "https://medium.com/@AsterDEX/anthropic-pre-ipo-showdown-20-000-usdt-taker-pnl-clash-1eb5f297e1d9",
    "why": "small",
-   "netUsd": -49.73
+   "netUsd": -24.73
   },
   {
    "id": "tg:LBanknews/20838",
@@ -1192,6 +1233,14 @@
    "url": "https://www.lbank.com/event-new/10003865-eftts-luckydraw?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "raffle",
    "netUsd": -0.19
+  },
+  {
+   "id": "bitget:12560603900486",
+   "venue": "Bitget",
+   "title": "CandyBomb x SOL: Trade futures to share 180 SOL!",
+   "url": "https://www.bitget.com/support/articles/12560603900486",
+   "why": "small",
+   "netUsd": 0.26
   },
   {
    "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
@@ -1383,7 +1432,7 @@
    "title": "OKX Flash Earn Lite (NIGHT) is Now Live! Subscribe BTC, SOL, OKB or NIGHT to share 12,500,000 NIGHT",
    "url": "https://www.okx.com/help/okx-flash-earn-lite-night-is-now-live-subscribe-btc-sol-okb-or-night-to-share-12500000-night",
    "why": "small",
-   "netUsd": 10.01
+   "netUsd": 10
   },
   {
    "id": "bitbase:5792472385182",
@@ -1393,6 +1442,14 @@
    "why": "social",
    "perUserUsd": 300,
    "netUsd": 2
+  },
+  {
+   "id": "bitget:12560603899948",
+   "venue": "Bitget",
+   "title": "Fiat Lucky Draw: Win Rewards worth 50,000 USDT!",
+   "url": "https://www.bitget.com/support/articles/12560603899948",
+   "why": "raffle",
+   "netUsd": 1.67
   },
   {
    "id": "bydfi:17827791534746",
@@ -1427,16 +1484,8 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.63,
+   "perUserUsd": 7.62,
    "netUsd": 2.74
-  },
-  {
-   "id": "mexc:17827791539539",
-   "venue": "MEXC",
-   "title": "Alpha Quest: Unlock Alpha Trader Benefits and Share a $30,000 Prize Pool",
-   "url": "https://www.mexc.com/announcements/article/alpha-quest-17827791539539",
-   "why": "small",
-   "netUsd": 1
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -1455,6 +1504,14 @@
    "why": "news"
   },
   {
+   "id": "bitget:12560603900791",
+   "venue": "Bitget",
+   "title": "NVIDIA, Nasdaq 100, and S&P 500 launch on Bitget PoolX: Stake U.S. stocks to share a 50,000 USDT airdrop",
+   "url": "https://www.bitget.com/support/articles/12560603900791",
+   "why": "small",
+   "netUsd": 1.04
+  },
+  {
    "id": "bydfi:17827791534737",
    "venue": "BYDFi",
    "title": "BYDFi Autumn Futures Challenge — Share 100,000 USDT!",
@@ -1462,6 +1519,15 @@
    "why": "small",
    "perUserUsd": 3300,
    "netUsd": 3.75
+  },
+  {
+   "id": "bitget:12560603899047",
+   "venue": "Bitget",
+   "title": "Bitget Wallet Physical Card: 50% off plus a $15 reward",
+   "url": "https://www.bitget.com/support/articles/12560603899047",
+   "why": "small",
+   "perUserUsd": 15,
+   "netUsd": 15
   },
   {
    "id": "zoomex:63690091619097",
