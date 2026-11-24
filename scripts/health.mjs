@@ -82,6 +82,18 @@ try {
 fs.mkdirSync(DIR, { recursive: true });
 const LAST = path.join(DIR, "last.json");
 const prev = fs.existsSync(LAST) ? JSON.parse(fs.readFileSync(LAST, "utf8")) : { problems: [] };
+
+// 6) new promo texts get translated (uk/ru): the build lists untranslated texts in data:translate-todo.json, the
+//    laptop task PromoRadarTranslate fills translations-manual.json every 30 min. A text waiting > 3 h = stuck.
+const pending = {};
+try {
+  const todo = JSON.parse((await get(`${RAW}/data/translate-todo.json`)).text.replace(/^﻿/, ""));
+  const manual = JSON.parse((await get(`${RAW}/main/src/config/translations-manual.json`)).text);
+  for (const lang of ["uk", "ru"]) for (const i of todo[lang] ?? []) if (!(i.k in (manual[lang] ?? {}))) pending[i.k] = prev.pending?.[i.k] ?? Date.now();
+  const stuck = Object.values(pending).filter((t) => age(t) > 3).length;
+  if (stuck) bad(`переклад: ${stuck} текст(ів) акцій без перекладу понад 3 год (автопереклад на ноутбуці не працює?)`);
+  if (Object.keys(pending).length) notes.push(`чекають перекладу ${Object.keys(pending).length}`);
+} catch (e) { notes.push(`переклад не перевірено: ${String(e.message ?? e).slice(0, 60)}`); }
 const ok = problems.length === 0;
 const stamp = new Date().toLocaleString("uk-UA");
 const key = (a) => a.map((s) => s.replace(/[\d.,]+/g, "#")).sort().join("|");   // ignore changing numbers
@@ -95,7 +107,7 @@ if (!QUIET && (changed || remind) && (problems.length || (prev.problems ?? []).l
   toast(title, body);
   notifiedAt = Date.now();
 }
-fs.writeFileSync(LAST, JSON.stringify({ at: Date.now(), ok, problems, notes, notifiedAt }, null, 1));
+fs.writeFileSync(LAST, JSON.stringify({ at: Date.now(), ok, problems, notes, notifiedAt, pending }, null, 1));
 console.log(ok ? `OK (${notes.join(", ")})` : `ПРОБЛЕМИ:\n- ${problems.join("\n- ")}`);
 process.exitCode = ok ? 0 : 1;
 

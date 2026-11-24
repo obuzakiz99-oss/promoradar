@@ -143,8 +143,9 @@ def main():
         def ok(k, t):   # line-break markers must survive; a long English text must not come back unchanged
             if src[k].count("⏎") != t.count("⏎"):
                 return False
-            # hashtag / ticker / URL lines may stay as they are; English prose copied back is a failed translation
-            return not (t == src[k] and re.search(r"[A-Za-z]{3,} [A-Za-z]{3,} [A-Za-z]{3,}", src[k]))
+            # hashtag / ticker / URL / brand-only lines ("App Store Google Play") may stay as they are;
+            # English prose (has an ordinary lower-case word) copied back is a failed translation
+            return not (t == src[k] and re.search(r"[a-z]{3,}", src[k]))
         good = [k for k in src if k in uk and k in ru and ok(k, uk[k]) and ok(k, ru[k])]
         if not good:
             log(f"no valid translations ({len(uk)} uk / {len(ru)} ru lines for {len(src)} texts)")
