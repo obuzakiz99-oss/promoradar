@@ -1,3 +1,4 @@
+import { ldJson } from "@/lib/ldjson";
 import { endedBySlug, endedPromos } from "@/lib/archive";
 import { EndedPromo } from "./ended";
 import { geoAllowed } from "@/lib/geo";
@@ -395,7 +396,7 @@ export default async function PromoPage({ params }: { params: Params }) {
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">
         {/* audit 23.11 (SEO): breadcrumbs for search results — Home › exchange › promo */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson({
           "@context": "https://schema.org", "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "PromoRadar", item: `https://${SITE.domain}/${lang}/` },
@@ -800,7 +801,7 @@ export default async function PromoPage({ params }: { params: Params }) {
                 </details>
               ))}
             </div>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson({
               "@context": "https://schema.org", "@type": "FAQPage",
               mainEntity: faq.map((x) => ({ "@type": "Question", name: x.q, acceptedAnswer: { "@type": "Answer", text: x.a } })),
             }).replace(/</g, "\\u003c") }} />

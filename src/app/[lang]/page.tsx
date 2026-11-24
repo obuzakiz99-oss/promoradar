@@ -1,3 +1,4 @@
+import { ldJson } from "@/lib/ldjson";
 import { rankOf, friendlyRank } from "@/lib/rank";
 import { notFound } from "next/navigation";
 import { PromoTabs } from "@/components/SectionTabs";
@@ -52,7 +53,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <>
       <main>
         {/* audit 23.11 (SEO): who publishes the site and what it is called */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson({
           "@context": "https://schema.org",
           "@graph": [
             { "@type": "Organization", "@id": `https://${SITE.domain}/#org`, name: "PromoRadar", url: `https://${SITE.domain}/${lang}/` },
