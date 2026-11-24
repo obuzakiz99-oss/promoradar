@@ -104,7 +104,7 @@ async function getPromosLive(): Promise<Collected> {
   const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
-  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news"; perUserUsd?: number; netUsd?: number }> = [];
+  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news" | "region"; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
     // links scraped from HTML / Telegram keep "&amp;" — the second parameter (inviteCode, rcode…) was lost (audit 14.11)
     // audit 22.11: links copied from Telegram can be plain http (WhiteBIT) — exchanges all serve https
@@ -246,6 +246,11 @@ async function getPromosLive(): Promise<Collected> {
     if (!geo.only && /\/(en-au|au)\//i.test(p.url)) geo.only = "AU";
     else if (!geo.only && /\/en-eu\//i.test(p.url)) geo.only = "EU";   // OKX EU deposit bonus (France, Italy, Spain…)
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
+    // audit 24.11 (owner: "роби все"): promos only for regions a Ukrainian/European reader can't join (Brazil, LATAM,
+    // South Asia, Africa, Kenya, MENA, SEA, Australia…) or that exclude Ukraine are hidden, not just labelled
+    if (!p.sponsored && (geo.noUA || (geo.only && !/^(EU|EEA|Europe|CEE|CIS|CIS & CEE|Ukraine)$/i.test(geo.only)))) {
+      hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "region" }); continue;
+    }
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
     // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
@@ -324,7 +329,10 @@ async function getPromosLive(): Promise<Collected> {
     const lowEstimate = !p.sponsored && !p.meta?.zeroFee && v?.mech !== "apr" && v?.net !== undefined && v.gross !== undefined && v.net < MIN_MAX_PER_USER_USD;
     // owner 17.11: raffles go (lucky draws, giveaways, mystery boxes) — also from the "stack with" links under other cards;
     // 0% fee offers stay (the fee saving is the point, the draw is an extra)
-    const raffle = !p.sponsored && !handAdded && !p.meta?.zeroFee && (v?.mech === "lucky_draw" || RAFFLE.test(p.titleOrig ?? p.title));
+    // audit 24.11: KuCoin PROOF 550K (a futures contest with a lucky-draw side event, ≈$64 per participant) was read as
+    // lucky_draw and hidden — a contest/competition headline with a real per-person estimate is not a raffle
+    const contest = /\b(competition|contest|championship|challenge|tournament|leaderboard|league|win (your|a) share)\b/i.test(p.titleOrig ?? p.title) && (v?.net ?? 0) >= MIN_MAX_PER_USER_USD;
+    const raffle = !p.sponsored && !handAdded && !p.meta?.zeroFee && ((v?.mech === "lucky_draw" && !contest) || RAFFLE.test(p.titleOrig ?? p.title));
     const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (raffle ? "raffle" : undefined) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
     if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
     kept.push(p);

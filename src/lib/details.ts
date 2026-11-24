@@ -19,7 +19,7 @@ export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "
 export interface Fact { k: FactKey; text: string }
 export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number; u?: string }
 
-const VER = 5;               // bump when the parser changes → cached promos are re-read
+const VER = 6;               // (6: 24.11 related-article bodies skipped) bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
 const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
@@ -110,7 +110,9 @@ function htmlFromPage(page: string): string {
     try { j = JSON.parse(s.slice(i).replace(/;\s*$/, "")); } catch { continue; }
     const walk = (v: unknown, depth: number) => {
       if (typeof v === "string") { if (v.length > best.length && score(v) > 2 && !looksLikeCode(v)) best = v; }
-      else if (v && typeof v === "object" && depth < 14) for (const x of Object.values(v)) walk(x, depth + 1);
+      // audit 24.11: BYDFi pages embed the longer bodies of "related articles" — every BYDFi promo got the Autumn
+      // Challenge rules. Sidebars / related / recommended lists are never the article itself.
+      else if (v && typeof v === "object" && depth < 14) for (const [k, x] of Object.entries(v)) { if (!/^_?(related|recommend|hot|latest|other|more|allSections)/i.test(k)) walk(x, depth + 1); }
     };
     walk(j, 0);
   }
@@ -496,7 +498,7 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
   }
   const fromFeed = (await feeds()).get(p.url.split("?")[0]);
   if (fromFeed) return { html: fromFeed };
-  if (["kucoin", "bitget", "gate", "ondoperps", "bydfi"].includes(v)) { const h = await fromUrl(p.url); return h ? { html: h } : null; }
+  if (["kucoin", "bitget", "gate", "ondoperps", "bydfi", "mexc", "toobit"].includes(v)) { const h = await fromUrl(p.url); return h ? { html: h } : null; }
   return null;
 }
 

@@ -9,7 +9,8 @@ const NOISE = /(maintenance|delist|removal of|suspension|suspend|resumption|resu
 const PROMO = /\b(airdrops?|launchpool|launchpad|launchx|megadrop|hodler|jumpstart|candybomb|candydrop|tokensplash|kickstarter|spotlight|startup|token sale|ieo|tge|booster|puzzle hunt|learn (&|and) earn|quiz|quests?|galxe|giveaways?|competition|tournament|challenge|trade[- ]to[- ](earn|share)|share|win|wins|winners?|prizes?|rewards?|bonus(es)?|earn|staking|apr|apy|cashback|vouchers?|coupons?|referral|invite|campaign|carnival|festival|lucky|draw|up to|points|incentives?|treasure|mystery box)\b/i;
 
 export function isPromo(title: string): boolean {
-  return !has(title, NOISE) && has(title, PROMO);
+  // audit 24.11: "Celebrate Thanksgiving with 350,000 USDT" (Toobit), "$1M TradFi Flip Fest: … Fee Perks" (MEXC) were missed
+  return !has(title, NOISE) && (has(title, PROMO) || /\b\d[\d,.]*\s?(USDT|USDC)\b|\$\d[\d,.]*[KM]?\b[^.]{0,30}\b(fest|perks|rewards?|pool)\b|\b0% (maker|taker|trading )?fees?\b|\bfee perks\b/i.test(title));
 }
 
 const REFERRAL = /(referral|invite friends|affiliate|refer )/i;

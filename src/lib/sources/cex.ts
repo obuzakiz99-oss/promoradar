@@ -40,10 +40,20 @@ export async function okx(): Promise<Raw[]> {
   return out;
 }
 
-/* Bitget — latest news, filtered to promos. */
+/* Bitget — latest news (API, filtered to promos) + the help centre section "Ongoing competitions and promotions"
+   (24.11 audit: the API returned 0 promos, CandyBomb / Onchain challenge / CFD Championship / PoolX were missing). */
 export async function bitget(): Promise<Raw[]> {
-  const j = await getJson("https://api.bitget.com/api/v2/public/annoucements?language=en_US&annType=latest_news");
-  return (j?.data ?? []).map((a: any) => ({ venue: "bitget", id: String(a.annId), title: a.annTitle, url: a.annUrl, publishedAt: Number(a.cTime), hint: a.annSubType }));
+  const [j, html] = await Promise.all([
+    getJson("https://api.bitget.com/api/v2/public/annoucements?language=en_US&annType=latest_news").catch(() => null),
+    getText("https://www.bitget.com/support/sections/4413154768537", 15_000).catch(() => ""),
+  ]);
+  const out = new Map<string, Raw>();
+  for (const a of j?.data ?? []) out.set(String(a.annId), { venue: "bitget", id: String(a.annId), title: a.annTitle, url: a.annUrl, publishedAt: Number(a.cTime), hint: a.annSubType });
+  for (const m of html.matchAll(/"contentId":"(\d+)"[^{}]*?"showTime":"(\d+)"[^{}]*?"title":"((?:[^"\\]|\\.)+)"/g)) {
+    if (!out.has(m[1])) out.set(m[1], { venue: "bitget", id: m[1], title: JSON.parse(`"${m[3]}"`), url: `https://www.bitget.com/support/articles/${m[1]}`, publishedAt: Number(m[2]) });
+  }
+  if (!out.size) throw new Error("bitget: API and help centre both empty");
+  return [...out.values()];
 }
 
 /* KuCoin — activities. */
@@ -133,6 +143,36 @@ export async function pionex(): Promise<Raw[]> {
   return out;
 }
 
+/* MEXC — official "Latest Events" announcement list (24.11 audit: the Telegram channel alone missed Airdrop+, Launchpad,
+   Flip Fest, Prediction Giveback…). Server-rendered: <a title="…" href="/announcements/article/…"> + <time dateTime>. */
+export async function mexc(): Promise<Raw[]> {
+  const html = await getText("https://www.mexc.com/announcements/latest-events", 15_000);
+  const out = new Map<string, Raw>();
+  for (const m of html.matchAll(/<a title="([^"]+)"[^>]*href="(\/announcements\/article\/([^"]+))"[\s\S]{0,1200}?<time[^>]*dateTime="([^"]+)"/g)) {
+    const id = m[3].match(/(\d{8,})$/)?.[1] ?? m[3];
+    if (!out.has(id)) out.set(id, { venue: "mexc", id, title: decodeEntities(m[1]), url: `https://www.mexc.com${m[2]}`, publishedAt: Date.parse(m[4]) });
+  }
+  if (!out.size) throw new Error("mexc: no events found");
+  return [...out.values()];
+}
+
+/* Toobit — official announcement centre (Nuxt payload: id, title, url slug, releaseAt), filtered to promos (24.11 audit). */
+export async function toobit(): Promise<Raw[]> {
+  const html = await getText("https://www.toobit.com/en-US/announcement", 15_000);
+  const m = html.match(/id="__NUXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) throw new Error("toobit: page data not found");
+  const a: unknown[] = JSON.parse(m[1]);
+  const out = new Map<string, Raw>();
+  for (const v of a) {
+    if (!v || typeof v !== "object" || Array.isArray(v)) continue;
+    const o = v as Record<string, number>;
+    if (!("title" in o && "url" in o && "id" in o && "releaseAt" in o)) continue;
+    const id = String(a[o.id]), title = String(a[o.title]), slug = String(a[o.url]), at = Number(a[o.releaseAt]);
+    if (title && slug && at > 0 && !out.has(id)) out.set(id, { venue: "toobit", id, title, url: `https://www.toobit.com/en-US/announcement/${slug}`, publishedAt: at });
+  }
+  return [...out.values()];
+}
+
 /**
  * Exchanges that refuse automated requests (403): their public promo list is read in a real browser every 2 h and
  * committed as src/config/browser-promos.json. An item disappears 26 h after it was last seen on the exchange page.
@@ -161,4 +201,4 @@ export async function kraken(): Promise<Raw[]> {
 }
 
 /** Direct exchange APIs/pages. Exchanges not listed here are covered via their official Telegram channel. */
-export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, biconomy, hibt, bitvavo, zoomex, websea, bitfinex, blofin, kraken, gemini, hotcoin, bydfi, poloniex, pionex };
+export const CEX_SOURCES: Partial<Record<keyof typeof CEX, () => Promise<Raw[]>>> = { binance, bybit, okx, bitget, kucoin, gate, xt, bitunix, weex, bitbase, biconomy, hibt, bitvavo, zoomex, websea, bitfinex, blofin, kraken, gemini, hotcoin, bydfi, poloniex, pionex, mexc, toobit };

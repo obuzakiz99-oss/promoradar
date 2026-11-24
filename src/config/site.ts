@@ -455,7 +455,7 @@ export const MANUAL: Array<{
       "Payout: XP (points, not money) is credited every Wednesday for the previous week. XP itself cannot be withdrawn or sold; its future value is not promised.",
       "XP is Paradex's reward system; earlier seasons' XP was converted into a share of the DIME token supply. No value of future XP is promised.",
     ],
-    checked: "2026-11-08",
+    checked: "2026-11-24", standing: true,   // audit 24.11: docs say "end date TBD" — no fake 30.11 countdown
   },
   {
     id: "paradex:referrals", venue: "paradex", category: "referral",
