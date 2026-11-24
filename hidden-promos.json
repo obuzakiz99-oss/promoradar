@@ -1,5 +1,5 @@
 {
- "at": 1795544103236,
+ "at": 1795545808951,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -585,19 +585,12 @@
    "netUsd": 1.33
   },
   {
-   "id": "gate:102964",
-   "venue": "Gate",
-   "title": "NVIDIA Momentum Trading Challenge : Trade NVIDIA, 100% Win Rate",
-   "url": "https://www.gate.com/announcements/article/102964",
-   "why": "raffle"
-  },
-  {
    "id": "mexc:17827791539925",
    "venue": "MEXC",
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.01
+   "netUsd": 4
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -620,17 +613,8 @@
    "title": "🏆 MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1120,
-   "netUsd": 0.2
-  },
-  {
-   "id": "gate:102962",
-   "venue": "Gate",
-   "title": "CFD Gold Airdrop: Trade for a Share of Rewards Worth 850,000 USDx and Earn Up to 4,432 USDT in XAUT",
-   "url": "https://www.gate.com/announcements/article/102962",
-   "why": "small",
-   "perUserUsd": 4432,
-   "netUsd": -4.2
+   "perUserUsd": 1106.56,
+   "netUsd": 0.19
   },
   {
    "id": "tg:Kucoin_News/37287",
@@ -642,15 +626,6 @@
    "netUsd": -4
   },
   {
-   "id": "gate:102961",
-   "venue": "Gate",
-   "title": "Perp Hot Tuesday Round 9: Trade popular coins to Unlock Up to 100 USDT in Rewards",
-   "url": "https://www.gate.com/announcements/article/102961",
-   "why": "small",
-   "perUserUsd": 100,
-   "netUsd": 1.5
-  },
-  {
    "id": "tg:LBanknews/20939",
    "venue": "LBank",
    "title": "Register for LBank’s Security Shield Program and use Google Authenticator for a chance at rewards every 10 days. 🔐",
@@ -658,33 +633,6 @@
    "why": "raffle",
    "perUserUsd": 50,
    "netUsd": 1
-  },
-  {
-   "id": "gate:102959",
-   "venue": "Gate",
-   "title": "OPENAI & SPCX Futures Hot Coin Airdrop: Register to Get 5 USDT, Up to 240 USDT Per Person",
-   "url": "https://www.gate.com/announcements/article/102959",
-   "why": "small",
-   "perUserUsd": 240,
-   "netUsd": 2.5
-  },
-  {
-   "id": "gate:102957",
-   "venue": "Gate",
-   "title": "Gate Web3 SCOR Swap Trading Competition Round 2 Is Live: Share 2,000 USDC in Rewards",
-   "url": "https://www.gate.com/announcements/article/102957",
-   "why": "small",
-   "perUserUsd": 150,
-   "netUsd": -0.03
-  },
-  {
-   "id": "gate:102955",
-   "venue": "Gate",
-   "title": "Gate ETF Treasure Hunt Edition 11: Up to 88 USDT per Draw & Trade for up to 900 USDT",
-   "url": "https://www.gate.com/announcements/article/102955",
-   "why": "raffle",
-   "perUserUsd": 900,
-   "netUsd": 4
   },
   {
    "id": "tg:Bitget_Announcements/18486",
@@ -696,38 +644,12 @@
    "netUsd": 5
   },
   {
-   "id": "gate:102953",
-   "venue": "Gate",
-   "title": "Stock Trading Check-In Bonanza: Trade and Check In for Rewards, 400 ANT Shares Up for Grabs",
-   "url": "https://www.gate.com/announcements/article/102953",
-   "why": "small",
-   "netUsd": 0.17
-  },
-  {
-   "id": "gate:102952",
-   "venue": "Gate",
-   "title": "SOL & XRP Rewards Quest: Deposit & Trade to Unlock Over $508,000 in Rewards",
-   "url": "https://www.gate.com/announcements/article/102952",
-   "why": "small",
-   "perUserUsd": 100,
-   "netUsd": -1.16
-  },
-  {
    "id": "tg:LBanknews/20936",
    "venue": "LBank",
    "title": "20,000 USDT in rewards. NVIDIA traders, this one’s for you. 📈",
    "url": "https://www.lbank.com/event-new/10004013-nvda-frenzy?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
    "netUsd": 2.5
-  },
-  {
-   "id": "gate:102951",
-   "venue": "Gate",
-   "title": "Follow Star CFD Lead Traders & Share 7,000 USDT Together",
-   "url": "https://www.gate.com/announcements/article/102951",
-   "why": "small",
-   "perUserUsd": 1200,
-   "netUsd": 0.12
   },
   {
    "id": "tg:OKXAnnouncements/7441",
@@ -897,7 +819,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1311.68,
+   "perUserUsd": 1314.56,
    "netUsd": 0.32
   },
   {
@@ -916,6 +838,15 @@
    "why": "small",
    "perUserUsd": 5.51,
    "netUsd": 0.03
+  },
+  {
+   "id": "gate:102922",
+   "venue": "Gate",
+   "title": "Gate Prediction Markets CS2 Trading Challenge: Rewards for the First Trade, Loss Compensation, and a...",
+   "url": "https://www.gate.com/announcements/article/102922",
+   "why": "small",
+   "perUserUsd": 150,
+   "netUsd": 2.4
   },
   {
    "id": "zoomex:64612993255577",
@@ -941,6 +872,15 @@
    "why": "raffle",
    "perUserUsd": 5,
    "netUsd": 0.1
+  },
+  {
+   "id": "gate:102916",
+   "venue": "Gate",
+   "title": "Gate Square × Trader Champions League S2: Share Strategies, Split 50,000 USDT & Win 10 GT",
+   "url": "https://www.gate.com/announcements/article/102916",
+   "why": "social",
+   "perUserUsd": 200,
+   "netUsd": 1.33
   },
   {
    "id": "tg:Kucoin_News/37276",
@@ -971,7 +911,7 @@
    "title": "🏆 KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1605.2,
+   "perUserUsd": 1604.3999999999999,
    "netUsd": 0.3
   },
   {
@@ -1045,7 +985,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1210.5,
+   "perUserUsd": 1202.1,
    "netUsd": -0.6
   },
   {
@@ -1122,6 +1062,13 @@
    "why": "small",
    "perUserUsd": 3,
    "netUsd": 1.05
+  },
+  {
+   "id": "gate:102883",
+   "venue": "Gate",
+   "title": "Gate IPO Access Phase 3: Anthropic (ANT) Share Allocation Confirmed, Total Allocation: 92,100 ANT Sh...",
+   "url": "https://www.gate.com/announcements/article/102883",
+   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/37246",
@@ -1210,7 +1157,7 @@
    "title": "🎁 Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 885.6729224000001,
+   "perUserUsd": 876.5557011399999,
    "netUsd": -0.06
   },
   {
@@ -1289,7 +1236,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 820.3356854000001,
+   "perUserUsd": 817.5529999,
    "netUsd": -0.09
   },
   {
@@ -1381,7 +1328,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 18.29,
+   "perUserUsd": 18.34,
    "netUsd": -0.53
   },
   {
@@ -1448,7 +1395,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 961,
+   "perUserUsd": 950,
    "netUsd": 1.81
   },
   {
@@ -1587,7 +1534,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 132.24,
+   "perUserUsd": 132.12,
    "netUsd": 2.52
   },
   {
@@ -1829,7 +1776,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.69,
+   "perUserUsd": 7.67,
    "netUsd": 2.74
   },
   {
