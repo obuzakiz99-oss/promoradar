@@ -260,9 +260,15 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       // KuCoin's 3-day 250 % coupon was counted for a whole month)
       if (need > 1000) return out(undefined, "low", "none");             // $1,000 can't even enter
       if (!a && apr > 30) return out(undefined, "low", "none");          // "up to 150 %" boosts: unknown term and cap
-      const cap = usd(a?.max);
+      // audit 24.11: Binance "35% bonus APR for new users" (only the first 200 USDT, only 7 days) read as ≈$24.66 — the AI gave
+      // no cap / term, the rules quoted on the card did: "only applicable to the user's first 200 USDT", "effective for 7 days"
+      const txt = [m.minEntry?.text, m.perUser?.text, p.titleOrig ?? p.title].filter(Boolean).join(" ");
+      const capM = txt.match(/\b(?:first|up to|maximum of|max(?:imum)?|capped at|cap of|limit of)\s+([\d,]+(?:\.\d+)?)\s?(USDT|USDC|USD|FDUSD)\b/i);
+      const daysM = txt.match(/\b(?:for|within|lasts?|effective for|valid for)\s+(\d{1,3})\s+days?\b|\b(\d{1,3})[- ]day\b/i);
+      const cap = usd(a?.max) ?? (capM ? Number(capM[1].replace(/,/g, "")) : undefined);
+      const days = a?.days ?? (daysM ? Number(daysM[1] ?? daysM[2]) : undefined);
       const base = Math.min(1000, cap !== undefined && cap > 0 ? cap : 1000);
-      const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, a?.days ?? 30) / 365));
+      const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, days ?? 30) / 365));
       return { gross: g, cost: 0, net: g, conf: "mid", mech, basis: "apr", ai };
     }
     default:

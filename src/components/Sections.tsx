@@ -1,7 +1,7 @@
 import { langOf, plural } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
 import type { SourceStatus } from "@/lib/sources";
-import { HAS_TG, PRO, SITE } from "@/config/site";
+import { HAS_TG, PRO, SITE, VENUES } from "@/config/site";
 import { LEGAL_NAV } from "@/lib/i18n-legal";
 import { TgIcon } from "./Header";
 import { LogoMark } from "./Logo";
@@ -127,6 +127,20 @@ export function ProSection({ t }: { t: Dict }) {
   );
 }
 
+const FOOT_SECTIONS: Array<[string, Record<"uk" | "en" | "ru", string>]> = [
+  ["bonuses", { uk: "Бонуси бірж", en: "Exchange bonuses", ru: "Бонусы бирж" }],
+  ["earn", { uk: "Earn / стейкінг", en: "Earn / staking", ru: "Earn / стейкинг" }],
+  ["launchpools", { uk: "Launchpool", en: "Launchpools", ru: "Launchpool" }],
+  ["zero-fees", { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" }],
+  ["dex", { uk: "DEX-пули", en: "DEX pools", ru: "DEX-пулы" }],
+  ["drops", { uk: "Аірдропи", en: "Airdrops", ru: "Аирдропы" }],
+  ["calendar", { uk: "Календар", en: "Calendar", ru: "Календарь" }],
+  ["unlocks", { uk: "Розблокування токенів", en: "Token unlocks", ru: "Разлоки токенов" }],
+  ["learn", { uk: "Навчання", en: "Learn", ru: "Обучение" }],
+  ["tools", { uk: "Інструменти", en: "Tools", ru: "Инструменты" }],
+];
+const FOOT_VENUES = ["binance", "bybit", "okx", "bitget", "kucoin", "gate", "mexc", "htx", "bingx", "bitrue", "lbank", "toobit", "whitebit", "kraken", "biconomy", "phemex", "xt", "coinstore", "btse", "hyperliquid", "lighter", "aster", "paradex"];
+
 export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lang: string }) {
   return (
     <footer className="border-t border-line">
@@ -138,6 +152,13 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
           <nav className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
             <a href={tourHref(withBase(""), lang)} className="inline-flex min-h-11 items-center text-ink-2 hover:text-ink">{TOUR_LABEL[(lang as "uk" | "en" | "ru")]}</a>
             {LEGAL_NAV[(lang as "uk" | "en" | "ru")].map(([slug, label]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-11 min-w-6 justify-center items-center hover:text-ink">{label}</a>)}
+          </nav>
+          {/* audit 24.11 (SEO): the server HTML had no plain links to the sections or exchange pages — crawlers saw 9 of ~860 URLs */}
+          <nav aria-label={({ uk: "Розділи", en: "Sections", ru: "Разделы" } as const)[lang as "uk" | "en" | "ru"]} className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-3">
+            {FOOT_SECTIONS.map(([slug, l]) => <a key={slug} href={withBase(`/${lang}/${slug}/`)} className="inline-flex min-h-8 items-center hover:text-ink">{l[(lang as "uk" | "en" | "ru")]}</a>)}
+          </nav>
+          <nav aria-label={({ uk: "Біржі", en: "Exchanges", ru: "Биржи" } as const)[lang as "uk" | "en" | "ru"]} className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-3">
+            {FOOT_VENUES.filter((id) => VENUES[id]).map((id) => <a key={id} href={withBase(`/${lang}/v/${id}/`)} className="inline-flex min-h-8 items-center hover:text-ink">{VENUES[id].name}</a>)}
           </nav>
         </div>
         <div className="flex flex-col gap-3 text-sm md:items-end">

@@ -248,6 +248,11 @@ async function getPromosLive(): Promise<Collected> {
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
     // audit 24.11 (owner: "роби все"): promos only for regions a Ukrainian/European reader can't join (Brazil, LATAM,
     // South Asia, Africa, Kenya, MENA, SEA, Australia…) or that exclude Ukraine are hidden, not just labelled
+    // audit 24.11: 46 % of cards had no end date and stayed up for the full 30 days (MEXC Alpha Quest 03.11, Bitrue Halloween
+    // airdrop…). With no date in the post AND none in the rules, a Telegram / announcement post is shown for 10 days.
+    if (!p.endsAt && !p.evergreen && !p.sponsored && !MANUAL.some((m) => m.id === p.id) && p.category !== "farming" && p.publishedAt && now - p.publishedAt > 10 * 86400_000) {
+      hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "news" }); continue;
+    }
     // "BDT & PKR Exclusive" (Bitget) — a local-currency exclusive is a regional promo too
     const localFiat = /\b(BDT|PKR|INR|NGN|KES|GHS|BRL|ARS|MXN|COP|IDR|VND|PHP|THB|TRY|EGP|ZAR|AED|SAR)\b[^.:|]{0,20}\bexclusive\b/i.test(p.titleOrig ?? p.title);
     if (!p.sponsored && (localFiat || geo.noUA || (geo.only && !/^(EU|EEA|Europe|CEE|CIS|CIS & CEE|Ukraine)$/i.test(geo.only)))) {
@@ -291,6 +296,9 @@ async function getPromosLive(): Promise<Collected> {
     if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dups.add(p.id); else seenUrl.add(sig); }
     const lead = head.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().slice(0, 32);
     if (lead.length >= 24 && !p.sponsored && !p.evergreen && !dups.has(p.id)) { const k = `${p.venue.id}|lead|${lead}`; if (seenUrl.has(k)) dups.add(p.id); else seenUrl.add(k); }
+    // audit 24.11: 8 near-identical "Biconomy.com Earn – DHN, GBCK, ATS & MTC Locked Products" cards — one per venue (the newest)
+    const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
+    if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dups.add(p.id); else seenUrl.add(series); }
     const tag = (head.match(/\b[A-Z][A-Z0-9]{2,9}\b/g) ?? []).find((x) => !GENERIC.test(x));
     const big = p.reward?.usd !== undefined && p.reward.usd >= 100_000 && tag ? `${p.venue.id}|${p.category}|${tag}|${Math.round(p.reward.usd)}` : "";
     if (big && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(big)) dups.add(p.id); else seenUrl.add(big); }
@@ -324,17 +332,20 @@ async function getPromosLive(): Promise<Collected> {
     const maxPer = [v?.max, p.meta?.perUser?.usd].filter((x): x is number => x !== undefined);
     // owner 17.11: the per-person figure printed big on the card counts too ("2 USDT" with "up to 72 USDT" in the rules)
     const pu = p.meta?.perUser?.usd;
-    const tiny = !p.sponsored && !handAdded && !p.meta?.zeroFee && v?.mech !== "apr" && ((maxPer.length > 0 && Math.max(...maxPer) < MIN_MAX_PER_USER_USD) || (pu !== undefined && pu < MIN_MAX_PER_USER_USD));
+    // audit 24.11: a "0 fees" line somewhere in the rules let a MEXC lucky draw ($0.08) and a KCEX $0.10 promo through —
+    // only an offer whose headline IS the fee cut is exempt from the small / raffle checks
+    const feeOffer = !!p.meta?.zeroFee && isZeroFee(p.titleOrig ?? p.title, undefined);
+    const tiny = !p.sponsored && !handAdded && !feeOffer && v?.mech !== "apr" && ((maxPer.length > 0 && Math.max(...maxPer) < MIN_MAX_PER_USER_USD) || (pu !== undefined && pu < MIN_MAX_PER_USER_USD));
     // owner 17.11: the card's estimate line ("У середньому на учасника ≈ $X" — expected net for an ordinary participant)
     // under $15 hides the promo too, hand-added ones included; APR products (that line is "+$X on $1,000") and 0% fee
     // offers are exempt
-    const lowEstimate = !p.sponsored && !p.meta?.zeroFee && v?.mech !== "apr" && v?.net !== undefined && v.gross !== undefined && v.net < MIN_MAX_PER_USER_USD;
+    const lowEstimate = !p.sponsored && !feeOffer && v?.mech !== "apr" && v?.net !== undefined && v.gross !== undefined && v.net < MIN_MAX_PER_USER_USD;
     // owner 17.11: raffles go (lucky draws, giveaways, mystery boxes) — also from the "stack with" links under other cards;
     // 0% fee offers stay (the fee saving is the point, the draw is an extra)
     // audit 24.11: KuCoin PROOF 550K (a futures contest with a lucky-draw side event, ≈$64 per participant) was read as
     // lucky_draw and hidden — a contest/competition headline with a real per-person estimate is not a raffle
     const contest = /\b(competition|contest|championship|challenge|tournament|leaderboard|league|win (your|a) share)\b/i.test(p.titleOrig ?? p.title) && (v?.net ?? 0) >= MIN_MAX_PER_USER_USD;
-    const raffle = !p.sponsored && !handAdded && !p.meta?.zeroFee && ((v?.mech === "lucky_draw" && !contest) || RAFFLE.test(p.titleOrig ?? p.title));
+    const raffle = !p.sponsored && !handAdded && !feeOffer && ((v?.mech === "lucky_draw" && !contest) || RAFFLE.test(p.titleOrig ?? p.title));
     const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (raffle ? "raffle" : undefined) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
     if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
     kept.push(p);

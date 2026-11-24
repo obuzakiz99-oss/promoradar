@@ -39,7 +39,15 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     en: `${n} promos right now: bonuses, Earn, competitions and airdrops — plain-language terms, how ${n} pays and what to claim by hand.`,
     ru: `Акции ${n} сейчас: бонусы, Earn, соревнования и аирдропы — условия по-русски, как ${n} платит и что забирать вручную.`,
   } as const)[lang];
-  return withOg({ title: `${n} — ${t.venue.promos}`, description, alternates: alt(lang, `/v/${id}`) });
+  // audit 24.11 (SEO): people search "бонус Bybit", "Bybit bonus November 2026", "акции Bybit" — the month keeps it fresh
+  const month = new Date().toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US", { month: "long", year: "numeric", timeZone: "UTC" }).replace(/ р\.$| г\.$/, "");
+  const title = ({
+    uk: `Бонуси та акції ${n} — ${month}: умови українською`,
+    en: `${n} bonus & promotions — ${month}`,
+    ru: `Бонусы и акции ${n} — ${month}: условия по-русски`,
+  } as const)[lang];
+  void t;
+  return withOg({ title, description, alternates: alt(lang, `/v/${id}`) });
 }
 
 export default async function VenuePage({ params }: { params: Params }) {
