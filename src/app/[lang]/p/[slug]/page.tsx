@@ -619,7 +619,7 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* "how much would I get" — only when the amount you put in changes the result (audit 14.11: a calculator on fixed
             vouchers and points airdrops said "✓ threshold passed" for any number) */}
-        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || (m.tiers?.length ?? 0) > 1 || (m.minEntry?.amount ?? 0) > 0) && (
+        {p.category !== "farming" && p.category !== "competition" && p.category !== "referral" && !/\b(giveaway|lucky draw|raffle|spin|mystery box|jackpot|competition|contest|leaderboard|tournament|creator)\b/i.test(p.titleOrig ?? p.title) && !m.noDeposit && !/\bpoints?\b|\bXP\b/i.test(p.titleOrig ?? p.title) && (m.aprPct !== undefined || (m.tiers?.length ?? 0) > 1 || (m.minEntry?.amount ?? 0) > 0) && (
           <div data-tour="promo-calc"><EarnCalc lang={lang} m={m} endsAt={p.endsAt} now={now} lock={lock} /></div>
         )}
 

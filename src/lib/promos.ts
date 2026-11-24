@@ -248,7 +248,9 @@ async function getPromosLive(): Promise<Collected> {
     if (geo.only || geo.noUA || geo.noEU) meta.geo = geo;
     // audit 24.11 (owner: "роби все"): promos only for regions a Ukrainian/European reader can't join (Brazil, LATAM,
     // South Asia, Africa, Kenya, MENA, SEA, Australia…) or that exclude Ukraine are hidden, not just labelled
-    if (!p.sponsored && (geo.noUA || (geo.only && !/^(EU|EEA|Europe|CEE|CIS|CIS & CEE|Ukraine)$/i.test(geo.only)))) {
+    // "BDT & PKR Exclusive" (Bitget) — a local-currency exclusive is a regional promo too
+    const localFiat = /\b(BDT|PKR|INR|NGN|KES|GHS|BRL|ARS|MXN|COP|IDR|VND|PHP|THB|TRY|EGP|ZAR|AED|SAR)\b[^.:|]{0,20}\bexclusive\b/i.test(p.titleOrig ?? p.title);
+    if (!p.sponsored && (localFiat || geo.noUA || (geo.only && !/^(EU|EEA|Europe|CEE|CIS|CIS & CEE|Ukraine)$/i.test(geo.only)))) {
       hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "region" }); continue;
     }
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)

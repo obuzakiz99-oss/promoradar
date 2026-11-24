@@ -10,7 +10,7 @@ import type { Promo } from "./types";
  */
 export type JunkReason = "social" | "small" | "raffle";
 /** Owner 17.11: no raffles on the site — lucky draws, giveaways, mystery boxes, "chance to win" prizes. */
-export const RAFFLE = /(lucky ?draws?|giveaways?|raffles?|draw chances?|mystery box(es)?|spin(s)? the wheel|lucky wheel|red packets?|sweepstakes?|chances? to win|lucky prize|gashapon)/i;
+export const RAFFLE = /\b(lucky ?draws?|giveaways?|raffles?|draw chances?|mystery box(es)?|spin(s)? the wheel|lucky wheel|red packets?|sweepstakes?|chances? to win|lucky prize|gashapon)\b/i;
 export const MIN_PER_USER_USD = 30;
 /** Owner 16.11: also hide anything where the most one person can get (any mechanic, competitions too) is under $15. */
 export const MIN_MAX_PER_USER_USD = 15;
