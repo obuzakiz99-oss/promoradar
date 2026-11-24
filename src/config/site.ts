@@ -1,4 +1,5 @@
 import type { Category, Venue } from "@/lib/types";
+import REFS from "./refs.json";
 
 /** Global site settings. Change the name/domain here once you pick them. */
 export const SITE = {
@@ -19,7 +20,7 @@ const dex = (id: string, name: string, kind: "dex" | "defi", color: string, ink:
   ({ id, name, kind, color, ink, monogram, logo: logo ? LOGO(logo) : undefined, site, refUrl: "" });
 
 /**
- * Centralised exchanges. `refUrl` = YOUR referral link: when set, "Join" on that exchange's promos uses it.
+ * Centralised exchanges. `refUrl` comes from refs.json (your referral links): when set, "Join" on that exchange's promos uses it.
  */
 export const CEX: Record<string, V> = {
   binance:  cex("binance",  "Binance",  "#F0B90B", "#16130A", "B",  "binance-cex", "https://www.binance.com"),
@@ -90,6 +91,17 @@ export const DEX: Record<string, V> = {
 };
 
 export const VENUES: Record<string, V> = { ...CEX, ...DEX };
+
+/* Referral links live in refs.json (one place for the owner). A link is used only when it is https and on the
+   venue's own domain, so a typo or a pasted third-party link can't send visitors somewhere else. */
+const rootOf = (u: string) => { try { return new URL(u).hostname.split(".").slice(-2).join("."); } catch { return ""; } };
+for (const [id, url] of Object.entries(REFS as Record<string, string>)) {
+  const v = VENUES[id];
+  if (!v || id.startsWith("_") || !url.trim()) continue;
+  const ok = url.startsWith("https://") && rootOf(url) === rootOf(v.site);
+  if (ok) v.refUrl = url.trim();
+  else console.warn(`refs.json: ${id} link ignored (must be https on ${rootOf(v.site)}): ${url}`);
+}
 
 /** Official promo / rewards pages of exchanges whose promos we can't read automatically (shown on their venue page). */
 export const PROMO_PAGES: Record<string, string> = {
