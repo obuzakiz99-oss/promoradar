@@ -126,8 +126,8 @@ export async function airdrops(): Promise<Promo[]> {
   for (const [, cls, attrs, body] of cards) {
     if (!/\bongoing\b/.test(cls)) continue;
     const attr = (k: string) => attrs.match(new RegExp(`data-${k}="([^"]*)"`))?.[1];
-    const name = decodeEntities(body.match(/<h3>([^<]+)<\/h3>/)?.[1] ?? "").trim();
-    const link = body.match(/class="card-link-overlay" href="([^"]+)"/)?.[1] ?? body.match(/<a href=([^ >]+)><h3>/)?.[1]?.replace(/"/g, "");
+    const name = decodeEntities(body.match(/<h3[^>]*>([^<]+)<\/h3>/)?.[1] ?? "").trim();
+    const link = body.match(/class="card-link-overlay" href="([^"]+)"/)?.[1] ?? body.match(/<a href=([^ >]+)><h3[ >]/)?.[1]?.replace(/"/g, "");
     if (!name || !link || blocked(name)) continue;
     const actions = decodeEntities(body.match(/Actions:\s*<span>([^<]+)<\/span>/)?.[1] ?? "").trim();
     const logo = body.match(/data-src="([^"]+)"/)?.[1];

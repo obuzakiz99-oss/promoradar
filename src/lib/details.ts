@@ -484,6 +484,16 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
   if (v === "bybit") { const d = (await bybitMap()).get(tail); return d ? { html: d, partial: true } : null; }
   if (v === "okx") return null;                                   // OKX blocks the crawler; link only
   if (v === "lighter") { const d = (await lighterMap()).get(p.id); return d ? { html: d, partial: true } : null; }
+  // 24.11: Poloniex pages are an empty JS shell to servers — its own public detail API holds the article and the
+  // campaign window (it answers only with an Accept-Language header, which getJson sends)
+  if (v === "poloniex") {
+    const j = await getJson<any>(`https://www.poloniex.com/proxy/sapi/proclamation/public/support/public/getDetails?id=${tail}`, 10_000);
+    const d = j?.data?.details;
+    if (!d?.content) return null;
+    const iso = (ms: unknown) => (Number(ms) > 0 ? new Date(Number(ms)).toISOString().replace("T", " ").slice(0, 16) : "");
+    const when = iso(d.activityStartTime) && iso(d.activityEndTime) ? `<p>Event Period: ${iso(d.activityStartTime)} – ${iso(d.activityEndTime)} (UTC)</p>` : "";
+    return { html: when + d.content };
+  }
   const fromFeed = (await feeds()).get(p.url.split("?")[0]);
   if (fromFeed) return { html: fromFeed };
   if (["kucoin", "bitget", "gate", "ondoperps", "bydfi"].includes(v)) { const h = await fromUrl(p.url); return h ? { html: h } : null; }

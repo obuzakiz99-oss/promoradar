@@ -75,7 +75,8 @@ function zendesk(venue: string, host: string, sections: number[] = []) {
   };
 }
 export const xt = zendesk("xt", "xtsupport.zendesk.com");
-export const bitunix = zendesk("bitunix", "support.bitunix.com");
+// 24.11: the main feed is all delistings / dividends (0 promos of 60) — the "Events and Activities" section holds the campaigns
+export const bitunix = zendesk("bitunix", "support.bitunix.com", [13762039477017]);
 export const weex = zendesk("weex", "weexsupport.zendesk.com");
 export const bitbase = zendesk("bitbase", "bitbase-support.zendesk.com");   // 08.11 official help-centre announcements
 export const biconomy = zendesk("biconomy", "biconomy.zendesk.com");
