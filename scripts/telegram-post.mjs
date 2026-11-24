@@ -6,6 +6,12 @@ import path from "node:path";
 
 const { TELEGRAM_BOT_TOKEN: TOKEN, TELEGRAM_CHAT_ID: CHAT } = process.env;
 if (!TOKEN || !CHAT) { console.log("telegram: no TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID — skipped"); process.exit(0); }
+// 24.11: say plainly whether the token works (the owner revoked one) — the token itself is never printed
+{
+  const me = await fetch(`https://api.telegram.org/bot${TOKEN}/getMe`).then((r) => r.json()).catch((e) => ({ ok: false, description: String(e) }));
+  console.log(me.ok ? `telegram: token OK — bot @${me.result.username}` : `telegram: TOKEN INVALID (${me.description ?? me.error_code}) — update the TELEGRAM_BOT_TOKEN secret`);
+  if (!me.ok) process.exit(0);
+}
 const SITE = (process.env.SITE_URL || "").replace(/\/$/, "");
 const LANG = process.env.POST_LANG || "uk";
 const APR_ALERT = Number(process.env.APR_ALERT || 20);
