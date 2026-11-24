@@ -1,0 +1,19 @@
+# Health alert from the server (scripts/health.mjs on Linux). This run FAILS on purpose with the problem list,
+# so GitHub sends the owner its usual "Run failed" e-mail. A "recovered" message passes (no e-mail).
+name: alert
+on:
+  workflow_dispatch:
+    inputs:
+      title: { description: "title", required: true }
+      body: { description: "problems", required: false, default: "" }
+permissions: {}
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: ${{ inputs.title }}
+        env: { TITLE: "${{ inputs.title }}", BODY: "${{ inputs.body }}" }
+        run: |
+          printf '%s\n\n%s\n' "$TITLE" "$BODY"
+          case "$TITLE" in *"знову працює"*) exit 0;; *) echo "::error title=$TITLE::$BODY"; exit 1;; esac

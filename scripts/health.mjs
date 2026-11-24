@@ -10,7 +10,7 @@ const BASE = "https://obuzakiz99-oss.github.io/promoradar";
 const RAW = "https://raw.githubusercontent.com/obuzakiz99-oss/promoradar";
 const DIR = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : path.join(process.cwd(), "..", "promoradar-health");
 const QUIET = process.argv.includes("--quiet");
-const GH = "C:/Program Files/GitHub CLI/gh.exe";
+const GH = process.env.GH || (process.platform === "win32" ? "C:/Program Files/GitHub CLI/gh.exe" : "gh");
 const UA = { "User-Agent": "PromoRadar-health/1.0" };
 const H = 3600_000;
 
@@ -100,6 +100,13 @@ console.log(ok ? `OK (${notes.join(", ")})` : `ПРОБЛЕМИ:\n- ${problems.j
 process.exitCode = ok ? 0 : 1;
 
 function toast(title, body) {
+  // on a Linux server there is no desktop: run the "alert" workflow, which fails on purpose → GitHub e-mails the owner
+  if (process.platform !== "win32") {
+    try { execFileSync(GH, ["workflow", "run", "alert.yml", "-R", "obuzakiz99-oss/promoradar", "--ref", "main", "-f", `title=${title}`, "-f", `body=${body.slice(0, 900)}`], { timeout: 60_000 }); }
+    catch (e) { fs.appendFileSync(path.join(DIR, "log.txt"), `   (alert not sent: ${String(e.message ?? e).slice(0, 100)})
+`); }
+    return;
+  }
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "''");
   const ps = `[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
 [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] > $null

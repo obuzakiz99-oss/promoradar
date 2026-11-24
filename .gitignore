@@ -12,3 +12,4 @@ build.log
 
 __pycache__/
 *.pyc
+server/prrelay/
