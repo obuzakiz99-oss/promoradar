@@ -67,7 +67,7 @@ Persistent=true
 WantedBy=timers.target
 UNIT
 # the relay pulls the repo each restart; restart it daily so script updates arrive
-( crontab -l 2>/dev/null | grep -v promoradar-relay; echo "17 4 * * * sudo systemctl restart promoradar-relay" ) | crontab -
+{ crontab -l 2>/dev/null | grep -v promoradar-relay || true; echo "17 4 * * * sudo systemctl restart promoradar-relay"; } | crontab -
 sudo systemctl daemon-reload
 sudo systemctl enable --now promoradar-relay.service promoradar-health.timer
 echo "Запущено. Перевірка: systemctl status promoradar-relay   журнал: tail ~/prrelay/relay.log"
