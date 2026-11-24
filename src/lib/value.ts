@@ -208,15 +208,26 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   const ai = !!a;
   // audit 23.11: position vouchers, interest-free coupons and futures bonuses were counted as cash ("$500, sure" for a
   // BingX voucher) — they can only be used for trading and most expire unused; points are worth even less
-  const fk = ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? "cash"] ?? 1;
+  const title = p.titleOrig ?? p.title;
+  const rules = [title, m.perUser?.text, m.minEntry?.text, ...(m.payout?.quotes ?? [])].filter(Boolean).join(" ");
+  // audit 25.11: trial funds / position vouchers pay only the (capped) profit made with them, not their face value
+  // (Gate "100 USDT Dual Investment Trial Fund" read as ≈$40, KuCoin "Futures Trial Fund — withdrawable profit ≤ 20%")
+  const trial = /\b(trial funds?|trial vouchers?|position (trial )?vouchers?|experience (funds?|vouchers?)|trial bonus)\b/i.test(rules);
+  const fk = trial ? 0.1 : ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? "cash"] ?? 1;
   // audit 23.11 (round 5): an "up to" APR is a ceiling — an estimate from it is never better than "low"
-  const capConf = (c: Conf): Conf => (m.aprUpTo ? "low" : c);   // whatever mechanism the AI chose (MEXC Futures Earn: "fixed")
+  // audit 25.11: a Telegram post without the exchange's full rules is never "you will really get" (Bitget trailing-stop 50 USDT)
+  const capConf = (c: Conf): Conf => (m.aprUpTo ? "low" : c === "high" && p.id.startsWith("tg:") ? "mid" : c);
   const out = (g0: number | undefined, c0: Conf, basis: Value["basis"]): Value => {
     const gross = g0 === undefined ? undefined : g0 * fk;
     const conf: Conf = capConf(fk < 1 && c0 === "high" ? "mid" : c0);
     const c = Math.max(cost, kind.startsWith("trade") ? cost : cost + volCost);
     return { gross: gross === undefined ? undefined : round(gross), cost: round(c), max: max === undefined ? undefined : round(max), net: gross === undefined ? undefined : round(gross - c), conf, mech, basis, ai };
   };
+
+  // audit 25.11: VIP/VVIP-only perks (MEXC VVIP Futures Earn boosters read as "+$21 likely") and campaigns whose smallest
+  // tier needs tens of thousands of dollars are out of reach for an ordinary participant — no estimate
+  if (/(?<![\w-])V?VIP(?![\w-])/.test(title) && !/non-?VIP|all users/i.test(title)) return out(undefined, "low", "none");
+  if (need >= 20_000 && mech !== "apr") return out(undefined, "low", "none");
 
   switch (mech) {
     case "referral": {
@@ -265,11 +276,18 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       const txt = [m.minEntry?.text, m.perUser?.text, p.titleOrig ?? p.title].filter(Boolean).join(" ");
       const capM = txt.match(/\b(?:first|up to|maximum of|max(?:imum)?|capped at|cap of|limit of)\s+([\d,]+(?:\.\d+)?)\s?(USDT|USDC|USD|FDUSD)\b/i);
       const daysM = txt.match(/\b(?:for|within|lasts?|effective for|valid for)\s+(\d{1,3})\s+days?\b|\b(\d{1,3})[- ]day\b/i);
+      // audit 25.11: Dual Investment is a non-principal-protected option product; its "rate-up" coupons cover a few USDT
+      // for 3 days (KuCoin: 50 % on max 10 USDT principal read as "+$78 on $1,000")
+      if (/dual investment/i.test(rules)) return out(undefined, "low", "none");
       const cap = usd(a?.max) ?? (capM ? Number(capM[1].replace(/,/g, "")) : undefined);
-      const days = a?.days ?? (daysM ? Number(daysM[1] ?? daysM[2]) : undefined);
+      // audit 25.11: the rules' "effective for 7 days" beats the AI's campaign length (Binance new-user 35 %: AI said 70 days)
+      const textDays = daysM ? Number(daysM[1] ?? daysM[2]) : undefined;
+      const days = a?.days !== undefined && textDays !== undefined ? Math.min(a.days, textDays) : a?.days ?? textDays;
       const base = Math.min(1000, cap !== undefined && cap > 0 ? cap : 1000);
       const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, days ?? 30) / 365));
-      return { gross: g, cost: 0, net: g, conf: "mid", mech, basis: "apr", ai };
+      // "up to" rates and interest paid in a volatile token (GBCK, PEARL, stock tokens…) are not what one likely gets
+      const stable = /\b(USDT|USDC|USD1|FDUSD|USDE|USDG|PYUSD|RLUSD|DAI|KCUSD|BXUSD|USDF|stablecoins?)\b|(?<![\w.])U(?![\w.])/i.test(rules);
+      return { gross: g, cost: 0, net: g, conf: m.aprUpTo || !stable ? "low" : "mid", mech, basis: "apr", ai };
     }
     default:
       return out(typical ?? undefined, typical !== undefined ? "mid" : "low", typical !== undefined ? "stated" : "none");
