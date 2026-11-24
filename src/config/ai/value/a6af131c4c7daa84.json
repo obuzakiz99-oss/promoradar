@@ -1,0 +1,1 @@
+{"id":"gate:102961","h":"BMT38N-sch-X_0gO","v":1,"at":1795516511940,"data":{"isPromo":true,"socialOnly":false,"mech":"tiers","act":{"kind":"trade_futures","usd":1000},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":100,"unit":"USDT"},"pool":{"amount":10000,"unit":"USDT"},"days":7}}
