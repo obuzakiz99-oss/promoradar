@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const args = Object.fromEntries(process.argv.slice(2).map((a) => { const [k, ...v] = a.replace(/^--/, "").split("="); return [k, v.length ? v.join("=") : true]; }));
-const BASE = (args.base || "https://obuzakiz99-oss.github.io/promoradar").replace(/\/$/, "");
+const BASE = (args.base || "https://promoradar.xyz").replace(/\/$/, "");
 const OUT = path.resolve(HERE, args.out || "out/r1");
 const SHOTS = path.join(OUT, "shots");
 const AXE = path.join(HERE, "node_modules/axe-core/axe.min.js");

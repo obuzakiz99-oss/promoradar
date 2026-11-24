@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { SITE } from "@/config/site";
 
-export const UA = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0; +https://promoradar.example)", Accept: "application/json, text/html;q=0.9, application/xml;q=0.8, */*;q=0.5", "Accept-Language": "en-US,en;q=0.9" };
+export const UA = { "User-Agent": "Mozilla/5.0 (compatible; PromoRadar/1.0; +https://promoradar.xyz)", Accept: "application/json, text/html;q=0.9, application/xml;q=0.8, */*;q=0.5", "Accept-Language": "en-US,en;q=0.9" };
 
 /**
  * EU relay: GitHub builds on US servers where OKX announcements and the Bybit API don't answer. A script on the owner's

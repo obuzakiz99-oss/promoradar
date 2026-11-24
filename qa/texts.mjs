@@ -11,7 +11,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const BASE = process.env.BASE || "https://obuzakiz99-oss.github.io/promoradar";
+const BASE = process.env.BASE || "https://promoradar.xyz";
 const args = process.argv.slice(2);
 const round = args.find((a) => !a.startsWith("--") && !a.endsWith(".json")) || "r1";
 const pagesFile = args.find((a) => a.endsWith(".json"));

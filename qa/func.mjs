@@ -8,9 +8,9 @@ import fs from "node:fs";
 import pth from "node:path";
 import { fileURLToPath } from "node:url";
 
-const BASE = "https://obuzakiz99-oss.github.io/promoradar";
+const BASE = "https://promoradar.xyz";
 const ORIGIN = new URL(BASE).origin;
-const BP = new URL(BASE).pathname; // "/promoradar"
+const BP = new URL(BASE).pathname.replace(/\/$/, ""); // "" on promoradar.xyz ("/promoradar" on github.io)
 const ROUNDS = pth.resolve(pth.dirname(fileURLToPath(import.meta.url)), "out");
 const ROUND = process.env.ROUND || "r1";
 const OUT = pth.join(ROUNDS, ROUND);
@@ -775,7 +775,7 @@ S.popovers = async () => {
         await p.waitForTimeout(150);
         const info0 = await p.evaluate(() => { const d = document.querySelector("details[data-pop][open]"); if (!d) return null; const a = d.querySelector("a[href*='calendar.google.com']"); const box = [...d.children].find((x) => x.tagName !== "SUMMARY"); const r = box.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + 12); return { href: a?.getAttribute("href"), r: [Math.round(r.left), Math.round(r.top), Math.round(r.right), Math.round(r.bottom)], top: !!e && box.contains(e), vw: innerWidth, vh: innerHeight }; });
         check(p, "calendar page menu opens on top & inside the viewport", !!info0 && info0.top && info0.r[0] >= 0 && info0.r[2] <= info0.vw && info0.r[3] <= info0.vh, JSON.stringify(info0 && { r: info0.r, top: info0.top }));
-        if (info0?.href) { const g = new URL(info0.href); const t = g.searchParams.get("text"); const d = g.searchParams.get("dates"); const det = g.searchParams.get("details") ?? ""; check(p, "calendar page Google link has title, dates and a working site link", !!t && /^\d{8}T\d{6}Z\/\d{8}T\d{6}Z$/.test(d ?? "") && det.includes("https://obuzakiz99-oss.github.io/promoradar/uk/"), `text=${t?.slice(0, 60)} dates=${d} details=${det.slice(0, 120)}`); }
+        if (info0?.href) { const g = new URL(info0.href); const t = g.searchParams.get("text"); const d = g.searchParams.get("dates"); const det = g.searchParams.get("details") ?? ""; check(p, "calendar page Google link has title, dates and a working site link", !!t && /^\d{8}T\d{6}Z\/\d{8}T\d{6}Z$/.test(d ?? "") && det.includes(BASE + "/uk/"), `text=${t?.slice(0, 60)} dates=${d} details=${det.slice(0, 120)}`); }
         if (cn > 1) { await cs.nth(1).scrollIntoViewIfNeeded(); /* the open panel sits over the next button (a real tap lands on the panel) — toggle it directly */ await cs.nth(1).dispatchEvent("click"); await p.waitForTimeout(120); check(p, "calendar page: one menu open at a time", (await p.locator("details[data-pop][open]").count()) === 1); }
         if (kind === "desk") {
           const ics = p.locator("details[data-pop][open] button").filter({ hasText: ".ics" }).first();
@@ -1931,7 +1931,7 @@ S.edge = async () => {
     check(p, "edge: a saved promo that left the feed shows «Акція вже не активна» and «Завершились 1»", gone === 1 && (await p.locator("main [role=tab]").filter({ hasText: /^Завершились\s*1$/ }).count()) === 1, `${gone}`);
     await p.locator("main ul > li.card").filter({ hasText: "Акція вже не активна" }).locator("button").filter({ hasText: "✕" }).click(); await p.waitForTimeout(120);
     check(p, "edge: ✕ removes the gone promo", (await p.locator("main ul > li.card").count()) === 3);
-    await p.evaluate(() => { localStorage.setItem("pr:saved", "{not json"); localStorage.setItem("pr:hidden", "[1,2"); localStorage.setItem("pr:track", "nope"); localStorage.setItem("pr:my:view", "{{"); localStorage.setItem("pr:filters:/promoradar/uk/", "%%%&cat=&&sort"); });
+    await p.evaluate(() => { localStorage.setItem("pr:saved", "{not json"); localStorage.setItem("pr:hidden", "[1,2"); localStorage.setItem("pr:track", "nope"); localStorage.setItem("pr:my:view", "{{"); localStorage.setItem(`pr:filters:${BP}/uk/`, "%%%&cat=&&sort"); });
     for (const u of ["/uk/", "/uk/my/"]) {
       await go(p, u); if (u === "/uk/") await feedReady(p); else await p.waitForTimeout(800);
       const mtx = await p.locator("main").innerText();
