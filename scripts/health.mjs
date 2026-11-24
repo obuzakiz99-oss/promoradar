@@ -6,7 +6,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const BASE = "https://obuzakiz99-oss.github.io/promoradar";
+const BASE = process.env.SITE_URL || "https://promoradar.xyz"; // own domain since 25.11 (github.io/promoradar redirects here)
 const RAW = "https://raw.githubusercontent.com/obuzakiz99-oss/promoradar";
 const DIR = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : path.join(process.cwd(), "..", "promoradar-health");
 const QUIET = process.argv.includes("--quiet");

@@ -12,7 +12,7 @@ import path from "node:path";
 const [, , outDir, maxArg] = process.argv;
 const MAX = Number(maxArg ?? 12);
 const CHROME = process.env.CHROME || (process.platform === "win32" ? "C:/Program Files/Google/Chrome/Application/chrome.exe" : "chromium");
-const SITE = "https://obuzakiz99-oss.github.io/promoradar/api/promos.json";
+const SITE = (process.env.SITE_URL || "https://promoradar.xyz") + "/api/promos.json";
 const DETAILS = "https://raw.githubusercontent.com/obuzakiz99-oss/promoradar/data/details.json";
 const FILE = path.join(outDir, "rules.json");
 const DAY = 86400_000;
