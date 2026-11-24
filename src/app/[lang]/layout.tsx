@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     icons: { icon: withBase("/icon.svg"), apple: withBase("/apple-touch-icon.png") },
     manifest: withBase("/manifest.webmanifest"),
     appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "black-translucent" },
+    verification: { google: "2b39PcYtXfivHnfm08m5gU9cjdXysM909StzoP6-XcM" },   // Search Console (24.11)
   };
 }
 
