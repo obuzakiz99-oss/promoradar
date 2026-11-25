@@ -16,7 +16,11 @@ const OFFER = new RegExp(
   String.raw`|\bzero[- ]trading[- ]fee campaign\b|\b0\s?% maker and 0\s?% taker\b|\bpay no maker or taker fees\b`, "i");
 const EXCLUDE = /\b(exclud\w*|except\w*|not (be )?(count|eligible|includ)\w*|non[- ]?zero|do(es)? not|will not|won't|isn't|aren't|nor)\b/i;
 
+// audit 25.11 (deep): Poloniex "0% fee: iPhone…" — the rules count "only trades for which you actually paid a fee"
+const PAID = /\b(only|solely) (count )?(trades?|orders?|volume)\b[^.]{0,40}\b(paid|pay|incur\w*|charged)\b[^.]{0,20}\bfees?\b|\bfee-paying (trades|volume|orders)\b/i;
+
 export function isZeroFee(title: string, blocks: Block[] | undefined): boolean {
+  if ((blocks ?? []).slice(0, 80).some((b) => PAID.test(b.x ?? ""))) return false;
   if (TITLE.test(title) && !EXCLUDE.test(title)) return true;
   for (const b of (blocks ?? []).slice(0, 60)) {
     if (b.t === "tr" || !b.x) continue;

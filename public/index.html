@@ -3,24 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PromoRadar</title>
-  <meta name="robots" content="noindex">
+  <!-- audit 25.11: the root is a real, indexable language chooser (was noindex + meta refresh) — Google takes the site
+       name and favicon from the domain's home page. People are still sent to their language by the script below. -->
+  <title>PromoRadar — промоакції криптобірж і DeFi в одному місці</title>
+  <meta name="description" content="Акції криптобірж і DeFi: бонуси, аірдропи, Launchpool, змагання, Earn. Показуємо, скільки реально отримає одна людина. Українською, English, по-русски.">
+  <link rel="canonical" href="https://promoradar.xyz/">
+  <link rel="alternate" hreflang="uk" href="https://promoradar.xyz/uk/">
+  <link rel="alternate" hreflang="en" href="https://promoradar.xyz/en/">
+  <link rel="alternate" hreflang="ru" href="https://promoradar.xyz/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://promoradar.xyz/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PromoRadar">
+  <meta property="og:url" content="https://promoradar.xyz/">
+  <meta property="og:title" content="PromoRadar — промоакції криптобірж і DeFi">
+  <meta property="og:description" content="Скільки реально отримає одна людина, а не «до 10 000 USDT».">
+  <meta property="og:image" content="https://promoradar.xyz/og-home.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="./favicon.ico" sizes="any">
   <link rel="icon" href="./favicon-96.png" type="image/png" sizes="96x96">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#06080b">
   <meta name="google-site-verification" content="2b39PcYtXfivHnfm08m5gU9cjdXysM909StzoP6-XcM">
-  <meta http-equiv="refresh" content="1; url=./uk/">
-  <style>html,body{margin:0;height:100%;background:#06080b;color:#a6b0bd;font:16px system-ui,sans-serif;display:grid;place-items:center}</style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://promoradar.xyz/#org","name":"PromoRadar","url":"https://promoradar.xyz/","logo":"https://promoradar.xyz/icon-512.png"},{"@type":"WebSite","name":"PromoRadar","alternateName":"Promo Radar","url":"https://promoradar.xyz/","inLanguage":["uk","en","ru"],"publisher":{"@id":"https://promoradar.xyz/#org"}}]}</script>
   <script>
-    // pick the visitor's language: Ukrainian → uk, Russian/Belarusian/Kazakh → ru, otherwise en
+    // people go straight to their language (saved choice first); search engine crawlers stay on this page
     (function () {
+      if (/bot|crawl|spider|slurp|preview|lighthouse/i.test(navigator.userAgent)) return;
       var saved = null; try { saved = localStorage.getItem("pr:lang"); } catch (e) {}
       var l = (navigator.languages && navigator.languages[0] || navigator.language || "uk").toLowerCase();
       var lang = saved || (/^uk/.test(l) ? "uk" : /^(ru|be|kk)/.test(l) ? "ru" : /^en/.test(l) ? "en" : "uk");
       location.replace("./" + lang + "/");
     })();
   </script>
+  <style>
+    html,body{margin:0;min-height:100%;background:#06080b;color:#a6b0bd;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+    main{max-width:720px;margin:0 auto;padding:56px 16px}
+    h1{color:#eef2f6;font-size:32px;line-height:1.15;margin:0 0 12px}
+    p{margin:0 0 24px}
+    .langs{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px}
+    .langs a{display:inline-block;padding:12px 20px;border-radius:12px;background:#c8ff3d;color:#06080b;font-weight:700;text-decoration:none}
+    .langs a.alt{background:#141a22;color:#eef2f6}
+    ul{padding-left:20px;margin:0}
+    li{margin:6px 0}
+    a{color:#c8ff3d}
+  </style>
 </head>
-<body><a href="./uk/" style="color:#c8ff3d">PromoRadar →</a></body>
+<body>
+  <main>
+    <h1>PromoRadar — промоакції криптобірж і DeFi в одному місці</h1>
+    <p>Бонуси, аірдропи, Launchpool, торгові змагання та Earn з 40+ бірж і протоколів. Оновлюється кожні 30 хвилин. Для кожної акції показуємо, скільки реально отримає одна людина, а не лише рекламне «до 10 000 USDT».</p>
+    <div class="langs">
+      <a href="./uk/" hreflang="uk">Українська</a>
+      <a class="alt" href="./en/" hreflang="en">English</a>
+      <a class="alt" href="./ru/" hreflang="ru">Русский</a>
+    </div>
+    <ul>
+      <li><a href="./uk/bonuses/">Бонуси для новачків</a></li>
+      <li><a href="./uk/launchpools/">Launchpool і аірдропи</a></li>
+      <li><a href="./uk/earn/">Ставки Earn</a></li>
+      <li><a href="./uk/calendar/">Календар акцій</a></li>
+      <li><a href="./uk/learn/">Новачкам: з чого почати</a></li>
+    </ul>
+  </main>
+</body>
 </html>

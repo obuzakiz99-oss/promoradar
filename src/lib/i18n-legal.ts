@@ -15,7 +15,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
   uk: {
     about: { title: "Про PromoRadar", sub: "Агрегатор промоакцій криптобірж і DeFi-протоколів: Launchpool, Earn, airdrop, змагання, бонуси — в одному місці.", blocks: [
       ["Що ми робимо", "Кожні 30 хвилин автоматично збираємо акції з офіційних джерел бірж і протоколів: їхніх API, оголошень, офіційних Telegram-каналів і блогів, а також відкриті дані DefiLlama. Рахуємо APR, прибуток, ризики і показуємо все в одному форматі."],
-      ["Незалежність", "Ми не є біржею і не зберігаємо ваші кошти. Частина посилань — реферальні: якщо ви зареєструєтеся за ними, біржа може заплатити нам комісію. На умови для вас і на порядок акцій у списках це не впливає."],
+      ["Незалежність", "Ми не є біржею і не зберігаємо ваші кошти. Ми не використовуємо реферальних посилань і не отримуємо комісій від бірж — порядок акцій у списках залежить лише від їхньої вигоди для вас."],
       ["Точність", "Дані беруться автоматично і оновлюються раз на 30–60 хвилин, тож можуть відставати від біржі або містити помилки джерела. Перед участю завжди перевіряйте умови на сторінці організатора — посилання є біля кожної акції."],
       ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть через GitHub: ${ISSUES}`],
     ] },
@@ -30,7 +30,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Не фінансова порада", "Уся інформація має довідковий характер і не є інвестиційною, фінансовою чи податковою порадою. Рішення ви ухвалюєте самостійно."],
       ["Ризики", "Криптовалюти, DeFi і торгівля з плечем пов'язані з високим ризиком, аж до повної втрати коштів. APR — це оцінка біржі на момент оновлення, а не гарантований дохід."],
       ["Умови акцій", "Акції проводять біржі та протоколи; умови встановлюють і змінюють вони. Ми не відповідаємо за виплати, зміну правил, регіональні обмеження чи дії третіх сторін."],
-      ["Реферальні посилання", "Деякі посилання є реферальними; ми можемо отримувати винагороду від бірж."],
+      ["Реферальні посилання", "Зараз сайт не використовує реферальних посилань. Якщо вони з'являться, ми прямо позначимо це біля кожного такого посилання."],
       ["Обмеження відповідальності", "Сайт надається «як є». Ми не гарантуємо безперервну роботу, точність і повноту даних і не несемо відповідальності за збитки від їх використання."],
       ["Зміни", "Умови можуть оновлюватися; актуальна версія завжди на цій сторінці."],
     ] },
@@ -38,7 +38,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
   en: {
     about: { title: "About PromoRadar", sub: "An aggregator of crypto exchange and DeFi promos: Launchpools, Earn, airdrops, competitions, bonuses — in one place.", blocks: [
       ["What we do", "Every 30 minutes we automatically collect promos from official sources: exchange and protocol APIs, announcements, official Telegram channels and blogs, plus DefiLlama open data. We calculate APR, profit and risks and show everything in one format."],
-      ["Independence", "We're not an exchange and never hold your funds. Some links are referral links: if you sign up through them, the exchange may pay us a commission. This doesn't change your terms or the order of promos in our lists."],
+      ["Independence", "We're not an exchange and never hold your funds. We use no referral links and take no commissions from exchanges — the order of promos depends only on their value to you."],
       ["Accuracy", "Data is collected automatically and can lag the exchange by a few minutes or contain source errors. Always check the terms on the organiser's page before joining — every promo links to it."],
       ["Contact", `Bugs, ideas, new promo sources — write via GitHub: ${ISSUES}`],
     ] },
@@ -53,7 +53,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Not financial advice", "All information is for reference only and is not investment, financial or tax advice. You make your own decisions."],
       ["Risks", "Crypto, DeFi and leveraged trading carry high risk, up to a total loss of funds. APR is the exchange's estimate at refresh time, not guaranteed income."],
       ["Promo terms", "Promos are run by exchanges and protocols, which set and change the terms. We're not responsible for payouts, rule changes, regional restrictions or third-party actions."],
-      ["Referral links", "Some links are referral links; we may be rewarded by exchanges."],
+      ["Referral links", "The site currently uses no referral links. If that changes, every such link will be clearly marked."],
       ["Limitation of liability", "The site is provided 'as is'. We don't guarantee uninterrupted operation or the accuracy and completeness of data, and aren't liable for losses from using it."],
       ["Changes", "These terms may be updated; the current version is always on this page."],
     ] },
@@ -61,7 +61,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
   ru: {
     about: { title: "О PromoRadar", sub: "Агрегатор промоакций криптобирж и DeFi-протоколов: Launchpool, Earn, airdrop, соревнования, бонусы — в одном месте.", blocks: [
       ["Что мы делаем", "Каждые 30 минут автоматически собираем акции из официальных источников бирж и протоколов: их API, анонсов, официальных Telegram-каналов и блогов, а также открытые данные DefiLlama. Считаем APR, прибыль, риски и показываем всё в одном формате."],
-      ["Независимость", "Мы не биржа и не храним ваши средства. Часть ссылок — реферальные: если вы зарегистрируетесь по ним, биржа может заплатить нам комиссию. На условия для вас и порядок акций в списках это не влияет."],
+      ["Независимость", "Мы не биржа и не храним ваши средства. Мы не используем реферальных ссылок и не получаем комиссий от бирж — порядок акций зависит только от их выгоды для вас."],
       ["Точность", "Данные собираются автоматически и могут отставать от биржи на несколько минут или содержать ошибки источника. Перед участием всегда проверяйте условия на странице организатора — ссылка есть у каждой акции."],
       ["Связь", `Ошибки, предложения, новые источники акций — пишите через GitHub: ${ISSUES}`],
     ] },
@@ -76,7 +76,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Не финансовый совет", "Вся информация носит справочный характер и не является инвестиционным, финансовым или налоговым советом. Решения вы принимаете самостоятельно."],
       ["Риски", "Криптовалюты, DeFi и торговля с плечом связаны с высоким риском, вплоть до полной потери средств. APR — это оценка биржи на момент обновления, а не гарантированный доход."],
       ["Условия акций", "Акции проводят биржи и протоколы; условия устанавливают и меняют они. Мы не отвечаем за выплаты, изменение правил, региональные ограничения или действия третьих лиц."],
-      ["Реферальные ссылки", "Некоторые ссылки реферальные; мы можем получать вознаграждение от бирж."],
+      ["Реферальные ссылки", "Сейчас сайт не использует реферальных ссылок. Если они появятся, мы явно отметим каждую такую ссылку."],
       ["Ограничение ответственности", "Сайт предоставляется «как есть». Мы не гарантируем бесперебойную работу, точность и полноту данных и не несём ответственности за убытки от их использования."],
       ["Изменения", "Условия могут обновляться; актуальная версия всегда на этой странице."],
     ] },

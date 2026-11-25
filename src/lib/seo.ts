@@ -4,7 +4,7 @@
  */
 export function alt(lang: string, path = "") {
   const p = `${path.replace(/\/+$/, "")}/`;
-  return { canonical: `/${lang}${p}`, languages: { uk: `/uk${p}`, en: `/en${p}`, ru: `/ru${p}`, "x-default": `/en${p}` } };
+  return { canonical: `/${lang}${p}`, languages: { uk: `/uk${p}`, en: `/en${p}`, ru: `/ru${p}`, "x-default": p === "/" ? "/" : `/en${p}` } };   // audit 25.11: the root page is the language chooser
 }
 
 type Meta = { title?: unknown; description?: unknown; openGraph?: Record<string, unknown>; [k: string]: unknown };

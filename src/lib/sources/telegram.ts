@@ -138,7 +138,8 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
       category: classify(title) !== "other" ? classify(title) : classify(text.slice(0, 400)), publishedAt: date,
       // audit 23.11: "up to 1,250 USDT per user", "Maximum reward: $5,000" are per-person caps, not the pool
       reward: /\b(per (user|person|participant|account|referral|friend)|each user|maximum reward|max(imum)? (of )?\$?[\d,.]+ ?(USDT|USDC|USD)? ?(per|each))\b/i.test(title) ? undefined : parseReward(title), tags: [],
-      meta: { source: `Telegram @${ch}` },
+      // audit 25.11 (deep): two posts about one campaign share a link (often a bit.ly) even when the post has no own-site article
+      meta: { source: `Telegram @${ch}`, ...(() => { const k = links.map(path).find((u) => !/t\.me\/|twitter\.com|x\.com|youtu|discord|forms\.gle|docs\.google|apps\.apple|play\.google|deposit|download|\/assets|wallet|\/trade\/|\/futures\/[A-Z]/i.test(u) && !ref(u) && /^https?:\/\/[^/]+\/[^/?#]{3,}/.test(u)); return k ? { linkKey: k.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "").toLowerCase() } : {}; })() },
     });
   }
   return { promos: out, minId, oldest: oldest === Infinity ? 0 : oldest };

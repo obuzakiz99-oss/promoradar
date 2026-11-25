@@ -25,7 +25,7 @@ const L = {
   ru: { promo: "🆕 Новая акция", lp: "🚀 Новый Launchpool", earn: "🏦 Высокая ставка Earn", pool: "Фонд", stake: "Стейк", apr: "APR", ends: "До", more: "Подробнее", est: "В среднем на человека", onK: "Доход на $1 000" },
 }[LANG];
 
-const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const read = (f) => JSON.parse(fs.readFileSync(path.join(OUT, "api", f), "utf8"));
 // same slug logic as src/lib/slug.ts
 const hash = (s) => { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); };
@@ -42,7 +42,10 @@ const seen = new Set(state.ids);
 const msgs = [];
 const feed = read("promos");
 const trTitle = (p) => feed.titles?.[LANG]?.[p.id] ?? p.title;   // translated title for the posting language
-const promos = feed.promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen);
+// audit 25.11 (deep): a card the quality guard (scripts/quality.mjs) flagged is not posted until it is fixed
+let flagged = new Set();
+try { flagged = new Set(read("quality.json").errors.map((e) => e.id).filter(Boolean)); } catch { /* no report → post as usual */ }
+const promos = feed.promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen && !flagged.has(p.id));
 // 25.11 (owner: "the channel looks raw"): wait for the translated title (English posts went out before the laptop
 // translated them), skip posts with nothing concrete to say, and a clearer card: type, money, deadline, entry, hashtags
 const CAT = {
@@ -92,13 +95,34 @@ for (const o of read("earn").offers) {
 const saveState = () => { state.ids = [...seen].slice(-5000); fs.mkdirSync("data", { recursive: true }); fs.writeFileSync(STATE, JSON.stringify(state)); };
 if (firstRun) { msgs.forEach(([k]) => seen.add(k)); saveState(); console.log(`telegram: first run — recorded ${seen.size} items, nothing posted`); process.exit(0); }
 
+// audit 25.11 (deep): a network error mid-run crashed the script before the state was saved → the same posts went out
+// again next run. Now: every send is guarded, the state is saved after each post, 429 waits as Telegram asks, and a
+// message Telegram rejects 3 times is dropped instead of blocking the queue forever.
+state.fail ??= {};
+const send = async (text) => {
+  for (let i = 0; i < 2; i++) {
+    try {
+      const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, signal: AbortSignal.timeout(20_000),
+        body: JSON.stringify({ chat_id: CHAT, text, parse_mode: "HTML", disable_web_page_preview: true }),
+      });
+      if (r.ok) return { ok: true };
+      const j = await r.json().catch(() => ({}));
+      if (r.status === 429 && i === 0) { await new Promise((res) => setTimeout(res, Math.min(60, j.parameters?.retry_after ?? 5) * 1000)); continue; }
+      return { ok: false, status: r.status, why: String(j.description ?? "").slice(0, 200) };
+    } catch (e) { return { ok: false, status: 0, why: String(e?.message ?? e).slice(0, 200) }; }
+  }
+  return { ok: false, status: 429, why: "rate limited" };
+};
 let sent = 0;
 for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
-  const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: CHAT, text, parse_mode: "HTML", disable_web_page_preview: true }),
-  });
-  if (r.ok) { sent++; seen.add(key); } else console.log("telegram error", r.status, (await r.text()).slice(0, 200));
+  const r = await send(text);
+  if (r.ok) { sent++; seen.add(key); delete state.fail[key]; saveState(); }
+  else {
+    console.log("telegram error", r.status, r.why);
+    if (r.status === 400 || r.status === 403) { state.fail[key] = (state.fail[key] ?? 0) + 1; if (state.fail[key] >= 3) { seen.add(key); delete state.fail[key]; } }
+    if (r.status === 0 || r.status === 429) break;   // network / rate limit: try the rest next run
+  }
   await new Promise((res) => setTimeout(res, 1500));
 }
 // 25.11 (owner: grow the channel): weekly digest — Monday from 07:00 UTC, once per ISO week — the 5 best running promos by
@@ -114,7 +138,7 @@ for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
   const week = `${d.getUTCFullYear()}-W${Math.ceil(((d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400_000 + 1) / 7)}`;
   if (now.getUTCDay() === 1 && now.getUTCHours() >= 7 && state.weekly !== week) {
-    const top = feed.promos.filter((p) => {
+    const top = feed.promos.filter((p) => !flagged.has(p.id)).filter((p) => {
       const v = p.meta?.value;
       return v && v.mech !== "apr" && (v.conf === "high" || v.conf === "mid") && v.net >= 15 && !p.meta?.thin && p.venue.kind !== "airdrop"
         && (!p.endsAt || p.endsAt - Date.now() > 2 * 86400_000);
@@ -122,12 +146,9 @@ for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
     if (top.length >= 3) {
       const rows = top.map((p, i) => `${i + 1}. <b>${esc(p.venue.name)}</b> — ≈ $${Math.round(p.meta.value.net)}\n${esc(trTitle(p))}${SITE ? `\n<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : ""}`);
       const text = [W.head, W.sub, "", rows.join("\n\n"), SITE ? `\n<a href="${SITE}/${LANG}/">${W.all} →</a>` : ""].filter((x) => x !== undefined).join("\n");
-      const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT, text, parse_mode: "HTML", disable_web_page_preview: true }),
-      });
-      if (r.ok) { state.weekly = week; console.log(`telegram: weekly top-${top.length} sent (${week})`); }
-      else console.log("telegram weekly error", r.status, (await r.text()).slice(0, 200));
+      const r = await send(text);
+      if (r.ok) { state.weekly = week; saveState(); console.log(`telegram: weekly top-${top.length} sent (${week})`); }
+      else console.log("telegram weekly error", r.status, r.why);
     }
   }
 }

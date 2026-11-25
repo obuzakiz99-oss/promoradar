@@ -110,6 +110,10 @@ async function getPromosLive(): Promise<Collected> {
     // audit 22.11: links copied from Telegram can be plain http (WhiteBIT) — exchanges all serve https
     p.url = p.url.replace(/&amp;/g, "&").replace(/^http:\/\//i, "https://");
     if (p.joinUrl) p.joinUrl = p.joinUrl.replace(/&amp;/g, "&");
+    // audit 25.11 (deep): links come straight from exchange feeds — only https web links are ever printed (no data:, javascript:)
+    const safe = (u: string | undefined) => { try { return !!u && new URL(u).protocol === "https:"; } catch { return false; } };
+    if (!safe(p.url)) p.url = VENUES[p.venue.id]?.site ?? `https://t.me/s/${p.id.replace(/^tg:/, "")}`;
+    if (p.joinUrl && !safe(p.joinUrl)) p.joinUrl = undefined;
     // the venue registry is the source of logos (audit 14.11: one Phemex card had the logo, its twin a monogram)
     if (!p.venue.logo && VENUES[p.venue.id]?.logo) p.venue = { ...p.venue, logo: venueOf(p.venue.id).logo };
     // the pool in dollars when it is announced in a coin ("12.5M NIGHT ≈ $579K"): cards, sorting by size and the
@@ -242,7 +246,7 @@ async function getPromosLive(): Promise<Collected> {
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
     // closed early: exchanges put an "UPDATE: this campaign has ended early" line at the top of the rules
-    const ENDED = /\b(has ended( early)?|ended early|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
+    const ENDED = /\b(has ended( early)?|ended early|has been upgraded|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
     if (d && d.blocks.slice(0, 8).some((b) => b.x.split(/(?<=[.!])\s+/).some((s) => ENDED.test(s) && !/\b(will|if|once|after)\b/i.test(s)))) continue;
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
@@ -264,10 +268,14 @@ async function getPromosLive(): Promise<Collected> {
       hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "region" }); continue;
     }
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
-      || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))) meta.forNew = true;
+      || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))
+      // audit 25.11 (deep): "only for users who have never used XT Earn", "new futures users only" sat in the rules, not the title
+      || (d?.blocks ?? []).slice(0, 25).some((b) => /\bnew (futures |spot |earn )?users? only\b|\bonly (for |available to |open to )?new (futures |spot )?(users|traders|customers)\b|\bexclusive(ly)? (for|to) new (users|traders)\b|\b(users|those) who have never (used|traded|deposited|registered)\b/i.test(b.x))) meta.forNew = true;
     // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
     const AUD = /\b(P2P )?merchants?\b|\bVIP ?\d*\+?\s*(users|clients|members)?\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
-    if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text)))) meta.audience = true;
+    if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text))
+      // audit 25.11 (deep): KuCoin "only for users bound to the ChartControl broker code"
+      || (d?.blocks ?? []).slice(0, 25).some((b) => /\b(broker code|bound to (the )?broker|via (the )?[A-Z]\w+ broker|API (users|partners) only|institutional (users|clients) only)\b/i.test(b.x)))) meta.audience = true;
     // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
     const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
     // audit 23.11 (beginner persona): HTX NVDA "free airdrop" needs a stock-token trade, a referral needs the friend to act —
@@ -288,11 +296,22 @@ async function getPromosLive(): Promise<Collected> {
   const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
   // several Telegram posts about one campaign link to the same page (KuCoin 5.0 ×3, MEXC Pre-IPO ×2): keep the newest
-  const seenUrl = new Set<string>(), dups = new Set<string>();
+  const seenUrl = new Set<string>(), dups = new Set<string>(), poolSeen = new Map<string, number>();
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
     try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
+    // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post
+    const lk = p.meta?.linkKey ? `${p.venue.id}|link|${p.meta.linkKey}` : "";
+    if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dups.add(p.id); else seenUrl.add(lk); }
+    // the site's own page and a Telegram post about it point to the same article path
+    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${p.meta!.linkKey!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dups.add(p.id); }
+    // the same prize pool (≥ 1,000) at one venue within a week = the same campaign posted again (Bitget Super Earn, Bybit WSOT)
+    const poolKey = p.reward && p.reward.amount >= 1000 ? `${p.venue.id}|${p.category}|pool|${Math.round(p.reward.amount)}|${p.reward.unit.toUpperCase()}` : "";
+    if (poolKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
+      const t0 = poolSeen.get(poolKey);
+      if (t0 !== undefined && t0 - p.publishedAt < 7 * 86400_000) dups.add(p.id); else poolSeen.set(poolKey, p.publishedAt);
+    }
     // same venue + same tickers + same numbers in the headline = the same offer
     const head = p.titleOrig ?? p.title;
     const toks = [...new Set([...(head.match(/\$?\b[A-Z][A-Z0-9]{1,9}\b/g) ?? []).map((x) => x.replace("$", "")), ...(head.match(/\d+(?:[.,]\d+)?\s?%?/g) ?? []).map((x) => x.replace(/\s/g, ""))])].sort();
@@ -328,6 +347,11 @@ async function getPromosLive(): Promise<Collected> {
       }
       if (coin(a.pool) && a.pool && (!p.reward || !same(p.reward, a.pool))) p.reward = { amount: a.pool.amount, unit: a.pool.unit, usd: usdOf(a.pool, px), label: `${compact(a.pool.amount)} ${a.pool.unit}` };
       p.meta = m;
+    }
+    // audit 25.11 (deep): Biconomy "up to 23,000 USDT" per-user ladders were printed as the pool too ("фонд 23.1K") — a pool
+    // within 10 % of what one person can get is that person's cap, not a shared pool
+    if (p.reward && p.meta?.perUser && p.reward.unit.toUpperCase() === p.meta.perUser.unit.toUpperCase() && p.meta.perUser.amount >= p.reward.amount * 0.9 && !p.sponsored) {
+      p.reward = undefined;
     }
     const v = p.category === "farming" ? undefined : valueOf(p, a, px);
     if (v) p.meta = { ...(p.meta ?? {}), value: v };

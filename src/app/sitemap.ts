@@ -15,19 +15,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { promos } = await getPromos();
   const { tokens } = await getTokens();
   const lps = lpPaged(await getPools());
-  // audit 23.11 (SEO): Google ignores changefreq/priority; it reads lastmod — every page is rebuilt with fresh data each run
+  // audit 23.11 (SEO): Google ignores changefreq/priority; it reads lastmod
+  // audit 25.11 (deep): lastmod was the build time on every page, so Google stops trusting it — now it is the real change:
+  // data pages = the newest promo they show, text pages (guides, legal) = when their text last changed
   const now = new Date();
-  const out: MetadataRoute.Sitemap = [];
+  const newest = new Date(Math.max(0, ...promos.map((p) => p.publishedAt || 0)) || now.getTime());
+  const byVenue = (id: string) => { const t = Math.max(0, ...promos.filter((p) => p.venue.id === id).map((p) => p.publishedAt || 0)); return t ? new Date(t) : TEXT_DATE; };
+  const TEXT_DATE = new Date("2026-11-25T00:00:00Z");
+  const TEXT = new Set(["learn", "learn/start", "learn/how", "learn/safety", "learn/rewards", "check", "learn/quiz", "learn/glossary", "about", "privacy", "terms", "api", "hedge"]);
+  const out: MetadataRoute.Sitemap = [{ url: `${base}/`, lastModified: newest }];
   for (const l of LOCALES) {
-    out.push({ url: `${base}/${l}`, lastModified: now });
+    out.push({ url: `${base}/${l}`, lastModified: newest });
     for (const s of ["launchpools", "earn", "dex", "calendar", "bonuses", "history", "hedge", "learn", "learn/start", "learn/how", "learn/safety", "learn/rewards", "check", "learn/quiz", "learn/glossary", "fixed", "drops", "zero-fees", "unlocks", "sales", "about", "privacy", "terms", "api"])
-      out.push({ url: `${base}/${l}/${s}`, lastModified: now });
-    for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, lastModified: now });
-    out.push({ url: `${base}/${l}/t`, lastModified: now });
-    for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, lastModified: now });
+      out.push({ url: `${base}/${l}/${s}`, lastModified: TEXT.has(s) ? TEXT_DATE : newest });
+    for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, lastModified: byVenue(id) });
+    out.push({ url: `${base}/${l}/t`, lastModified: newest });
+    for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, lastModified: TEXT_DATE });
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
     // out.push({ url: `${base}/${l}/exchanges`, lastModified: now });
-    for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, lastModified: now });
+    for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, lastModified: newest });
     for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, lastModified: now });
     for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : now });
   }

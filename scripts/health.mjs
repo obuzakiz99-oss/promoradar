@@ -78,6 +78,13 @@ try {
   if (age(r.updatedAt) > 2) bad(`ретранслятор на ноутбуці не оновлювався ${age(r.updatedAt).toFixed(1)} год`);
 } catch (e) { bad(`ретранслятор: ${String(e.message ?? e).slice(0, 80)}`); }
 
+// 7) quality of the cards (scripts/quality.mjs in every build, audit 25.11): estimates, duplicates, dates, links, texts
+try {
+  const q = JSON.parse((await get(`${BASE}/api/quality.json`)).text);
+  if (q.errors?.length) bad(`якість карток: ${q.errors.length} помилок — ${q.errors.slice(0, 2).map((e) => `${e.id ?? "сайт"}: ${e.why}`).join("; ").slice(0, 160)}`);
+  if (q.warns?.length) notes.push(`попереджень якості ${q.warns.length}`);
+} catch (e) { notes.push(`якість не перевірено: ${String(e.message ?? e).slice(0, 60)}`); }
+
 // ---- result, log, notification on change
 fs.mkdirSync(DIR, { recursive: true });
 const LAST = path.join(DIR, "last.json");

@@ -27,7 +27,8 @@ function kindOf(t: string): Category {
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   // audit 23.11: MEXC "Futures Loss Coverage" (pays back futures losses) was filed as a deposit bonus
   if (has(t, /(loss (coverage|protection|compensation|rebate)|compensat\w* (for )?(your )?(futures )?loss|futures insurance)/i)) return "other";
-  if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn))/i)) return "bonus";
+  // audit 25.11 (deep): "New to CoinW? Complete tasks… Super Bonus" was filed as Earn
+  if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn)|new to [a-z]|complete (the |all |simple )?tasks|task (center|hub|centre)|super bonus)/i)) return "bonus";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
   if (has(t, /deposit/i)) return "bonus";
   if (has(t, /(earn|staking|stake|savings|apr|apy|hold to|\bhold\b.*\bshare\b|yield|dual investment|loan|subscribe|subscription)/i)) return "earn";

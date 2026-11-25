@@ -44,6 +44,7 @@ export interface Promo {
   evergreen?: boolean;       // ongoing programme (farming pools, points)
   meta?: {
     source?: string;         // "airdrops.io", "DefiLlama"…
+    linkKey?: string;        // first campaign link in a Telegram post (bit.ly, landing…) — finds the same campaign posted twice
     actions?: string;        // what to do (airdrops)
     requires?: string[];     // telegram, x, email, kyc, discord…
     confirmed?: boolean;

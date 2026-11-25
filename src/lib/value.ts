@@ -213,7 +213,9 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   // audit 25.11: trial funds / position vouchers pay only the (capped) profit made with them, not their face value
   // (Gate "100 USDT Dual Investment Trial Fund" read as ≈$40, KuCoin "Futures Trial Fund — withdrawable profit ≤ 20%")
   const trial = /\b(trial funds?|trial vouchers?|position (trial )?vouchers?|experience (funds?|vouchers?)|trial bonus)\b/i.test(rules);
-  const fk = trial ? 0.1 : ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? "cash"] ?? 1;
+  // audit 25.11 (deep): CoinW "1,200% APR paid as a Mega Coupon" and "100 USDT Super Bonus" (a futures bonus) were counted as cash
+  const couponWord = /\b(coupons?|vouchers?|super bonus|futures bonus|bonus funds?|deduction|cashback vouchers?)\b/i.test(rules);
+  const fk = trial ? 0.1 : ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? (couponWord ? "voucher" : "cash")] ?? 1;
   // audit 23.11 (round 5): an "up to" APR is a ceiling — an estimate from it is never better than "low"
   // audit 25.11: a Telegram post without the exchange's full rules is never "you will really get" (Bitget trailing-stop 50 USDT)
   const capConf = (c: Conf): Conf => (m.aprUpTo ? "low" : c === "high" && p.id.startsWith("tg:") ? "mid" : c);
@@ -245,7 +247,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       // (an affiliate "up to $3,000" is a best month, not one friend: capped until Claude reads the per-friend amount)
       // audit 23.11: Bitget "up to $12,800" (needs $5M of holdings) read as "≈ $3,200 likely" — a quarter of a big top tier
       // is still far above what the entry tiers pay, so an unknown tier ladder is capped at $250
-      if (max !== undefined) return out(mech === "tiers" ? Math.min(max / 4, 250) : max, mech === "fixed" && a ? "mid" : "low", "max");
+      // audit 25.11 (deep): CoinW "Welcome Pack up to 350 USDT" showed "≈ $350, most likely" — an "up to" alone is never likely
+      if (max !== undefined) return out(Math.min(max / 4, 250), "low", "max");
       return out(undefined, "low", "none");
     case "first_n": {
       const per = typical ?? max ?? (pool && a?.winners ? pool / a.winners : undefined);
@@ -271,6 +274,8 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       // KuCoin's 3-day 250 % coupon was counted for a whole month)
       if (need > 1000) return out(undefined, "low", "none");             // $1,000 can't even enter
       if (!a && apr > 30) return out(undefined, "low", "none");          // "up to 150 %" boosts: unknown term and cap
+      // audit 25.11 (deep): a "1,200 % APR" is a short promo rate on a tiny quota (CoinW ANT: 12,000 pool, 10 people) — never an estimate
+      if (apr > 100) return out(undefined, "low", "none");
       // audit 24.11: Binance "35% bonus APR for new users" (only the first 200 USDT, only 7 days) read as ≈$24.66 — the AI gave
       // no cap / term, the rules quoted on the card did: "only applicable to the user's first 200 USDT", "effective for 7 days"
       const txt = [m.minEntry?.text, m.perUser?.text, p.titleOrig ?? p.title].filter(Boolean).join(" ");
@@ -282,12 +287,18 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       const cap = usd(a?.max) ?? (capM ? Number(capM[1].replace(/,/g, "")) : undefined);
       // audit 25.11: the rules' "effective for 7 days" beats the AI's campaign length (Binance new-user 35 %: AI said 70 days)
       const textDays = daysM ? Number(daysM[1] ?? daysM[2]) : undefined;
-      const days = a?.days !== undefined && textDays !== undefined ? Math.min(a.days, textDays) : a?.days ?? textDays;
+      const days0 = a?.days !== undefined && textDays !== undefined ? Math.min(a.days, textDays) : a?.days ?? textDays;
+      // audit 25.11 (deep): never count more days than the promo has left
+      const left = p.endsAt ? Math.max(1, Math.ceil((p.endsAt - Date.now()) / 86400_000)) : undefined;
+      const days = left !== undefined ? Math.min(days0 ?? 30, left) : days0;
       const base = Math.min(1000, cap !== undefined && cap > 0 ? cap : 1000);
-      const g = round(base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, days ?? 30) / 365));
+      const g0 = base * Math.max(0, apr / 100 - IDLE_APR) * (Math.min(30, days ?? 30) / 365) * fk;
+      // a capped bonus pool can't pay everyone the full rate: never more than ~10 average shares of the pool
+      const poolCap = pool !== undefined && pool > 0 ? (pool / crowd(p.venue.id)) * 10 : Infinity;
+      const g = round(Math.min(g0, poolCap));
       // "up to" rates and interest paid in a volatile token (GBCK, PEARL, stock tokens…) are not what one likely gets
       const stable = /\b(USDT|USDC|USD1|FDUSD|USDE|USDG|PYUSD|RLUSD|DAI|KCUSD|BXUSD|USDF|stablecoins?)\b|(?<![\w.])U(?![\w.])/i.test(rules);
-      return { gross: g, cost: 0, net: g, conf: m.aprUpTo || !stable ? "low" : "mid", mech, basis: "apr", ai };
+      return { gross: g, cost: 0, net: g, conf: m.aprUpTo || !stable || fk < 1 ? "low" : "mid", mech, basis: "apr", ai };
     }
     default:
       return out(typical ?? undefined, typical !== undefined ? "mid" : "low", typical !== undefined ? "stated" : "none");

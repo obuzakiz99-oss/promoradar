@@ -87,7 +87,7 @@ const uk = {
     disclaimer: "APR — оцінка біржі на момент оновлення; фактичний дохід залежить від ціни токена і кількості учасників.",
   },
   filters: { all: "Усі", search: "Пошук: токен, біржа, протокол…", sort: "Сортувати", newest: "Нові", ending: "Скоро завершуються", biggest: "Найбільша винагорода", venues: "Майданчики", more: "Ще", less: "Згорнути", reset: "Скинути", empty: "Нічого не знайдено. Спробуйте інші фільтри.", results: "результатів" },
-  cat: { airdrop: "Аірдроп / Launchpool", competition: "Змагання", bonus: "Бонус за депозит", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Розіграші та інше" } as Record<Category, string>,
+  cat: { airdrop: "Аірдроп / Launchpool", competition: "Змагання", bonus: "Бонуси", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Інше" } as Record<Category, string>,
   card: {
     join: "Взяти участь", details: "Умови", pool: "Загальний фонд на всіх", endsIn: "Завершиться через", started: "Опубліковано", new: "Нове", sponsored: "Реклама", soon: "Старт",
     apr: "APR винагород", base: "базовий", tvl: "TVL", ongoing: "Постійна програма", actions: "Що зробити", via: "джерело", confirmed: "Підтверджено", hot: "Гаряче", open: "Відкрити", requires: "Потрібно",
@@ -95,7 +95,7 @@ const uk = {
   req: { telegram: "Telegram", x: "X (Twitter)", email: "Email", discord: "Discord", kyc: "KYC", phone: "Телефон" } as Record<string, string>,
   time: { d: "д", h: "год", m: "хв", ago: "тому", justNow: "щойно" },
   how: {
-    title: "Як заробити на акціях",
+    title: "Як заробити на промоакціях",
     steps: [
       ["Оберіть акцію", "Фільтруйте за типом, майданчиком і розміром винагороди. Спершу — найвигідніші; сортування можна змінити."],
       ["Прочитайте умови", "«Умови» відкривають офіційне оголошення: строки, вимоги, ліміти, ризики."],
@@ -112,7 +112,7 @@ const uk = {
     cta: "Отримати Pro", soon: "Оплата відкриється найближчим часом — залиште заявку в Telegram", popular: "Найпопулярніше",
   },
   footer: {
-    disclaimer: "PromoRadar збирає публічні оголошення бірж і протоколів та відкриті дані DefiLlama і не є фінансовою порадою. Умови акцій встановлюють організатори; перевіряйте їх в оригіналі. DeFi та криптовалюти — ризикові активи. Деякі посилання є реферальними.",
+    disclaimer: "PromoRadar збирає публічні оголошення бірж і протоколів та відкриті дані DefiLlama і не є фінансовою порадою. Умови акцій встановлюють організатори; перевіряйте їх в оригіналі. DeFi та криптовалюти — ризикові активи. Ми не використовуємо реферальних посилань і не отримуємо комісій від бірж.",
     rights: "Усі права захищені.", updated: "Оновлено",
   },
 };
@@ -197,7 +197,7 @@ const en: Dict = {
     disclaimer: "APR is the exchange’s estimate at refresh time; actual income depends on token price and the number of participants.",
   },
   filters: { all: "All", search: "Search: token, exchange, protocol…", sort: "Sort", newest: "Newest", ending: "Ending soon", biggest: "Biggest reward", venues: "Venues", more: "More", less: "Less", reset: "Reset", empty: "Nothing found. Try other filters.", results: "results" },
-  cat: { airdrop: "Airdrop / Launchpool", competition: "Competition", bonus: "Deposit bonus", earn: "Earn / Staking", farming: "Liquidity farming", listing: "Listing campaign", referral: "Referral", other: "Draws & other" },
+  cat: { airdrop: "Airdrop / Launchpool", competition: "Competition", bonus: "Bonuses", earn: "Earn / Staking", farming: "Liquidity farming", listing: "Listing campaign", referral: "Referral", other: "Other" },
   card: {
     join: "Join", details: "Rules", pool: "Total pool for everyone", endsIn: "Ends in", started: "Published", new: "New", sponsored: "Sponsored", soon: "Starts",
     apr: "Reward APR", base: "base", tvl: "TVL", ongoing: "Ongoing programme", actions: "What to do", via: "source", confirmed: "Confirmed", hot: "Hot", open: "Open", requires: "Requires",
@@ -222,7 +222,7 @@ const en: Dict = {
     cta: "Get Pro", soon: "Checkout opens soon — join the waitlist on Telegram", popular: "Most popular",
   },
   footer: {
-    disclaimer: "PromoRadar aggregates public exchange and protocol announcements and DefiLlama open data and is not financial advice. Terms are set by the organisers; always check the original. DeFi and crypto assets are risky. Some links are referral links.",
+    disclaimer: "PromoRadar aggregates public exchange and protocol announcements and DefiLlama open data and is not financial advice. Terms are set by the organisers; always check the original. DeFi and crypto assets are risky. We use no referral links and take no commissions from exchanges.",
     rights: "All rights reserved.", updated: "Updated",
   },
 };
@@ -305,7 +305,7 @@ const ru: Dict = {
     disclaimer: "APR — оценка биржи на момент обновления; фактический доход зависит от цены токена и количества участников.",
   },
   filters: { all: "Все", search: "Поиск: токен, биржа, протокол…", sort: "Сортировать", newest: "Новые", ending: "Скоро завершатся", biggest: "Крупнейшая награда", venues: "Площадки", more: "Ещё", less: "Свернуть", reset: "Сбросить", empty: "Ничего не найдено. Попробуйте другие фильтры.", results: "результатов" },
-  cat: { airdrop: "Аирдроп / Launchpool", competition: "Соревнование", bonus: "Бонус за депозит", earn: "Earn / Стейкинг", farming: "Фарм ликвидности", listing: "Листинг-кампания", referral: "Реферальная", other: "Розыгрыши и другое" },
+  cat: { airdrop: "Аирдроп / Launchpool", competition: "Соревнование", bonus: "Бонусы", earn: "Earn / Стейкинг", farming: "Фарм ликвидности", listing: "Листинг-кампания", referral: "Реферальная", other: "Другое" },
   card: {
     join: "Участвовать", details: "Условия", pool: "Общий фонд на всех", endsIn: "Закончится через", started: "Опубликовано", new: "Новое", sponsored: "Реклама", soon: "Старт",
     apr: "APR наград", base: "базовый", tvl: "TVL", ongoing: "Постоянная программа", actions: "Что сделать", via: "источник", confirmed: "Подтверждено", hot: "Горячее", open: "Открыть", requires: "Нужно",
@@ -313,7 +313,7 @@ const ru: Dict = {
   req: { telegram: "Telegram", x: "X (Twitter)", email: "Email", discord: "Discord", kyc: "KYC", phone: "Телефон" },
   time: { d: "д", h: "ч", m: "мин", ago: "назад", justNow: "только что" },
   how: {
-    title: "Как заработать на акциях",
+    title: "Как заработать на промоакциях",
     steps: [
       ["Выберите акцию", "Фильтруйте по типу, площадке и размеру награды. Сначала — самые выгодные; сортировку можно изменить."],
       ["Прочитайте условия", "«Условия» открывают официальное объявление: сроки, требования, лимиты, риски."],
@@ -330,7 +330,7 @@ const ru: Dict = {
     cta: "Получить Pro", soon: "Оплата откроется в ближайшее время — оставьте заявку в Telegram", popular: "Самый популярный",
   },
   footer: {
-    disclaimer: "PromoRadar собирает публичные объявления бирж и протоколов и открытые данные DefiLlama и не является финансовым советом. Условия устанавливают организаторы; проверяйте их в оригинале. DeFi и криптовалюты — рискованные активы. Некоторые ссылки реферальные.",
+    disclaimer: "PromoRadar собирает публичные объявления бирж и протоколов и открытые данные DefiLlama и не является финансовым советом. Условия устанавливают организаторы; проверяйте их в оригинале. DeFi и криптовалюты — рискованные активы. Мы не используем реферальных ссылок и не получаем комиссий от бирж.",
     rights: "Все права защищены.", updated: "Обновлено",
   },
 };

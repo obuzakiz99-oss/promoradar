@@ -69,6 +69,11 @@ jobs:
         run: node scripts/audit-content.mjs
         continue-on-error: true
 
+      # every build: estimates, duplicates, dates, links, texts (→ out/api/quality.json, read hourly by health.mjs);
+      # STOPS the deploy only on a mass source outage or a forbidden text coming back — the last good site stays online
+      - name: Quality guard
+        run: node scripts/quality.mjs
+
       - name: Friendly 404 (old addresses redirect)
         run: node scripts/page-404.mjs
 

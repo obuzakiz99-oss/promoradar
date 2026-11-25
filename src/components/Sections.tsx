@@ -1,7 +1,7 @@
 import { langOf, plural } from "@/lib/format";
 import type { Dict } from "@/lib/i18n";
 import type { SourceStatus } from "@/lib/sources";
-import { HAS_TG, PRO, SITE, VENUES } from "@/config/site";
+import { HAS_ADS, HAS_TG, PRO, SITE, VENUES } from "@/config/site";
 import { LEGAL_NAV } from "@/lib/i18n-legal";
 import { TgIcon } from "./Header";
 import { LogoMark } from "./Logo";
@@ -164,7 +164,7 @@ export function Footer({ t, fetchedAt, lang }: { t: Dict; fetchedAt: number; lan
         <div className="flex flex-col gap-3 text-sm md:items-end">
           <div className="flex flex-wrap gap-2">
             <a href={withBase(`/rss-${lang}.xml`)} className="btn btn-ghost h-10">RSS</a>
-            {HAS_TG && <a href={withBase(`/${lang}#advertise`)} className="btn btn-ghost h-10">{t.ads.title}</a>}
+            {HAS_TG && HAS_ADS && <a href={withBase(`/${lang}#advertise`)} className="btn btn-ghost h-10">{t.ads.title}</a>}
             {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost h-10"><TgIcon /> Telegram</a>}
           </div>
           <p className="font-mono text-xs text-ink-3">

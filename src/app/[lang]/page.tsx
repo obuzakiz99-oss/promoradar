@@ -6,7 +6,7 @@ import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos, topVenues } from "@/lib/promos";
 import { Hero } from "@/components/Hero";
 import type { RadarItem } from "@/components/RadarPicker";
-import { HAS_PRO, HAS_TG, SITE, VENUES } from "@/config/site";
+import { HAS_ADS, HAS_PRO, HAS_TG, SITE, VENUES } from "@/config/site";
 import { todayPins } from "@/components/TodayTop";
 import { slugOf } from "@/lib/slug";
 import { promoLevel } from "@/lib/level";
@@ -45,7 +45,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     const pu = p.meta?.perUser?.usd ?? 0, pool = p.reward?.usd;
     return pu > 0 && !p.meta?.thin && !/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") && (pool !== undefined ? pu < pool : p.category === "bonus" || p.category === "referral");
   };
-  const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && p.category !== "competition" && perPersonOk(p)).map((p) => p.meta!.perUser!.usd!));
+  // audit 25.11: "$23K for one person" was a Biconomy per-user ladder equal to its whole pool (≈$20 per participant really) —
+  // the hero now shows the best REALISTIC estimate (value.ts, confident, not APR) of a promo open to everyone
+  void perPersonOk;
+  const maxPerUser = Math.max(0, ...promos.filter((p) => !p.meta?.geo?.only && !p.meta?.geo?.noUA && !p.meta?.thin && !p.meta?.audience && p.meta?.value && p.meta.value.mech !== "apr" && p.meta.value.conf !== "low" && (p.meta.value.net ?? 0) > 0).map((p) => Math.round(p.meta!.value!.net!)));
   const newDay = promos.filter((p) => p.publishedAt > fetchedAt - 86400_000).length;
   const venueCount = new Set(promos.filter((p) => p.venue.kind !== "airdrop").map((p) => p.venue.id)).size;
 
@@ -60,7 +63,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             { "@type": "WebSite", name: "PromoRadar", url: `https://${SITE.domain}/${lang}/`, inLanguage: lang, publisher: { "@id": `https://${SITE.domain}/#org` } },
           ],
         }).replace(/</g, "\\u003c") }} />
-        <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "максимум на 1 людину", en: "most for one person", ru: "максимум на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
+        <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "найбільше реально на 1 людину", en: "best realistic for one person", ru: "больше всего реально на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
           tour={{ href: tourHref(withBase(""), lang), label: TOUR_LABEL[lang] }} />
@@ -73,7 +76,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         {pools && pools.projects.some((p) => p.status !== "ended") && <LaunchpoolTeaser t={t} lang={lang} data={pools} />}
         <HowItWorks t={t} />
         {HAS_PRO && <ProSection t={t} />}
-        {HAS_TG && <div className="adv"><AdsSection t={t} /></div>}
+        {HAS_TG && HAS_ADS && <div className="adv"><AdsSection t={t} /></div>}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
       {/* owner 21.11: first-visit "how to use the site" tour (asks first; replay via ?tour=1) */}

@@ -5,6 +5,16 @@ import { CEX, DEX, DEX_FEEDS, SITE, TELEGRAM, VENUES, venueOf } from "@/config/s
 import { CEX_SOURCES, type Raw } from "./cex";
 import { airdrops, dexBlogs, farming, lighter, ondoPerps } from "./defi";
 import { telegram } from "./telegram";
+import path from "node:path";
+import { readStore, writeStore } from "../store";
+
+/**
+ * Audit 25.11 (deep): one Binance / Bybit timeout emptied that exchange for 30 minutes and its promos showed as "ended".
+ * The last good answer of every exchange API is kept (data/lastgood.json) and used for up to LASTGOOD_H hours when the
+ * source fails or suddenly returns nothing.
+ */
+const LASTGOOD_H = 6;
+type LastGood = Record<string, { at: number; raws: Raw[] }>;
 
 export type SourceStatus = { ok: boolean; count: number; error?: string; name: string; kind: string; via: string };
 export interface Collected {
@@ -60,13 +70,23 @@ export async function collectAll(): Promise<Collected> {
   ]);
 
   // 1) direct exchange APIs (most precise: dates, ids) go first so they win de-duplication
+  const lgFile = path.join(process.cwd(), "data", "lastgood.json");
+  const lg = readStore<LastGood>(lgFile, {});
   cexRes.forEach((r, i) => {
     const id = cexIds[i];
     const st: SourceStatus = { ok: r.status === "fulfilled", count: 0, name: CEX[id].name, kind: "cex", via: "API" };
+    let raws: Raw[] = r.status === "fulfilled" ? r.value : [];
     if (r.status === "rejected") st.error = String(r.reason).slice(0, 160);
-    else for (const raw of r.value) { const p = fromRaw(raw); if (p && keep(p)) st.count++; }
+    const prev = lg.data[id];
+    if (raws.length) lg.data[id] = { at: now, raws };
+    else if (prev && now - prev.at < LASTGOOD_H * 3600_000 && prev.raws.length) {
+      raws = prev.raws;
+      st.error = `${st.error ?? "empty answer"} — showing the last good data from ${new Date(prev.at).toISOString().slice(11, 16)} UTC`;
+    }
+    for (const raw of raws) { const p = fromRaw(raw); if (p && keep(p)) st.count++; }
     status[id] = st;
   });
+  writeStore(lgFile, lg.data, lg.ok);
   // 2) official APIs of DEXes
   status["api:lighter"] = { ok: lit.ok, count: lit.ok ? lit.v.filter(keep).length : 0, error: lit.ok ? undefined : String(lit.e).slice(0, 160), name: "Lighter", kind: "dex", via: "API" };
   status["web:ondoperps"] = { ok: ondo.ok, count: ondo.ok ? ondo.v.filter(keep).length : 0, error: ondo.ok ? undefined : String(ondo.e).slice(0, 160), name: "Ondo Perps", kind: "dex", via: "Web" };
