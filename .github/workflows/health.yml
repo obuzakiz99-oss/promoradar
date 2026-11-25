@@ -1,0 +1,44 @@
+# Hourly health check of the live site from GitHub (25.11: works while the owner's laptop is off).
+# scripts/health.mjs checks pages, data freshness, sources, deploys, relay, translations and the quality report.
+# On a NEW problem (or every 6 h while it lasts, or on recovery) it starts alert.yml, which fails on purpose →
+# GitHub e-mails the owner. The state (what was already reported) is kept between runs in the Actions cache.
+name: health
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write      # list deploy runs + start alert.yml
+
+concurrency:
+  group: health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Restore last state
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .health
+          key: health-${{ github.run_id }}
+          restore-keys: health-
+      - name: Check the site
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SITE_URL: https://${{ vars.SITE_HOST || 'promoradar.xyz' }}
+        run: node scripts/health.mjs .health || true   # problems are reported by alert.yml, not by failing this run
+      - name: Save state
+        if: always()
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .health
+          key: health-${{ github.run_id }}
