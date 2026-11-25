@@ -33,7 +33,10 @@ export async function bybit(): Promise<Raw[]> {
 export async function okx(): Promise<Raw[]> {
   const out: Raw[] = [];
   for (const [type, hint, trusted] of [["latest-events", "", true], ["announcements-jumpstart", "jumpstart", true], ["announcements-earn-and-loan", "earn", false]] as const) {
-    const j = await getJson(`https://www.okx.com/api/v5/support/announcements?annType=${type}`);
+    // 25.11: the EU relay (Oracle, Frankfurt) gets "annType error" for latest-events — OKX doesn't offer its event
+    // campaigns in the EU. One missing type must not fail the whole source (Jumpstart / Earn still come; OKX events
+    // reach the site through its Telegram channel)
+    const j = await getJson(`https://www.okx.com/api/v5/support/announcements?annType=${type}`).catch(() => null);
     for (const a of j?.data?.[0]?.details ?? [])
       out.push({ venue: "okx", id: String(a.url).split("/").pop() ?? a.title, title: a.title, url: a.url, publishedAt: Number(a.pTime), hint, trusted });
   }
