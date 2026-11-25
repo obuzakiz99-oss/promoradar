@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     twitter: { card: "summary_large_image", title, description: t.hero.sub, images: ["/og-home.png"] },
     // 25.11: + favicon.ico / PNG — Google results, Telegram and Bing don't use the SVG and showed a blank globe
     icons: {
-      icon: [{ url: withBase("/favicon.ico"), sizes: "any" }, { url: withBase("/favicon-32.png"), type: "image/png", sizes: "32x32" }, { url: withBase("/icon.svg"), type: "image/svg+xml" }],
+      icon: [{ url: withBase("/favicon.ico"), sizes: "any" }, { url: withBase("/favicon-96.png"), type: "image/png", sizes: "96x96" }, { url: withBase("/favicon-32.png"), type: "image/png", sizes: "32x32" }, { url: withBase("/icon.svg"), type: "image/svg+xml" }],
       apple: withBase("/apple-touch-icon.png"),
     },
     manifest: withBase("/manifest.webmanifest"),
