@@ -104,7 +104,7 @@ async function getPromosLive(): Promise<Collected> {
   const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
-  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news" | "region"; perUserUsd?: number; netUsd?: number }> = [];
+  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news" | "region" | "duplicate"; of?: string; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
     // links scraped from HTML / Telegram keep "&amp;" — the second parameter (inviteCode, rcode…) was lost (audit 14.11)
     // audit 22.11: links copied from Telegram can be plain http (WhiteBIT) — exchanges all serve https
@@ -299,46 +299,48 @@ async function getPromosLive(): Promise<Collected> {
   const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
   // several Telegram posts about one campaign link to the same page (KuCoin 5.0 ×3, MEXC Pre-IPO ×2): keep the newest
-  const seenUrl = new Set<string>(), dups = new Set<string>(), poolSeen = new Map<string, { t: number; tg: boolean }>();
+  const seenUrl = new Map<string, string>(), dups = new Set<string>(), twin = new Map<string, { id: string; rule: string }>(), poolSeen = new Map<string, { t: number; tg: boolean; id: string }>();
+  // audit 25.11 (deep): every hidden duplicate records its twin and the rule (data/hidden-promos.json) — 3 promos vanished
+  // with no visible twin because the twin was later hidden as junk; such a duplicate now stands in for its twin
+  const dupOf = (id: string, k: string, other?: string) => { dups.add(id); twin.set(id, { id: other ?? seenUrl.get(k) ?? "?", rule: k.split("|")[1] ?? "url" }); };
   const linkUse = new Map<string, number>();
   for (const p of promos) if (p.meta?.linkKey) { const k = `${p.venue.id}|${p.meta.linkKey}`; linkUse.set(k, (linkUse.get(k) ?? 0) + 1); }
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
     try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
-    if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
+    if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dupOf(p.id, u); else seenUrl.set(u, p.id); }
     // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post.
     // Only a campaign-like link counts, and never one most posts of the channel carry (Bitrue puts /rewards/mobile in
     // every post — the first version merged 8 different Bitrue promos)
     const lkRaw = p.meta?.linkKey;
-    const lkOk = !!lkRaw && (linkUse.get(`${p.venue.id}|${lkRaw}`) ?? 0) <= 2
+    const lkOk = !!lkRaw && (linkUse.get(`${p.venue.id}|${lkRaw}`) ?? 0) <= 4
       && (/^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lkRaw) || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lkRaw));
     const lk = lkOk ? `${p.venue.id}|link|${lkRaw}` : "";
-    if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dups.add(p.id); else seenUrl.add(lk); }
+    if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dupOf(p.id, lk); else seenUrl.set(lk, p.id); }
     // the site's own page and a Telegram post about it point to the same article path
-    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${lkRaw!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dups.add(p.id); }
+    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${lkRaw!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dupOf(p.id, `${p.venue.id}|own|`, seenUrl.get(own)); }
     // the same prize pool (≥ 1,000) on the exchange's site and in its Telegram within a week = one campaign (Bitget Super Earn)
     const poolKey = p.reward && p.reward.amount >= 1000 ? `${p.venue.id}|${p.category}|pool|${Math.round(p.reward.amount)}|${p.reward.unit.toUpperCase()}` : "";
     if (poolKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
       const prev = poolSeen.get(poolKey), tg = p.id.startsWith("tg:");
-      if (prev && prev.tg !== tg && prev.t - p.publishedAt < 7 * 86400_000) dups.add(p.id); else if (!prev) poolSeen.set(poolKey, { t: p.publishedAt, tg });
+      if (prev && prev.tg !== tg && prev.t - p.publishedAt < 7 * 86400_000) dupOf(p.id, poolKey, prev.id); else if (!prev) poolSeen.set(poolKey, { t: p.publishedAt, tg, id: p.id });
     }
     // same venue + same tickers + same numbers in the headline = the same offer
     const head = p.titleOrig ?? p.title;
     const toks = [...new Set([...(head.match(/\$?\b[A-Z][A-Z0-9]{1,9}\b/g) ?? []).map((x) => x.replace("$", "")), ...(head.match(/\d+(?:[.,]\d+)?\s?%?/g) ?? []).map((x) => x.replace(/\s/g, ""))])].sort();
     const GENERIC = /^(APR|APY|USDT|USDC|USD|VIP|TGE|NEW|LIVE|UTC|KYC|AI|CEX|DEX|NFT|P2P|FAQ|AMA)$/;
     const sig = toks.some((x) => /\d/.test(x) && !/^20\d\d$/.test(x)) && toks.some((x) => /^[A-Z]/.test(x) && !GENERIC.test(x)) ? `${p.venue.id}|${p.category}|${toks.filter((x) => !/^20\d\d$/.test(x)).join(",")}` : "";
-    if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dups.add(p.id); else seenUrl.add(sig); }
+    if (sig && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(sig)) dupOf(p.id, sig); else seenUrl.set(sig, p.id); }
     const lead = head.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().slice(0, 32);
-    if (lead.length >= 24 && !p.sponsored && !p.evergreen && !dups.has(p.id)) { const k = `${p.venue.id}|lead|${lead}`; if (seenUrl.has(k)) dups.add(p.id); else seenUrl.add(k); }
+    if (lead.length >= 24 && !p.sponsored && !p.evergreen && !dups.has(p.id)) { const k = `${p.venue.id}|lead|${lead}`; if (seenUrl.has(k)) dupOf(p.id, k); else seenUrl.set(k, p.id); }
     // audit 24.11: 8 near-identical "Biconomy.com Earn – DHN, GBCK, ATS & MTC Locked Products" cards — one per venue (the newest)
     const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
-    if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dups.add(p.id); else seenUrl.add(series); }
+    if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dupOf(p.id, series); else seenUrl.set(series, p.id); }
     const tag = (head.match(/\b[A-Z][A-Z0-9]{2,9}\b/g) ?? []).find((x) => !GENERIC.test(x));
     const big = p.reward?.usd !== undefined && p.reward.usd >= 100_000 && tag ? `${p.venue.id}|${p.category}|${tag}|${Math.round(p.reward.usd)}` : "";
-    if (big && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(big)) dups.add(p.id); else seenUrl.add(big); }
+    if (big && !p.sponsored && !p.evergreen && !dups.has(p.id)) { if (seenUrl.has(big)) dupOf(p.id, big); else seenUrl.set(big, p.id); }
   }
-  for (const p of promos) {
-    if (dups.has(p.id)) continue;
+  const consider = (p: Promo) => {
     const handAdded = !!manualDetails[p.id] || MANUAL.some((m) => m.id === p.id);
     const a = facts[p.id];
     // audit 18.11: Claude read the full rules, the regexes only guessed from a sentence — its per-person cap and pool win
@@ -386,8 +388,16 @@ async function getPromosLive(): Promise<Collected> {
     const contest = /\b(competition|contest|championship|challenge|tournament|leaderboard|league|win (your|a) share)\b/i.test(p.titleOrig ?? p.title) && (v?.net ?? 0) >= MIN_MAX_PER_USER_USD;
     const raffle = !p.sponsored && !handAdded && !feeOffer && ((v?.mech === "lucky_draw" && !contest) || RAFFLE.test(p.titleOrig ?? p.title));
     const junk = junkReason(p, details[p.id]?.blocks, handAdded) ?? (raffle ? "raffle" : undefined) ?? (tiny || lowEstimate ? "small" : undefined) ?? (p.sponsored || handAdded || !v ? undefined : valueJunk(a, v));
-    if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); continue; }
+    if (junk) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: junk, perUserUsd: p.meta?.perUser?.usd, netUsd: v?.net }); return; }
     kept.push(p);
+  };
+  const later: Promo[] = [];
+  for (const p of promos) { if (dups.has(p.id)) later.push(p); else consider(p); }
+  const keptIds = new Set(kept.map((p) => p.id));
+  for (const p of later) {
+    const tw = twin.get(p.id);
+    if (tw && !keptIds.has(tw.id) && !later.some((x) => x.id === tw.id)) { consider(p); continue; }   // its twin was hidden as junk
+    hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "duplicate", of: tw ? `${tw.id} (${tw.rule})` : undefined });
   }
   promos.splice(0, promos.length, ...kept);
   // what the junk filter hid this build (data branch → reviewable history)
