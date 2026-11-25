@@ -404,7 +404,9 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
   else if (/region[- ]exclusive/i.test(title)) g.only = "region";
   const bl = d?.blocks ?? [];
   // audit 23.11 (round 5): CEX.IO listed the countries where the offer runs — Ukraine was not on it, the page said "✓ Україна"
-  const allow = bl.findIndex((b) => /\b(available|eligible|open|valid|applies)\b[^.]{0,40}\b(following|these|listed|supported|selected) (countries|regions|jurisdictions|markets)\b|\b(supported|eligible|participating) (countries|regions|jurisdictions)\s*[:：]/i.test(b.x));
+  const allow = bl.findIndex((b) => /\b(available|eligible|open|valid|applies)\b[^.]{0,40}\b(following|these|listed|supported|selected) (countries|regions|jurisdictions|markets)\b|\b(supported|eligible|participating) (countries|regions|jurisdictions)\s*[:：]/i.test(b.x)
+    // weekly audit 26.11: CEX.IO "🌐 Available in the US, Cape Verde, Serbia, Albania…" — a plain country list
+    || /\bavailable (?:only )?in (?:the )?[A-Z][\w .'-]{1,30},\s*[A-Z][\w .'-]{1,30},/.test(b.x));
   if (allow >= 0 && !g.only) {
     const list = bl.slice(allow, allow + 4).map((b) => b.x).join(" ");
     if (!/\bUkraine\b/i.test(list) && (list.match(/,/g)?.length ?? 0) >= 2) { g.only = "region"; g.text ??= bl[allow].x; }
