@@ -1,5 +1,5 @@
 {
- "at": 1795612995268,
+ "at": 1795613192194,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -271,7 +271,7 @@
    "id": "tg:OKXAnnouncements/7406",
    "venue": "OKX",
    "title": "Trade onchain, share your honest feedback in our short survey, and upload your trade proof to split a 1,000 USDT prize pool.",
-   "url": "https://www.okx.com/support-center/channel-verification?channelid=ACE505900",
+   "url": "https://okx.com/ul/yGyCHQa?channelid=ACE505900",
    "why": "news"
   },
   {
@@ -537,7 +537,7 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 6954.3,
+   "perUserUsd": 6956.849999999999,
    "netUsd": 0.85
   },
   {
@@ -564,8 +564,8 @@
    "title": "🦃 Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5879.46,
-   "netUsd": 117.09
+   "perUserUsd": 5886.580000000001,
+   "netUsd": 117.23
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -755,8 +755,8 @@
    "title": "🏆 MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1103.1999999999998,
-   "netUsd": 0.19
+   "perUserUsd": 1114.176,
+   "netUsd": 0.2
   },
   {
    "id": "tg:LBanknews/20939",
@@ -788,7 +788,7 @@
    "id": "tg:OKXAnnouncements/7441",
    "venue": "OKX",
    "title": "Get a share of 50K USDG in rewards when you trade ANTx on our DEX.",
-   "url": "https://www.okx.com/support-center/channel-verification?channelid=ACE505900",
+   "url": "https://web3.okx.com/ul/S7xw1J?channelid=ACE505900",
    "why": "small",
    "netUsd": 0.83
   },
@@ -952,7 +952,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1285.44,
+   "perUserUsd": 1286.08,
    "netUsd": 0.3
   },
   {
@@ -969,7 +969,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.4,
+   "perUserUsd": 5.41,
    "netUsd": 0.03
   },
   {
@@ -1092,7 +1092,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1176,
+   "perUserUsd": 1180.2,
    "netUsd": -0.6
   },
   {
@@ -1162,6 +1162,13 @@
    "netUsd": 3
   },
   {
+   "id": "tg:Bitrue_official/11268",
+   "venue": "Bitrue",
+   "title": "Don’t miss Bitrue’s hottest rewards – claim your USDT now on Bitrue",
+   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
+   "why": "news"
+  },
+  {
    "id": "binance:dc7d8cf6785c4962828648ddcee55137",
    "venue": "Binance",
    "title": "Deposit Fiat or Buy Crypto/bStocks to Share $45,000 in Anthropic bStocks (ANTB) Token Vouchers!",
@@ -1224,6 +1231,14 @@
    "title": "1️⃣ Futures Earn APR Booster: +150%",
    "url": "https://www.mexc.com/?utm_source=community&utm_medium=tg",
    "why": "news"
+  },
+  {
+   "id": "tg:Bitrue_official/11260",
+   "venue": "Bitrue",
+   "title": "Trade. Share. Get Rewarded! — Get a chance to win up to 4,000 USDT in Futures Position Bonuses!",
+   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
+   "why": "raffle",
+   "netUsd": 2
   },
   {
    "id": "tg:OKXAnnouncements/7431",
@@ -1322,6 +1337,21 @@
    "why": "news"
   },
   {
+   "id": "tg:LBanknews/20874",
+   "venue": "LBank",
+   "title": "3 copies of GTA 6 up for grabs. The top 3 traders by volume each win a copy for PlayStation or Xbox.",
+   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "social",
+   "netUsd": 0.1
+  },
+  {
+   "id": "tg:Bitrue_official/11252",
+   "venue": "Bitrue",
+   "title": "BLACK FRIDAY IS HERE: Trading v. Staking on #Bitrue",
+   "url": "https://www.bitrue.com/staking?cn=399990",
+   "why": "news"
+  },
+  {
    "id": "tg:Bybit_Announcements/10138",
    "venue": "Bybit",
    "title": "Anthropic IPO Livestream: Watch, Learn and Win",
@@ -1335,7 +1365,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 759.9911627,
+   "perUserUsd": 760.1501733,
    "netUsd": -0.12
   },
   {
@@ -1407,6 +1437,15 @@
    "netUsd": 250
   },
   {
+   "id": "tg:OKXAnnouncements/7422",
+   "venue": "OKX",
+   "title": "Invite new users to join the server through unique Discord invite links",
+   "url": "https://okx.com/ul/yGyCHQa?channelid=ACE505900",
+   "why": "small",
+   "perUserUsd": 40,
+   "netUsd": 0
+  },
+  {
    "id": "bybit:fast-track-your-onboarding-as-a-verified-bybit-p2p-merchant--artefc35670d74e",
    "venue": "Bybit",
    "title": "Fast-Track Your Onboarding as a Verified Bybit P2P Merchant!",
@@ -1436,7 +1475,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 22.98,
+   "perUserUsd": 22.62,
    "netUsd": -0.51
   },
   {
@@ -1522,6 +1561,13 @@
    "why": "small",
    "perUserUsd": 3000,
    "netUsd": -4.85
+  },
+  {
+   "id": "tg:Bitrue_official/11239",
+   "venue": "Bitrue",
+   "title": "What rewards do you want to see this Black Friday on #Bitrue? 👀",
+   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
+   "why": "news"
   },
   {
    "id": "bitget:12560603900389",
@@ -1651,7 +1697,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 129.6,
+   "perUserUsd": 129.72,
    "netUsd": 2.47
   },
   {
@@ -1694,7 +1740,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5879.46,
+   "perUserUsd": 5886.580000000001,
    "netUsd": 8.77
   },
   {
@@ -1715,11 +1761,29 @@
    "netUsd": 2
   },
   {
+   "id": "tg:Kucoin_News/37184",
+   "venue": "KuCoin",
+   "title": "Finish your tasks before 16 Nov and claim up to 200 USDT in Futures Airdrops. 🌠",
+   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 0.5
+  },
+  {
    "id": "tg:Kucoin_News/37183",
    "venue": "KuCoin",
    "title": "TIME IS RUNNING OUT — TAKE THE KUCOIN 5.0 QUIZ!",
    "url": "https://t.me/Kucoin_News/37183",
    "why": "raffle"
+  },
+  {
+   "id": "tg:Kucoin_News/37182",
+   "venue": "KuCoin",
+   "title": "Invite a qualifying friend",
+   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 1
   },
   {
    "id": "bitget:12560603900486",
@@ -1770,6 +1834,13 @@
    "title": "Stock Investor Campaign | Earn Up to 2.5 rNVDA! 📈",
    "url": "https://www.bitget.com/launchhub/stock-investor/1006",
    "why": "raffle"
+  },
+  {
+   "id": "tg:Bitrue_official/11212",
+   "venue": "Bitrue",
+   "title": "$2,000 USDT prize pool up for grabs 💰",
+   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
+   "why": "social"
   },
   {
    "id": "tg:Bitrue_official/11210",
@@ -1867,7 +1938,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.41,
+   "perUserUsd": 7.43,
    "netUsd": 2.74
   },
   {
@@ -2055,38 +2126,6 @@
    "of": "biconomy:64662106557849 (series)"
   },
   {
-   "id": "tg:LBanknews/20906",
-   "venue": "LBank",
-   "title": "Complete tasks, collect points and redeem rewards from a $150,000 pool, including GTA VI + premium gaming gear.",
-   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "duplicate",
-   "of": "tg:LBanknews/20959 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11268",
-   "venue": "Bitrue",
-   "title": "Don’t miss Bitrue’s hottest rewards – claim your USDT now on Bitrue",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
-  },
-  {
-   "id": "tg:coinwofficialchannel/8144",
-   "venue": "CoinW",
-   "title": "ANT Launch Campaign runs through Nov 30, 23:59 (UTC+8), with rewards for eligible first trades, position holding, and referrals.",
-   "url": "https://www.coinw.com/help-center/announcement-center/event/latest-event/2026-11-18/ant-rewards/8227?utm_source=community&utm_campaign=ant",
-   "why": "duplicate",
-   "of": "tg:coinwofficialchannel/8153 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11260",
-   "venue": "Bitrue",
-   "title": "Trade. Share. Get Rewarded! — Get a chance to win up to 4,000 USDT in Futures Position Bonuses!",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
-  },
-  {
    "id": "tg:Bitget_Announcements/18455",
    "venue": "Bitget",
    "title": "Hold any U.S. stocks - Share a $500,000 airdrop 🔥",
@@ -2111,28 +2150,12 @@
    "of": "biconomy:64662106557849 (series)"
   },
   {
-   "id": "tg:Bitget_Announcements/18451",
-   "venue": "Bitget",
-   "title": "USDT — Up to 10% APR",
-   "url": "https://www.bitget.com/campaigns/super-earn-season",
-   "why": "duplicate",
-   "of": "tg:Bitget_Announcements/18494 (url)"
-  },
-  {
    "id": "tg:coinstore_global/10388",
    "venue": "Coinstore",
    "title": "A rare and rare opportunity to win $2,000 cash with 0 threshold",
    "url": "https://www.coinstore.com/help/article/hc_33h1x9zx1h",
    "why": "duplicate",
    "of": "tg:coinstore_global/10399 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11257",
-   "venue": "Bitrue",
-   "title": "BLACK FRIDAY DEALS: Stake #XRP for up to 5% APY on #Bitrue!",
-   "url": "https://www.bitrue.com/staking?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11258 (url)"
   },
   {
    "id": "tg:OKXAnnouncements/7428",
@@ -2156,48 +2179,7 @@
    "title": "To celebrate the launch of ANT, linked to Anthropic, the company behind Claude, we’ve got 3 ways to earn rewards 👇",
    "url": "https://www.coinw.com/help-center/announcement-center/event/latest-event/2026-11-18/ant-rewards/8227?utm_source=community&utm_campaign=ant",
    "why": "duplicate",
-   "of": "tg:coinwofficialchannel/8153 (url)"
-  },
-  {
-   "id": "tg:LBanknews/20874",
-   "venue": "LBank",
-   "title": "3 copies of GTA 6 up for grabs. The top 3 traders by volume each win a copy for PlayStation or Xbox.",
-   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "duplicate",
-   "of": "tg:LBanknews/20959 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11252",
-   "venue": "Bitrue",
-   "title": "BLACK FRIDAY IS HERE: Trading v. Staking on #Bitrue",
-   "url": "https://www.bitrue.com/staking?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11258 (url)"
-  },
-  {
-   "id": "tg:OKXAnnouncements/7422",
-   "venue": "OKX",
-   "title": "Invite new users to join the server through unique Discord invite links",
-   "url": "https://www.okx.com/support-center/channel-verification?channelid=ACE505900",
-   "why": "small",
-   "perUserUsd": 40,
-   "netUsd": 0
-  },
-  {
-   "id": "tg:Bitget_Announcements/18438",
-   "venue": "Bitget",
-   "title": "Earn Up to 10% APR on USDT",
-   "url": "https://www.bitget.com/campaigns/super-earn-season",
-   "why": "duplicate",
-   "of": "tg:Bitget_Announcements/18494 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11240",
-   "venue": "Bitrue",
-   "title": "60,000 $USDT in trading rewards, Flexible Earn perks & more!",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
+   "of": "tg:coinwofficialchannel/8153 (link)"
   },
   {
    "id": "biconomy:64413377384345",
@@ -2208,44 +2190,12 @@
    "of": "biconomy:64662106557849 (series)"
   },
   {
-   "id": "tg:Bitrue_official/11239",
-   "venue": "Bitrue",
-   "title": "What rewards do you want to see this Black Friday on #Bitrue? 👀",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
-  },
-  {
-   "id": "tg:Bitrue_official/11238",
-   "venue": "Bitrue",
-   "title": "Trade & Earn: Trade $TSLA, $NVDA, $AAPL & more to unlock up to 200 USDT in trading rewards!",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
-  },
-  {
-   "id": "tg:Bitget_Announcements/18414",
-   "venue": "Bitget",
-   "title": "Unlock Up to 10% APR in Just 2 Steps! 👀",
-   "url": "https://www.bitget.com/campaigns/super-earn-season",
-   "why": "duplicate",
-   "of": "tg:Bitget_Announcements/18494 (url)"
-  },
-  {
    "id": "tg:coinstore_global/10378",
    "venue": "Coinstore",
    "title": "Put your USDT, BTC and ETH to work with Coinstore Earn and explore rewards that fit your investment timeline. 🚀",
    "url": "https://www.coinstore.com/earn/list?ts=1794880709048",
    "why": "duplicate",
    "of": "tg:coinstore_global/10391 (url)"
-  },
-  {
-   "id": "tg:Bitget_Announcements/18411",
-   "venue": "Bitget",
-   "title": "With 1,000,000 USDT at an estimated 10% APR",
-   "url": "https://www.bitget.com/campaigns/super-earn-season",
-   "why": "duplicate",
-   "of": "tg:Bitget_Announcements/18494 (url)"
   },
   {
    "id": "tg:coinwofficialchannel/8120",
@@ -2262,32 +2212,6 @@
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64380597298585-Biconomy-com-Earn-SOXSB-BMT-KGEN-SHELL-Locked-Products-Enjoy-Up-to-30-42-APR-in-Rewards",
    "why": "duplicate",
    "of": "biconomy:64662106557849 (series)"
-  },
-  {
-   "id": "tg:Kucoin_News/37184",
-   "venue": "KuCoin",
-   "title": "Finish your tasks before 16 Nov and claim up to 200 USDT in Futures Airdrops. 🌠",
-   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 0.5
-  },
-  {
-   "id": "tg:Kucoin_News/37182",
-   "venue": "KuCoin",
-   "title": "Invite a qualifying friend",
-   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 1
-  },
-  {
-   "id": "tg:Bitrue_official/11212",
-   "venue": "Bitrue",
-   "title": "$2,000 USDT prize pool up for grabs 💰",
-   "url": "https://www.bitrue.com/rewards/mobile?cn=399990",
-   "why": "duplicate",
-   "of": "tg:Bitrue_official/11273 (url)"
   },
   {
    "id": "bybit:wsot-2026-squad-or-solo-compete-to-win-up-to-10m--artfc6575ad9be4",
