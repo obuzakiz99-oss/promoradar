@@ -1,0 +1,1 @@
+{"id":"binance:00326c1f822a43f1bb6f4ef15b24ade9","h":"yKFtyQudRxDULAnX","v":1,"at":1795601932761,"data":{"isPromo":true,"socialOnly":false,"mech":"tiers","act":{"kind":"trade_spot","usd":5000},"typical":{"amount":5,"unit":"USDC"},"max":{"amount":100,"unit":"USDC"},"pool":{"amount":1000000,"unit":"USDC"},"days":14}}
