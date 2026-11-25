@@ -267,7 +267,9 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       return out(max !== undefined ? Math.min(avg, max) : avg, "low", "chance");
     }
     case "apr": {
-      const apr = a?.aprPct ?? m.aprPct;
+      // the $1,000 example is in a stablecoin: when the headline rate belongs to another coin, the stablecoin's rate counts
+      const apr0 = a?.aprPct ?? m.aprPct;
+      const apr = apr0 !== undefined && m.aprStable !== undefined ? Math.min(apr0, m.aprStable) : apr0;
       if (apr === undefined) return out(undefined, "low", "none");
       // extra over idle money on $1,000 (or the cap) for the period (30 days when not stated)
       // shown as "+$X on $1,000 a month over regular earn" (audit 14.11: Bitbase used its 250,000 USDT minimum,

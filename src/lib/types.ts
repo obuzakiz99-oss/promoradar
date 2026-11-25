@@ -63,6 +63,7 @@ export interface Promo {
     forNew?: boolean;          // only for new users
     tiers?: Array<{ min: number; reward: string; amount: number; unit: string }>;   // threshold → reward table from the rules
     aprPct?: number;           // advertised APR of an interest-type promo
+    aprStable?: number;        // the APR the rules give a stablecoin (USDT/USDC…) when the headline rate belongs to another coin
     needVol?: { futures?: number; spot?: number };   // trading volume the smallest reward requires (fees are a real cost)
     audience?: boolean;        // only part of the users can join (P2P merchants, VIPs, invited / selected users, IPO subscribers)
     aprUpTo?: boolean;         // the APR is a ceiling ("up to 20%": base 5% + boosts) — never a sure rate

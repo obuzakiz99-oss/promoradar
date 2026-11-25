@@ -218,6 +218,14 @@ async function getPromosLive(): Promise<Collected> {
       if (tiers.length) meta.tiers = tiers;
       const apr = p.category === "earn" || /\bAPR|APY\b/.test(p.title) ? aprOf(p.title, d.blocks.map((b) => b.x)) : undefined;
       if (apr !== undefined && meta.apr === undefined) meta.aprPct = apr;
+      // audit 25.11 (deep): Binance Yield Arena "up to 27% APR" was BERA's variable rate — USDT got 10.3% on the first 1,000.
+      // The rate a stablecoin gets in the rules (a table row or a sentence naming USDT/USDC next to a %) is what $1,000 earns.
+      if (meta.aprPct !== undefined) {
+        const rows = d.blocks.slice(0, 80).map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x));
+        const st = rows.flatMap((x) => [...x.matchAll(/\b(USDT|USDC|USD1|FDUSD)\b[^%\n]{0,50}?(\d{1,3}(?:\.\d+)?)\s?%|(\d{1,3}(?:\.\d+)?)\s?%[^%\n]{0,30}?\b(USDT|USDC|USD1|FDUSD)\b/g)])
+          .map((x) => Number(x[2] ?? x[3])).filter((n) => n > 0 && n <= 100);
+        if (st.length && Math.max(...st) < meta.aprPct) meta.aprStable = Math.max(...st);
+      }
       // audit 23.11 (round 5): MEXC "up to 20% APR" (base 5%), KuCoin Dual "up to 250%" were calculated as flat rates
       if (meta.aprPct !== undefined && /\bup to\b[^.%]{0,25}\d+(\.\d+)?\s?%|\bmax(imum)?\b[^.%]{0,15}\d+(\.\d+)?\s?%/i.test(p.titleOrig ?? p.title)) meta.aprUpTo = true;
       // audit 23.11: OKX "8% APR paid over 3 months" was counted only until the promo's end (17 days)

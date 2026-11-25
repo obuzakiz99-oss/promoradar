@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Promo } from "../types";
-import { classify, cleanTitle, isPromo, parseReward } from "../parse";
+import { classify, cleanTitle, isPromo, parseReward, tidyHeadline } from "../parse";
 import { decodeEntities, getText } from "./util";
 
 export type TgStatus = Record<string, { ok: boolean; count: number; error?: string }>;
@@ -56,7 +56,7 @@ function pickTitle(text: string): string {
 const STORE = () => path.join(process.cwd(), "data", "telegram.json");
 const BACK_MS = 14 * 86400_000;
 type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
-const TG_VER = 3;   // 3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
+const TG_VER = 4;   // 4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
 let STORE_MEM: TgStore | null = null;
 function loadStore(): TgStore {
   if (STORE_MEM) return STORE_MEM;
@@ -119,7 +119,7 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const date = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
     if (!body || !date) continue;
     const text = strip(body);
-    const title = pickTitle(text);
+    const title = tidyHeadline(pickTitle(text));
     if (!title) continue;
     // link to the exchange's own article when the post has one; otherwise to the post itself
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)

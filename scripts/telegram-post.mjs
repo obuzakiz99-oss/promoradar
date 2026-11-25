@@ -54,9 +54,9 @@ const CAT = {
   ru: { bonus: ["🎁", "Бонус"], competition: ["🏆", "Соревнование"], airdrop: ["🪂", "Аирдроп"], earn: ["🏦", "Earn"], referral: ["👥", "Реферальная"], listing: ["🆕", "Листинг"], other: ["🔥", "Акция"], farming: ["🌾", "Фарминг"] },
 }[LANG];
 const T = {
-  uk: { real: "Найімовірніше на людину", max: "Максимум на людину", entry: "Щоб взяти участь", forNew: "Лише для нових користувачів", left: (n) => `ще ${n} дн.`, cta: "Умови й покроково", months: ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"] },
-  en: { real: "Likely per person", max: "Max per person", entry: "To take part", forNew: "New users only", left: (n) => `${n} days left`, cta: "Rules & steps", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] },
-  ru: { real: "Скорее всего на человека", max: "Максимум на человека", entry: "Чтобы участвовать", forNew: "Только для новых пользователей", left: (n) => `ещё ${n} дн.`, cta: "Условия и пошагово", months: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"] },
+  uk: { real: "Реально на людину", max: "Максимум на людину", entry: "Щоб взяти участь", forNew: "Лише для нових користувачів", left: (n) => `ще ${n} дн.`, cta: "Умови й покроково", months: ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"] },
+  en: { real: "Realistically per person", max: "Max per person", entry: "To take part", forNew: "New users only", left: (n) => `${n} days left`, cta: "Rules & steps", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] },
+  ru: { real: "Реально на человека", max: "Максимум на человека", entry: "Чтобы участвовать", forNew: "Только для новых пользователей", left: (n) => `ещё ${n} дн.`, cta: "Условия и пошагово", months: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"] },
 }[LANG];
 const human = (ts) => { const d = new Date(ts); return LANG === "en" ? `${T.months[d.getUTCMonth()]} ${d.getUTCDate()}` : `${d.getUTCDate()} ${T.months[d.getUTCMonth()]}`; };
 const tag = (s) => "#" + String(s).replace(/\.com$/i, "").replace(/[^\p{L}\p{N}_]/gu, "");
@@ -69,7 +69,9 @@ for (const p of promos) {
   const tr = feed.titles?.[LANG]?.[p.id];
   if (LANG !== "en" && !tr && /^[\x00-\x7F -⯿️\u{1F000}-\u{1FAFF}]*$/u.test(p.title) && Date.now() - (p.publishedAt ?? 0) < 86400_000) continue;
   const v = p.meta?.value, net = v?.net, apr = v?.mech === "apr", pu = p.meta?.perUser;
-  const est = net !== undefined && net > 0 ? `💰 ${apr ? L.onK : v.conf === "low" ? L.est : T.real}: <b>≈ $${Math.round(net)}</b>` : "";
+  // one label for the estimate everywhere (site + channel), with how sure it is
+  const rough = ({ uk: "грубо", en: "rough", ru: "грубо" })[LANG];
+  const est = net !== undefined && net > 0 ? `💰 ${apr ? L.onK : T.real}: <b>≈ $${Math.round(net)}</b>${v.conf === "low" ? ` (${rough})` : ""}` : "";
   const max = !est && pu?.amount ? `💰 ${T.max}: <b>${pu.amount.toLocaleString("en-US")} ${esc(pu.unit)}</b>` : "";
   const pool = p.reward ? `🎯 ${L.pool}:<b>${esc(p.reward.label)}</b>` : "";
   if (!est && !max && !pool) continue;   // nothing concrete — not worth a post (still on the site)

@@ -1,6 +1,6 @@
 import type { Promo } from "../types";
 import type { PromoDetails } from "../details";
-import { classify, cleanTitle, isPromo, parseReward } from "../parse";
+import { classify, isPromo, parseReward, tidyHeadline } from "../parse";
 import { CEX, DEX, DEX_FEEDS, SITE, TELEGRAM, VENUES, venueOf } from "@/config/site";
 import { CEX_SOURCES, type Raw } from "./cex";
 import { airdrops, dexBlogs, farming, lighter, ondoPerps } from "./defi";
@@ -24,7 +24,7 @@ export interface Collected {
 }
 
 function fromRaw(r: Raw): Promo | null {
-  const title = cleanTitle(r.title);
+  const title = tidyHeadline(r.title);
   if (!r.trusted && !isPromo(title)) return null;
   return {
     id: `${r.venue}:${r.id}`, venue: venueOf(r.venue), title, url: r.url, joinUrl: CEX[r.venue].refUrl || undefined,

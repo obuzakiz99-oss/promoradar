@@ -16,12 +16,13 @@ import type { Value } from "@/lib/value";
 import { regionName } from "@/lib/regions";
 
 /** "What you'd really get" line (value.ts): expected net $ for one ordinary participant, with how sure it is. */
-const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string; loss: string; flat: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
-  uk: { high: "Реально отримаєте", mid: "Найімовірніше отримаєте", low: "У середньому на учасника", apr: "на $1 000 понад звичайний Earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний Earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
+// audit 25.11 (deep): three different names for one estimate confused beginners — one label + how sure it is
+const VAL: Record<Locale, { real: string; high: string; mid: string; low: string; sure: string; apr: string; loss: string; flat: string; cost: (x: string) => string; why: Record<Value["basis"], string> }> = {
+  uk: { real: "Реально отримаєте", high: "точно", mid: "приблизно", low: "грубо", sure: "Наскільки точна оцінка", apr: "на $1 000 понад звичайний Earn", loss: "Витрати з'їдають бонус", flat: "Не вигідніше за звичайний Earn", cost: (x) => `мінус комісії/заморозка ≈ ${x}`,
     why: { stated: "сума з правил для мінімальної участі", max: "лише «до …» з правил — більшість отримує менше", chance: "пул ÷ приблизна кількість учасників (шанс)", apr: "дохід за строк акції на $1 000 понад звичайні 5% річних", none: "" } },
-  en: { high: "You will really get", mid: "Most likely you get", low: "Average per participant", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", flat: "No better than regular earn", cost: (x) => `minus fees/lock-up ≈ ${x}`,
+  en: { real: "You will really get", high: "sure", mid: "approx.", low: "rough", sure: "How sure the estimate is", apr: "on $1,000 over regular earn", loss: "Costs eat the bonus", flat: "No better than regular earn", cost: (x) => `minus fees/lock-up ≈ ${x}`,
     why: { stated: "amount from the rules for the minimum entry", max: "only an 'up to' figure — most people get less", chance: "pool ÷ rough number of participants (a chance)", apr: "income for the period on $1,000 above a regular 5% a year", none: "" } },
-  ru: { high: "Реально получите", mid: "Скорее всего получите", low: "В среднем на участника", apr: "на $1 000 сверх обычного Earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного Earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
+  ru: { real: "Реально получите", high: "точно", mid: "примерно", low: "грубо", sure: "Насколько точна оценка", apr: "на $1 000 сверх обычного Earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного Earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
     why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
 };
 function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
@@ -33,9 +34,10 @@ function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean })
   const tone = v.conf === "high" ? "text-lime" : v.conf === "mid" ? "text-ink" : "text-ink-2";
   return (
     <div title={title} className="mb-2 flex items-baseline gap-1.5 text-xs font-semibold text-ink-3">
-      <span>{L[v.conf]}</span>
+      <span>{L.real}</span>
       <span className={`font-mono font-bold ${big ? "text-xl text-lime" : `text-sm ${tone}`}`}>{v.mech === "apr" ? "+" : "≈ "}{usd(v.net)}</span>
       {v.mech === "apr" && <span>{L.apr}</span>}
+      <span aria-label={`${L.sure}: ${L[v.conf]}`} className={`rounded-md px-1.5 py-0.5 text-xs font-bold ${v.conf === "high" ? "bg-lime/10 text-lime" : v.conf === "mid" ? "bg-white/5 text-ink-2" : "bg-white/5 text-ink-3"}`}>{L[v.conf]}</span>
     </div>
   );
 }

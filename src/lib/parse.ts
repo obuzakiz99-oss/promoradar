@@ -86,6 +86,38 @@ export function parseReward(title: string): Reward | undefined {
 }
 
 /** Normalise whitespace and HTML entities in headlines. */
+/**
+ * Audit 25.11 (deep): headlines copied from posts read like raw exchange text — "New Listing Fest Phase 6 | Prize Pool",
+ * "How your APR stacks • 5% base APR • Up to…", "… 👉 Details", 300-character first sentences. One tidy shape:
+ * separators become " — ", a bullet list keeps only its first item, trailing calls to action go, and a long headline is
+ * cut at the end of a sentence/clause. The page URL does not depend on it (promos are found by the id hash).
+ */
+export function tidyHeadline(s: string): string {
+  let t = cleanTitle(s)
+    .replace(/\s*[|｜]\s*/g, " — ")
+    .replace(/\s*(👉|➡️|→)\s*(more )?(details|learn more|join now|read more|here)\b.*$/i, "")
+    .replace(/[\s\u{1F300}-\u{1FAFF}☀-➿️]+$/u, "")
+    .trim();
+  // the headline is its first part; a part with the money ("Share 10,000 USDT", "5% base APR") is kept next to it
+  // (case-sensitive ticker: "Phase 4 is Live" is not an amount)
+  const AMT = /\$\s?\d|\d[\d,.]*\s?(%|[kKmMbB]\b|USDT|USDC|USD|BTC|ETH|[A-Z]{2,6}\b)/;
+  const parts = t.split(/\s+—\s+|\s+•\s+|(?<=[.!?])\s+/).map((x) => x.trim().replace(/\.$/, "")).filter(Boolean);
+  if (parts.length > 1) {
+    let out = parts[0];
+    if (out.length < 28 && parts[1]) out = `${out} — ${parts[1]}`;
+    if (!AMT.test(out)) {
+      let money = parts.slice(1).find((x) => AMT.test(x));
+      // a long money part keeps the words around the amount ("…Share 10,000 USDT")
+      if (money && out.length + money.length > 107) { const i = money.search(AMT); const from = Math.max(0, i - 25); money = (from > 0 ? "…" : "") + money.slice(from).replace(from > 0 ? /^\S*\s/ : /^/, ""); }
+      if (money) out = `${out} — ${money}`;
+    }
+    t = out;
+  }
+  if (t.length > 110) t = `${t.slice(0, 108).replace(/\s+\S*$/, "").replace(/[\s—:,;]+$/, "")}…`;
+  t = t.replace(/^[a-z]/, (c) => c.toUpperCase()).replace(/[.]$/, "");
+  return t || cleanTitle(s);
+}
+
 export function cleanTitle(s: string): string {
   return s
     .replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
