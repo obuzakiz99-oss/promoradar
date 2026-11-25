@@ -1,5 +1,5 @@
 {
- "at": 1795570743644,
+ "at": 1795570955315,
  "items": [
   {
    "id": "tg:Bybit_Announcements/10183",
@@ -641,7 +641,7 @@
    "title": "🏆 MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1038.24,
+   "perUserUsd": 1037.12,
    "netUsd": 0.15
   },
   {
@@ -945,7 +945,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1301.76,
+   "perUserUsd": 1300.8,
    "netUsd": 0.31
   },
   {
@@ -962,7 +962,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.45,
+   "perUserUsd": 5.44,
    "netUsd": 0.03
   },
   {
@@ -1454,7 +1454,7 @@
    "title": "infiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 19.81,
+   "perUserUsd": 19.8,
    "netUsd": -0.52
   },
   {
@@ -1513,7 +1513,7 @@
    "title": "10,000 USDT in rewards. Who’s taking the top spot? 🎯",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 1095.2,
+   "perUserUsd": 1070.65,
    "netUsd": 1.81
   },
   {
@@ -1661,7 +1661,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 130.728,
+   "perUserUsd": 130.536,
    "netUsd": 2.49
   },
   {
@@ -1704,7 +1704,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5946.830000000001,
+   "perUserUsd": 5939.34,
    "netUsd": 8.77
   },
   {
