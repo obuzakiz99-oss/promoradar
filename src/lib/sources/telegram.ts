@@ -119,7 +119,12 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const date = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
     if (!body || !date) continue;
     // audit 2 (25.11): Bitrue posts end with a "━━━━ claim your USDT now" footer — never part of the post's headline
-    const text = strip(body).split(/^\s*[_━─=]{5,}.*$/m)[0];
+    // (Bitrue also puts "Bitrue Official Update / ━━━━" ABOVE the post — only the last part after a rule is the footer,
+    // and a short first part is a channel header; the first version kept only the header and dropped 19 promos)
+    const segs = strip(body).split(/^\s*[_━─=]{5,}\s*$/m);
+    if (segs.length > 1) segs.pop();
+    while (segs.length > 1 && segs[0].replace(/[^\p{L}]/gu, "").length < 40) segs.shift();
+    const text = segs.join("\n");
     const raw = pickTitle(text), tidy = tidyHeadline(raw);
     const title = tidy && isPromo(tidy) ? tidy : raw;   // never lose a promo to the tidying
     if (!title) continue;
