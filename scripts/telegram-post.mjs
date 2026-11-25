@@ -83,7 +83,7 @@ for (const p of promos) {
   const v = p.meta?.value, net = v?.net, apr = v?.mech === "apr", pu = p.meta?.perUser;
   // one label for the estimate everywhere (site + channel), with how sure it is
   const rough = ({ uk: "грубо", en: "rough", ru: "грубо" })[LANG];
-  const est = net !== undefined && net > 0 ? `💰 ${apr ? L.onK : T.real}: <b>≈ $${Math.round(net)}</b>${v.conf === "low" ? ` (${rough})` : ""}` : "";
+  const est = net !== undefined && Math.round(net) >= 1 ? `💰 ${apr ? L.onK : T.real}: <b>≈ $${Math.round(net)}</b>${v.conf === "low" ? ` (${rough})` : ""}` : "";
   const max = !est && pu?.amount ? `💰 ${T.max}: <b>${pu.amount.toLocaleString("en-US")} ${esc(pu.unit)}</b>` : "";
   const pool = p.reward ? `🎯 ${L.pool}:<b>${esc(p.reward.label)}</b>` : "";
   if (!est && !max && !pool) continue;   // nothing concrete — not worth a post (still on the site)

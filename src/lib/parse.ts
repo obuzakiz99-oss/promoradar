@@ -29,6 +29,8 @@ function kindOf(t: string): Category {
   if (has(t, /(loss (coverage|protection|compensation|rebate)|compensat\w* (for )?(your )?(futures )?loss|futures insurance)/i)) return "other";
   // audit 25.11 (deep): "New to CoinW? Complete tasks… Super Bonus" was filed as Earn
   if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn)|new to [a-z]|complete (the |all |simple )?tasks|task (center|hub|centre)|super bonus)/i)) return "bonus";
+  // 25.11: "Binance Earn Yield Arena" is an Earn offer, not a contest
+  if (has(t, /\b(yield|earn|apr|apy) arena\b|\barena\b.{0,40}\b(apr|apy)\b/i)) return "earn";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
   if (has(t, /deposit/i)) return "bonus";
   if (has(t, /(earn|staking|stake|savings|apr|apy|hold to|\bhold\b.*\bshare\b|yield|dual investment|loan|subscribe|subscription)/i)) return "earn";
