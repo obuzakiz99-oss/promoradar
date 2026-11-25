@@ -310,7 +310,7 @@ async function getPromosLive(): Promise<Collected> {
     try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
     // a general section page (one path segment, no id: Bitrue /flexible-staking, LBank /futures-earn) is shared by many
     // different promos — never a duplicate key; a campaign page (/flexible-staking/xrp, /pointmall/10003934-…) is
-    try { if (/^\/[a-z-]+\/?$/i.test(new URL(p.url).pathname)) u = ""; } catch { /* */ }
+    try { const pn = new URL(p.url).pathname; if (/^\/[a-z-]+\/?$/i.test(pn) || /\/rewards\/mobile|\/download|channel-verification/i.test(pn)) u = ""; } catch { /* */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dupOf(p.id, u); else seenUrl.set(u, p.id); }
     // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post.
     // Only a campaign-like link counts, and never one most posts of the channel carry (Bitrue puts /rewards/mobile in
