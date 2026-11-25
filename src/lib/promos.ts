@@ -318,7 +318,7 @@ async function getPromosLive(): Promise<Collected> {
     const lk = lkOk ? `${p.venue.id}|link|${lkRaw}` : "";
     if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dupOf(p.id, lk); else seenUrl.set(lk, p.id); }
     // the site's own page and a Telegram post about it point to the same article path
-    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${lkRaw!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dupOf(p.id, `${p.venue.id}|own|`, seenUrl.get(own)); }
+    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${lkRaw!.replace(/\/$/, "")}`; const o = seenUrl.get(own); if (o && o !== p.id) dupOf(p.id, `${p.venue.id}|own|`, o); }
     // the same prize pool (≥ 1,000) on the exchange's site and in its Telegram within a week = one campaign (Bitget Super Earn)
     const poolKey = p.reward && p.reward.amount >= 1000 ? `${p.venue.id}|${p.category}|pool|${Math.round(p.reward.amount)}|${p.reward.unit.toUpperCase()}` : "";
     if (poolKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
