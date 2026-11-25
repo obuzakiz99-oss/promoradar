@@ -29,7 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     alternates: alt(lang),
     openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website", images: [{ url: "/og-home.png", width: 1200, height: 630, alt: SITE.name }] },
     twitter: { card: "summary_large_image", title, description: t.hero.sub, images: ["/og-home.png"] },
-    icons: { icon: withBase("/icon.svg"), apple: withBase("/apple-touch-icon.png") },
+    // 25.11: + favicon.ico / PNG — Google results, Telegram and Bing don't use the SVG and showed a blank globe
+    icons: {
+      icon: [{ url: withBase("/favicon.ico"), sizes: "any" }, { url: withBase("/favicon-32.png"), type: "image/png", sizes: "32x32" }, { url: withBase("/icon.svg"), type: "image/svg+xml" }],
+      apple: withBase("/apple-touch-icon.png"),
+    },
     manifest: withBase("/manifest.webmanifest"),
     appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "black-translucent" },
     verification: { google: "2b39PcYtXfivHnfm08m5gU9cjdXysM909StzoP6-XcM" },   // Search Console (24.11)
