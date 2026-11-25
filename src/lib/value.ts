@@ -180,6 +180,7 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
     const todo = items.filter(({ p, text }) => { const s = store[p.id]; return !s || s.v !== VER || s.h !== hashOf(text); })
       .filter(({ p, text }) => { const e = readHand<Assess>("value").get(p.id); return !(e && e.v === VER && e.h === hashOf(text)); })
       .slice(0, GEMINI_PER_BUILD);
+    console.log(`[value/gemini] ${todo.length} promo(s) to read this build`);
     for (const it of todo) {
       try {
         const a = await askGemini(it.text);

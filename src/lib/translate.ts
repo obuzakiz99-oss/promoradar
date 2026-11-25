@@ -8,6 +8,7 @@ import { geminiTranslate, hasGemini } from "./gemini";
 
 const GEMINI_PER_BUILD = 40_000;   // chars per build over all languages (≈ 8 requests)
 let GEMINI_SPENT = 0;
+const LOG: Record<string, { ok: number; err?: string }> = {};   // per provider, printed in the build log
 
 /**
  * Machine translation of promo texts (titles, key rules, full rules) into Ukrainian and Russian.
@@ -143,9 +144,10 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
           if (!batch.length) break;
           try {
             const out = await pr.run(batch, lang);
+            (LOG[pr.name] ??= { ok: 0 }).ok += out.filter(Boolean).length;
             batch.forEach((s, k) => { if (out[k]) store[lang][key(s)] = { t: out[k], at: now }; else rest.push(s); });
             pr.budget -= size; pr.spent(size);
-          } catch { pr.budget = 0; rest.push(...batch); }      // quota exceeded / network: next provider, next build
+          } catch (e) { pr.budget = 0; rest.push(...batch); (LOG[pr.name] ??= { ok: 0 }).err = String(e instanceof Error ? e.message : e).slice(0, 140); }      // quota exceeded / network: next provider, next build
         }
         todo = [...rest, ...todo.slice(i)];
         if (!todo.length) break;
@@ -157,6 +159,7 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
       if (live.has(k)) v.at = now;
       else if (now - v.at > KEEP_MS) delete store[lang][k];
     }
+    console.log(`[translate] ${Object.entries(LOG).map(([k, v]) => `${k}: ${v.ok} ok${v.err ? `, error ${v.err}` : ""}`).join("; ") || "nothing to translate"}`);
     writeStore(FILE(), store, READ_OK);
   }
   const out = { uk: {}, ru: {} } as Record<TLang, Record<string, string>>;
