@@ -91,7 +91,7 @@ Fields:
 function inputText(p: Promo, d?: PromoDetails): string {
   const lines = (d?.blocks ?? []).map((b) => (b.t === "h" ? `## ${b.x}` : b.t === "li" ? `- ${b.x}` : b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x));
   return [
-    `Venue: ${p.venue.name}`, `Headline: ${p.titleOrig ?? p.title}`,
+    `Venue: ${p.venue.name}`, `Headline: ${p.meta?.rawTitle ?? p.titleOrig ?? p.title}`,
     p.meta?.actions ? `Tasks: ${p.meta.actions}` : "",
     lines.length ? "\nANNOUNCEMENT / RULES:" : "(only the headline is available)",
     ...lines,

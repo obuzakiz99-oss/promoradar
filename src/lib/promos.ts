@@ -404,10 +404,14 @@ async function getPromosLive(): Promise<Collected> {
   };
   const later: Promo[] = [];
   for (const p of promos) { if (dups.has(p.id)) later.push(p); else consider(p); }
-  const keptIds = new Set(kept.map((p) => p.id));
+  // the same campaign is already on the site through another post (LBank $150K: 3 posts, the first twin was junk)
+  const pathOf = (u: string) => { try { const x = new URL(u); return /^\/[a-z-]+\/?$/i.test(x.pathname) ? "" : x.host.replace(/^www\./, "") + x.pathname.replace(/\/$/, ""); } catch { return ""; } };
+  const onSite = (p: Promo) => kept.some((k) => k.venue.id === p.venue.id && (
+    (!!p.meta?.linkKey && k.meta?.linkKey === p.meta.linkKey) || (!!pathOf(p.url) && pathOf(k.url) === pathOf(p.url))
+    || (!!p.reward && !!k.reward && p.reward.amount >= 1000 && k.reward.amount === p.reward.amount && k.reward.unit === p.reward.unit)));
   for (const p of later) {
     const tw = twin.get(p.id);
-    if (tw && !keptIds.has(tw.id) && !later.some((x) => x.id === tw.id)) { consider(p); continue; }   // its twin was hidden as junk
+    if (tw && !kept.some((k) => k.id === tw.id) && !later.some((x) => x.id === tw.id) && !onSite(p)) { consider(p); continue; }   // its twin was hidden as junk
     hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "duplicate", of: tw ? `${tw.id} (${tw.rule})` : undefined });
   }
   promos.splice(0, promos.length, ...kept);

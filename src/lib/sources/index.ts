@@ -29,10 +29,12 @@ function fromRaw(r: Raw): Promo | null {
   if (!r.trusted && !isPromo(title)) return null;
   return {
     id: `${r.venue}:${r.id}`, venue: venueOf(r.venue), title, url: r.url, joinUrl: CEX[r.venue].refUrl || undefined,
-    category: classify(title, r.hint), publishedAt: r.publishedAt,
+    category: classify(r.title, r.hint), publishedAt: r.publishedAt,
     startsAt: r.startsAt && r.startsAt !== r.endsAt ? r.startsAt : undefined,
     endsAt: r.endsAt && r.endsAt > r.publishedAt + 3600_000 ? r.endsAt : undefined,
-    reward: parseReward(title), tags: r.tags ?? [],
+    reward: parseReward(r.title), tags: r.tags ?? [],
+    // the exchange's own headline: the AI reads it (value.ts) — the tidied one is only for display
+    ...(title !== r.title.trim() ? { meta: { rawTitle: r.title.trim() } } : {}),
   };
 }
 

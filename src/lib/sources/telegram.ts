@@ -56,7 +56,7 @@ function pickTitle(text: string): string {
 const STORE = () => path.join(process.cwd(), "data", "telegram.json");
 const BACK_MS = 14 * 86400_000;
 type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
-const TG_VER = 4;   // 4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
+const TG_VER = 5;   // 5: raw headline kept for the AI  4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
 let STORE_MEM: TgStore | null = null;
 function loadStore(): TgStore {
   if (STORE_MEM) return STORE_MEM;
@@ -137,11 +137,11 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
       ?? mine[0] ?? `https://t.me/${post}`;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
-      category: classify(title) !== "other" ? classify(title) : classify(text.slice(0, 400)), publishedAt: date,
+      category: classify(raw) !== "other" ? classify(raw) : classify(text.slice(0, 400)), publishedAt: date,
       // audit 23.11: "up to 1,250 USDT per user", "Maximum reward: $5,000" are per-person caps, not the pool
-      reward: /\b(per (user|person|participant|account|referral|friend)|each user|maximum reward|max(imum)? (of )?\$?[\d,.]+ ?(USDT|USDC|USD)? ?(per|each))\b/i.test(title) ? undefined : parseReward(title), tags: [],
+      reward: /\b(per (user|person|participant|account|referral|friend)|each user|maximum reward|max(imum)? (of )?\$?[\d,.]+ ?(USDT|USDC|USD)? ?(per|each))\b/i.test(raw) ? undefined : parseReward(raw), tags: [],
       // audit 25.11 (deep): two posts about one campaign share a link (often a bit.ly) even when the post has no own-site article
-      meta: { source: `Telegram @${ch}`, ...(() => { const k = links.map(path).find((u) => !/t\.me\/|twitter\.com|x\.com|youtu|discord|forms\.gle|docs\.google|apps\.apple|play\.google|deposit|download|\/assets|wallet|\/trade\/|\/futures\/[A-Z]/i.test(u) && !ref(u) && /^https?:\/\/[^/]+\/[^/?#]{3,}/.test(u)); return k ? { linkKey: k.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "").toLowerCase() } : {}; })() },
+      meta: { source: `Telegram @${ch}`, ...(raw !== title ? { rawTitle: raw } : {}),...(() => { const k = links.map(path).find((u) => !/t\.me\/|twitter\.com|x\.com|youtu|discord|forms\.gle|docs\.google|apps\.apple|play\.google|deposit|download|\/assets|wallet|\/trade\/|\/futures\/[A-Z]/i.test(u) && !ref(u) && /^https?:\/\/[^/]+\/[^/?#]{3,}/.test(u)); return k ? { linkKey: k.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "").toLowerCase() } : {}; })() },
     });
   }
   return { promos: out, minId, oldest: oldest === Infinity ? 0 : oldest };
