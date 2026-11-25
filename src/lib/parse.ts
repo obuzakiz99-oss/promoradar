@@ -116,6 +116,8 @@ export function tidyHeadline(s: string): string {
       if (money && out.length + money.length > 107) { const i = money.search(AMT); const from = Math.max(0, i - 25); money = (from > 0 ? "…" : "") + money.slice(from).replace(from > 0 ? /^\S*\s/ : /^/, ""); }
       if (money) out = `${out} — ${money}`;
     }
+    // the part that makes it a promo ("Stake $SOL … up to 50% APY") must stay — a market fact alone is not a headline
+    if (!isPromo(out)) { const pr = parts.find((x) => isPromo(x) && AMT.test(x)) ?? parts.find((x) => isPromo(x)); if (pr && !out.includes(pr)) out = parts[0].length <= 60 && parts[0] !== pr ? `${parts[0]} — ${pr}` : pr; }
     t = out;
   }
   if (t.length > 110) t = `${t.slice(0, 108).replace(/\s+\S*$/, "").replace(/[\s—:,;]+$/, "")}…`;

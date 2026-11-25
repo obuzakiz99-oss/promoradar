@@ -119,7 +119,8 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const date = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
     if (!body || !date) continue;
     const text = strip(body);
-    const title = tidyHeadline(pickTitle(text));
+    const raw = pickTitle(text), tidy = tidyHeadline(raw);
+    const title = tidy && isPromo(tidy) ? tidy : raw;   // never lose a promo to the tidying
     if (!title) continue;
     // link to the exchange's own article when the post has one; otherwise to the post itself
     // (posts often start with a Discord / Google Form / partner link — those aren't the campaign page)

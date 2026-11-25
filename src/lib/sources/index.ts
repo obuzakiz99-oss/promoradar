@@ -24,7 +24,8 @@ export interface Collected {
 }
 
 function fromRaw(r: Raw): Promo | null {
-  const title = tidyHeadline(r.title);
+  const tidy = tidyHeadline(r.title);
+  const title = isPromo(tidy) || r.trusted ? tidy : r.title.trim();   // never lose a promo to the tidying
   if (!r.trusted && !isPromo(title)) return null;
   return {
     id: `${r.venue}:${r.id}`, venue: venueOf(r.venue), title, url: r.url, joinUrl: CEX[r.venue].refUrl || undefined,
