@@ -246,8 +246,11 @@ async function getPromosLive(): Promise<Collected> {
     }
     if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
     // closed early: exchanges put an "UPDATE: this campaign has ended early" line at the top of the rules
-    const ENDED = /\b(has ended( early)?|ended early|has been upgraded|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
+    const ENDED = /\b(has ended( early)?|ended early|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
     if (d && d.blocks.slice(0, 8).some((b) => b.x.split(/(?<=[.!])\s+/).some((s) => ENDED.test(s) && !/\b(will|if|once|after)\b/i.test(s)))) continue;
+    // audit 25.11 (deep): "This Campaign has been upgraded … Please refer to the most recent … announcement" — the old page of a
+    // replaced campaign (the new page also says "has been upgraded", but never sends you elsewhere)
+    if (d && d.blocks.slice(0, 8).some((b) => /has been upgraded/i.test(b.x) && /\brefer to the (most recent|latest|new)\b/i.test(b.x))) continue;
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
     const geo = geoOf(p.title, d);
@@ -296,21 +299,28 @@ async function getPromosLive(): Promise<Collected> {
   const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
   // several Telegram posts about one campaign link to the same page (KuCoin 5.0 ×3, MEXC Pre-IPO ×2): keep the newest
-  const seenUrl = new Set<string>(), dups = new Set<string>(), poolSeen = new Map<string, number>();
+  const seenUrl = new Set<string>(), dups = new Set<string>(), poolSeen = new Map<string, { t: number; tg: boolean }>();
+  const linkUse = new Map<string, number>();
+  for (const p of promos) if (p.meta?.linkKey) { const k = `${p.venue.id}|${p.meta.linkKey}`; linkUse.set(k, (linkUse.get(k) ?? 0) + 1); }
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
     try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dups.add(p.id); else seenUrl.add(u); }
-    // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post
-    const lk = p.meta?.linkKey ? `${p.venue.id}|link|${p.meta.linkKey}` : "";
+    // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post.
+    // Only a campaign-like link counts, and never one most posts of the channel carry (Bitrue puts /rewards/mobile in
+    // every post — the first version merged 8 different Bitrue promos)
+    const lkRaw = p.meta?.linkKey;
+    const lkOk = !!lkRaw && (linkUse.get(`${p.venue.id}|${lkRaw}`) ?? 0) <= 2
+      && (/^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lkRaw) || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lkRaw));
+    const lk = lkOk ? `${p.venue.id}|link|${lkRaw}` : "";
     if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dups.add(p.id); else seenUrl.add(lk); }
     // the site's own page and a Telegram post about it point to the same article path
-    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${p.meta!.linkKey!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dups.add(p.id); }
-    // the same prize pool (≥ 1,000) at one venue within a week = the same campaign posted again (Bitget Super Earn, Bybit WSOT)
+    if (lk && !dups.has(p.id)) { const own = `${p.venue.id}${lkRaw!.replace(/\/$/, "")}`; if (seenUrl.has(own)) dups.add(p.id); }
+    // the same prize pool (≥ 1,000) on the exchange's site and in its Telegram within a week = one campaign (Bitget Super Earn)
     const poolKey = p.reward && p.reward.amount >= 1000 ? `${p.venue.id}|${p.category}|pool|${Math.round(p.reward.amount)}|${p.reward.unit.toUpperCase()}` : "";
     if (poolKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
-      const t0 = poolSeen.get(poolKey);
-      if (t0 !== undefined && t0 - p.publishedAt < 7 * 86400_000) dups.add(p.id); else poolSeen.set(poolKey, p.publishedAt);
+      const prev = poolSeen.get(poolKey), tg = p.id.startsWith("tg:");
+      if (prev && prev.tg !== tg && prev.t - p.publishedAt < 7 * 86400_000) dups.add(p.id); else if (!prev) poolSeen.set(poolKey, { t: p.publishedAt, tg });
     }
     // same venue + same tickers + same numbers in the headline = the same offer
     const head = p.titleOrig ?? p.title;

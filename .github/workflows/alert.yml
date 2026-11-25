@@ -15,5 +15,7 @@ jobs:
       - name: ${{ inputs.title }}
         env: { TITLE: "${{ inputs.title }}", BODY: "${{ inputs.body }}" }
         run: |
+          # no workflow commands from the inputs (audit 25.11): newlines and "::" are flattened
+          TITLE=$(printf '%s' "$TITLE" | tr '\n\r' '  ' | sed 's/::/: /g'); BODY=$(printf '%s' "$BODY" | tr '\n\r' '  ' | sed 's/::/: /g')
           printf '%s\n\n%s\n' "$TITLE" "$BODY"
           case "$TITLE" in *"знову працює"*) exit 0;; *) echo "::error title=$TITLE::$BODY"; exit 1;; esac

@@ -79,7 +79,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
     big = `${m.aprUpTo ? "≤ " : "+"}${m.aprPct > 50 ? `${usd(day)} ${T.perDay}` : `${usd(day * 30)} ${T.perMonth}`}`;
     if (m.aprUpTo) lines.push({ text: ({ uk: "Це максимальна ставка («до»): базова зазвичай значно нижча, решта — за умови (обсяг, рівень, позиція).", en: "This is the maximum (“up to”) rate: the base is usually much lower, the rest depends on conditions.", ru: "Это максимальная ставка («до»): базовая обычно значительно ниже, остальное — при условиях." } as const)[lang], tone: "bad" });
     if (m.aprPct > 50) lines.push({ text: ({ uk: "Підвищена ставка зазвичай діє кілька днів і на обмежену суму — строк і ліміт дивіться в умовах.", en: "A boosted rate usually lasts a few days and covers a capped amount — check the term and limit in the rules.", ru: "Повышенная ставка обычно действует несколько дней и на ограниченную сумму — срок и лимит смотрите в условиях." } as const)[lang], tone: "bad" });
-    lines.push({ text: m.aprPct > 50 ? `${m.aprPct}% APR` : `+${usd(day)} ${T.perDay} · ${m.aprPct}% APR` });
+    lines.push({ text: m.aprPct > 50 ? `${num(m.aprPct, lang)}% APR` : `+${usd(day)} ${T.perDay} · ${num(m.aprPct, lang)}% APR` });
     if (left && m.aprPct <= 50) lines.push({ text: m.aprDays
       ? `+${usd(day * left)} ${({ uk: "загалом", en: "in total", ru: "всего" } as const)[lang]} (${T.days(left)}, ${num(m.aprPct * left / 365, lang)}% ${({ uk: "від суми", en: "of the amount", ru: "от суммы" } as const)[lang]})`
       : `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });

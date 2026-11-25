@@ -27,7 +27,7 @@ const VAL: Record<Locale, { high: string; mid: string; low: string; apr: string;
 function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
   if (!v || v.net === undefined || v.gross === undefined) return null;
   const L = VAL[lang];
-  const usd = (x: number) => (x >= 1000 ? compactUsd(x, lang) : `$${x >= 10 ? Math.round(x) : x.toFixed(x >= 1 ? 1 : 2)}`);
+  const usd = (x: number) => (x >= 1000 ? compactUsd(x, lang) : `$${x >= 10 ? Math.round(x) : num(x, lang, x >= 1 ? 1 : 2)}`);
   const title = [L.why[v.basis], v.cost ? L.cost(usd(v.cost)) : ""].filter(Boolean).join("; ");
   if (v.net <= 0) return v.mech === "apr" ? <div className="mb-2 text-xs font-semibold text-ink-3">{L.flat}</div> : <div title={title} className="mb-2 text-xs font-bold text-amber">{L.loss}</div>;
   const tone = v.conf === "high" ? "text-lime" : v.conf === "mid" ? "text-ink" : "text-ink-2";
@@ -192,7 +192,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
           {isFarm ? (
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
-              <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-success">+{m.apr}%</div>
+              <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-success">+{num(m.apr ?? 0, lang)}%</div>
               {m.baseApr ? <div className="font-mono text-xs text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
             </div>
           ) : m.perUser && p.reward ? (

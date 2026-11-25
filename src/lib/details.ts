@@ -319,6 +319,8 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   const starts: number[] = [], ends: number[] = [];
   for (const l of lines) {
     if (/distribut|credited|airdropp?ed|snapshot|listing|trading (opening|opens|starts)|deposit (opening|opens)|withdrawal/i.test(l) && !periodRe.test(l)) continue;
+    // audit 25.11 (deep): "Verification period: … – 18.05" (Bitbase) and Binance's payout date (08.01) were read as the campaign end
+    if (/\b(verification|settlement|payout|pay-?out|reward (distribution|issuance)|distribution (period|date|time)|claim (period|window)|review period|redemption|rewards? will be (distributed|credited|sent))\b/i.test(l)) continue;
     const ds = datesIn(l, publishedAt || undefined).filter((x) => ok(x.ms));
     if (ds.length >= 2 && (periodRe.test(l) || /\b(from|between)\b|\bto\b|[–—-]/i.test(l))) {
       starts.push(ds[0].ms);

@@ -8,9 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write        # push APR history / posted-state to the `data` branch
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: pages
@@ -19,15 +17,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write    # push APR history / posted-state to the `data` branch
     timeout-minutes: 25
     env:
       SITE_HOST: ${{ vars.SITE_HOST }}   # own domain (e.g. promoradar.xyz); empty = github.io/promoradar
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # APR history + Telegram state live on the `data` branch (created on first run)
       - name: Get data branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         continue-on-error: true
         with:
           ref: data
@@ -35,13 +35,13 @@ jobs:
 
       # OKX / Bybit data relayed from an EU machine (US runners get no answer from them)
       - name: Get relay branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         continue-on-error: true
         with:
           ref: relay
           path: relay
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -94,10 +94,13 @@ jobs:
 
       - name: Save data branch
         working-directory: data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
           if [ ! -d .git ]; then
             git init -q -b data
-            git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
           fi
           git config user.name "promoradar-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -105,16 +108,19 @@ jobs:
           git commit -q -m "data: $(date -u +%FT%TZ)" || exit 0
           git push -q origin HEAD:data
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: out
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

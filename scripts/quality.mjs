@@ -97,6 +97,10 @@ const fatal = [];
 if (count === 0) fatal.push("no promos at all");
 else if (prev?.count >= 40 && count < prev.count * 0.5) fatal.push(`only ${count} promos (last good build had ${prev.count}) — a mass source outage`);
 for (const e of errors) if (/referral links|ad block|missing/.test(e.why)) fatal.push(e.why);
+// one exchange suddenly losing most of its promos = a parser / filter broke (25.11: an over-eager duplicate rule hid 8 Bitrue promos)
+const byVenue = {};
+for (const p of P) if (p.category !== "farming") byVenue[p.venue.id] = (byVenue[p.venue.id] ?? 0) + 1;
+for (const [v, n] of Object.entries(prev?.byVenue ?? {})) if (n >= 4 && (byVenue[v] ?? 0) < n * 0.5) W(null, `${v}: ${byVenue[v] ?? 0} promos, the last build had ${n} — check sources / filters`);
 
 /* ---------- report ---------- */
 const report = { at: now, promos: count, errors, warns, fatal };
@@ -109,4 +113,4 @@ if (process.env.GITHUB_ACTIONS) {
   for (const f of fatal) console.log(`::error title=Quality guard stopped the deploy::${f}`);
 }
 if (fatal.length) process.exit(1);
-try { if (fs.existsSync("data")) fs.writeFileSync(GUARD, JSON.stringify({ at: now, count })); } catch { /* */ }
+try { if (fs.existsSync("data")) fs.writeFileSync(GUARD, JSON.stringify({ at: now, count, byVenue })); } catch { /* */ }
