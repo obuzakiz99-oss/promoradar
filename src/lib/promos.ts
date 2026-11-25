@@ -147,10 +147,11 @@ async function getPromosLive(): Promise<Collected> {
       if ((!p.endsAt || p.venue.id === "bybit") && !p.evergreen) {
         const M = "[Jj]an|[Ff]eb|[Mm]ar|[Aa]pr|May|[Jj]un|[Jj]ul|[Aa]ug|[Ss]ept?|[Oo]ct|[Nn]ov|[Dd]ec";   // "May" capitalised only ("users may 1…")
         const mon = (s: string) => ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].indexOf(s.slice(0, 3).toLowerCase());
-        const txt = d.blocks.slice(0, 40).map((b) => b.x).join(" ");
+        // audit 25.11: the title counts too ("Canton Carnival: final week — Ends Nov 30, 18:00 (UTC+8)")
+        const txt = [p.titleOrig ?? p.title, ...d.blocks.slice(0, 40).map((b) => b.x)].join(" ");
         const y0 = new Date(p.publishedAt || now).getUTCFullYear();
         const range = txt.match(new RegExp(String.raw`\b(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?(?:,? \d{1,2}:\d{2})?\s*(?:[-–~]|to|until|through)\s*(?:(${M})[a-z]*\.? )?(\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`))
-          ?? txt.match(new RegExp(String.raw`\b(?:until|till|through|ends? on|ending)\s+()()()(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`));
+          ?? txt.match(new RegExp(String.raw`\b(?:until|till|through|[Ee]nds?(?: on)?|[Ee]nding(?: on)?)\s+()()()(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`));
         if (range) {
           const mEnd = mon(range[4] || range[1]), dEnd = +range[5], yEnd = +(range[6] || range[3] || y0);
           const end = Date.UTC(yEnd, mEnd, dEnd, 23, 59);
@@ -173,8 +174,12 @@ async function getPromosLive(): Promise<Collected> {
         meta.datesFromRules = true;
       }
       // "Last 5 days to enjoy up to 7% APR" (KuCoin KCUSD, audit 23.11) — ends N days after the post
-      const lastN = (p.titleOrig ?? p.title).match(/\b(?:last|final|only) (\d{1,2}) days?\b/i);
-      if (!p.endsAt && p.publishedAt && lastN) { p.endsAt = p.publishedAt + +lastN[1] * 86400_000; meta.datesFromRules = true; }
+      // audit 25.11: also "7 days left in Referral Rush", "⏰ Only 14 days" in the first lines, "final week", "this week"
+      const head5 = [p.titleOrig ?? p.title, ...d.blocks.slice(0, 6).map((b) => b.x)].join(" ");
+      const lastN = head5.match(/\b(?:last|final|only) (\d{1,2}) days?\b|\b(\d{1,2}) days? (?:left|remaining|to go)\b/i);
+      const weekN = /\b(?:final|last|this) week\b/i.test(p.titleOrig ?? p.title);
+      const nDays = lastN ? +(lastN[1] ?? lastN[2]) : weekN ? 7 : 0;
+      if (!p.endsAt && p.publishedAt && nDays > 0) { p.endsAt = p.publishedAt + nDays * 86400_000; meta.datesFromRules = true; }
       // audit 19.11: a timeline of bare dates with no "period" line ("Subscription channel closes 2026-11-18") — when every
       // date in the rules is over a day old the campaign is over (a Bitget IPO challenge kept saying «Триває» after it closed)
       if (!p.endsAt && !p.evergreen) {
