@@ -1,0 +1,1 @@
+{"id":"gate:102981","h":"7rir_QRUs_7JwCnt","v":1,"at":1795592436243,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"trade_futures","usd":5000},"typical":{"amount":10,"unit":"USDT"},"max":{"amount":100,"unit":"USD"},"pool":{"amount":500000,"unit":"USDT"},"days":14}}
