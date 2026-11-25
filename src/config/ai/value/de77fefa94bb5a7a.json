@@ -1,1 +1,1 @@
-{"id":"tg:Kucoin_News/37220","h":"eFoGFVLUS2BlQGVh","v":1,"at":1795615855061,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"trade_futures","usd":100},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":5,"unit":"USDT"}}}
+{"id":"tg:Kucoin_News/37220","h":"mOtdCTog9pTPlu9B","v":1,"at":1795617558771,"data":{"isPromo":true,"socialOnly":false,"mech":"first_n","act":{"kind":"trade_futures","usd":100},"typical":{"amount":100,"unit":"USDT"},"max":{"amount":100,"unit":"USDT"},"winners":200}}
