@@ -2,50 +2,69 @@
  * Google Gemini (free tier of the Gemini API, key from aistudio.google.com) — owner 25.11: "run it without the laptop,
  * for free". Used when there is no ANTHROPIC_API_KEY: translations (translate.ts) and reading promo rules (value.ts).
  * The free tier allows a few requests per minute, so callers keep their batches small and sequential.
- * The model is picked from the account's model list (the newest "flash" model) unless GEMINI_MODEL is set.
+ * Models: the newest stable "flash" models on the account (GEMINI_MODEL first when set); a busy model (503) is retried
+ * after a pause and then replaced by the next one in the list.
  */
 const BASE = "https://generativelanguage.googleapis.com/v1beta";
-let MODEL: Promise<string> | undefined;
+const FALLBACK = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+let MODELS: Promise<string[]> | undefined;
 
 export const hasGemini = () => !!process.env.GEMINI_API_KEY;
 
-async function pickModel(key: string): Promise<string> {
-  if (process.env.GEMINI_MODEL) return process.env.GEMINI_MODEL;
+async function pickModels(key: string): Promise<string[]> {
+  const pinned = process.env.GEMINI_MODEL ? [process.env.GEMINI_MODEL] : [];
   try {
     const r = await fetch(`${BASE}/models?pageSize=200`, { headers: { "x-goog-api-key": key }, signal: AbortSignal.timeout(20_000) });
     const j = (await r.json()) as { models?: Array<{ name: string; supportedGenerationMethods?: string[] }> };
-    const names = (j.models ?? []).filter((m) => m.supportedGenerationMethods?.includes("generateContent")).map((m) => m.name.replace(/^models\//, ""))
-      .filter((n) => /^gemini-[\d.]+-flash$/.test(n));   // stable flash models only (no -lite / -preview / -exp)
-    const ver = (n: string) => Number(n.match(/^gemini-([\d.]+)/)?.[1] ?? 0);
-    names.sort((a, b) => ver(b) - ver(a));
-    if (names[0]) return names[0];
-  } catch { /* fall through */ }
-  return "gemini-2.5-flash";
+    const STABLE = /^gemini-[0-9.]+-flash(-lite)?$/;   // no -preview / -exp builds
+    const ver = (n: string) => Number(n.match(/^gemini-([0-9.]+)/)?.[1] ?? 0);
+    const names = (j.models ?? [])
+      .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
+      .map((m) => m.name.replace(/^models\//, ""))
+      .filter((n) => STABLE.test(n))
+      .sort((a, b) => ver(b) - ver(a) || Number(a.endsWith("-lite")) - Number(b.endsWith("-lite")));
+    return [...new Set([...pinned, ...names, ...FALLBACK])];
+  } catch {
+    return [...new Set([...pinned, ...FALLBACK])];
+  }
 }
 
 let lastCall = 0;
-/** One prompt → text (or JSON text when `json`). Throws on HTTP errors (429 = free quota used up for now). */
+/** One prompt → text (or JSON text when `json`). Throws with the last HTTP error (429 = free quota used up for now). */
 export async function gemini(prompt: string, opts: { system?: string; json?: boolean; timeoutMs?: number } = {}): Promise<string> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("no GEMINI_API_KEY");
-  MODEL ??= pickModel(key);
-  const model = await MODEL;
-  // free tier: stay under ~10 requests a minute
-  const wait = lastCall + 6500 - Date.now();
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-  lastCall = Date.now();
-  const r = await fetch(`${BASE}/models/${model}:generateContent`, {
-    method: "POST", signal: AbortSignal.timeout(opts.timeoutMs ?? 90_000),
-    headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ...(opts.system ? { systemInstruction: { parts: [{ text: opts.system }] } } : {}),
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2, ...(opts.json ? { responseMimeType: "application/json" } : {}) },
-    }),
-  });
-  if (!r.ok) throw new Error(`gemini ${r.status}: ${(await r.text()).slice(0, 160)}`);
-  const j = (await r.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-  return (j.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
+  MODELS ??= pickModels(key);
+  const models = await MODELS;
+  let last = "gemini: no answer";
+  // 25.11: the first live run got "503 overloaded" — retry with a pause, then the next model in the list
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const model = models[Math.min(models.length - 1, Math.floor(attempt / 2))];
+    // free tier: stay under ~10 requests a minute (+ a longer pause before a retry)
+    const wait = lastCall + 6500 + attempt * 8000 - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    lastCall = Date.now();
+    try {
+      const r = await fetch(`${BASE}/models/${model}:generateContent`, {
+        method: "POST", signal: AbortSignal.timeout(opts.timeoutMs ?? 90_000),
+        headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...(opts.system ? { systemInstruction: { parts: [{ text: opts.system }] } } : {}),
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.2, ...(opts.json ? { responseMimeType: "application/json" } : {}) },
+        }),
+      });
+      if (r.ok) {
+        const j = (await r.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+        return (j.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
+      }
+      last = `gemini ${r.status} (${model}): ${(await r.text()).replace(/\s+/g, " ").slice(0, 140)}`;
+      if (![500, 503, 504].includes(r.status)) break;   // 429 quota / 400 / 403: retrying won't help this build
+    } catch (e) {
+      last = `gemini network (${model}): ${String(e instanceof Error ? e.message : e).slice(0, 100)}`;
+    }
+  }
+  throw new Error(last);
 }
 
 /** Translate a batch of promo texts; returns the same number of strings ("" where it failed). */
