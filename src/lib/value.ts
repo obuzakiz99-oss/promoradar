@@ -187,7 +187,8 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
         if (a) store[it.p.id] = { h: hashOf(it.text), v: VER, at: now, a };
       } catch (e) {
         console.warn(`[value/gemini] ${it.p.id}: ${e instanceof Error ? e.message : e}`);
-        if (/gemini 4(29|03|01)/.test(String(e))) break;   // free quota used up / bad key — try again next build
+        // audit 2: any failure ends Gemini for this build (busy models × timeouts could otherwise eat the 25-min job)
+        break;
       }
     }
     const live = new Set(promos.map((p) => p.id));
@@ -253,7 +254,9 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   // (Gate "100 USDT Dual Investment Trial Fund" read as ≈$40, KuCoin "Futures Trial Fund — withdrawable profit ≤ 20%")
   const trial = /\b(trial funds?|trial vouchers?|position (trial )?vouchers?|experience (funds?|vouchers?)|trial bonus)\b/i.test(rules);
   // audit 25.11 (deep): CoinW "1,200% APR paid as a Mega Coupon" and "100 USDT Super Bonus" (a futures bonus) were counted as cash
-  const couponWord = /\b(coupons?|vouchers?|super bonus|futures bonus|bonus funds?|deduction|cashback vouchers?)\b/i.test(rules);
+  // audit 2: the voucher may be named only in the rules (Bitget 5–50 USDT copy-trading voucher, CoinW "Super Bonus"), and
+  // an APR / rate-up coupon raises cash interest — it is not a voucher itself (XT "Bonus APR Coupon")
+  const couponWord = (/\b(coupons?|vouchers?|super bonus|futures bonus|bonus funds?|deduction|cashback vouchers?)\b/i.test(rules) && !/\b(apr|apy|rate[- ]up|interest|yield)\s+(boost\s+)?coupons?\b/i.test(rules)) || !!m.voucherish;
   const fk = trial ? 0.1 : ({ cash: 1, mixed: 0.7, voucher: 0.4, points: 0.3 } as const)[m.payout?.form ?? (couponWord ? "voucher" : "cash")] ?? 1;
   // audit 23.11 (round 5): an "up to" APR is a ceiling — an estimate from it is never better than "low"
   // audit 25.11: a Telegram post without the exchange's full rules is never "you will really get" (Bitget trailing-stop 50 USDT)
@@ -325,6 +328,10 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       // audit 25.11: Dual Investment is a non-principal-protected option product; its "rate-up" coupons cover a few USDT
       // for 3 days (KuCoin: 50 % on max 10 USDT principal read as "+$78 on $1,000")
       if (/dual investment/i.test(rules)) return out(undefined, "low", "none");
+      // audit 2 (25.11): Bitrue SOL "up to 50%" → +$37, a stock PoolX 62% → +$42 — "+$X on $1,000" is in stablecoins; a
+      // volatile coin's rate (price risk, no stablecoin row in the rules) gives no estimate
+      const stableAsset = /\b(USDT|USDC|USD1|FDUSD|USDE|USDG|PYUSD|RLUSD|DAI|KCUSD|BXUSD|USDF|stablecoins?)\b|(?<![\w.])U(?![\w.])/i.test(rules);
+      if (!stableAsset && m.aprStable === undefined) return out(undefined, "low", "none");
       const cap = usd(a?.max) ?? (capM ? Number(capM[1].replace(/,/g, "")) : undefined);
       // audit 25.11: the rules' "effective for 7 days" beats the AI's campaign length (Binance new-user 35 %: AI said 70 days)
       const textDays = daysM ? Number(daysM[1] ?? daysM[2]) : undefined;

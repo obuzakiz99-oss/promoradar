@@ -11,7 +11,7 @@ const strip = (html: string) =>
   decodeEntities(html.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").trim();
 
 /** A post headline must itself announce a campaign (market chatter / memes are skipped). */
-const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|(?<!the )spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking)\b|\bpoints$/i;
+const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|(?<!the )spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking|festival|loss coverage)\b|\bpoints$/i;
 const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update|performance report|monthly report)\b/i;
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
@@ -56,7 +56,7 @@ function pickTitle(text: string): string {
 const STORE = () => path.join(process.cwd(), "data", "telegram.json");
 const BACK_MS = 14 * 86400_000;
 type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
-const TG_VER = 5;   // 5: raw headline kept for the AI  4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
+const TG_VER = 6;   // 6: footer cut, campaign links (audit 2)  5: raw headline kept for the AI  4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
 let STORE_MEM: TgStore | null = null;
 function loadStore(): TgStore {
   if (STORE_MEM) return STORE_MEM;
@@ -118,7 +118,8 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const body = block.match(/<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/)?.[1];
     const date = Date.parse(block.match(/<time[^>]*datetime="([^"]+)"/)?.[1] ?? "");
     if (!body || !date) continue;
-    const text = strip(body);
+    // audit 2 (25.11): Bitrue posts end with a "━━━━ claim your USDT now" footer — never part of the post's headline
+    const text = strip(body).split(/^\s*[_━─=]{5,}.*$/m)[0];
     const raw = pickTitle(text), tidy = tidyHeadline(raw);
     const title = tidy && isPromo(tidy) ? tidy : raw;   // never lose a promo to the tidying
     if (!title) continue;
@@ -131,10 +132,13 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const path = (u: string) => u.split(/[?#]/)[0];   // utm_campaign=… is not a campaign page
     // audit 23.11 (round 5): Bitrue "/referral/landing?inviteCode=…" won over "/land/Bitrue-Thanksgiving-Month" — referral pages never count
     // audit 25.11: OKX posts end with a "verify our channel" link — never the campaign page
-    const ref = (u: string) => /referr|invite|register|sign-?up|channel-verification|verify|\/rewards\/mobile|\/rewards\/?$|\/download|\/app\/?$/i.test(path(u));   // + footer links every post carries (Bitrue /rewards/mobile)
-    const url = mine.find((u) => !ref(u) && /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/land\/|\/news\//i.test(path(u)))
-      ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(path(u)))
-      ?? mine[0] ?? `https://t.me/${post}`;
+    // audit 2 (25.11): MEXC "/campaigns/ReferralRush" is the campaign page — only real referral / invite landings are skipped
+    const ref = (u: string) => /\/referral(\/landing)?\b|[?&]invite(code)?=|\/invite\b|register|sign-?up|channel-verification|verify|\/rewards\/mobile|\/rewards\/?$|\/download|\/app\/?$/i.test(path(u));   // + footer links every post carries (Bitrue /rewards/mobile)
+    const url0 = mine.find((u) => !ref(u) && /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/land\/|\/news\//i.test(path(u)))
+      ?? mine.find((u) => !ref(u) && !/deposit|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(path(u)))
+      ?? `https://t.me/${post}`;
+    // a site's home page is not the campaign (MEXC Referral Rush linked mexc.com/) — the post itself is better
+    const url = /^https?:\/\/[^/]+\/?$/.test(path(url0)) ? `https://t.me/${post}` : url0;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
       category: classify(raw) !== "other" ? classify(raw) : classify(text.slice(0, 400)), publishedAt: date,
@@ -162,7 +166,7 @@ export async function telegram(): Promise<{ promos: Promo[]; status: TgStatus }>
     status[key] = { ok: true, count: 0 };
     // stored posts are re-checked against the current filter (it gets stricter over time, e.g. hack/breach news)
     // audit 23.11: a title picked from mid-post ("What's more? You can continue earning…") — drop the connector
-    promos.push(...r.value.map((p) => ({ ...p, title: p.title.replace(/^(what'?s more|plus|also|moreover|in addition|on top of that)\s*[?!:,.—–-]*\s*/i, "") }))
+    promos.push(...r.value.map((p) => ({ ...p, title: p.title.replace(/^(what'?s more|plus|also|moreover|in addition|on top of that)[\s?!:,.—–-]*/i, "") }))
       .filter((p) => p.title.length >= 12 && !/^(breakdown|details|rules|terms|how to|note)\b/i.test(p.title) && isPromo(p.title)));
   });
   return { promos, status };

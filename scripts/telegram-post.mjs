@@ -71,7 +71,7 @@ const tag = (s) => "#" + String(s).replace(/\.com$/i, "").replace(/[^\p{L}\p{N}_
 const campsOf = (p) => {
   const c = [];
   try { const u = new URL(p.url); if (u.host !== "t.me" && !/^\/[a-z-]+\/?$/i.test(u.pathname)) c.push("url:" + p.venue.id + u.host.replace(/^www\./, "") + u.pathname.replace(/\/$/, "")); } catch { /* */ }
-  if (p.reward && p.reward.amount >= 1000) c.push("pool:" + p.venue.id + ":" + Math.round(p.reward.amount) + p.reward.unit);
+  if (p.reward && p.reward.amount >= 1000) c.push("pool:" + p.venue.id + ":" + p.category + ":" + Math.round(p.reward.amount) + String(p.reward.unit).replace(/^USDT?$/, "USD"));
   return c;
 };
 // campaigns of promos already posted (also those posted before this rule existed)
@@ -79,7 +79,7 @@ for (const p of promos) if (seen.has(`promo:${p.id}`)) for (const c of campsOf(p
 const queued = new Set();
 for (const p of promos) {
   const key = `promo:${p.id}`; if (seen.has(key)) continue;
-  if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
+  if (Math.max(p.publishedAt ?? 0, p.startsAt ?? 0) && Date.now() - Math.max(p.publishedAt ?? 0, p.startsAt ?? 0) > 3 * 86400_000) continue; // only genuinely new
   // 24.11: no empty teasers, nothing ending within a day; the realistic per-person estimate is the point of the channel
   if (p.meta?.thin || (p.endsAt && p.endsAt - Date.now() < 86400_000)) continue;
   // 25.11: "Coming soon" teasers (Bitbase) — post when it starts, not before
@@ -101,7 +101,9 @@ for (const p of promos) {
   const info = [est || max, pool, entry, p.meta?.forNew ? `🆕 ${T.forNew}` : "", p.endsAt ? `⏳ ${L.ends} ${human(p.endsAt)} (${T.left(days)})` : ""].filter(Boolean);
   const foot = [SITE ? `👉 <a href="${SITE}/${LANG}/p/${slugOf(p)}/">${T.cta}</a>` : `👉 <a href="${esc(p.url)}">${T.cta}</a>`, `${tag(p.venue.name)} ${tag(kind.toLowerCase())}`];
   const camps = campsOf(p);
-  if (camps.some((c) => (state.camps[c] && Date.now() - state.camps[c] < 30 * 86400_000) || queued.has(c))) { seen.add(key); continue; }
+  const recent = (c) => state.camps[c] && Date.now() - state.camps[c] < (c.startsWith("pool:") ? 7 : 30) * 86400_000;
+  if (camps.some(recent)) { seen.add(key); continue; }
+  if (camps.some((c) => queued.has(c))) continue;
   for (const c of camps) queued.add(c);
   campOf.set(key, camps);
   msgs.push([key, [head, info, foot].map((b) => b.join("\n")).join("\n\n")]);

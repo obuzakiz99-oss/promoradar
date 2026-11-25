@@ -62,6 +62,17 @@ for (const p of P) {
   let ok = false;
   try { const u = new URL(p.url); ok = u.protocol === "https:"; } catch { /* */ }
   if (!ok) E(p, `link is not https: ${String(p.url).slice(0, 60)}`);
+  // audit 2: an exchange's home page is not a campaign page (MEXC Referral Rush linked mexc.com/)
+  else if (!p.sponsored && /^https:\/\/[^/]+\/?$/.test(String(p.url).split(/[?#]/)[0])) E(p, `links to the exchange's home page, not the campaign: ${p.url}`);
+}
+
+/* ---------- 4b) teasers and estimates (audit 2) ---------- */
+for (const p of P) {
+  const head = p.meta?.rawTitle ?? p.titleOrig ?? p.title ?? "";
+  const v = p.meta?.value;
+  if (/\b(coming soon|is coming|are coming|stay tuned|starts tomorrow|launching soon)\b/i.test(head) && !(p.startsAt && p.startsAt <= now)) E(p, "a teaser (not started yet) is shown as a live promo");
+  if (p.startsAt && p.startsAt > now && v?.net !== undefined && v.mech !== "apr") W(p, "an estimate for a promo that has not started");
+  if (v?.mech === "apr" && v.net !== undefined && v.net > 0 && p.meta?.aprStable === undefined && !/\b(USDT|USDC|USD1|FDUSD|USDE|DAI|stablecoins?)\b/i.test(head)) W(p, "APR estimate from a non-stablecoin rate?");
 }
 
 /* ---------- 5) categories & 0% fee ---------- */
@@ -76,6 +87,8 @@ for (const p of P) {
 for (const p of P) {
   const t = p.title ?? "";
   if (p.category !== "farming" && (/\s\|\s|•|^\s*[a-zа-яії]/.test(t) || t.length > 120)) W(p, "headline looks like raw exchange text");
+  // audit 2: "— You can continue…", "What's your order? — ☕️ —" — a broken tidy
+  if (/^\s*[—–-]|—\s*—|—\s*$/u.test(t)) E(p, `broken headline: "${t.slice(0, 60)}"`);
 }
 
 /* ---------- 7) site-wide texts that must not come back ---------- */
@@ -103,8 +116,8 @@ if (count === 0) fatal.push("no promos at all");
 else if (prev?.count >= 40 && count < prev.count * 0.5) fatal.push(`only ${count} promos (last good build had ${prev.count}) — a mass source outage`);
 for (const e of errors) if (/referral links|ad block|missing/.test(e.why)) fatal.push(e.why);
 // a backspace character in the code is a regex word boundary mangled by a scripted edit (25.11: happened 4 times)
-(function scan(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) scan(p); else if (/\.(ts|tsx|mjs)$/.test(e.name) && fs.readFileSync(p, "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in " + p); } })("src");
-for (const s of fs.readdirSync("scripts")) if (/\.mjs$/.test(s) && fs.readFileSync(path.join("scripts", s), "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in scripts/" + s);
+(function scan(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) scan(p); else if (/.(ts|tsx|mjs|js|py)$/.test(e.name) && fs.readFileSync(p, "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in " + p); } })("src");
+for (const s of fs.readdirSync("scripts")) if (/.(mjs|js|py)$/.test(s) && fs.readFileSync(path.join("scripts", s), "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in scripts/" + s);
 // one exchange suddenly losing most of its promos = a parser / filter broke (25.11: an over-eager duplicate rule hid 8 Bitrue promos)
 const byVenue = {};
 for (const p of P) if (p.category !== "farming") byVenue[p.venue.id] = (byVenue[p.venue.id] ?? 0) + 1;

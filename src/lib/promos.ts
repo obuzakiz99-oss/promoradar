@@ -222,7 +222,9 @@ async function getPromosLive(): Promise<Collected> {
       // The rate a stablecoin gets in the rules (a table row or a sentence naming USDT/USDC next to a %) is what $1,000 earns.
       if (meta.aprPct !== undefined) {
         const rows = d.blocks.slice(0, 80).map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x));
-        const st = rows.flatMap((x) => [...x.matchAll(/\b(USDT|USDC|USD1|FDUSD)\b[^%\n]{0,50}?(\d{1,3}(?:\.\d+)?)\s?%|(\d{1,3}(?:\.\d+)?)\s?%[^%\n]{0,30}?\b(USDT|USDC|USD1|FDUSD)\b/g)])
+        // (audit 2: only a rate — "min 100 USDT, 0.5% redemption fee" turned a SOL estimate into ≈ $0)
+        const st = rows.filter((x) => /\b(APR|APY|rate|interest|yield)\b/i.test(x) && !/\b(fee|commission|penalty)\b/i.test(x))
+          .flatMap((x) => [...x.matchAll(/\b(USDT|USDC|USD1|FDUSD)\b[^%\n]{0,50}?(\d{1,3}(?:\.\d+)?)\s?%|(\d{1,3}(?:\.\d+)?)\s?%[^%\n]{0,30}?\b(USDT|USDC|USD1|FDUSD)\b/g)])
           .map((x) => Number(x[2] ?? x[3])).filter((n) => n > 0 && n <= 100);
         if (st.length && Math.max(...st) < meta.aprPct) meta.aprStable = Math.max(...st);
       }
@@ -234,6 +236,11 @@ async function getPromosLive(): Promise<Collected> {
       // what is actually paid (cash / voucher / points), claim window, review & payout days — with the quoted sentences
       const po = payoutOf(d.blocks.map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x)));
       if (po) meta.payout = po;
+      // audit 2: rewards paid as vouchers / coupons / futures bonuses are named in the rules, not the headline
+      if (!po || po.form === undefined) {
+        const rew = d.blocks.slice(0, 60).map((b) => b.x).join(" ");
+        if (/\b(reward|prize|receive|get|earn|win)\w*\b[^.]{0,60}\b(vouchers?|coupons?|futures bonus|super bonus|trial funds?|bonus funds?)\b/i.test(rew) && !/\b(apr|apy|rate[- ]up|interest|yield)\s+(boost\s+)?coupons?\b/i.test(rew)) meta.voucherish = true;
+      }
       if (/\b(futures|perps?|perpetual|contract|CFD)\b/i.test(`${p.title} ${tm.minEntry?.text ?? ""}`)) meta.futures = true;
       // a small headline amount someone "gets" is per person, not the pool ("Get $2 in WLFI" while the rules say
       // 60,000 WLFI in total): keep it as the per-person figure and look for the real pool in the rules (audit 12.11)
@@ -282,12 +289,13 @@ async function getPromosLive(): Promise<Collected> {
     if (!p.sponsored && (localFiat || geo.noUA || (geo.only && !/^(EU|EEA|Europe|CEE|CIS|CIS & CEE|Ukraine)$/i.test(geo.only)))) {
       hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "region" }); continue;
     }
-    if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z])\b/i.test(p.title)
+    if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z]\w*)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))
       // audit 25.11 (deep): "only for users who have never used XT Earn", "new futures users only" sat in the rules, not the title
       || (d?.blocks ?? []).slice(0, 25).some((b) => /\bnew (futures |spot |earn )?users? only\b|\bonly (for |available to |open to )?new (futures |spot )?(users|traders|customers)\b|\bexclusive(ly)? (for|to) new (users|traders)\b|\b(users|those) who have never (used|traded|deposited|registered)\b/i.test(b.x))) meta.forNew = true;
     // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
-    const AUD = /\b(P2P )?merchants?\b|\bVIP ?\d*\+?\s*(users|clients|members)?\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
+    // (audit 2: + VVIP, broker referral codes, taker / market-share programmes, IPO subscribers)
+    const AUD = /\b(P2P )?merchants?\b|\bV?VIP ?\d*\+?\s*(users|clients|members)?\b|\bbroker (referral )?code\b|\btaker program(me)?\b|\b(volume|market) share\b|\bexclusive to [A-Z][\w ]{0,30}subscribers\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
     if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text))
       // audit 25.11 (deep): KuCoin "only for users bound to the ChartControl broker code"
       || (d?.blocks ?? []).slice(0, 25).some((b) => /\b(broker code|bound to (the )?broker|via (the )?[A-Z]\w+ broker|API (users|partners) only|institutional (users|clients) only)\b/i.test(b.x)))) meta.audience = true;
@@ -300,7 +308,11 @@ async function getPromosLive(): Promise<Collected> {
       && !costs.test(p.title) && !/\b(trade|trading|swap|deposit|stake|buy)\b/i.test(p.titleOrig ?? p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x) || mustAct.test(b.x))) meta.noDeposit = true;
     const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
     // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
-    if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "teaser", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
+    // audit 2 (25.11): teasers with numbers were shown live with estimates (Ourbit "XP Arena Is Coming" — starts Dec 2,
+    // Bitbase "Coming Soon", Bitrue "starts tomorrow… stay tuned") — hidden until the start post comes
+    const head1 = p.meta?.rawTitle ?? p.titleOrig ?? p.title;
+    const teaser = /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming|is coming|are coming|starts tomorrow|launching soon)\b/i.test(head1);
+    if ((thin || teaser) && (teaser || /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) && !(p.startsAt && p.startsAt <= now)) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "teaser", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     if (thin) meta.thin = true;
     p.meta = Object.keys(meta).length ? meta : p.meta;
     promos.push(p);
@@ -319,7 +331,8 @@ async function getPromosLive(): Promise<Collected> {
   for (const p of promos) if (p.meta?.linkKey) { const k = `${p.venue.id}|${p.meta.linkKey}`; linkUse.set(k, (linkUse.get(k) ?? 0) + 1); }
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
-    try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
+    // (lower case: the Telegram linkKey is lower-cased — Bitrue "/land/Bitrue-Thanksgiving-Month" missed its twin)
+    try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}`.toLowerCase() : ""; } catch { /* keep */ }
     // a general section page (one path segment, no id: Bitrue /flexible-staking, LBank /futures-earn) is shared by many
     // different promos — never a duplicate key; a campaign page (/flexible-staking/xrp, /pointmall/10003934-…) is
     try { const pn = new URL(p.url).pathname; if (/^\/[a-z-]+\/?$/i.test(pn) || /\/rewards\/mobile|\/download|channel-verification/i.test(pn)) u = ""; } catch { /* */ }
@@ -349,6 +362,16 @@ async function getPromosLive(): Promise<Collected> {
     const lead = head.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().slice(0, 32);
     if (lead.length >= 24 && !p.sponsored && !p.evergreen && !dups.has(p.id)) { const k = `${p.venue.id}|lead|${lead}`; if (seenUrl.has(k)) dupOf(p.id, k); else seenUrl.set(k, p.id); }
     // audit 24.11: 8 near-identical "Biconomy.com Earn – DHN, GBCK, ATS & MTC Locked Products" cards — one per venue (the newest)
+    // audit 2 (25.11): one named event posted twice (CoinW "TradFi Campaign Phase 4", Bitget "Super Earn Festival", MEXC
+    // "Futures Earn" ×2 — one card $0, the other +$12): the event's own name, within two weeks
+    const ev = (p.meta?.rawTitle ?? head).match(/\b((?:[A-Z][\w×&'-]*\s+){0,3})(Festival|Carnival|Fest|Campaign|Futures Earn|Super Earn|Championship|League)\b(?:\s+(?:Phase|Season|S)\s?(\d+))?/);
+    // the exchange's own name in front ("CoinW TradFi Campaign" vs "TradFi Campaign") is not part of the event's name
+    const evName = ev ? ev[1].trim().toLowerCase().split(/\s+/).filter((w) => w && w !== p.venue.name.toLowerCase() && w !== p.venue.id).join(" ") : "";
+    const evKey = ev && (evName || /earn/i.test(ev[2])) ? `${p.venue.id}|event|${evName} ${ev[2].toLowerCase()}${ev[3] ? ` ${ev[3]}` : ""}` : "";
+    if (evKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
+      const prev = poolSeen.get(evKey);
+      if (prev && prev.t - p.publishedAt < 14 * 86400_000) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id });
+    }
     const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
     if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dupOf(p.id, series); else seenUrl.set(series, p.id); }
     const tag = (head.match(/\b[A-Z][A-Z0-9]{2,9}\b/g) ?? []).find((x) => !GENERIC.test(x));
@@ -413,9 +436,19 @@ async function getPromosLive(): Promise<Collected> {
   const onSite = (p: Promo) => kept.some((k) => k.venue.id === p.venue.id && (
     (!!p.meta?.linkKey && k.meta?.linkKey === p.meta.linkKey) || (!!pathOf(p.url) && pathOf(k.url) === pathOf(p.url))
     || (!!p.reward && !!k.reward && p.reward.amount >= 1000 && k.reward.amount === p.reward.amount && k.reward.unit === p.reward.unit)));
+  // audit 2: one stand-in per campaign — follow the twin chain to its root (B and C duplicates of junk A: only one shows),
+  // newest first so the result doesn't depend on the order of the list
+  const rootOf = (id: string) => { let r = id; for (let i = 0; i < 10 && twin.has(r); i++) r = twin.get(r)!.id; return r; };
+  const stoodIn = new Set<string>();
+  later.sort((a, b) => b.publishedAt - a.publishedAt);
   for (const p of later) {
     const tw = twin.get(p.id);
-    if (tw && !kept.some((k) => k.id === tw.id) && !later.some((x) => x.id === tw.id) && !onSite(p)) { consider(p); continue; }   // its twin was hidden as junk
+    const root = rootOf(p.id);
+    if (tw && root !== p.id && !kept.some((k) => k.id === root) && !stoodIn.has(root) && !onSite(p)) {
+      const n = kept.length; consider(p);
+      if (kept.length > n) { stoodIn.add(root); continue; }   // its twin was hidden as junk — this one stands in
+      continue;                                               // hidden by consider() itself (junk too)
+    }
     hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "duplicate", of: tw ? `${tw.id} (${tw.rule})` : undefined });
   }
   promos.splice(0, promos.length, ...kept);

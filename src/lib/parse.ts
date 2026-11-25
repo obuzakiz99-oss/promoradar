@@ -23,6 +23,8 @@ export function classify(title: string, hint?: string): Category {
 }
 
 function kindOf(t: string): Category {
+  // audit 2 (25.11): Coinstore "Futures Trading Sprint", a "compete for…" airdrop / bonus were filed by their side words
+  if (has(t, /\b(compete|competition|leaderboard|tournament|trading sprint|top \d+ traders)\b/i) && !has(t, /\b(yield|earn|apr|apy) arena\b/i)) return "competition";
   if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   // audit 23.11: MEXC "Futures Loss Coverage" (pays back futures losses) was filed as a deposit bonus
@@ -61,8 +63,10 @@ export function parseReward(title: string): Reward | undefined {
   // audit 25.11: "$1.8B in weekly spot volume" (Bitrue) was posted as the pool — market figures are not prizes,
   // and "earn up to $300 daily" / "per friend" is what one person gets, not a pool
   const t = t0
-    .replace(/\$?\s?[\d][\d,.]*\s?(k|m|b|million|billion)?\+?\s*([A-Z][A-Z0-9]{1,9}\s)?(in )?((weekly|daily|monthly|total|24h|record)\s)*(spot |futures |trading )?(volume|TVL|market cap|valuation|liquidity|deposits|users|traders)\b/gi, " ")
-    .replace(/\$?\s?[\d][\d,.]*\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9}\s?)?(daily|per day|a day|each day|per friend|per referral|per invite|per user|per person|each)\b/gi, " ");
+    // (audit 2, 25.11: "liquidity / deposits / traders" and a bare "each" / "daily" also ate real pools — "Share 100,000 USDT
+    // in Liquidity Rewards", "Win 20,000 USDT Daily Prize Pool", "Top 100 traders share 30,000 USDT each week")
+    .replace(/\$?\s?[\d][\d,.]*\s?(k|m|b|million|billion)?\+?\s*([A-Z][A-Z0-9]{1,9}\s)?(in )?((weekly|daily|monthly|total|24h|record)\s)*(spot |futures |trading )?(volume|TVL|market cap|valuation)\b/gi, " ")
+    .replace(/\$?\s?[\d][\d,.]*\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9}\s?)?(daily|per day|a day|each day|per friend|per referral|per invite|per user|per person|each (user|person|winner|friend))\b(?!\s+(\w+\s+){0,2}(prize|pool|rewards? pool))/gi, " ");
   const found: Reward[] = [];
   const letters = t.replace(/[^A-Za-z]/g, "");
   const shouty = letters.length > 12 && (letters.match(/[A-Z]/g)?.length ?? 0) / letters.length > 0.7;
@@ -104,11 +108,15 @@ export function tidyHeadline(s: string): string {
     .replace(/\s*[|｜]\s*/g, " — ")
     .replace(/\s*(👉|➡️|→)\s*(more )?(details|learn more|join now|read more|here)\b.*$/i, "")
     .replace(/[\s\u{1F300}-\u{1FAFF}☀-➿️]+$/u, "")
+    .replace(/^[\s\u{1F300}-\u{1FAFF}☀-➿️#]+/u, "")   // leading "🏆 " / "#" too (audit 2)
     .trim();
   // the headline is its first part; a part with the money ("Share 10,000 USDT", "5% base APR") is kept next to it
   // (case-sensitive ticker: "Phase 4 is Live" is not an amount)
   const AMT = /\$\s?\d|\d[\d,.]*\s?(%|[kKmMbB]\b|USDT|USDC|USD|BTC|ETH|[A-Z]{2,6}\b)/;
-  const parts = t.split(/\s+—\s+|\s+•\s+|(?<=[.!?])\s+/).map((x) => x.trim().replace(/\.$/, "")).filter(Boolean);
+  // (audit 2: no split after abbreviations — "Bitget U.S. Stock…" became "Bitget U.S — Stock", "a est. 4%" was cut;
+  // emoji-only parts ("☕️") go)
+  const parts = t.split(/\s+—\s+|\s+•\s+|(?<=[\p{L}\p{N}]{3}[.!?])(?<!\b(?:est|approx|incl|etc|vs|min|max)\.)\s+/u)
+    .map((x) => x.trim().replace(/\.$/, "").replace(/^[—–-]\s*/, "")).filter((x) => /[\p{L}\p{N}]/u.test(x));
   if (parts.length > 1) {
     let out = parts[0];
     if (out.length < 28 && parts[1]) out = `${out} — ${parts[1]}`;

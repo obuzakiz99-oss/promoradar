@@ -24,14 +24,15 @@ async function pickModels(key: string): Promise<string[]> {
       .filter((n) => STABLE.test(n))
       .sort((a, b) => ver(b) - ver(a) || Number(a.endsWith("-lite")) - Number(b.endsWith("-lite")));
     const full = names.filter((n) => !n.endsWith("-lite")), lite = names.filter((n) => n.endsWith("-lite"));
-    // only models THIS key may use: two newest full flash models, then two lite ones — each tried once
-    return [...new Set([...pinned, ...full.slice(0, 2), ...lite.slice(0, 2), ...FALLBACK])];
+    // audit 2: newest flash, then the *-latest aliases (always open to new keys), then lite models
+    return [...new Set([...pinned, ...full.slice(0, 1), ...FALLBACK, ...full.slice(1, 2), ...lite.slice(0, 2)])];
   } catch {
     return [...new Set([...pinned, ...FALLBACK])];
   }
 }
 
 let lastCall = 0;
+const GONE = new Set<string>();   // models that answered 404 (closed to this key) — skipped for the rest of the build
 /** One prompt → text (or JSON text when `json`). Throws with the last HTTP error (429 = free quota used up for now). */
 export async function gemini(prompt: string, opts: { system?: string; json?: boolean; timeoutMs?: number } = {}): Promise<string> {
   const key = process.env.GEMINI_API_KEY;
@@ -41,14 +42,15 @@ export async function gemini(prompt: string, opts: { system?: string; json?: boo
   let last = "gemini: no answer";
   // 25.11: the first live run got "503 overloaded" — retry with a pause, then the next model in the list
   for (let attempt = 0; attempt < Math.min(4, models.length); attempt++) {
-    const model = models[attempt];   // a busy model stays busy for minutes — the next one is the better retry
+    const model = models.filter((m) => !GONE.has(m))[attempt];   // a busy model stays busy for minutes — the next one is the better retry
+    if (!model) break;
     // free tier: stay under ~10 requests a minute (+ a longer pause before a retry)
     const wait = lastCall + 6500 + attempt * 3000 - Date.now();
     if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     lastCall = Date.now();
     try {
       const r = await fetch(`${BASE}/models/${model}:generateContent`, {
-        method: "POST", signal: AbortSignal.timeout(opts.timeoutMs ?? 90_000),
+        method: "POST", signal: AbortSignal.timeout(opts.timeoutMs ?? 45_000),
         headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
         body: JSON.stringify({
           ...(opts.system ? { systemInstruction: { parts: [{ text: opts.system }] } } : {}),
@@ -61,6 +63,7 @@ export async function gemini(prompt: string, opts: { system?: string; json?: boo
         return (j.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
       }
       last = `gemini ${r.status} (${model}): ${(await r.text()).replace(/\s+/g, " ").slice(0, 140)}`;
+      if (r.status === 404) GONE.add(model);
       if (![404, 500, 503, 504].includes(r.status)) break;   // busy / gone → next model; 429 quota / 400 / 403 → stop for this build
     } catch (e) {
       last = `gemini network (${model}): ${String(e instanceof Error ? e.message : e).slice(0, 100)}`;

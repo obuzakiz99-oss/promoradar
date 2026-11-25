@@ -45,6 +45,7 @@ export interface Promo {
   meta?: {
     source?: string;         // "airdrops.io", "DefiLlama"…
     rawTitle?: string;       // the exchange's own headline before tidyHeadline — what the AI reads and amounts are parsed from
+    voucherish?: boolean;    // the rules say the reward is a coupon / voucher / futures bonus (counted at 0.4 like a voucher)
     linkKey?: string;        // first campaign link in a Telegram post (bit.ly, landing…) — finds the same campaign posted twice
     actions?: string;        // what to do (airdrops)
     requires?: string[];     // telegram, x, email, kyc, discord…
