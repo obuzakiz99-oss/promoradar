@@ -237,7 +237,11 @@ async function getPromosLive(): Promise<Collected> {
       if (/\b(futures|perps?|perpetual|contract|CFD)\b/i.test(`${p.title} ${tm.minEntry?.text ?? ""}`)) meta.futures = true;
       // a small headline amount someone "gets" is per person, not the pool ("Get $2 in WLFI" while the rules say
       // 60,000 WLFI in total): keep it as the per-person figure and look for the real pool in the rules (audit 12.11)
-      const perPersonHeadline = !!p.reward && (p.reward.usd ?? Infinity) < 100 && /\b(get|receive|claim|earn|grab|enjoy)\s+(up to\s+)?\$?\s?\d/i.test(p.title);
+      // 25.11: "Get up to 800 USDT in rewards!" (BingX, the pool was 200,000) — "get/earn up to X" is what one person gets,
+      // up to a few thousand dollars, unless the headline itself calls it a pool / a share / a total
+      const head0 = p.meta?.rawTitle ?? p.titleOrig ?? p.title;
+      const getUpTo = /\b(get|receive|claim|earn|grab|enjoy|unlock)\s+up to\s+\$?\s?\d/i.test(head0) && !/\b(pool|share|total|in rewards pool|prize pool|split)\b/i.test(head0);
+      const perPersonHeadline = !!p.reward && (((p.reward.usd ?? Infinity) < 100 && /\b(get|receive|claim|earn|grab|enjoy)\s+(up to\s+)?\$?\s?\d/i.test(head0)) || (getUpTo && (p.reward.usd ?? Infinity) <= 5000));
       if (perPersonHeadline && p.reward) {
         meta.perUser ??= { amount: p.reward.amount, unit: p.reward.unit, usd: p.reward.usd, text: p.title };
         p.reward = undefined;

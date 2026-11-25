@@ -82,6 +82,8 @@ for (const p of promos) {
   if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
   // 24.11: no empty teasers, nothing ending within a day; the realistic per-person estimate is the point of the channel
   if (p.meta?.thin || (p.endsAt && p.endsAt - Date.now() < 86400_000)) continue;
+  // 25.11: "Coming soon" teasers (Bitbase) — post when it starts, not before
+  if ((p.startsAt && p.startsAt > Date.now()) || /\b(coming soon|stay tuned|teaser|sneak peek)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)) continue;
   // not translated yet → wait for a later build (the laptop translates every 30 min); after a day post as is
   const tr = feed.titles?.[LANG]?.[p.id];
   if (LANG !== "en" && !tr && /^[\x00-\x7F -⯿️\u{1F000}-\u{1FAFF}]*$/u.test(p.title) && Date.now() - (p.publishedAt ?? 0) < 86400_000) continue;
