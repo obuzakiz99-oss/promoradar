@@ -104,7 +104,7 @@ async function getPromosLive(): Promise<Collected> {
   const details: Record<string, PromoDetails> = { ...(await getDetails(all.filter((p) => !manualDetails[p.id])).catch(() => ({}))), ...manualDetails };
   const px = await prices().then((x) => x.px).catch(() => ({} as Record<string, number>));
   const promos: Promo[] = [];
-  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news" | "region" | "duplicate"; of?: string; perUserUsd?: number; netUsd?: number }> = [];
+  const hidden: Array<{ id: string; venue: string; title: string; url: string; why: JunkReason | "news" | "region" | "duplicate" | "ended" | "ended-text" | "upgraded" | "teaser"; of?: string; perUserUsd?: number; netUsd?: number }> = [];
   for (const p of all) {
     // links scraped from HTML / Telegram keep "&amp;" — the second parameter (inviteCode, rcode…) was lost (audit 14.11)
     // audit 22.11: links copied from Telegram can be plain http (WhiteBIT) — exchanges all serve https
@@ -252,13 +252,13 @@ async function getPromosLive(): Promise<Collected> {
       }
       p.meta = meta;
     }
-    if (p.endsAt && p.endsAt < now) continue;          // the rules say it has already ended
+    if (p.endsAt && p.endsAt < now) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "ended", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }          // the rules say it has already ended
     // closed early: exchanges put an "UPDATE: this campaign has ended early" line at the top of the rules
     const ENDED = /\b(has ended( early)?|ended early|campaign (is )?(now )?(closed|over|concluded)|has (been )?(concluded|terminated|suspended))\b/i;
-    if (d && d.blocks.slice(0, 8).some((b) => b.x.split(/(?<=[.!])\s+/).some((s) => ENDED.test(s) && !/\b(will|if|once|after)\b/i.test(s)))) continue;
+    if (d && d.blocks.slice(0, 8).some((b) => b.x.split(/(?<=[.!])\s+/).some((s) => ENDED.test(s) && !/\b(will|if|once|after)\b/i.test(s)))) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "ended-text", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     // audit 25.11 (deep): "This Campaign has been upgraded … Please refer to the most recent … announcement" — the old page of a
     // replaced campaign (the new page also says "has been upgraded", but never sends you elsewhere)
-    if (d && d.blocks.slice(0, 8).some((b) => /has been upgraded/i.test(b.x) && /\brefer to the (most recent|latest|new)\b/i.test(b.x))) continue;
+    if (d && d.blocks.slice(0, 8).some((b) => /has been upgraded/i.test(b.x) && /\brefer to the (most recent|latest|new)\b/i.test(b.x))) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "upgraded", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
     const geo = geoOf(p.title, d);
@@ -296,7 +296,7 @@ async function getPromosLive(): Promise<Collected> {
       && !costs.test(p.title) && !/\b(trade|trading|swap|deposit|stake|buy)\b/i.test(p.titleOrig ?? p.title) && !(d?.blocks ?? []).slice(0, 80).some((b) => costs.test(b.x) || mustAct.test(b.x))) meta.noDeposit = true;
     const thin = !p.reward && !p.endsAt && !meta.perUser && !meta.minEntry && !(d && d.facts.length) && meta.apr === undefined && !p.evergreen;
     // pure teasers ("T-minus 24 hours until…", "coming soon") carry nothing to act on yet
-    if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) continue;
+    if (thin && /\b(t-?minus|coming soon|stay tuned|countdown|sneak peek|teaser|guess (what|the)|something (big|new) is coming)\b/i.test(p.title)) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "teaser", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     if (thin) meta.thin = true;
     p.meta = Object.keys(meta).length ? meta : p.meta;
     promos.push(p);
