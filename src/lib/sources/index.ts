@@ -85,6 +85,7 @@ export async function collectAll(): Promise<Collected> {
     else if (prev && now - prev.at < LASTGOOD_H * 3600_000 && prev.raws.length) {
       raws = prev.raws;
       st.error = `${st.error ?? "empty answer"} — showing the last good data from ${new Date(prev.at).toISOString().slice(11, 16)} UTC`;
+      st.ok = true;   // covered for up to LASTGOOD_H hours — the hourly health check alerts only once the copy is too old
     }
     for (const raw of raws) { const p = fromRaw(raw); if (p && keep(p)) st.count++; }
     status[id] = st;
