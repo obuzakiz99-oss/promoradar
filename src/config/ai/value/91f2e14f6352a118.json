@@ -1,1 +1,1 @@
-{"id":"gate:102970","h":"E0GjJ6UCVouhlmA6","v":1,"at":1795581507570,"data":{"isPromo":true,"socialOnly":false,"mech":"lucky_draw","act":{"kind":"register","usd":0},"pool":{"amount":10000,"unit":"USDT"},"days":4}}
+{"id":"gate:102970","h":"E0GjJ6UCVouhlmA6","v":1,"at":1795581484181,"data":{"isPromo":true,"socialOnly":false,"mech":"lucky_draw","act":{"kind":"register"},"pool":{"amount":10000,"unit":"USDT"},"days":4}}
