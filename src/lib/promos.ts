@@ -303,14 +303,14 @@ async function getPromosLive(): Promise<Collected> {
   // audit 25.11 (deep): every hidden duplicate records its twin and the rule (data/hidden-promos.json) — 3 promos vanished
   // with no visible twin because the twin was later hidden as junk; such a duplicate now stands in for its twin
   const dupOf = (id: string, k: string, other?: string) => { dups.add(id); twin.set(id, { id: other ?? seenUrl.get(k) ?? "?", rule: k.split("|")[1] ?? "url" }); };
-  const linkUse = new Map<string, number>(), urlUse = new Map<string, number>();
-  for (const p of promos) { try { const x = new URL(p.url); const k = `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}`; urlUse.set(k, (urlUse.get(k) ?? 0) + 1); } catch { /* */ } }
+  const linkUse = new Map<string, number>();
   for (const p of promos) if (p.meta?.linkKey) { const k = `${p.venue.id}|${p.meta.linkKey}`; linkUse.set(k, (linkUse.get(k) ?? 0) + 1); }
   for (const p of [...promos].sort((a, b) => b.publishedAt - a.publishedAt)) {
     let u = "";
     try { const x = new URL(p.url); u = x.pathname.length > 1 && x.host !== "t.me" ? `${p.venue.id}${x.host.replace(/^www\./, "")}${x.pathname.replace(/\/$/, "")}` : ""; } catch { /* keep */ }
-    // a general page 3+ posts link to (Bitrue /flexible-staking for every token) is not one campaign
-    if (u && (urlUse.get(u) ?? 0) >= 3) u = "";
+    // a general section page (one path segment, no id: Bitrue /flexible-staking, LBank /futures-earn) is shared by many
+    // different promos — never a duplicate key; a campaign page (/flexible-staking/xrp, /pointmall/10003934-…) is
+    try { if (/^\/[a-z-]+\/?$/i.test(new URL(p.url).pathname)) u = ""; } catch { /* */ }
     if (u && !p.sponsored && !p.evergreen) { if (seenUrl.has(u)) dupOf(p.id, u); else seenUrl.set(u, p.id); }
     // audit 25.11 (deep): Toobit 6188 + 6156 (same bit.ly), CoinW TradFi phase 4 twice — the campaign link inside the post.
     // Only a campaign-like link counts, and never one most posts of the channel carry (Bitrue puts /rewards/mobile in
