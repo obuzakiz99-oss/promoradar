@@ -24,7 +24,9 @@ export function todayPins(promos: Promo[], lang: Locale, now: number): Array<{ i
   const pick = (xs: Promo[]) => { const p = xs.find((x) => !used.has(x.id)); if (p) used.add(p.id); return p; };
   // a per-person figure counts when it is below the pool (or there is no pool) and is not a ranking prize (audit 14.11)
   const real = (p: Promo) => p.category !== "competition" && !/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") && (p.reward?.usd === undefined || val(p) < p.reward.usd);
-  const best = pick([...ok].filter((p) => val(p) >= 10 && real(p)).sort((a, b) => val(b) - val(a)));
+  // audit 2 (25.11): ranked by what one person realistically gets (value.ts, sure / likely), not by the "up to"
+  const est = (p: Promo) => (p.meta?.value && p.meta.value.conf !== "low" && p.meta.value.mech !== "apr" ? p.meta.value.net ?? 0 : 0);
+  const best = pick([...ok].filter((p) => est(p) >= 15 && real(p)).sort((a, b) => est(b) - est(a)));
   const free = pick([...ok].filter((p) => p.meta?.noDeposit && !/\b(trade|trading|deposit|stake|buy|swap)\b/i.test(p.titleOrig ?? p.title)).sort((a, b) => val(b) - val(a) || (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0) || b.publishedAt - a.publishedAt));
   const ending = pick([...ok].filter((p) => p.endsAt && p.endsAt - now < 72 * 3600_000).sort((a, b) => (val(b) || (b.reward?.usd ?? 0) / 1000) - (val(a) || (a.reward?.usd ?? 0) / 1000)));
   return ([[best, T.best, "accent"], [free, T.free, "success"], [ending, T.ending, "danger"]] as const)
@@ -40,7 +42,9 @@ export function TodayTop({ promos, lang, now, siteUrl }: { promos: Promo[]; lang
 
   // a per-person figure counts when it is below the pool (or there is no pool) and is not a ranking prize (audit 14.11)
   const real = (p: Promo) => p.category !== "competition" && !/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") && (p.reward?.usd === undefined || val(p) < p.reward.usd);
-  const best = pick([...ok].filter((p) => val(p) >= 10 && real(p)).sort((a, b) => val(b) - val(a)));
+  // audit 2 (25.11): ranked by what one person realistically gets (value.ts, sure / likely), not by the "up to"
+  const est = (p: Promo) => (p.meta?.value && p.meta.value.conf !== "low" && p.meta.value.mech !== "apr" ? p.meta.value.net ?? 0 : 0);
+  const best = pick([...ok].filter((p) => est(p) >= 15 && real(p)).sort((a, b) => est(b) - est(a)));
   const free = pick([...ok].filter((p) => p.meta?.noDeposit && !/\b(trade|trading|deposit|stake|buy|swap)\b/i.test(p.titleOrig ?? p.title)).sort((a, b) => val(b) - val(a) || (b.reward?.usd ?? 0) - (a.reward?.usd ?? 0) || b.publishedAt - a.publishedAt));
   const ending = pick([...ok].filter((p) => p.endsAt && p.endsAt - now < 72 * 3600_000).sort((a, b) => (val(b) || (b.reward?.usd ?? 0) / 1000) - (val(a) || (a.reward?.usd ?? 0) / 1000)));
   const cards = ([[T.best, best, "text-lime"], [T.free, free, "text-teal"], [T.ending, ending, "text-rose"]] as const).filter(([, p]) => p);

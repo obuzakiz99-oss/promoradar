@@ -42,6 +42,9 @@ function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean })
   );
 }
 
+// audit 2 (25.11): the combined total uses realistic estimates, never a contest top prize
+const realOf = (q: Promo) => (q.meta?.value && q.meta.value.mech !== "apr" && q.meta.value.mech !== "top_n" && (q.meta.value.net ?? 0) > 0 ? q.meta.value.net : undefined);
+
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },
   competition: { dot: "#ffb547", text: "text-amber" },
@@ -177,7 +180,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
         if (m.geo?.noUA) b.push([NO_UA[lang].replace(/^⚠\s*/, ""), "danger"]);
         if (m.geo?.only) b.push([GEO_ONLY[lang](m.geo.only), "warning"]);
         if (m.zeroFee && (m.perUser || p.reward)) b.push([ZF[lang].badge, "success"]);
-        if (m.noDeposit && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
+        if (m.noDeposit && !m.minEntry && !own?.startsWith(NO_DEP[lang]) && pin?.cls !== "success") b.push([NO_DEP[lang], "success"]);
         if (m.forNew) b.push([FOR_NEW[lang], "info"]);
         if (m.payout?.form) b.push([FORM_BADGE[lang][m.payout.form], "neutral"]);
         return b.length ? (
@@ -264,8 +267,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
 
         {/* stackable with other promos on this exchange (audit 12.11): opens a short list right in the card */}
         {combos && combos.length > 0 && (
-          <ComboPanel lang={lang} why={combos[0].why} ownUsd={m.perUser?.usd}
-            items={combos.map(({ p: q }) => ({ id: q.id, href: withBase(`/${lang}/p/${slugOf(q)}/`), title: titleOf(q, lang) ?? q.title, usd: q.meta?.perUser?.usd, left: q.endsAt ? duration(q.endsAt - now, t.time) : undefined }))} />
+          <ComboPanel lang={lang} why={combos[0].why} ownUsd={realOf(p)}
+            items={combos.map(({ p: q }) => ({ id: q.id, href: withBase(`/${lang}/p/${slugOf(q)}/`), title: titleOf(q, lang) ?? q.title, usd: realOf(q), left: q.endsAt ? duration(q.endsAt - now, t.time) : undefined }))} />
         )}
         {/* 07.11 user: every link first leads to the short explanation page; the exchange link lives there */}
         <div className="relative z-10 mt-4 grid">

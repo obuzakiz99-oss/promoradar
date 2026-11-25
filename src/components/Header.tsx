@@ -24,7 +24,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     // the Unlocks page, so tablets drop this entry (as the phone bar does)
     { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], wide: "lg:block", match: ["calendar", "sales"] },
     // owner 17.11: token unlocks get their own menu entry (the page used to hide behind a Calendar tab)
-    { href: withBase(`/${lang}/unlocks/`), label: { uk: "Розлоки", en: "Unlocks", ru: "Разлоки" }[lang], match: ["unlocks"] },
+    { href: withBase(`/${lang}/unlocks/`), label: { uk: "Розблокування", en: "Unlocks", ru: "Разблокировки" }[lang], match: ["unlocks"] },
     { href: withBase(`/${lang}/learn/`), label: LEARN[lang].nav, match: ["learn", "best", "check"] },
     ...(HAS_PRO ? [{ href: withBase(`/${lang}/#pro`), label: t.nav.pro, wide: "lg:block", match: ["pro"] }] : []),
   ];

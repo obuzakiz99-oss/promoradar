@@ -63,7 +63,9 @@ export const dec = (s: string, lang: string) => (lang === "en" ? s : s.replace(/
 /** AI texts in uk/ru: "$2,500" -> "$2 500", "1.5%" -> "1,5%" (dates like 16.11.2026 stay). */
 export const localNums = (s: string, lang: string) => (lang === "en" ? s : s
   .replace(/\b([1-9]\d{0,2})((?:,\d{3})+)(?![,\d]|\s?%)/g, (_, a: string, b: string) => a + b.replace(/,/g, "\u00a0"))
-  .replace(/(?<![.\d])(\d+)\.(\d+)(?![.\d])/g, "$1,$2"));
+  // audit 2: a day.month date (19.11, 05.12) not followed by a unit stays a date ("коригування 19,11 і 29.11")
+  .replace(/(?<![.\d])(\d+)\.(\d+)(?![.\d])/g, (m: string, a: string, b: string, i: number, all: string) =>
+    +a >= 1 && +a <= 31 && /^(0[1-9]|1[0-2])$/.test(b) && !/^\s?(%|[A-Z$€]|x\b|тис|млн)/.test(all.slice(i + m.length)) ? m : `${a},${b}`));
 /** Money: "$50 000" for dollars, "50 000 USDT" for coins. */
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;
@@ -100,8 +102,9 @@ export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s.repl
 const WORDING: Record<string, Array<[RegExp, string]>> = {
   uk: [
     [/(^|[^а-яіїєґ'])Підпишіть(?=[^а-яіїєґ'])/g, "$1Внесіть"], [/(^|[^а-яіїєґ'])підпишіть(?=[^а-яіїєґ'])/g, "$1внесіть"],
-    [/відповідних (нових )?користувачів/g, "допущених $1користувачів"], [/відповідні (нові )?користувачі/g, "допущені $1користувачі"],
-    [/Відповідні (нові )?користувачі/g, "Допущені $1користувачі"], [/вносячи відповідну криптовалюту/g, "вносячи підтримувану криптовалюту"],
+    // audit 2: "допущених" read like bureaucratese
+    [/відповідних (нових )?користувачів/g, "$1користувачів, які відповідають умовам"], [/відповідні (нові )?користувачі/g, "$1користувачі, які відповідають умовам"],
+    [/Відповідні (нові )?користувачі/g, "Користувачі, які відповідають умовам"], [/вносячи відповідну криптовалюту/g, "вносячи підтримувану криптовалюту"],
     [/відповідних активів/g, "зарахованих активів"], [/(^|\s)Season (\d+)/g, "$1Сезон $2"], [/передплат(и|у|а)(?= Kraken)/g, "підписк$1"],
     [/(розділіть|щоб розділити) /g, "отримайте частку з "],
     // final audit 24.11: "Subscribe to Simple Earn" is a deposit, not a newsletter — only before product words (channels keep "підпишіться")

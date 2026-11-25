@@ -3,7 +3,8 @@ import { withBase } from "@/lib/base";
 
 // audit 08.11: "Інструменти" is gone from the menu — its tools live in the sections now; old links land on the home page.
 // A static page (GitHub Pages has no server redirects): meta refresh + script, with a plain link as the fallback.
-export const metadata = { robots: { index: false } };
+// audit 2: noindex + a canonical pointing to /xx/ (inherited from the layout) contradict each other — no canonical here
+export const metadata = { robots: { index: false }, alternates: { canonical: null } };
 
 export default async function Tools({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: l } = await params;

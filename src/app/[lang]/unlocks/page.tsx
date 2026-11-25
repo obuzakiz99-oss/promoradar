@@ -168,7 +168,7 @@ export default async function UnlocksPage({ params }: { params: Params }) {
                             </div>
                           </div>
                         </td>
-                        <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd, lang)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens, lang)} {u.sym} · {u.pctSupply.toFixed(2)}% {T.ofSupply}</div></td>
+                        <td data-l={T.amount} className="rt-wide px-4 py-3"><div className="font-mono font-bold">{compactUsd(u.usd, lang)}</div><div className="font-mono text-xs text-ink-3">{fmtNum(u.tokens, lang)} {u.sym} · {dec(u.pctSupply.toFixed(2), lang)}% {T.ofSupply}</div></td>
                         <td data-l={T.pressure} className="px-4 py-3"><span className={`rounded-md px-2 py-1 font-mono text-xs font-bold ${pressCls(u.pctCap)}`}>{num(u.pctCap, lang, 2)}%</span></td>
                         <td data-l={T.who} className="px-4 py-3 text-ink-2">{u.sale ? trs(u.sale) : "—"}</td>
                         <td data-l={T.kind} className="px-4 py-3 text-ink-2">{T.type[u.type]}</td>

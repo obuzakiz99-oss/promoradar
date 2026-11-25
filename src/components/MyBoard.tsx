@@ -145,7 +145,7 @@ export function MyBoard({ promos, lang }: { promos: MyPromo[]; lang: Locale }) {
                 <input inputMode="decimal" defaultValue={tr.earned ?? ""} onBlur={(e) => update(id, { earned: Number(e.target.value.replace(/[^\d.,-]/g, "").replace(",", ".")) || 0 }, p)}
                   className="h-10 w-24 rounded-xl border border-line bg-white/[0.03] px-3 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
               </label>
-              <input placeholder={T.note} defaultValue={tr.note ?? ""} onBlur={(e) => update(id, { note: e.target.value.slice(0, 200) }, p)} onChange={(e) => update(id, { note: e.target.value.slice(0, 200) }, p)}
+              <input aria-label={T.note} placeholder={T.note} defaultValue={tr.note ?? ""} onBlur={(e) => update(id, { note: e.target.value.slice(0, 200) }, p)} onChange={(e) => update(id, { note: e.target.value.slice(0, 200) }, p)}
                 className="h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm text-ink placeholder:text-ink-3 focus:border-lime/50 focus:outline-none" />
               <button type="button" onClick={() => toggleSaved(id)} title={t.saved.remove} className="h-10 rounded-xl border border-line px-3 text-sm text-ink-3 hover:text-rose">✕</button>
             </li>

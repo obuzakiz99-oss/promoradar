@@ -16,15 +16,15 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     about: { title: "Про PromoRadar", sub: "Агрегатор промоакцій криптобірж і DeFi-протоколів: Launchpool, Earn, airdrop, змагання, бонуси — в одному місці.", blocks: [
       ["Що ми робимо", "Кожні 30 хвилин автоматично збираємо акції з офіційних джерел бірж і протоколів: їхніх API, оголошень, офіційних Telegram-каналів і блогів, а також відкриті дані DefiLlama. Рахуємо APR, прибуток, ризики і показуємо все в одному форматі."],
       ["Незалежність", "Ми не є біржею і не зберігаємо ваші кошти. Ми не використовуємо реферальних посилань і не отримуємо комісій від бірж — порядок акцій у списках залежить лише від їхньої вигоди для вас."],
-      ["Точність", "Дані беруться автоматично і оновлюються раз на 30–60 хвилин, тож можуть відставати від біржі або містити помилки джерела. Перед участю завжди перевіряйте умови на сторінці організатора — посилання є біля кожної акції."],
-      ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть через GitHub: ${ISSUES}`],
+      ["Точність", "Дані беруться автоматично і оновлюються кожні 30 хвилин, тож можуть відставати від біржі або містити помилки джерела. Перед участю завжди перевіряйте умови на сторінці організатора — посилання є біля кожної акції."],
+      ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть на hello@promoradar.xyz або в Telegram t.me/promoradarapp (є й GitHub: ${ISSUES})`],
     ] },
     privacy: { title: "Конфіденційність", sub: "Коротко: ми не збираємо ваших персональних даних і не маємо акаунтів.", blocks: [
       ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, вибрана країна і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
       ["Хостинг", "Сайт розміщено на GitHub Pages. GitHub як хостинг може технічно обробляти IP-адреси відвідувачів для безпеки й роботи сервісу — див. GitHub Privacy Statement."],
       ["Файли cookie та аналітика", "Ми не використовуємо cookie та рекламні трекери. Для підрахунку відвідувань працює GoatCounter: він не ставить cookie, не зберігає IP-адреси й не збирає персональних даних — лише загальні числа (сторінка, країна, браузер, звідки прийшли). Ця статистика не публічна."],
       ["Зовнішні сайти", "Посилання ведуть на сайти бірж і протоколів — у них свої правила конфіденційності."],
-      ["Зв'язок", `Питання щодо даних: ${ISSUES}`],
+      ["Зв'язок", `Питання щодо даних: hello@promoradar.xyz`],
     ] },
     terms: { title: "Умови використання", sub: "Користуючись сайтом, ви погоджуєтесь з цими умовами.", blocks: [
       ["Не фінансова порада", "Уся інформація має довідковий характер і не є інвестиційною, фінансовою чи податковою порадою. Рішення ви ухвалюєте самостійно."],
@@ -40,14 +40,14 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["What we do", "Every 30 minutes we automatically collect promos from official sources: exchange and protocol APIs, announcements, official Telegram channels and blogs, plus DefiLlama open data. We calculate APR, profit and risks and show everything in one format."],
       ["Independence", "We're not an exchange and never hold your funds. We use no referral links and take no commissions from exchanges — the order of promos depends only on their value to you."],
       ["Accuracy", "Data is collected automatically and can lag the exchange by a few minutes or contain source errors. Always check the terms on the organiser's page before joining — every promo links to it."],
-      ["Contact", `Bugs, ideas, new promo sources — write via GitHub: ${ISSUES}`],
+      ["Contact", `Bugs, ideas, new promo sources — write to hello@promoradar.xyz or on Telegram t.me/promoradarapp (GitHub too: ${ISSUES})`],
     ] },
     privacy: { title: "Privacy", sub: "In short: we collect no personal data and have no accounts.", blocks: [
       ["What we store", "Nothing on our servers. Saved promos (★), your tracker, chosen country and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
       ["Hosting", "The site is hosted on GitHub Pages. As the host, GitHub may technically process visitors' IP addresses for security and operation — see the GitHub Privacy Statement."],
       ["Cookies and analytics", "We use no cookies or ad trackers. Visits are counted with GoatCounter: it sets no cookies, stores no IP addresses and collects no personal data — only totals (page, country, browser, referrer). These stats are not public."],
       ["External sites", "Links lead to exchange and protocol sites, which have their own privacy policies."],
-      ["Contact", `Data questions: ${ISSUES}`],
+      ["Contact", `Data questions: hello@promoradar.xyz`],
     ] },
     terms: { title: "Terms of use", sub: "By using the site you agree to these terms.", blocks: [
       ["Not financial advice", "All information is for reference only and is not investment, financial or tax advice. You make your own decisions."],
@@ -63,14 +63,14 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Что мы делаем", "Каждые 30 минут автоматически собираем акции из официальных источников бирж и протоколов: их API, анонсов, официальных Telegram-каналов и блогов, а также открытые данные DefiLlama. Считаем APR, прибыль, риски и показываем всё в одном формате."],
       ["Независимость", "Мы не биржа и не храним ваши средства. Мы не используем реферальных ссылок и не получаем комиссий от бирж — порядок акций зависит только от их выгоды для вас."],
       ["Точность", "Данные собираются автоматически и могут отставать от биржи на несколько минут или содержать ошибки источника. Перед участием всегда проверяйте условия на странице организатора — ссылка есть у каждой акции."],
-      ["Связь", `Ошибки, предложения, новые источники акций — пишите через GitHub: ${ISSUES}`],
+      ["Связь", `Ошибки, предложения, новые источники акций — пишите на hello@promoradar.xyz или в Telegram t.me/promoradarapp (есть и GitHub: ${ISSUES})`],
     ] },
     privacy: { title: "Конфиденциальность", sub: "Коротко: мы не собираем ваших персональных данных и не имеем аккаунтов.", blocks: [
       ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, выбранная страна и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],
       ["Хостинг", "Сайт размещён на GitHub Pages. GitHub как хостинг может технически обрабатывать IP-адреса посетителей для безопасности и работы сервиса — см. GitHub Privacy Statement."],
       ["Cookie и аналитика", "Мы не используем cookie и рекламные трекеры. Посещения считает GoatCounter: он не ставит cookie, не хранит IP-адреса и не собирает персональные данные — только общие числа (страница, страна, браузер, откуда пришли). Эта статистика не публичная."],
       ["Внешние сайты", "Ссылки ведут на сайты бирж и протоколов — у них свои правила конфиденциальности."],
-      ["Связь", `Вопросы о данных: ${ISSUES}`],
+      ["Связь", `Вопросы о данных: hello@promoradar.xyz`],
     ] },
     terms: { title: "Условия использования", sub: "Пользуясь сайтом, вы соглашаетесь с этими условиями.", blocks: [
       ["Не финансовый совет", "Вся информация носит справочный характер и не является инвестиционным, финансовым или налоговым советом. Решения вы принимаете самостоятельно."],

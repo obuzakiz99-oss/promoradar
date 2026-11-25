@@ -31,7 +31,7 @@ const LP: Tab[] = [
 ];
 const CAL: Tab[] = [
   { id: "calendar", href: "/calendar/", label: { uk: "Акції", en: "Promos", ru: "Акции" } },
-  { id: "unlocks", href: "/unlocks/", label: { uk: "Розлоки токенів", en: "Token unlocks", ru: "Разлоки токенов" } },
+  { id: "unlocks", href: "/unlocks/", label: { uk: "Розблокування токенів", en: "Token unlocks", ru: "Разблокировки токенов" } },
   { id: "sales", href: "/sales/", label: { uk: "Токен-сейли", en: "Token sales", ru: "Токен-сейлы" } },
 ];
 

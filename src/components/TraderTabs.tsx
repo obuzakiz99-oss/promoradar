@@ -6,7 +6,7 @@ import { Icon, type IconName } from "./Icon";
 export type TraderTab = "fixed" | "insights" | "unlocks";
 export const TRADER_NAV: Record<Locale, string> = { uk: "Трейдерам", en: "Traders", ru: "Трейдерам" };
 const L: Record<Locale, Record<TraderTab, string>> = {
-  uk: { fixed: "Фікс. дохідність", insights: "Аналітика Launchpool", unlocks: "Розлоки токенів" },
+  uk: { fixed: "Фікс. дохідність", insights: "Аналітика Launchpool", unlocks: "Розблокування токенів" },
   en: { fixed: "Fixed yield", insights: "Launchpool insights", unlocks: "Token unlocks" },
   ru: { fixed: "Фикс. доходность", insights: "Аналитика Launchpool", unlocks: "Разлоки токенов" },
 };

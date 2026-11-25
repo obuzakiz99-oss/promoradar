@@ -55,5 +55,6 @@ export function plainProfit(apr: number, lang: Locale, amount = 100): string {
   if (apr >= 1000) return { uk: "Пул щойно відкрився — APR швидко впаде", en: "Pool just opened — the APR will drop fast", ru: "Пул только открылся — APR быстро упадёт" }[lang];
   const m = (amount * apr) / 100 / 12;
   const v = m >= 10 ? m.toFixed(0) : m >= 1 ? m.toFixed(1) : m.toFixed(2);
-  return { uk: `$${amount} → ≈ +$${v} за місяць`, en: `$${amount} → ≈ +$${v} a month`, ru: `$${amount} → ≈ +$${v} в месяц` }[lang];
+  const vl = lang === "en" ? v : v.replace(".", ",");   // decimal comma in uk/ru (audit 2)
+  return { uk: `$${amount} → ≈ +$${vl} за місяць`, en: `$${amount} → ≈ +$${v} a month`, ru: `$${amount} → ≈ +$${vl} в месяц` }[lang];
 }

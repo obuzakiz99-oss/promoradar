@@ -22,6 +22,7 @@ const KIND: Record<L, Record<Promo["category"], string>> = {
   ru: { competition: "Соревнование", airdrop: "Аирдроп", bonus: "Бонус", earn: "Earn", listing: "Листинг", referral: "Реферальная программа", other: "Промоакция", farming: "Фарм" },
 };
 const PER: Record<L, (x: string) => string> = { uk: (x) => `до ${x} на 1 людину`, en: (x) => `up to ${x} per person`, ru: (x) => `до ${x} на 1 человека` };
+const TOP: Record<L, (x: string) => string> = { uk: (x) => `1-ше місце до ${x}`, en: (x) => `1st place up to ${x}`, ru: (x) => `1-е место до ${x}` };
 const POOL: Record<L, (x: string) => string> = { uk: (x) => `фонд ${x}`, en: (x) => `pool ${x}`, ru: (x) => `фонд ${x}` };
 
 // products and prizes people recognise, in each language
@@ -85,6 +86,9 @@ export function titleOf(p: Promo, lang: L): string | undefined {
   // rates use the reader's decimal comma (4,25 %), like the translated headline next to them
   const rate = m.aprPct !== undefined ? `${upTo || "+"}${num(m.aprPct, lang)}% ${apy}` : undefined;
   const much = p.category === "earn" && rate ? rate
+    // audit 2 (25.11): in a ranking contest the per-person figure is the 1st-place prize, not what one person gets
+    // (BingX "ANTHROPIC → до 150 000 USDT на 1 людину")
+    : m.perUser && (p.category === "competition" || m.value?.mech === "top_n") ? TOP[lang](money(m.perUser.amount, m.perUser.unit, lang))
     : m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
     : rate ?? (p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined);
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;

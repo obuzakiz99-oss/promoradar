@@ -50,7 +50,7 @@ const days = (lang: L, n: number, biz = false) => {
 export function timingChips(po: Payout, lang: L): string[] {
   const out: string[] = [];
   const T = {
-    uk: { claim: (d: string) => `Забрати вручну за ${d}`, manual: "Треба забрати вручну", auto: "Приходить автоматично", review: (d: string) => `Перевірка — до ${d.replace(/ (день|дні)$/, (_, w) => (w === "день" ? " дня" : " днів"))}`, pay: (d: string) => `Виплата протягом ${d}` },
+    uk: { claim: (d: string) => `Забрати вручну за ${d}`, manual: "Треба забрати вручну", auto: "Приходить автоматично", review: (d: string) => `Перевірка — до ${d.replace(/ (день|дні)$/, (_, w) => (w === "день" ? " дня" : " днів"))}`, pay: (d: string) => `Виплата протягом ${d.replace(/(\d+) робочі дні/, "$1 робочих днів").replace(/(\d+) календарні дні/, "$1 календарних днів").replace(/(\d+) дні\b/, "$1 днів")}` },   // "протягом 3 робочих днів" (audit 2)
     en: { claim: (d: string) => `Claim manually within ${d}`, manual: "Must be claimed manually", auto: "Paid automatically", review: (d: string) => `Review up to ${d}`, pay: (d: string) => `Paid within ${d}` },
     ru: { claim: (d: string) => `Забрать вручную за ${d}`, manual: "Нужно забрать вручную", auto: "Приходит автоматически", review: (d: string) => `Проверка — до ${d.replace(/ (день|дня)$/, (_, w) => (w === "день" ? " дня" : " дней"))}`, pay: (d: string) => `Выплата в течение ${d}` },
   }[lang];

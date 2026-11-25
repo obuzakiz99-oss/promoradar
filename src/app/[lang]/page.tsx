@@ -63,7 +63,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             { "@type": "WebSite", name: "PromoRadar", url: `https://${SITE.domain}/${lang}/`, inLanguage: lang, publisher: { "@id": `https://${SITE.domain}/#org` } },
           ],
         }).replace(/</g, "\\u003c") }} />
-        <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "найбільше реально на 1 людину", en: "best realistic for one person", ru: "больше всего реально на 1 человека" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
+        <Hero t={t} active={lang === "uk" ? promos.filter((p) => geoAllowed(p, "ua")).length : promos.length} poolsUsd={maxPerUser} poolsLabel={({ uk: "найбільше на 1 людину (надійна оцінка)", en: "most for one person (reliable estimate)", ru: "больше всего на 1 человека (надёжная оценка)" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
           learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
           tour={{ href: tourHref(withBase(""), lang), label: TOUR_LABEL[lang] }} />

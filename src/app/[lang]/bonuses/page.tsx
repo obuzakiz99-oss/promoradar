@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // the page showed 1 promo while the list filter said 29
 // audit 14.11: community / P2P-merchant / VIP / region-only campaigns are not new-user bonuses
 const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?)\b/i;
-const isNewUser = (p: Promo) => !p.meta?.geo?.only && !NOT_NEW.test(p.titleOrig ?? p.title) && (
+// audit 2 (25.11): a trading competition is not a newcomer bonus (Coinstore "0-fee sprint" showed "up to $15K per newcomer")
+const isNewUser = (p: Promo) => !p.meta?.geo?.only && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title) && (
   p.category === "bonus" || !!p.meta?.forNew
   || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */

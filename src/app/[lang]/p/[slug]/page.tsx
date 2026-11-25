@@ -92,9 +92,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const base = tpl ?? head;
   const named = base.toLowerCase().includes(p.venue.name.toLowerCase()) ? base : `${p.venue.name}: ${base}`;
   const cap = (x: string, n: number) => (x.length > n ? `${x.slice(0, n - 2).replace(/[\s,.:;—–-]+\S*$/, "")}…` : x);
-  const title = p.venue.kind === "airdrop" ? `${cap(head, 60)} Airdrop` : cap(named, 65);
+  // audit 2 (25.11): 243 titles ran past 60 characters with " · PromoRadar" (13) added by the layout template
+  const title = p.venue.kind === "airdrop" ? `${cap(head, 38)} Airdrop` : cap(named, 47);
   // audit 23.11 (SEO): 9 Biconomy pages shared one description — the promo's own headline makes each unique
-  const desc = cap(`${tpl && tpl !== head ? `${head}. ` : ""}${bits}`, 200);
+  const desc = cap(`${tpl && tpl !== head ? `${head}. ` : ""}${bits}`, 155);   // Google shows ~155 (audit 2)
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
   return {
@@ -226,17 +227,17 @@ const COMBO_TX: Record<Locale, { title: string; sub: (v: string) => string; why:
   uk: {
     title: "Можна поєднати", sub: (v) => `Ці акції ${v} йдуть одночасно й рахують ту саму дію — один обсяг або депозит може зарахуватися одразу в кілька.`,
     why: { "trade-futures": "той самий обсяг ф'ючерсів", "trade-spot": "той самий обсяг споту", deposit: "той самий депозит", stake: "той самий стейк", free: "теж без вкладень" },
-    upTo: "до", sum: (x, n) => `Разом до ≈${x} на людину з ${n} акцій`, note: "Деякі біржі не зараховують обсяг двічі або забороняють участь у кількох кампаніях — перевірте це в правилах кожної акції.",
+    upTo: "до", sum: (x, n) => `Разом реально ≈${x} на людину з ${n} акцій`, note: "Деякі біржі не зараховують обсяг двічі або забороняють участь у кількох кампаніях — перевірте це в правилах кожної акції.",
   },
   en: {
     title: "Can be combined", sub: (v) => `These ${v} promos run at the same time and count the same action — one volume or deposit may count in several at once.`,
     why: { "trade-futures": "same futures volume", "trade-spot": "same spot volume", deposit: "same deposit", stake: "same stake", free: "also no deposit" },
-    upTo: "up to", sum: (x, n) => `Up to ≈${x} per person across ${n} promos`, note: "Some exchanges don't count volume twice or forbid joining several campaigns — check each promo's rules.",
+    upTo: "up to", sum: (x, n) => `Realistically ≈${x} per person across ${n} promos`, note: "Some exchanges don't count volume twice or forbid joining several campaigns — check each promo's rules.",
   },
   ru: {
     title: "Можно совместить", sub: (v) => `Эти акции ${v} идут одновременно и считают одно и то же действие — один объём или депозит может засчитаться сразу в несколько.`,
     why: { "trade-futures": "тот же объём фьючерсов", "trade-spot": "тот же объём спота", deposit: "тот же депозит", stake: "тот же стейк", free: "тоже без вложений" },
-    upTo: "до", sum: (x, n) => `Вместе до ≈${x} на человека из ${n} акций`, note: "Некоторые биржи не засчитывают объём дважды или запрещают участие в нескольких кампаниях — проверьте это в правилах каждой акции.",
+    upTo: "до", sum: (x, n) => `Вместе реально ≈${x} на человека из ${n} акций`, note: "Некоторые биржи не засчитывают объём дважды или запрещают участие в нескольких кампаниях — проверьте это в правилах каждой акции.",
   },
 };
 const UI_TX: Record<Locale, {
@@ -350,7 +351,8 @@ export default async function PromoPage({ params }: { params: Params }) {
   // other promos on this exchange the same action counts toward (one volume / deposit → several rewards)
   const combos = combosFor(p, promos, now);
   const C = COMBO_TX[lang];
-  const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.perUser?.usd ?? 0), 0);
+  // audit 2 (25.11): "Разом до ≈$150K на людину" added 1st-place prizes — the sum is of realistic estimates, contests' tops excluded
+  const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.value && x.meta.value.mech !== "apr" && x.meta.value.mech !== "top_n" ? Math.max(0, x.meta.value.net ?? 0) : 0), 0);
   // audit 23.11: on uk pages a Brazil-only promo showed under "Схожі акції" — the default country there is Ukraine
   // audit 23.11: also no promo the site itself marks as "no better than regular Earn" / "costs eat the bonus"
   const relOk = (x: (typeof promos)[number]) => (lang !== "uk" || geoAllowed(x, "ua")) && !(x.meta?.value?.net !== undefined && x.meta.value.net <= 0);
@@ -449,16 +451,19 @@ export default async function PromoPage({ params }: { params: Params }) {
 
         {/* DeFi pool pages had only "Open ↗" (audit 14.11): what it is, what can go wrong, how to join */}
         {p.category === "farming" && (() => {
+          // audit 2 (25.11): MetaMask / Rabby don't work on Solana or Sui — the wallet hint follows the chain
+          const ch = (m.chain ?? "").toLowerCase();
+          const wallet = /solana/.test(ch) ? "Phantom, Solflare" : /sui/.test(ch) ? "Slush, Phantom" : /aptos/.test(ch) ? "Petra" : /ton/.test(ch) ? "Tonkeeper" : /tron/.test(ch) ? "TronLink" : /starknet/.test(ch) ? "Ready (Argent), Braavos" : /bitcoin|btc/.test(ch) ? "Xverse, Unisat" : "MetaMask, Rabby";
           const F = ({
             uk: { what: "Що це", whatT: `Пул ліквідності / депозит у протоколі ${p.venue.name}${m.chain ? ` (мережа ${m.chain})` : ""}. Ви вносите монети зі свого гаманця — протокол платить відсоток${m.apr !== undefined ? ` (зараз ≈ ${m.apr}% річних, ставка змінюється щодня)` : ""}.`,
               risk: "Ризики", risks: ["Ставка плаває: показаний APR — це «зараз», а не обіцянка.", "Ризик смарт-контракту: збій чи злам протоколу може коштувати вкладу.", "Якщо в пулі не лише стейблкоїни — можливі непостійні втрати (IL) через зміну ціни.", "Комісія мережі (газ) за вхід і вихід."],
-              how: "Як взяти участь", hows: ["Потрібен гаманець (MetaMask, Rabby) з монетами в потрібній мережі.", `Відкрийте пул на сайті ${p.venue.name} кнопкою вище, підключіть гаманець і внесіть суму.`, "Почніть з невеликої суми й перевірте, що депозит видно в протоколі."], more: "Порівняти з іншими DeFi-пулами →" },
+              how: "Як взяти участь", hows: [`Потрібен гаманець (${wallet}) з монетами в потрібній мережі.`, `Відкрийте пул на сайті ${p.venue.name} кнопкою вище, підключіть гаманець і внесіть суму.`, "Почніть з невеликої суми й перевірте, що депозит видно в протоколі."], more: "Порівняти з іншими DeFi-пулами →" },
             en: { what: "What it is", whatT: `A liquidity pool / deposit in ${p.venue.name}${m.chain ? ` (${m.chain} chain)` : ""}. You deposit coins from your own wallet and the protocol pays interest${m.apr !== undefined ? ` (≈ ${m.apr}% a year right now; the rate changes daily)` : ""}.`,
               risk: "Risks", risks: ["The rate floats: the APR shown is “now”, not a promise.", "Smart-contract risk: a bug or hack can cost the deposit.", "If the pool holds more than stablecoins, price moves cause impermanent loss (IL).", "Network fees (gas) to enter and exit."],
-              how: "How to join", hows: ["You need a wallet (MetaMask, Rabby) with coins on the right chain.", `Open the pool on ${p.venue.name} with the button above, connect the wallet and deposit.`, "Start small and check that the deposit shows up in the protocol."], more: "Compare with other DeFi pools →" },
+              how: "How to join", hows: [`You need a wallet (${wallet}) with coins on the right chain.`, `Open the pool on ${p.venue.name} with the button above, connect the wallet and deposit.`, "Start small and check that the deposit shows up in the protocol."], more: "Compare with other DeFi pools →" },
             ru: { what: "Что это", whatT: `Пул ликвидности / депозит в протоколе ${p.venue.name}${m.chain ? ` (сеть ${m.chain})` : ""}. Вы вносите монеты со своего кошелька — протокол платит процент${m.apr !== undefined ? ` (сейчас ≈ ${m.apr}% годовых, ставка меняется ежедневно)` : ""}.`,
               risk: "Риски", risks: ["Ставка плавает: показанный APR — это «сейчас», а не обещание.", "Риск смарт-контракта: сбой или взлом протокола может стоить вклада.", "Если в пуле не только стейблкоины — возможны непостоянные потери (IL) из-за изменения цены.", "Комиссия сети (газ) за вход и выход."],
-              how: "Как участвовать", hows: ["Нужен кошелёк (MetaMask, Rabby) с монетами в нужной сети.", `Откройте пул на сайте ${p.venue.name} кнопкой выше, подключите кошелёк и внесите сумму.`, "Начните с небольшой суммы и проверьте, что депозит виден в протоколе."], more: "Сравнить с другими DeFi-пулами →" },
+              how: "Как участвовать", hows: [`Нужен кошелёк (${wallet}) с монетами в нужной сети.`, `Откройте пул на сайте ${p.venue.name} кнопкой выше, подключите кошелёк и внесите сумму.`, "Начните с небольшой суммы и проверьте, что депозит виден в протоколе."], more: "Сравнить с другими DeFi-пулами →" },
           } as const)[lang];
           return (
             <section data-tour="promo-summary" className="card mt-6 grid gap-6 p-6 hover:transform-none md:grid-cols-3">
@@ -633,7 +638,9 @@ export default async function PromoPage({ params }: { params: Params }) {
           <div className="px-1 pb-1 sm:px-2 sm:pb-2">
             <p className="px-4 pt-1 text-sm text-ink-2">{/* audit 23.11: "OKX: OKX: 0% комісії" */}{!p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) && <span className="text-ink-3">{p.venue.name}: </span>}{sentenceCase(p.title)}</p>
         {/* what the reward really is (cash / voucher / points) and how it is paid — read from the official rules */}
-        {p.category !== "farming" && det && (() => {
+        {/* audit 2 (25.11): "type not stated — the exchange doesn't say if it is money" is noise for interest (APR / Earn)
+            and referral rebates — they are paid in the coin; the block stays when the rules do say something */}
+        {p.category !== "farming" && det && (m.payout?.form || !(p.category === "earn" || p.category === "referral" || m.value?.mech === "apr" || m.aprPct !== undefined)) && (() => {
           const po = m.payout;
           const chips = po ? timingChips(po, lang) : [];
           const PT = PAY_TX[lang];

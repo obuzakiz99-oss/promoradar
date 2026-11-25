@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { VenuePayout } from "@/components/VenuePayout";
-import { PROMO_PAGES, TELEGRAM, VENUES, venueOf } from "@/config/site";
+import { PROMO_PAGES, SITE, TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Locale } from "@/lib/i18n";
 
 const NOAUTO: Record<Locale, { browser: (v: string) => string; manual: (v: string) => string; open: (v: string) => string }> = {
@@ -42,9 +42,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   // audit 24.11 (SEO): people search "бонус Bybit", "Bybit bonus November 2026", "акции Bybit" — the month keeps it fresh
   const month = new Date().toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-US", { month: "long", year: "numeric", timeZone: "UTC" }).replace(/ р\.$| г\.$/, "");
   const title = ({
-    uk: `Бонуси та акції ${n} — ${month}: умови українською`,
+    uk: `Бонуси та акції ${n} — ${month}`,   // audit 2: ≤ 60 with " · PromoRadar"
     en: `${n} bonus & promotions — ${month}`,
-    ru: `Бонусы и акции ${n} — ${month}: условия по-русски`,
+    ru: `Бонусы и акции ${n} — ${month}`,
   } as const)[lang];
   void t;
   return withOg({ title, description, alternates: alt(lang, `/v/${id}`) });
@@ -117,7 +117,16 @@ export default async function VenuePage({ params }: { params: Params }) {
 
         <section className="mt-10">
           <h2 data-tour="venue-promos" className="mb-5 font-display text-2xl font-semibold tracking-tight">{t.venue.promos}</h2>
-          <PromoExplorer promos={mine} t={t} lang={lang} serverNow={fetchedAt} showKinds={false} />
+          {/* audit 2 (25.11): WhiteBIT (most used in Ukraine, linked in the footer) showed "Нічого не знайдено. Спробуйте інші фільтри." */}
+          {mine.length === 0 ? (
+            <div className="card p-6 text-sm leading-relaxed text-ink-2 hover:transform-none">
+              {({
+                uk: <>Зараз у {v.name} немає активних акцій. Нові з'являються тут автоматично — підпишіться на <a className="font-semibold text-lime underline" href={SITE.telegram} target="_blank" rel="noopener">наш Telegram</a>, щоб не пропустити.</>,
+                en: <>{v.name} has no running promos right now. New ones appear here automatically — follow <a className="font-semibold text-lime underline" href={SITE.telegram} target="_blank" rel="noopener">our Telegram</a> so you don&apos;t miss them.</>,
+                ru: <>Сейчас у {v.name} нет активных акций. Новые появляются здесь автоматически — подпишитесь на <a className="font-semibold text-lime underline" href={SITE.telegram} target="_blank" rel="noopener">наш Telegram</a>, чтобы не пропустить.</>,
+              } as const)[lang]}
+            </div>
+          ) : <PromoExplorer promos={mine} t={t} lang={lang} serverNow={fetchedAt} showKinds={false} />}
         </section>
 
         <section data-tour="venue-others" className="mt-16">

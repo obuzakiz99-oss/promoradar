@@ -34,8 +34,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
     // out.push({ url: `${base}/${l}/exchanges`, lastModified: now });
     for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, lastModified: newest });
-    for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, lastModified: now });
-    for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : now });
+    // audit 2: lastmod = the pool's start (it was the build time, changing every 30 min)
+    for (const p of lps) out.push({ url: `${base}/${l}/lp/${lpSlug(p)}`, lastModified: p.start ? new Date(Math.min(p.start, now.getTime())) : newest });
+    for (const p of promos) out.push({ url: `${base}/${l}/p/${slugOf(p)}`, lastModified: p.publishedAt ? new Date(p.publishedAt) : p.startsAt && p.startsAt < now.getTime() ? new Date(p.startsAt) : newest });
   }
   // trailing slash = the canonical URL (trailingSlash export); without it every sitemap line was a 301 hop
   return out.map((e) => ({ ...e, url: e.url.endsWith("/") ? e.url : `${e.url}/` }));
