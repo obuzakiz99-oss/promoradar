@@ -94,6 +94,7 @@ jobs:
           POST_LANG: ${{ vars.POST_LANG || 'uk' }}
 
       - name: Save data branch
+        continue-on-error: true
         working-directory: data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,7 +108,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -q -m "data: $(date -u +%FT%TZ)" || exit 0
-          git push -q origin HEAD:data
+          # 25.11: GitHub answered 500 for a minute — retry; if it still fails the site is deployed anyway
+          for i in 1 2 3; do git push -q origin HEAD:data && exit 0; echo "push failed ($i), retrying"; sleep $((i * 20)); done
+          echo "::warning title=Data branch not saved::GitHub rejected the push 3 times — next build saves it"
 
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:

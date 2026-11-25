@@ -23,7 +23,9 @@ async function pickModels(key: string): Promise<string[]> {
       .map((m) => m.name.replace(/^models\//, ""))
       .filter((n) => STABLE.test(n))
       .sort((a, b) => ver(b) - ver(a) || Number(a.endsWith("-lite")) - Number(b.endsWith("-lite")));
-    return [...new Set([...pinned, ...names, ...FALLBACK])];
+    // newest flash, the long-standing 2.5 flash (less busy), then the lite versions — each tried once
+    const full = names.filter((n) => !n.endsWith("-lite")), lite = names.filter((n) => n.endsWith("-lite"));
+    return [...new Set([...pinned, ...full.slice(0, 1), FALLBACK[0], ...lite.slice(0, 1), FALLBACK[1]])];
   } catch {
     return [...new Set([...pinned, ...FALLBACK])];
   }
@@ -38,10 +40,10 @@ export async function gemini(prompt: string, opts: { system?: string; json?: boo
   const models = await MODELS;
   let last = "gemini: no answer";
   // 25.11: the first live run got "503 overloaded" — retry with a pause, then the next model in the list
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const model = models[Math.min(models.length - 1, Math.floor(attempt / 2))];
+  for (let attempt = 0; attempt < Math.min(4, models.length); attempt++) {
+    const model = models[attempt];   // a busy model stays busy for minutes — the next one is the better retry
     // free tier: stay under ~10 requests a minute (+ a longer pause before a retry)
-    const wait = lastCall + 6500 + attempt * 8000 - Date.now();
+    const wait = lastCall + 6500 + attempt * 3000 - Date.now();
     if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     lastCall = Date.now();
     try {
