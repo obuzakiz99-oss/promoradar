@@ -8,8 +8,13 @@ const { TELEGRAM_BOT_TOKEN: TOKEN, TELEGRAM_CHAT_ID: CHAT } = process.env;
 if (!TOKEN || !CHAT) { console.log("telegram: no TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID — skipped"); process.exit(0); }
 // 24.11: say plainly whether the token works (the owner revoked one) — the token itself is never printed
 {
-  const me = await fetch(`https://api.telegram.org/bot${TOKEN}/getMe`).then((r) => r.json()).catch((e) => ({ ok: false, description: String(e) }));
-  console.log(me.ok ? `telegram: token OK — bot @${me.result.username}` : `telegram: TOKEN INVALID (${me.description ?? me.error_code}) — update the TELEGRAM_BOT_TOKEN secret`);
+  // 25.11: a network error ("fetch failed") is not a bad token — retry once and say which it is
+  const getMe = () => fetch(`https://api.telegram.org/bot${TOKEN}/getMe`, { signal: AbortSignal.timeout(20_000) }).then((r) => r.json()).catch((e) => ({ ok: false, net: true, description: String(e) }));
+  let me = await getMe();
+  if (!me.ok && me.net) { await new Promise((r) => setTimeout(r, 5000)); me = await getMe(); }
+  console.log(me.ok ? `telegram: token OK — bot @${me.result.username}`
+    : me.net ? `telegram: Telegram not reachable from this runner (${me.description}) — nothing posted, next run will retry`
+    : `telegram: TOKEN INVALID (${me.description ?? me.error_code}) — update the TELEGRAM_BOT_TOKEN secret`);
   if (!me.ok) process.exit(0);
 }
 const SITE = (process.env.SITE_URL || "").replace(/\/$/, "");
