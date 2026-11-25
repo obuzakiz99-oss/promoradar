@@ -43,18 +43,40 @@ const msgs = [];
 const feed = read("promos");
 const trTitle = (p) => feed.titles?.[LANG]?.[p.id] ?? p.title;   // translated title for the posting language
 const promos = feed.promos.filter((p) => p.venue.kind !== "airdrop" && !p.evergreen);
+// 25.11 (owner: "the channel looks raw"): wait for the translated title (English posts went out before the laptop
+// translated them), skip posts with nothing concrete to say, and a clearer card: type, money, deadline, entry, hashtags
+const CAT = {
+  uk: { bonus: ["🎁", "Бонус"], competition: ["🏆", "Змагання"], airdrop: ["🪂", "Аірдроп"], earn: ["🏦", "Earn"], referral: ["👥", "Реферальна"], listing: ["🆕", "Лістинг"], other: ["🔥", "Акція"], farming: ["🌾", "Фармінг"] },
+  en: { bonus: ["🎁", "Bonus"], competition: ["🏆", "Competition"], airdrop: ["🪂", "Airdrop"], earn: ["🏦", "Earn"], referral: ["👥", "Referral"], listing: ["🆕", "Listing"], other: ["🔥", "Promo"], farming: ["🌾", "Farming"] },
+  ru: { bonus: ["🎁", "Бонус"], competition: ["🏆", "Соревнование"], airdrop: ["🪂", "Аирдроп"], earn: ["🏦", "Earn"], referral: ["👥", "Реферальная"], listing: ["🆕", "Листинг"], other: ["🔥", "Акция"], farming: ["🌾", "Фарминг"] },
+}[LANG];
+const T = {
+  uk: { real: "Найімовірніше на людину", max: "Максимум на людину", entry: "Щоб взяти участь", forNew: "Лише для нових користувачів", left: (n) => `ще ${n} дн.`, cta: "Умови й покроково", months: ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"] },
+  en: { real: "Likely per person", max: "Max per person", entry: "To take part", forNew: "New users only", left: (n) => `${n} days left`, cta: "Rules & steps", months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] },
+  ru: { real: "Скорее всего на человека", max: "Максимум на человека", entry: "Чтобы участвовать", forNew: "Только для новых пользователей", left: (n) => `ещё ${n} дн.`, cta: "Условия и пошагово", months: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"] },
+}[LANG];
+const human = (ts) => { const d = new Date(ts); return LANG === "en" ? `${T.months[d.getUTCMonth()]} ${d.getUTCDate()}` : `${d.getUTCDate()} ${T.months[d.getUTCMonth()]}`; };
+const tag = (s) => "#" + String(s).replace(/\.com$/i, "").replace(/[^\p{L}\p{N}_]/gu, "");
 for (const p of promos) {
   const key = `promo:${p.id}`; if (seen.has(key)) continue;
   if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
   // 24.11: no empty teasers, nothing ending within a day; the realistic per-person estimate is the point of the channel
   if (p.meta?.thin || (p.endsAt && p.endsAt - Date.now() < 86400_000)) continue;
-  const net = p.meta?.value?.net, apr = p.meta?.value?.mech === "apr";
-  const est = net !== undefined && net > 0 ? `${apr ? L.onK : L.est}: <b>≈ $${Math.round(net)}</b>` : "";
-  msgs.push([key, [
-    `<b>${L.promo} · ${esc(p.venue.name)}</b>`, esc(trTitle(p)), est,
-    p.reward ? `${L.pool}: <b>${esc(p.reward.label)}</b>` : "", p.endsAt ? `${L.ends}: ${date(p.endsAt)}` : "",
-    SITE ? `<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : `<a href="${esc(p.url)}">${L.more} →</a>`,
-  ].filter(Boolean).join("\n")]);
+  // not translated yet → wait for a later build (the laptop translates every 30 min); after a day post as is
+  const tr = feed.titles?.[LANG]?.[p.id];
+  if (LANG !== "en" && !tr && /^[\x00-\x7F -⯿️\u{1F000}-\u{1FAFF}]*$/u.test(p.title) && Date.now() - (p.publishedAt ?? 0) < 86400_000) continue;
+  const v = p.meta?.value, net = v?.net, apr = v?.mech === "apr", pu = p.meta?.perUser;
+  const est = net !== undefined && net > 0 ? `💰 ${apr ? L.onK : v.conf === "low" ? L.est : T.real}: <b>≈ $${Math.round(net)}</b>` : "";
+  const max = !est && pu?.amount ? `💰 ${T.max}: <b>${pu.amount.toLocaleString("en-US")} ${esc(pu.unit)}</b>` : "";
+  const pool = p.reward ? `🎯 ${L.pool}:<b>${esc(p.reward.label)}</b>` : "";
+  if (!est && !max && !pool) continue;   // nothing concrete — not worth a post (still on the site)
+  const [icon, kind] = CAT[p.category] ?? CAT.other;
+  const entry = p.meta?.minEntry?.amount ? `✅ ${T.entry}: ${p.meta.minEntry.amount.toLocaleString("en-US")} ${esc(p.meta.minEntry.unit)}` : "";
+  const days = p.endsAt ? Math.max(1, Math.ceil((p.endsAt - Date.now()) / 86400_000)) : 0;
+  const head = [`${icon} <b>${esc(p.venue.name)}</b> · ${kind}`, `<b>${esc((tr ?? p.title).replace(/\s+/g, " ").trim())}</b>`];
+  const info = [est || max, pool, entry, p.meta?.forNew ? `🆕 ${T.forNew}` : "", p.endsAt ? `⏳ ${L.ends} ${human(p.endsAt)} (${T.left(days)})` : ""].filter(Boolean);
+  const foot = [SITE ? `👉 <a href="${SITE}/${LANG}/p/${slugOf(p)}/">${T.cta}</a>` : `👉 <a href="${esc(p.url)}">${T.cta}</a>`, `${tag(p.venue.name)} ${tag(kind.toLowerCase())}`];
+  msgs.push([key, [head, info, foot].map((b) => b.join("\n")).join("\n\n")]);
 }
 for (const p of read("pools").projects.filter((x) => x.status !== "ended")) {
   const key = `lp:${p.id}`; if (seen.has(key)) continue;
