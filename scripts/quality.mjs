@@ -102,6 +102,9 @@ const fatal = [];
 if (count === 0) fatal.push("no promos at all");
 else if (prev?.count >= 40 && count < prev.count * 0.5) fatal.push(`only ${count} promos (last good build had ${prev.count}) — a mass source outage`);
 for (const e of errors) if (/referral links|ad block|missing/.test(e.why)) fatal.push(e.why);
+// a backspace character in the code is a regex word boundary mangled by a scripted edit (25.11: happened 4 times)
+(function scan(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) scan(p); else if (/\.(ts|tsx|mjs)$/.test(e.name) && fs.readFileSync(p, "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in " + p); } })("src");
+for (const s of fs.readdirSync("scripts")) if (/\.mjs$/.test(s) && fs.readFileSync(path.join("scripts", s), "utf8").includes(String.fromCharCode(8))) fatal.push("backspace character (broken regex word boundary) in scripts/" + s);
 // one exchange suddenly losing most of its promos = a parser / filter broke (25.11: an over-eager duplicate rule hid 8 Bitrue promos)
 const byVenue = {};
 for (const p of P) if (p.category !== "farming") byVenue[p.venue.id] = (byVenue[p.venue.id] ?? 0) + 1;
