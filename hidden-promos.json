@@ -1,5 +1,5 @@
 {
- "at": 1795615389229,
+ "at": 1795615783165,
  "items": [
   {
    "id": "tg:ourbitofficial/4260",
@@ -297,6 +297,14 @@
    "of": "2026-11-20T23:59"
   },
   {
+   "id": "tg:Phemex_Announcements/7978",
+   "venue": "Phemex",
+   "title": "Phemex Deposit Week is here! — Share",
+   "url": "https://t.me/Phemex_Announcements/7978",
+   "why": "ended",
+   "of": "2026-09-18T23:59"
+  },
+  {
    "id": "tg:coinstore_global/10373",
    "venue": "Coinstore",
    "title": "Discover Pixagram® (pixagram_omni) — a social platform for pixel artists, featuring on-chain artwork, social publishing, Proof-of-Brain rewards, and a planned NFT…",
@@ -375,13 +383,6 @@
    "url": "https://docs.lighter.xyz/programs/lighter-on-robinhood-chain-points",
    "why": "ended",
    "of": "2026-11-12T23:59"
-  },
-  {
-   "id": "tg:Kucoin_News/37163",
-   "venue": "KuCoin",
-   "title": "Complete your Market Tsunami tasks, then invite a friend who signs up, completes KYC and trades at least 10…",
-   "url": "https://www.kucoin.com/campaigns/The_Market_Tsunami?utm_source=Market_Tsunami&utm_medium=Community&utm_campaign=Market_Tsunami&rcode=CXEEPG3P",
-   "why": "news"
   },
   {
    "id": "tg:coinwofficialchannel/8094",
@@ -494,6 +495,13 @@
    "venue": "CoinW",
    "title": "RT CoinW Alpha — Alpha Trading Airdrop #9 is LIVE!",
    "url": "https://www.coinw.com/module/onchain-trading-airdrop-09",
+   "why": "news"
+  },
+  {
+   "id": "tg:HTXGlobalAnnouncementChannel/15829",
+   "venue": "HTX",
+   "title": "Top 10 Trading Opportunities — Futures Trading Competition Update",
+   "url": "https://t.me/HTXGlobalAnnouncementChannel/15829",
    "why": "news"
   },
   {
@@ -1017,7 +1025,7 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 6910.5,
+   "perUserUsd": 6882.900000000001,
    "netUsd": 0.84
   },
   {
@@ -1044,8 +1052,8 @@
    "title": "🦃 Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5814.05,
-   "netUsd": 115.78
+   "perUserUsd": 5830.66,
+   "netUsd": 116.11
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1138,7 +1146,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 77.75999999999999,
+   "perUserUsd": 76.20400000000001,
    "netUsd": 0.6
   },
   {
@@ -1235,7 +1243,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 3.88
+   "netUsd": 3.89
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1258,7 +1266,7 @@
    "title": "🏆 MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1100.624,
+   "perUserUsd": 1106.56,
    "netUsd": 0.19
   },
   {
@@ -1448,7 +1456,7 @@
    "title": "🏆 LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1276.48,
+   "perUserUsd": 1276.8,
    "netUsd": 0.3
   },
   {
@@ -1596,7 +1604,7 @@
    "title": "🏆 ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1150.05,
+   "perUserUsd": 1157.7,
    "netUsd": -0.6
   },
   {
@@ -1762,6 +1770,13 @@
    "why": "raffle"
   },
   {
+   "id": "tg:Bybit_Announcements/10143",
+   "venue": "Bybit",
+   "title": "Thank you for joining our ANT IPO livestream — Now it's time for the quiz",
+   "url": "https://t.me/Bybit_Announcements/10143",
+   "why": "news"
+  },
+  {
    "id": "tg:coinwofficialchannel/8141",
    "venue": "CoinW",
    "title": "RT CoinW — $100 CRYPTO WORD CHALLENGE!",
@@ -1818,6 +1833,13 @@
    "why": "news"
   },
   {
+   "id": "tg:Bitrue_official/11252",
+   "venue": "Bitrue",
+   "title": "BLACK FRIDAY IS HERE: Trading v — Staking on #Bitrue",
+   "url": "https://www.bitrue.com/staking?cn=399990",
+   "why": "news"
+  },
+  {
    "id": "tg:Bybit_Announcements/10138",
    "venue": "Bybit",
    "title": "Anthropic IPO Livestream: Watch, Learn and Win",
@@ -1831,7 +1853,7 @@
    "title": "🎁 Share 800,000 NPC — Biconomy × Non-Playable Coin Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64458359254681--Share-800-000-NPC-Biconomy-Non-Playable-Coin-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 744.4876292000001,
+   "perUserUsd": 744.3286186,
    "netUsd": -0.13
   },
   {
@@ -1919,6 +1941,15 @@
    "why": "news"
   },
   {
+   "id": "tg:Kucoin_News/37218",
+   "venue": "KuCoin",
+   "title": "Ready to put your KuCoin knowledge to the test? — Join the quiz, complete your daily tasks, and climb the…",
+   "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
+   "why": "raffle",
+   "perUserUsd": 2,
+   "netUsd": 0.04
+  },
+  {
    "id": "tg:Kucoin_News/37217",
    "venue": "KuCoin",
    "title": "Trade Together, Win Together! — Up to 10,000 USDT in Rewards with KuCoin × ChartControl AI!",
@@ -1932,7 +1963,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 23.13,
+   "perUserUsd": 23.23,
    "netUsd": -0.51
   },
   {
@@ -1990,7 +2021,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 972,
+   "perUserUsd": 952.55,
    "netUsd": 1.81
   },
   {
@@ -2127,7 +2158,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 128.04,
+   "perUserUsd": 128.256,
    "netUsd": 2.44
   },
   {
@@ -2170,7 +2201,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5814.05,
+   "perUserUsd": 5830.66,
    "netUsd": 8.77
   },
   {
@@ -2187,6 +2218,7 @@
    "title": "One invite lands a $10 ANTHROPIC voucher",
    "url": "https://bingx.com/activity/task/",
    "why": "small",
+   "perUserUsd": 10,
    "netUsd": 2
   },
   {
@@ -2413,6 +2445,14 @@
    "netUsd": 4.37
   },
   {
+   "id": "biconomy:64709842495513",
+   "venue": "Biconomy.com",
+   "title": "Biconomy.com Earn – AERO, PEAQ & PUMP Locked Products: Enjoy Up to 13.52% APR in Rewards!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64709842495513-Biconomy-com-Earn-AERO-PEAQ-PUMP-Locked-Products-Enjoy-Up-to-13-52-APR-in-Rewards",
+   "why": "duplicate",
+   "of": "biconomy:64710415983385 (series)"
+  },
+  {
    "id": "tg:Toobit_announcements/6186",
    "venue": "Toobit",
    "title": "Every Milestone Brings You Closer to Bigger Rewards!",
@@ -2430,6 +2470,14 @@
    "netUsd": -1.5
   },
   {
+   "id": "tg:Kucoin_News/37298",
+   "venue": "KuCoin",
+   "title": "Celebrate World Science Day with KuCoin and grab your chance to claim a 100 USDT Futures Bonus from a…",
+   "url": "https://www.kucoin.com/campaigns/World_Science_Day?utm_source=World_Science_Day&utm_medium=Community&utm_campaign=World_Science_Day",
+   "why": "small",
+   "perUserUsd": 5
+  },
+  {
    "id": "tg:Kucoin_News/37287",
    "venue": "KuCoin",
    "title": "YOU’RE NOT ALONE! — CLAIM YOUR 100 USDT FUTURES BONUS!",
@@ -2439,13 +2487,20 @@
    "netUsd": -5.5
   },
   {
+   "id": "biconomy:64662106557849",
+   "venue": "Biconomy.com",
+   "title": "Biconomy.com Earn – DHN, GBCK、ATS & MTC Locked Products: Enjoy Up to 19.47% APR in Rewards!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64662106557849-Biconomy-com-Earn-DHN-GBCK-ATS-MTC-Locked-Products-Enjoy-Up-to-19-47-APR-in-Rewards",
+   "why": "duplicate",
+   "of": "biconomy:64710415983385 (series)"
+  },
+  {
    "id": "bitget:12560603901279",
    "venue": "Bitget",
    "title": "Onchain trading challenge round 136 (SOL)—register and trade to share 50,000 USDT",
    "url": "https://www.bitget.com/support/articles/12560603901279",
-   "why": "small",
-   "perUserUsd": 600,
-   "netUsd": 2
+   "why": "duplicate",
+   "of": "tg:Bitget_Announcements/18486 (competition)"
   },
   {
    "id": "biconomy:64631774686745",
@@ -2453,7 +2508,7 @@
    "title": "Biconomy.com Earn – SKYAI, VVV、IDOL & YURU Locked Products: Enjoy Up to 24.33% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64631774686745-Biconomy-com-Earn-SKYAI-VVV-IDOL-YURU-Locked-Products-Enjoy-Up-to-24-33-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:LBanknews/20931",
@@ -2505,14 +2560,6 @@
    "of": "tg:CEXIO_Announcements/3517 (url)"
   },
   {
-   "id": "tg:Kucoin_News/37254",
-   "venue": "KuCoin",
-   "title": "ONE WEEK LEFT — DON’T MISS THE DUAL INVESTMENT CAMPAIGN!",
-   "url": "https://www.kucoin.com/campaigns/Dual_4_1028?appNeedLang=true&loading=2&transparentTitle=true",
-   "why": "duplicate",
-   "of": "tg:Kucoin_News/37264 (url)"
-  },
-  {
    "id": "tg:coinwofficialchannel/8152",
    "venue": "CoinW",
    "title": "Tech stocks in focus! — Explore CoinW TradFi Campaign #4!",
@@ -2526,7 +2573,7 @@
    "title": "Biconomy.com Earn – $UPT, MNT,TUSD & BGSC Locked Products: Enjoy Up to 24.33% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64542371125401-Biconomy-com-Earn-UPT-MNT-TUSD-BGSC-Locked-Products-Enjoy-Up-to-24-33-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:coinwofficialchannel/8144",
@@ -2541,9 +2588,8 @@
    "venue": "LBank",
    "title": "New users: register for a $5 futures bonus",
    "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 2
+   "why": "duplicate",
+   "of": "tg:LBanknews/20961 (url)"
   },
   {
    "id": "tg:Bitget_Announcements/18455",
@@ -2567,7 +2613,7 @@
    "title": "Biconomy.com Earn – LINK, ICNT、IRYS & DCTCREW Locked Products: Enjoy Up to 40.56% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64494068237081-Biconomy-com-Earn-LINK-ICNT-IRYS-DCTCREW-Locked-Products-Enjoy-Up-to-40-56-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:Bitget_Announcements/18451",
@@ -2599,7 +2645,7 @@
    "title": "Biconomy.com Earn – BTC & KAMIRAI Locked Products: Enjoy Up to 8.11% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64464692560921-Biconomy-com-Earn-BTC-KAMIRAI-Locked-Products-Enjoy-Up-to-8-11-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:coinwofficialchannel/8133",
@@ -2608,6 +2654,22 @@
    "url": "https://www.coinw.com/help-center/announcement-center/event/latest-event/2026-11-18/ant-rewards/8227?utm_source=community&utm_campaign=ant",
    "why": "duplicate",
    "of": "tg:coinwofficialchannel/8153 (url)"
+  },
+  {
+   "id": "tg:LBanknews/20874",
+   "venue": "LBank",
+   "title": "3 copies of GTA 6 up for grabs — The top 3 traders by volume each win a copy for PlayStation or Xbox",
+   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "duplicate",
+   "of": "tg:LBanknews/20961 (url)"
+  },
+  {
+   "id": "tg:LBanknews/20873",
+   "venue": "LBank",
+   "title": "$150,000 in rewards",
+   "url": "https://www.lbank.com/event-new/pointmall/10003934-Thanksgiving-YETI?qcode=9i4n9&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=activity-mkt&utm_term=of&utm_content=lbank-mkt",
+   "why": "duplicate",
+   "of": "tg:LBanknews/20961 (url)"
   },
   {
    "id": "tg:Bitget_Announcements/18438",
@@ -2631,7 +2693,7 @@
    "title": "Biconomy.com Earn – SKDDB, HANA、RARE & SOVR Locked Products: Enjoy Up to 30.42% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64413377384345-Biconomy-com-Earn-SKDDB-HANA-RARE-SOVR-Locked-Products-Enjoy-Up-to-30-42-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15848",
@@ -2680,7 +2742,7 @@
    "title": "Biconomy.com Earn – SOXSB, BMT、KGEN & SHELL Locked Products: Enjoy Up to 30.42% APR in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64380597298585-Biconomy-com-Earn-SOXSB-BMT-KGEN-SHELL-Locked-Products-Enjoy-Up-to-30-42-APR-in-Rewards",
    "why": "duplicate",
-   "of": "biconomy:64662106557849 (series)"
+   "of": "biconomy:64710415983385 (series)"
   },
   {
    "id": "tg:Kucoin_News/37184",
