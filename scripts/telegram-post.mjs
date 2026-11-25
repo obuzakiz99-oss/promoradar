@@ -79,5 +79,36 @@ for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
   if (r.ok) { sent++; seen.add(key); } else console.log("telegram error", r.status, (await r.text()).slice(0, 200));
   await new Promise((res) => setTimeout(res, 1500));
 }
+// 25.11 (owner: grow the channel): weekly digest — Monday from 07:00 UTC, once per ISO week — the 5 best running promos by
+// the realistic per-person estimate (only "likely"/"sure" estimates, ≥ $15, not ending within 2 days)
+{
+  const W = {
+    uk: { head: "🏆 <b>Топ-5 акцій тижня</b>", sub: "За реальною сумою на одну людину, а не за «до 10 000 USDT».", all: "Усі акції" },
+    en: { head: "🏆 <b>Top 5 promos of the week</b>", sub: "Ranked by what one person realistically gets, not by \"up to 10,000 USDT\".", all: "All promos" },
+    ru: { head: "🏆 <b>Топ-5 акций недели</b>", sub: "По реальной сумме на одного человека, а не по «до 10 000 USDT».", all: "Все акции" },
+  }[LANG];
+  const now = new Date();
+  const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const week = `${d.getUTCFullYear()}-W${Math.ceil(((d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400_000 + 1) / 7)}`;
+  if (now.getUTCDay() === 1 && now.getUTCHours() >= 7 && state.weekly !== week) {
+    const top = feed.promos.filter((p) => {
+      const v = p.meta?.value;
+      return v && v.mech !== "apr" && (v.conf === "high" || v.conf === "mid") && v.net >= 15 && !p.meta?.thin && p.venue.kind !== "airdrop"
+        && (!p.endsAt || p.endsAt - Date.now() > 2 * 86400_000);
+    }).sort((a, b) => b.meta.value.net - a.meta.value.net).slice(0, 5);
+    if (top.length >= 3) {
+      const rows = top.map((p, i) => `${i + 1}. <b>${esc(p.venue.name)}</b> — ≈ $${Math.round(p.meta.value.net)}\n${esc(trTitle(p))}${SITE ? `\n<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : ""}`);
+      const text = [W.head, W.sub, "", rows.join("\n\n"), SITE ? `\n<a href="${SITE}/${LANG}/">${W.all} →</a>` : ""].filter((x) => x !== undefined).join("\n");
+      const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT, text, parse_mode: "HTML", disable_web_page_preview: true }),
+      });
+      if (r.ok) { state.weekly = week; console.log(`telegram: weekly top-${top.length} sent (${week})`); }
+      else console.log("telegram weekly error", r.status, (await r.text()).slice(0, 200));
+    }
+  }
+}
+
 saveState(); // unsent items stay unseen and go out on the next run
 console.log(`telegram: ${msgs.length} new, ${sent} sent (cap ${MAX_PER_RUN}/run)`);
