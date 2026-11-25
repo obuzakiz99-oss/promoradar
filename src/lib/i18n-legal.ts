@@ -22,7 +22,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Конфіденційність", sub: "Коротко: ми не збираємо ваших персональних даних і не маємо акаунтів.", blocks: [
       ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, вибрана країна і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
       ["Хостинг", "Сайт розміщено на GitHub Pages. GitHub як хостинг може технічно обробляти IP-адреси відвідувачів для безпеки й роботи сервісу — див. GitHub Privacy Statement."],
-      ["Файли cookie та аналітика", "Зараз ми не використовуємо cookie, аналітику чи рекламні трекери. Якщо вони з'являться, ми оновимо цю сторінку і, де потрібно, попросимо вашої згоди."],
+      ["Файли cookie та аналітика", "Ми не використовуємо cookie та рекламні трекери. Для підрахунку відвідувань працює GoatCounter: він не ставить cookie, не зберігає IP-адреси й не збирає персональних даних — лише загальні числа (сторінка, країна, браузер, звідки прийшли). Ця статистика не публічна."],
       ["Зовнішні сайти", "Посилання ведуть на сайти бірж і протоколів — у них свої правила конфіденційності."],
       ["Зв'язок", `Питання щодо даних: ${ISSUES}`],
     ] },
@@ -45,7 +45,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Privacy", sub: "In short: we collect no personal data and have no accounts.", blocks: [
       ["What we store", "Nothing on our servers. Saved promos (★), your tracker, chosen country and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
       ["Hosting", "The site is hosted on GitHub Pages. As the host, GitHub may technically process visitors' IP addresses for security and operation — see the GitHub Privacy Statement."],
-      ["Cookies and analytics", "We currently use no cookies, analytics or ad trackers. If that changes we'll update this page and ask for consent where required."],
+      ["Cookies and analytics", "We use no cookies or ad trackers. Visits are counted with GoatCounter: it sets no cookies, stores no IP addresses and collects no personal data — only totals (page, country, browser, referrer). These stats are not public."],
       ["External sites", "Links lead to exchange and protocol sites, which have their own privacy policies."],
       ["Contact", `Data questions: ${ISSUES}`],
     ] },
@@ -68,7 +68,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Конфиденциальность", sub: "Коротко: мы не собираем ваших персональных данных и не имеем аккаунтов.", blocks: [
       ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, выбранная страна и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],
       ["Хостинг", "Сайт размещён на GitHub Pages. GitHub как хостинг может технически обрабатывать IP-адреса посетителей для безопасности и работы сервиса — см. GitHub Privacy Statement."],
-      ["Cookie и аналитика", "Сейчас мы не используем cookie, аналитику или рекламные трекеры. Если они появятся, мы обновим эту страницу и, где нужно, попросим вашего согласия."],
+      ["Cookie и аналитика", "Мы не используем cookie и рекламные трекеры. Посещения считает GoatCounter: он не ставит cookie, не хранит IP-адреса и не собирает персональные данные — только общие числа (страница, страна, браузер, откуда пришли). Эта статистика не публичная."],
       ["Внешние сайты", "Ссылки ведут на сайты бирж и протоколов — у них свои правила конфиденциальности."],
       ["Связь", `Вопросы о данных: ${ISSUES}`],
     ] },

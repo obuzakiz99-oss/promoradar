@@ -49,6 +49,8 @@ export default async function LangLayout({ children, params }: { children: React
         <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
         {/* beginner mode was removed 06.11 — this clears it for visitors who had switched it on */}
         <script dangerouslySetInnerHTML={{ __html: NOVICE_BOOT }} />
+        {/* visit counter (owner 25.11): GoatCounter — no cookies, no personal data; stats visible only to the owner */}
+        {process.env.SITE_HOST ? <script data-goatcounter="https://promoradar.goatcounter.com/count" async src="https://gc.zgo.at/count.js" /> : null}
       </head>
       <body className="min-h-dvh pb-16 md:pb-0">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-lime focus:px-4 focus:py-2 focus:font-bold focus:text-on-accent">{({ uk: "До вмісту", en: "Skip to content", ru: "К содержимому" } as const)[lang]}</a>
