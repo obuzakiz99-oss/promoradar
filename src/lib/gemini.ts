@@ -6,7 +6,7 @@
  * after a pause and then replaced by the next one in the list.
  */
 const BASE = "https://generativelanguage.googleapis.com/v1beta";
-const FALLBACK = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+const FALLBACK = ["gemini-flash-latest", "gemini-flash-lite-latest"];   // aliases; 2.5 is closed to new keys (404, 25.11)
 let MODELS: Promise<string[]> | undefined;
 
 export const hasGemini = () => !!process.env.GEMINI_API_KEY;
@@ -23,9 +23,9 @@ async function pickModels(key: string): Promise<string[]> {
       .map((m) => m.name.replace(/^models\//, ""))
       .filter((n) => STABLE.test(n))
       .sort((a, b) => ver(b) - ver(a) || Number(a.endsWith("-lite")) - Number(b.endsWith("-lite")));
-    // newest flash, the long-standing 2.5 flash (less busy), then the lite versions — each tried once
     const full = names.filter((n) => !n.endsWith("-lite")), lite = names.filter((n) => n.endsWith("-lite"));
-    return [...new Set([...pinned, ...full.slice(0, 1), FALLBACK[0], ...lite.slice(0, 1), FALLBACK[1]])];
+    // only models THIS key may use: two newest full flash models, then two lite ones — each tried once
+    return [...new Set([...pinned, ...full.slice(0, 2), ...lite.slice(0, 2), ...FALLBACK])];
   } catch {
     return [...new Set([...pinned, ...FALLBACK])];
   }
@@ -61,7 +61,7 @@ export async function gemini(prompt: string, opts: { system?: string; json?: boo
         return (j.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("");
       }
       last = `gemini ${r.status} (${model}): ${(await r.text()).replace(/\s+/g, " ").slice(0, 140)}`;
-      if (![500, 503, 504].includes(r.status)) break;   // 429 quota / 400 / 403: retrying won't help this build
+      if (![404, 500, 503, 504].includes(r.status)) break;   // busy / gone → next model; 429 quota / 400 / 403 → stop for this build
     } catch (e) {
       last = `gemini network (${model}): ${String(e instanceof Error ? e.message : e).slice(0, 100)}`;
     }
