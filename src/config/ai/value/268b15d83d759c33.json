@@ -1,1 +1,1 @@
-{"id":"gate:102984","h":"RHnBY1b0wnXlTs5j","v":1,"at":1795597792470,"data":{"isPromo":true,"socialOnly":false,"mech":"lucky_draw","act":{"kind":"trade_spot","usd":50},"pool":{"amount":5000,"unit":"USDT"},"days":14.3}}
+{"id":"gate:102984","h":"RHnBY1b0wnXlTs5j","v":1,"at":1795597995493,"data":{"isPromo":true,"socialOnly":false,"mech":"lucky_draw","act":{"kind":"other","usd":50},"pool":{"amount":5000,"unit":"USDT"},"days":14}}
