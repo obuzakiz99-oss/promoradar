@@ -37,6 +37,8 @@ let state = null;
 try { state = JSON.parse(fs.readFileSync(STATE, "utf8")); } catch {}
 const firstRun = !state;
 state ??= { ids: [] };
+state.camps ??= {};
+const campOf = new Map();   // post key → campaign keys (recorded in state.camps once sent)
 const seen = new Set(state.ids);
 
 const msgs = [];
@@ -60,6 +62,16 @@ const T = {
 }[LANG];
 const human = (ts) => { const d = new Date(ts); return LANG === "en" ? `${T.months[d.getUTCMonth()]} ${d.getUTCDate()}` : `${d.getUTCDate()} ${T.months[d.getUTCMonth()]}`; };
 const tag = (s) => "#" + String(s).replace(/\.com$/i, "").replace(/[^\p{L}\p{N}_]/gu, "");
+// 25.11: one campaign often comes as 2–3 exchange posts (LBank $150K went out twice) — never post the same campaign again
+const campsOf = (p) => {
+  const c = [];
+  try { const u = new URL(p.url); if (u.host !== "t.me" && !/^\/[a-z-]+\/?$/i.test(u.pathname)) c.push("url:" + p.venue.id + u.host.replace(/^www\./, "") + u.pathname.replace(/\/$/, "")); } catch { /* */ }
+  if (p.reward && p.reward.amount >= 1000) c.push("pool:" + p.venue.id + ":" + Math.round(p.reward.amount) + p.reward.unit);
+  return c;
+};
+// campaigns of promos already posted (also those posted before this rule existed)
+for (const p of promos) if (seen.has(`promo:${p.id}`)) for (const c of campsOf(p)) state.camps[c] ??= Date.now();
+const queued = new Set();
 for (const p of promos) {
   const key = `promo:${p.id}`; if (seen.has(key)) continue;
   if (p.publishedAt && Date.now() - p.publishedAt > 3 * 86400_000) continue; // only genuinely new
@@ -81,6 +93,10 @@ for (const p of promos) {
   const head = [`${icon} <b>${esc(p.venue.name)}</b> · ${kind}`, `<b>${esc((tr ?? p.title).replace(/\s+/g, " ").trim())}</b>`];
   const info = [est || max, pool, entry, p.meta?.forNew ? `🆕 ${T.forNew}` : "", p.endsAt ? `⏳ ${L.ends} ${human(p.endsAt)} (${T.left(days)})` : ""].filter(Boolean);
   const foot = [SITE ? `👉 <a href="${SITE}/${LANG}/p/${slugOf(p)}/">${T.cta}</a>` : `👉 <a href="${esc(p.url)}">${T.cta}</a>`, `${tag(p.venue.name)} ${tag(kind.toLowerCase())}`];
+  const camps = campsOf(p);
+  if (camps.some((c) => (state.camps[c] && Date.now() - state.camps[c] < 30 * 86400_000) || queued.has(c))) { seen.add(key); continue; }
+  for (const c of camps) queued.add(c);
+  campOf.set(key, camps);
   msgs.push([key, [head, info, foot].map((b) => b.join("\n")).join("\n\n")]);
 }
 for (const p of read("pools").projects.filter((x) => x.status !== "ended")) {
@@ -119,7 +135,7 @@ const send = async (text) => {
 let sent = 0;
 for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
   const r = await send(text);
-  if (r.ok) { sent++; seen.add(key); delete state.fail[key]; saveState(); }
+  if (r.ok) { sent++; seen.add(key); for (const c of campOf.get(key) ?? []) state.camps[c] = Date.now(); delete state.fail[key]; saveState(); }
   else {
     console.log("telegram error", r.status, r.why);
     if (r.status === 400 || r.status === 403) { state.fail[key] = (state.fail[key] ?? 0) + 1; if (state.fail[key] >= 3) { seen.add(key); delete state.fail[key]; } }

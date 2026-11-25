@@ -55,7 +55,12 @@ export function compact(n: number): string {
  */
 export function parseReward(title: string): Reward | undefined {
   // amounts that are entry conditions ("balance of 100 USDT", "minimum 50 USDT", "at least…") are not prizes
-  const t = title.replace(/ /g, " ").replace(/\b(balance of|minimum( of)?|min\.|at least|holding of|deposit of at least)\s*\$?\s?[\d][\d,.]*\+?\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9})?/gi, " ");
+  const t0 = title.replace(/ /g, " ").replace(/\b(balance of|minimum( of)?|min\.|at least|holding of|deposit of at least)\s*\$?\s?[\d][\d,.]*\+?\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9})?/gi, " ");
+  // audit 25.11: "$1.8B in weekly spot volume" (Bitrue) was posted as the pool — market figures are not prizes,
+  // and "earn up to $300 daily" / "per friend" is what one person gets, not a pool
+  const t = t0
+    .replace(/\$?\s?[\d][\d,.]*\s?(k|m|b|million|billion)?\+?\s*([A-Z][A-Z0-9]{1,9}\s)?(in )?((weekly|daily|monthly|total|24h|record)\s)*(spot |futures |trading )?(volume|TVL|market cap|valuation|liquidity|deposits|users|traders)\b/gi, " ")
+    .replace(/\$?\s?[\d][\d,.]*\s?(k|m)?\s*([A-Z][A-Z0-9]{1,9}\s?)?(daily|per day|a day|each day|per friend|per referral|per invite|per user|per person|each)\b/gi, " ");
   const found: Reward[] = [];
   const letters = t.replace(/[^A-Za-z]/g, "");
   const shouty = letters.length > 12 && (letters.match(/[A-Z]/g)?.length ?? 0) / letters.length > 0.7;

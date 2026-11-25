@@ -35,6 +35,9 @@ for (const p of P) {
     E(p, `pool ${p.reward.amount} ≈ per-person ${m.perUser.amount} — a per-person cap printed as the pool`);
 }
 
+// a "pool" of hundreds of millions on an ordinary promo is a market figure (volume, TVL) read as a prize
+for (const p of P) if (p.category !== "farming" && (p.reward?.usd ?? 0) > 100e6 && !p.sponsored) E(p, `pool ${p.reward.label} looks like a market figure (volume / TVL), not a prize`);
+
 /* ---------- 2) dates ---------- */
 for (const p of P) {
   if (p.endsAt && p.endsAt < now) E(p, "already ended but still shown");
