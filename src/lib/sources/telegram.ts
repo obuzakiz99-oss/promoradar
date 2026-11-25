@@ -129,7 +129,8 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     // audit 23.11: the first own link was often a button (deposit, referral landing, m-score) — prefer the article / event page
     const path = (u: string) => u.split(/[?#]/)[0];   // utm_campaign=… is not a campaign page
     // audit 23.11 (round 5): Bitrue "/referral/landing?inviteCode=…" won over "/land/Bitrue-Thanksgiving-Month" — referral pages never count
-    const ref = (u: string) => /referr|invite|register|sign-?up/i.test(path(u));
+    // audit 25.11: OKX posts end with a "verify our channel" link — never the campaign page
+    const ref = (u: string) => /referr|invite|register|sign-?up|channel-verification|verify/i.test(path(u));
     const url = mine.find((u) => !ref(u) && /support|announce|activit|event|campaign|promo|article|help|zendesk|landing|\/land\/|\/news\//i.test(path(u)))
       ?? mine.find((u) => !/deposit|register|sign-?up|invite|referr|download|\/assets|wallet|m-score|\/trade\/|\/futures\/[A-Z]/i.test(path(u)))
       ?? mine[0] ?? `https://t.me/${post}`;
