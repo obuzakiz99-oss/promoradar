@@ -158,6 +158,10 @@ export const TELEGRAM: Array<{ venue: string; channel: string }> = [
   { venue: "lbank",       channel: "LBankNews" },
   { venue: "phemex",      channel: "phemex_announcements" },
   { venue: "hashkey",     channel: "HashKeyGlobal_Announcement" },
+  // 25.11 (unreadable sites): only channels linked from the exchange's own site — coinw.com footer, support.hibt.com.
+  // XT, Bitunix, edgeX link only chat groups (no public feed); Pionex, Deepcoin, Hotcoin pages show no channel link.
+  { venue: "coinw",       channel: "coinwofficialchannel" },
+  { venue: "hibt",        channel: "HotsCoinAnnouncements" },
 ];
 
 /** Venues we never show. Matched against ids/slugs/names, lower-case. */
