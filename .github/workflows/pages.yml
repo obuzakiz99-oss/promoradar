@@ -61,6 +61,7 @@ jobs:
           AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}         # second free translator (Azure F0, 2M chars/month)
           AZURE_TRANSLATOR_REGION: ${{ secrets.AZURE_TRANSLATOR_REGION }}   # e.g. westeurope (the resource's region)
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # AI-written FAQ on promo pages (src/lib/faq.ts); empty = no FAQ
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}   # free Gemini tier (aistudio.google.com): translations + reading promo rules when there is no Claude key
           FAQ_MODEL: ${{ vars.FAQ_MODEL || 'claude-opus-5-5' }}
           VALUE_MODEL: ${{ vars.VALUE_MODEL || 'claude-sonnet-5-5' }}   # reads each promo's rules once → expected $ per person, junk filter (src/lib/value.ts)
 

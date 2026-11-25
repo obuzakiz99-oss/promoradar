@@ -7,6 +7,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { PromoDetails } from "./details";
+import { gemini, hasGemini } from "./gemini";
 import type { Promo } from "./types";
 
 /**
@@ -127,6 +128,25 @@ async function ask(client: Anthropic, text: string): Promise<Assess | null> {
   };
 }
 
+const GEMINI_PER_BUILD = Number(process.env.VALUE_GEMINI_PER_BUILD) || 6;
+const FIELDS = `Return ONLY one JSON object with exactly these keys (use null when not stated):
+{"isPromo": boolean, "socialOnly": boolean, "mech": "fixed"|"tiers"|"pool_share"|"top_n"|"lucky_draw"|"first_n"|"apr"|"referral"|"points"|"unknown",
+ "typical": {"amount": number, "unit": string}|null, "max": {"amount": number, "unit": string}|null, "pool": {"amount": number, "unit": string}|null,
+ "winners": number|null, "act": {"kind": "none"|"register"|"trade_spot"|"trade_futures"|"deposit"|"stake"|"hold"|"buy"|"other", "usd": number|null, "lockDays": number|null},
+ "aprPct": number|null, "days": number|null}`;
+async function askGemini(text: string): Promise<Assess | null> {
+  const raw = await gemini(`${text}\n\n${FIELDS}`, { system: SYSTEM, json: true });
+  const parsed = Schema.safeParse(JSON.parse(raw));
+  if (!parsed.success) return null;
+  const x = parsed.data;
+  const amt = (a: { amount: number; unit: string } | null) => (a && a.amount > 0 ? { amount: a.amount, unit: a.unit.trim().toUpperCase() } : undefined);
+  return {
+    isPromo: x.isPromo, socialOnly: x.socialOnly, mech: x.mech, typical: amt(x.typical), max: amt(x.max), pool: amt(x.pool),
+    winners: x.winners ?? undefined, aprPct: x.aprPct ?? undefined, days: x.days ?? undefined,
+    act: { kind: x.act.kind, usd: x.act.usd ?? undefined, lockDays: x.act.lockDays ?? undefined },
+  };
+}
+
 /** Facts for the given promos: cached + up to VALUE_PER_BUILD new ones (pass the most visible first). Never throws. */
 export async function getAssessments(promos: Promo[], details: Record<string, PromoDetails>): Promise<Record<string, Assess>> {
   const store = load();
@@ -151,6 +171,24 @@ export async function getAssessments(promos: Promo[], details: Record<string, Pr
       }
     };
     await Promise.all(Array.from({ length: 4 }, worker));
+    const live = new Set(promos.map((p) => p.id));
+    for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
+    writeStore(FILE(), store, READ_OK);
+  }
+  // 25.11 (owner: "without the laptop, for free"): no Claude key → Gemini free tier reads the newest promos, a few per build
+  else if (hasGemini()) {
+    const todo = items.filter(({ p, text }) => { const s = store[p.id]; return !s || s.v !== VER || s.h !== hashOf(text); })
+      .filter(({ p, text }) => { const e = readHand<Assess>("value").get(p.id); return !(e && e.v === VER && e.h === hashOf(text)); })
+      .slice(0, GEMINI_PER_BUILD);
+    for (const it of todo) {
+      try {
+        const a = await askGemini(it.text);
+        if (a) store[it.p.id] = { h: hashOf(it.text), v: VER, at: now, a };
+      } catch (e) {
+        console.warn(`[value/gemini] ${it.p.id}: ${e instanceof Error ? e.message : e}`);
+        if (/gemini 4(29|03|01)/.test(String(e))) break;   // free quota used up / bad key — try again next build
+      }
+    }
     const live = new Set(promos.map((p) => p.id));
     for (const [id, s] of Object.entries(store)) { if (live.has(id)) s.at = now; else if (now - s.at > KEEP_MS) delete store[id]; }
     writeStore(FILE(), store, READ_OK);

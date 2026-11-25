@@ -4,6 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import MANUAL_JSON from "@/config/translations-manual.json";
+import { geminiTranslate, hasGemini } from "./gemini";
+
+const GEMINI_PER_BUILD = 40_000;   // chars per build over all languages (≈ 8 requests)
+let GEMINI_SPENT = 0;
 
 /**
  * Machine translation of promo texts (titles, key rules, full rules) into Ukrainian and Russian.
@@ -120,6 +124,9 @@ export async function translateAll(lists: Record<TLang, string[]>): Promise<Reco
     const left = AZURE_MONTH - store.usage.azure;
     providers.push({ name: "azure", budget: Math.min(AZURE_PER_BUILD, left), run: (t, l) => azure(t, l, ak, process.env.AZURE_TRANSLATOR_REGION || undefined), spent: (n) => { store.usage!.azure += n; } });
   }
+  // 25.11: Gemini free tier (GEMINI_API_KEY) — translates what DeepL / Azure leave, so nothing waits for the laptop.
+  // A few small requests per build (the free tier allows ~10 a minute); the rest goes to the next build in 30 min.
+  if (hasGemini()) providers.push({ name: "gemini", budget: GEMINI_PER_BUILD - GEMINI_SPENT, run: (t, l) => geminiTranslate(t.slice(0, 25), l).then((o) => [...o, ...t.slice(25).map(() => "")]), spent: (n) => { GEMINI_SPENT += n; } });
 
   if (providers.length) {
     // interleave: Ukrainian first (main audience), then Russian; each text goes to the first provider with budget left
