@@ -222,6 +222,9 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
       // CAP of the bonus, not the minimum to join (Binance new-user 35 % showed "stake from 200 USDT"; the minimum is 0.1)
       const lead = line.slice(Math.max(0, m.index! - 30), m.index!);
       if (/\b(first|up to|maximum|max\.?|cap(ped)? at|limit(ed)? (of|to)|no more than|at most)\s*\$?\s*$/i.test(lead)) continue;
+      // …and "any amount exceeding 200 USDT will only earn…" / "the first 200 USDT" anywhere in the line (the regex keyword
+      // "exceeding" itself sits before the number, so the lead above misses it)
+      if (new RegExp(`\\b(first|up to|maximum|capped at|exceed\\w*|above|over)\\s*\\$?\\s?${m[2].replace(/[.,]/g, "[.,]?")}\\b`, "i").test(line) && /\b(first|only (applicable|effective)|will only|exceed\w*|cap)\b/i.test(line)) continue;
       // the word right before the amount decides the kind ("net deposit of at least 1,000 USDT, plus … trading volume")
       const near = line.slice(Math.max(0, m.index! - 40), m.index!);
       const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
