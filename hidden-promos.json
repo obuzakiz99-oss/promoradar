@@ -1,5 +1,5 @@
 {
- "at": 1795728296922,
+ "at": 1795728573231,
  "items": [
   {
    "id": "tg:CEXIO_Announcements/3525",
@@ -1096,7 +1096,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2225.2,
+   "perUserUsd": 2225.6,
    "netUsd": 0.54
   },
   {
@@ -1284,8 +1284,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6084.9800000000005,
-   "netUsd": 121.2
+   "perUserUsd": 6090.9800000000005,
+   "netUsd": 121.32
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1335,7 +1335,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 76.152,
+   "perUserUsd": 76.328,
    "netUsd": 0.6
   },
   {
@@ -1431,7 +1431,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1170.1760000000002,
+   "perUserUsd": 1166.704,
    "netUsd": 0.23
   },
   {
@@ -1622,7 +1622,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1410.56,
+   "perUserUsd": 1407.04,
    "netUsd": 0.38
   },
   {
@@ -1696,7 +1696,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1574,
+   "perUserUsd": 1571.6000000000001,
    "netUsd": 0.28
   },
   {
@@ -2031,7 +2031,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6084.9800000000005,
+   "perUserUsd": 6090.9800000000005,
    "netUsd": 250
   },
   {
@@ -2116,7 +2116,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 951.9,
+   "perUserUsd": 954.0999999999999,
    "netUsd": 1.81
   },
   {
@@ -2208,7 +2208,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.51199999999997,
+   "perUserUsd": 133.536,
    "netUsd": 2.55
   },
   {
@@ -2244,7 +2244,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6084.9800000000005,
+   "perUserUsd": 6090.9800000000005,
    "netUsd": 8.77
   },
   {
@@ -2395,6 +2395,14 @@
    "why": "small",
    "perUserUsd": 27,
    "netUsd": 4.37
+  },
+  {
+   "id": "tg:Bitget_Announcements/18509",
+   "venue": "Bitget",
+   "title": "Celebrate this season of gratitude with Bitget Super Earn Festival and enjoy up to 10% APR on USDT Simple…",
+   "url": "https://www.bitget.com/campaigns/super-earn-season",
+   "why": "duplicate",
+   "of": "bitget:12560603900036 (event)"
   },
   {
    "id": "biconomy:64710415983385",
@@ -2698,7 +2706,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 33.33,
+   "perUserUsd": 33.74,
    "netUsd": -0.47
   },
   {
@@ -2750,14 +2758,6 @@
    "why": "small",
    "perUserUsd": 5,
    "netUsd": 0
-  },
-  {
-   "id": "bitget:12560603900036",
-   "venue": "Bitget",
-   "title": "Bitget Super Earn Festival - up to 10% APR on net deposits",
-   "url": "https://www.bitget.com/support/articles/12560603900036",
-   "why": "duplicate",
-   "of": "tg:Bitget_Announcements/18509 (event)"
   },
   {
    "id": "bybit:wsot-2026-squad-or-solo-compete-to-win-up-to-10m--artfc6575ad9be4",
