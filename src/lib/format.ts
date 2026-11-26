@@ -131,10 +131,11 @@ export function fixWording(s: string, lang: string): string {
  * app shows) but goes in «» like the hand translations do; an event name takes the capitalised words before it along.
  * Text already inside «…» is left alone.
  */
-const UI_NAME = /\[?\b((?:Join|Register|Sign up|Claim|Subscribe|Learn more|Participate)(?: [Nn]ow)?|(?:[A-Z][\w-]*\s){0,3}Lucky Draw(?: #\d+)?)\b\]?/g;
+// weekly audit 26.11 (2): "Deposit Now", "Campaign Link" left bare too
+const UI_NAME = /\[?\b((?:Join|Register|Sign up|Claim|Subscribe|Learn more|Participate|Deposit|Trade|Buy|Stake|Enroll|Apply|Campaign Link)(?: [Nn]ow)?|(?:[A-Z][\w-]*\s){0,3}Lucky Draw(?: #\d+)?)\b\]?/g;
 function quoteUi(s: string): string {
-  if (!/Join|Register|Sign up|Claim|Subscribe|Learn more|Participate|Lucky Draw/.test(s)) return s;
+  if (!/Join|Register|Sign up|Claim|Subscribe|Learn more|Participate|Deposit|Trade|Buy|Stake|Enroll|Apply|Campaign Link|Lucky Draw/.test(s)) return s;
   return s.replace(/«[^«»]*»|[^«]+/g, (seg) => seg.startsWith("«") ? seg : seg.replace(UI_NAME, (m, name: string) =>
     // a lone verb ("Claim", "Subscribe") is only a button when bracketed or followed by "Now"; "Lucky Draw" always is a name
-    /Lucky Draw|\s[Nn]ow$/.test(name) || m.startsWith("[") || /^(Learn more|Sign up)$/.test(name) ? `«${name}»` : m));
+    /Lucky Draw|\s[Nn]ow$/.test(name) || m.startsWith("[") || /^(Learn more|Sign up|Campaign Link)$/.test(name) ? `«${name}»` : m));
 }

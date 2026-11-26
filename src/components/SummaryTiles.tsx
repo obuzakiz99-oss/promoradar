@@ -22,7 +22,7 @@ export function SummaryTiles({ tiles, lang }: { tiles: TileData[]; lang: "uk" | 
               className="flex items-start gap-3 text-left disabled:opacity-100">
               <span className={`grid size-10 shrink-0 place-items-center rounded-xl bg-white/[0.05] ${t.tone ?? "text-ink"}`}><Icon name={t.icon} className="size-5" /></span>
               <span className="min-w-0 flex-1">
-                <span className="block text-xs font-semibold text-ink-3">{t.label}</span>
+                <span className="block text-xs font-semibold text-ink-3">{t.label}</span>{" "}
                 <span className={`block font-semibold leading-snug [overflow-wrap:anywhere] ${t.tone ?? "text-ink"}`}>{t.value}</span>
               </span>
             </button>

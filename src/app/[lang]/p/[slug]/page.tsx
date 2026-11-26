@@ -496,7 +496,9 @@ export default async function PromoPage({ params }: { params: Params }) {
           if (m.geo?.noUA) whoParts.push([U.notUA, "text-rose"]);
           else if (m.geo?.only) whoParts.push([U.region(m.geo.only), "text-amber"]);
           // weekly audit 26.11: "Україна · Усі користувачі" was shown even when the rules say nothing about who may join
-          else if (det && (det.facts ?? []).some((f) => f.k === "region" || f.k === "who")) whoParts.push([U.uaOk, "text-ink"]);
+          // weekly audit 26.11 (2): "Україна" only when the rules list the restricted countries and Ukraine is not on it
+          else if (m.geo?.checked) whoParts.push([U.uaOk, "text-ink"]);
+          else if (m.geo?.vague) whoParts.push([({ uk: "Є обмеження за країнами", en: "Country limits apply", ru: "Есть ограничения по странам" } as const)[lang], "text-amber"]);
           else if (det) whoParts.push([({ uk: "Регіон у правилах не вказано", en: "Region not stated in the rules", ru: "Регион в правилах не указан" } as const)[lang], "text-ink-2"]);
           whoParts.push(m.forNew ? [U.onlyNew, "text-sky"] : m.audience ? [({ uk: "Лише окремі користувачі", en: "Only some users", ru: "Только отдельные пользователи" } as const)[lang], "text-amber"] : [U.allUsers, "text-ink"]);
           if (kyc) whoParts.push([U.kyc, "text-ink"]);

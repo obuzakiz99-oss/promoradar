@@ -19,7 +19,7 @@ export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "
 export interface Fact { k: FactKey; text: string }
 export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number; u?: string }
 
-const VER = 7;               // (7: 26.11 Telegram post text kept before the linked page) (6: 24.11 related-article bodies skipped) bump when the parser changes → cached promos are re-read
+const VER = 8;               // (7: 26.11 Telegram post text kept before the linked page) (6: 24.11 related-article bodies skipped) bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
 const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
@@ -708,11 +708,18 @@ const SALES = /\b(sign up (now |today )?(and|&) (get|claim|receive)|register now
 const SIGN = /^(?:the\s+)?[\p{L}\d.]{2,20}(?:\s+[\p{L}\d.]{2,20})?\s+team\.?$|^(?:команда|команда)\s+\S+/iu;
 function dropTail(blocks: Block[], head: string): Block[] {
   const out: Block[] = [];
+  const seenRule = new Set<string>();
   let cut = false;
-  for (const b of blocks) {
-    if (b.x === head) { cut = false; out.push(b); continue; }   // a new segment (the exchange page) starts
+  for (const b0 of blocks) {
+    if (b0.x === head) { cut = false; out.push(b0); continue; }   // a new segment (the exchange page) starts
     if (cut) continue;
+    // weekly audit 26.11: a Telegram promo text left "… #LBank #Crypto" at the end of a rule line
+    const b = b0.t === "tr" ? b0 : { ...b0, x: b0.x.replace(/(\s+#[\p{L}\d_]+)+\s*$/u, "") };
     const x = b.x.trim();
+    if (!x) continue;
+    // weekly audit 26.11: BTSE printed rule 5 twice (the page repeats it in a collapsed block) — a long rule line only once
+    const key = x.toLowerCase().replace(/^\s*\d+[.)]\s*/, "").replace(/\s+/g, " ");
+    if (b.t !== "h" && key.length >= 40) { if (seenRule.has(key)) continue; seenRule.add(key); }
     if (out.length >= 3 && x.length <= 40 && SIGN.test(x)) { cut = true; continue; }
     if (AD.test(x) && !/\b(reward|prize|usdt|campaign)\b/i.test(x)) continue;
     if (b.t !== "tr" && x.length <= 220 && SALES.test(x)) continue;
