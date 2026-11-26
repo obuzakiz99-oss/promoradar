@@ -1,5 +1,5 @@
 {
- "at": 1795672192187,
+ "at": 1795674026184,
  "items": [
   {
    "id": "tg:BingXAnnouncement/5416",
@@ -958,12 +958,28 @@
    "netUsd": 10
   },
   {
+   "id": "tg:Toobit_announcements/6198",
+   "venue": "Toobit",
+   "title": "Make the right calls and unlock daily rewards based on your highest achievement",
+   "url": "https://t.me/Toobit_announcements/6198",
+   "why": "small",
+   "perUserUsd": 10
+  },
+  {
+   "id": "gate:102995",
+   "venue": "Gate",
+   "title": "Gate Futures Points Airdrop #173: Claim 0.078 SPCXG & 100 USDT",
+   "url": "https://www.gate.com/announcements/article/102995",
+   "why": "small",
+   "perUserUsd": 10.24
+  },
+  {
    "id": "gate:102994",
    "venue": "Gate",
    "title": "Gate Launchpool Project #388: XAUT (Tether Gold). Stake USDT, GT, or XAUT to Claim Airdrops",
    "url": "https://www.gate.com/announcements/article/102994",
    "why": "small",
-   "netUsd": -3.33
+   "netUsd": -3.35
   },
   {
    "id": "tg:Bitget_Announcements/18511",
@@ -1043,15 +1059,6 @@
    "netUsd": 12.5
   },
   {
-   "id": "tg:Toobit_announcements/6187",
-   "venue": "Toobit",
-   "title": "Your First Move Could Bring Rewards!",
-   "url": "https://t.me/Toobit_announcements/6187",
-   "why": "small",
-   "perUserUsd": 5,
-   "netUsd": 0.5
-  },
-  {
    "id": "tg:Kucoin_News/37300",
    "venue": "KuCoin",
    "title": "Three stops on the way to the stars: Sign up, complete the task, and claim your reward!",
@@ -1108,8 +1115,8 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 7333.95,
-   "netUsd": 0.93
+   "perUserUsd": 7401.299999999999,
+   "netUsd": 0.94
   },
   {
    "id": "gate:102986",
@@ -1135,8 +1142,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6081.57,
-   "netUsd": 121.13
+   "perUserUsd": 6046.87,
+   "netUsd": 120.44
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1230,7 +1237,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 79.268,
+   "perUserUsd": 78.956,
    "netUsd": 0.6
   },
   {
@@ -1311,7 +1318,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.05
+   "netUsd": 4.03
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1326,7 +1333,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1232.896,
+   "perUserUsd": 1236.0320000000002,
    "netUsd": 0.27
   },
   {
@@ -1533,7 +1540,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1393.92,
+   "perUserUsd": 1393.6,
    "netUsd": 0.37
   },
   {
@@ -1550,7 +1557,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.59,
+   "perUserUsd": 5.55,
    "netUsd": 0.03
   },
   {
@@ -1607,7 +1614,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1568.8,
+   "perUserUsd": 1571.2,
    "netUsd": 0.28
   },
   {
@@ -1672,7 +1679,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1262.7,
+   "perUserUsd": 1250.85,
    "netUsd": -0.6
   },
   {
@@ -1689,7 +1696,7 @@
    "title": "Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64536163317529--Share-2-000-000-ARK-Biconomy-ARK-DeFAI-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 17.9288864,
+   "perUserUsd": 18.0127904,
    "netUsd": -0.49
   },
   {
@@ -1829,8 +1836,8 @@
    "title": "Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 911.16392878,
-   "netUsd": -0.04
+   "perUserUsd": 907.0704824999999,
+   "netUsd": -0.05
   },
   {
    "id": "mexc:17827791539811",
@@ -1984,7 +1991,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6081.57,
+   "perUserUsd": 6046.87,
    "netUsd": 250
   },
   {
@@ -2069,7 +2076,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 990.85,
+   "perUserUsd": 986.95,
    "netUsd": 1.81
   },
   {
@@ -2210,8 +2217,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 134.064,
-   "netUsd": 2.56
+   "perUserUsd": 133.296,
+   "netUsd": 2.54
   },
   {
    "id": "tg:MEXCofficialNews/38822",
@@ -2253,7 +2260,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6081.57,
+   "perUserUsd": 6046.87,
    "netUsd": 8.77
   },
   {
@@ -2382,7 +2389,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.83
+   "perUserUsd": 7.81
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -2451,6 +2458,15 @@
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64709842495513-Biconomy-com-Earn-AERO-PEAQ-PUMP-Locked-Products-Enjoy-Up-to-13-52-APR-in-Rewards",
    "why": "duplicate",
    "of": "biconomy:64710415983385 (series)"
+  },
+  {
+   "id": "tg:Toobit_announcements/6187",
+   "venue": "Toobit",
+   "title": "Your First Move Could Bring Rewards!",
+   "url": "https://t.me/Toobit_announcements/6187",
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 0.5
   },
   {
    "id": "tg:Toobit_announcements/6186",
@@ -2720,8 +2736,8 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 24.19,
-   "netUsd": -0.51
+   "perUserUsd": 26.41,
+   "netUsd": -0.5
   },
   {
    "id": "tg:Bitget_Announcements/18438",
