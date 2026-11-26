@@ -16,10 +16,16 @@ export function generateStaticParams() { return DOCS.map((doc) => ({ doc })); }
 
 type Params = Promise<{ lang: string; doc: string }>;
 
+// audit 26.11: about / privacy / terms had one shared description — Google treats that as duplicate pages
+const DOC_DESC: Record<Exclude<DocId, "api">, Record<"uk" | "en" | "ru", string>> = {
+  about: { uk: "Хто робить PromoRadar, звідки беремо акції бірж і як перевіряємо умови перед публікацією.", en: "Who runs PromoRadar, where exchange promos come from and how we check the terms before publishing.", ru: "Кто делает PromoRadar, откуда берём акции бирж и как проверяем условия перед публикацией." },
+  privacy: { uk: "Політика конфіденційності PromoRadar: без cookie і трекерів — лише загальна статистика відвідувань; що зберігається у вашому браузері і як це видалити.", en: "PromoRadar privacy policy: no cookies or trackers, only total visit counts; what stays in your browser and how to delete it.", ru: "Политика конфиденциальности PromoRadar: без cookie и трекеров — только общая статистика посещений; что хранится в вашем браузере и как это удалить." },
+  terms: { uk: "Умови користування PromoRadar: сайт лише збирає акції бірж, не дає фінансових порад і не відповідає за умови бірж.", en: "PromoRadar terms of use: the site only collects exchange promos, gives no financial advice and does not set the exchanges' terms.", ru: "Условия пользования PromoRadar: сайт только собирает акции бирж, не даёт финансовых советов и не отвечает за условия бирж." },
+};
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, doc } = await params;
   if (!isLocale(lang) || !DOCS.includes(doc as DocId)) return {};
-  return withOg(doc === "api" ? { alternates: alt(lang, `/${doc}`), title: API_DOC[lang].title, description: API_DOC[lang].sub } : { alternates: alt(lang, `/${doc}`), title: LEGAL[lang][doc as Exclude<DocId, "api">].title, description: ({ uk: "PromoRadar: як ми збираємо акції бірж, що робимо з даними і правила користування.", en: "PromoRadar: how we collect exchange promos, what we do with data and the terms of use.", ru: "PromoRadar: как мы собираем акции бирж, что делаем с данными и правила пользования." } as const)[lang] });
+  return withOg(doc === "api" ? { alternates: alt(lang, `/${doc}`), title: API_DOC[lang].title, description: API_DOC[lang].sub } : { alternates: alt(lang, `/${doc}`), title: LEGAL[lang][doc as Exclude<DocId, "api">].title, description: DOC_DESC[doc as Exclude<DocId, "api">][lang] });
 }
 
 const linkify = (s: string) => s.split(/(https?:\/\/\S+)/).map((x, i) => (x.startsWith("http") ? <a key={i} href={x} target="_blank" rel="noopener" className="font-semibold text-lime hover:underline">{x.replace(/^https:\/\//, "")}</a> : x));
