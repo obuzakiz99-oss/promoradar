@@ -1,1 +1,1 @@
-{"id":"biconomy:64652932025753","h":"mW1lXkovAXCbiJ3_","v":1,"at":1795617116601,"data":{"isPromo":true,"socialOnly":false,"mech":"tiers","act":{"kind":"trade_futures","usd":1000},"typical":{"amount":20,"unit":"USDT"},"max":{"amount":23110,"unit":"USDT"},"days":16}}
+{"id":"biconomy:64652932025753","h":"D_eCSKf3L84As5F9","v":1,"at":1795728514059,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"deposit","usd":100},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":23110,"unit":"USDT"},"days":16}}
