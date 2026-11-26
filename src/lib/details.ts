@@ -210,7 +210,12 @@ const KIND_RE: Array<[EntryKind, RegExp]> = [
 ];
 function minEntryOf(lines: string[]): MinEntry | undefined {
   let best: MinEntry | undefined;
+  // 27.11 (Bitget Super Earn): the first tier row "… | ≥30,000 USDT | …" names no action — the table's header ("Net deposit
+  // amount") does; only the next row's "Subscribe now" button gave a kind, so the minimum read as 300,000
+  let hdrKind: EntryKind | undefined;
   for (const line of lines) {
+    if (line.includes("§H§") && !/\d/.test(line.replace(/APR\*?|%/g, ""))) hdrKind = KIND_RE.find(([, re]) => re.test(line.replace(/subscription limit|subscri\w*\s*$/gi, "")))?.[0];
+    else if (!line.includes("|")) hdrKind = undefined;
     for (const m of line.matchAll(ENTRY_RE)) {
       const dollar = m[1] || m[4];
       if (!dollar) continue;                                             // only dollar amounts (not "3 friends", "5 trades")
@@ -227,9 +232,9 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
       if (new RegExp(`\\b(first|up to|maximum|capped at|exceed\\w*|above|over)\\s*\\$?\\s?${m[2].replace(/[.,]/g, "[.,]?")}\\b`, "i").test(line) && /\b(first|only (applicable|effective)|will only|exceed\w*|cap)\b/i.test(line)) continue;
       // the word right before the amount decides the kind ("net deposit of at least 1,000 USDT, plus … trading volume")
       const near = line.slice(Math.max(0, m.index! - 40), m.index!);
-      const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
+      const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? (line.includes("|") ? hdrKind : undefined) ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
       if (!kind) continue;
-      if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line };
+      if (!best || amount < best.amount) best = { amount, unit: m[4] && m[4] !== "$" ? m[4].toUpperCase() : "USD", kind, text: line.replace(/§H§/g, "").replace(/\s*\|\s*/g, " · ") };
     }
   }
   return best;
@@ -345,7 +350,8 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   if (ends.length) out.end = Math.max(...ends);
   if (out.start && out.end && out.end <= out.start) { delete out.start; delete out.end; }
   out.perUser = perUserOf([title, ...lines], poolAmount);
-  out.minEntry = minEntryOf(lines);
+  // table rows with their cells (header marks §H§ kept) so a tier row can take its action from the header
+  out.minEntry = minEntryOf((d?.blocks ?? []).filter((b) => !BOILER.test(b.x)).map((b) => (b.t === "tr" && b.cells?.length ? b.cells.join(" | ") : b.x)));
   return out;
 }
 
