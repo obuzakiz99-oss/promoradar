@@ -111,7 +111,10 @@ const pageText = (f) => { try { return fs.readFileSync(path.join(OUT, f), "utf8"
     const h = pageText(path.join("uk", "p", s, "index.html")).replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ")
       // a button named as the exchange shows it («Join now», &laquo;…&raquo;) is right — the exchange's app is in English
       .replace(/(«|&laquo;|&#171;)[^«»<]{0,60}?(»|&raquo;|&#187;)/g, " ");
-    const hit = h.match(/\b(Join [Nn]ow|Lucky Draw|Subscribe and receive|Sign up now|Claim now|Learn more)\b/);
+    // 27.11: only inside a Ukrainian sentence — a rule line still waiting for translation is all English (that is the
+    // translation queue, data/translate-todo.json, not a bare button name)
+    const hit = [...h.matchAll(/\b(Join [Nn]ow|Lucky Draw|Subscribe and receive|Sign up now|Claim now|Learn more)\b/g)]
+      .find((m) => /[а-яіїєґ]{3,}/i.test(h.slice(Math.max(0, m.index - 60), m.index + m[0].length + 30)));
     if (hit) { n++; if (ex.length < 3) ex.push(`${s.slice(0, 30)}: ${hit[0]}`); }
   }
   if (n) W(null, `${n} uk promo pages still show English UI words (${ex.join("; ")})`);

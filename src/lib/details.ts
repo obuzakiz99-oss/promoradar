@@ -214,7 +214,8 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
   // amount") does; only the next row's "Subscribe now" button gave a kind, so the minimum read as 300,000
   let hdrKind: EntryKind | undefined;
   for (const line of lines) {
-    if (line.includes("§H§") && !/\d/.test(line.replace(/APR\*?|%/g, ""))) hdrKind = KIND_RE.find(([, re]) => re.test(line.replace(/subscription limit|subscri\w*\s*$/gi, "")))?.[0];
+    // a header row: a table row with no number in it (the §H§ marks are stripped when the stored rules are loaded)
+    if (line.includes(" | ") && !/\d/.test(line.replace(/§H§|APR\*?|%/g, ""))) hdrKind = KIND_RE.find(([, re]) => re.test(line.replace(/subscription limit|subscri\w*\s*$/gi, "")))?.[0];
     else if (!line.includes("|")) hdrKind = undefined;
     for (const m of line.matchAll(ENTRY_RE)) {
       const dollar = m[1] || m[4];
