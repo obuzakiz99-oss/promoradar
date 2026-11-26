@@ -3,6 +3,7 @@ import type { Dict, Locale } from "@/lib/i18n";
 import type { Promo } from "@/lib/types";
 import type { Ended } from "@/lib/archive";
 import { geoAllowed } from "@/lib/geo";
+import { fixWording } from "@/lib/format";
 import { venueOf, VENUES } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoCard } from "@/components/PromoCard";
@@ -17,7 +18,7 @@ const TX = {
 export function EndedPromo({ e, lang, t, live, now }: { e: Ended; lang: Locale; t: Dict; live: Promo[]; now: number }) {
   const T = TX[lang];
   const v = venueOf(e.venue);
-  const title = (lang === "en" ? undefined : e.titles[lang]) ?? e.title;
+  const title = lang === "en" ? e.title : (e.titles[lang] ?? fixWording(e.title, lang));   // an untranslated title still gets «Lucky Draw»
   const same = live.filter((p) => p.venue.id === e.venue && (lang !== "uk" || geoAllowed(p, "ua"))).slice(0, 6);
   return (
     <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6">

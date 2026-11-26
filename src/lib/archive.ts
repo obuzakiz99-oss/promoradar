@@ -1,6 +1,7 @@
 import path from "node:path";
 import { readStore, writeStore } from "./store";
 import { slugOf } from "./slug";
+import { fixWording } from "./format";
 import type { Category, Promo } from "./types";
 
 /**
@@ -44,7 +45,9 @@ export function recordLive(promos: Promo[], i18n?: Partial<Record<"uk" | "ru", R
 export function endedPromos(live: Promo[]): Ended[] {
   const liveSlugs = new Set(live.map((p) => slugOf(p)));
   const liveIds = new Set(live.map((p) => p.id));
-  return Object.values(load()).filter((e) => !liveSlugs.has(e.slug) && !liveIds.has(e.id));
+  // titles were stored by older builds — run them through today's wording fixes (26.11: bare "Lucky Draw" without «»)
+  return Object.values(load()).filter((e) => !liveSlugs.has(e.slug) && !liveIds.has(e.id))
+    .map((e) => ({ ...e, titles: { uk: e.titles?.uk && fixWording(e.titles.uk, "uk"), ru: e.titles?.ru && fixWording(e.titles.ru, "ru") } }));
 }
 
 export function endedBySlug(live: Promo[], slug: string): Ended | undefined {

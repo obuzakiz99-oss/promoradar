@@ -9,7 +9,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, fmtLabel, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
+import { compactUsd, duration, fixWording, fmtLabel, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
 import { SITE, VENUES, HAS_TG } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!p) {
     const e = endedBySlug(live, slug);
     if (!e) return { title: "404" };
-    const tt = (lang === "en" ? undefined : e.titles[lang]) ?? e.title;
+    const tt = lang === "en" ? e.title : (e.titles[lang] ?? fixWording(e.title, lang));
     return { title: `${({ uk: "Завершилась", en: "Ended", ru: "Завершилась" } as const)[lang]}: ${tt}`, robots: { index: false, follow: true }, alternates: alt(lang, `/p/${slug}`) };
   }
   const t = getDict(lang);
