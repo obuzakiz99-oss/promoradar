@@ -25,7 +25,7 @@ const VAL: Record<Locale, { real: string; high: string; mid: string; low: string
   ru: { real: "Реально получите", high: "точно", mid: "примерно", low: "грубо", sure: "Насколько точна оценка", apr: "на $1 000 сверх обычного Earn", loss: "Расходы съедают бонус", flat: "Не выгоднее обычного Earn", cost: (x) => `минус комиссии/заморозка ≈ ${x}`,
     why: { stated: "сумма из правил для минимального участия", max: "только «до …» из правил — большинство получает меньше", chance: "пул ÷ примерное число участников (шанс)", apr: "доход за срок акции на $1 000 сверх обычных 5% годовых", none: "" } },
 };
-function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
+export function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
   if (!v || v.net === undefined || v.gross === undefined) return null;
   const L = VAL[lang];
   const usd = (x: number) => (x >= 1000 ? compactUsd(x, lang) : `$${x >= 10 ? Math.round(x) : num(x, lang, x >= 1 ? 1 : 2)}`);

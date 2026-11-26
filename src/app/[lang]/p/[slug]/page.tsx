@@ -35,7 +35,7 @@ import { SaveButton } from "@/components/SaveButton";
 import { HideButton } from "@/components/HideButton";
 import { SummaryTiles } from "@/components/SummaryTiles";
 import { Share } from "@/components/Share";
-import { PromoCard, CAT_STYLE } from "@/components/PromoCard";
+import { PromoCard, CAT_STYLE, ValueLine } from "@/components/PromoCard";
 import { Footer } from "@/components/Sections";
 import type { Block, FactKey } from "@/lib/details";
 import { deadlineReminder, googleCalUrl, icsHref, type CalEvent } from "@/lib/ics";
@@ -504,6 +504,8 @@ export default async function PromoPage({ params }: { params: Params }) {
           const whoLines = m.geo?.text ? [m.geo.text] : (det?.facts ?? []).filter((f) => f.k === "who" || f.k === "region" || f.k === "kyc").map((f) => f.text).slice(0, 3);
           return (
             <div data-tour="promo-summary">
+            {/* weekly audit 26.11: the estimate was only on list cards — the promo page itself had no "Реально отримаєте" */}
+            {m.value && <div className="card mt-6 px-6 pt-5 pb-3 hover:transform-none"><ValueLine v={m.value} lang={lang} big /></div>}
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",

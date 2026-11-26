@@ -91,8 +91,29 @@ for (const p of P) {
   if (/^\s*[—–-]|—\s*—|—\s*$/u.test(t)) E(p, `broken headline: "${t.slice(0, 60)}"`);
 }
 
+/* ---------- 6b) weekly-audit classes (26.11) ---------- */
+for (const p of P) {
+  const m = p.meta ?? {};
+  // a cap read as the minimum ("first 200 USDT" → "стейк від 200")
+  if (m.minEntry?.text && new RegExp(`\\b(first|up to|maximum|max\\.?|capped at)\\s*\\$?\\s*${String(m.minEntry.amount).replace(".", "\\.")}`, "i").test(m.minEntry.text)) E(p, `entry minimum ${m.minEntry.amount} is a cap in the rules`);
+  // rules name a period but the card has no end date
+  const rules = (D[p.id]?.blocks ?? []).slice(0, 30).map((b) => b.x ?? "").join(" ");
+  if (!p.endsAt && !p.evergreen && p.category !== "farming" && /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? \d{1,2}\s*[-–—~～]\s*(?:(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? )?\d{1,2}\b/.test(rules)) W(p, "the rules name a period but the card has no end date");
+}
+
 /* ---------- 7) site-wide texts that must not come back ---------- */
 const pageText = (f) => { try { return fs.readFileSync(path.join(OUT, f), "utf8"); } catch { return ""; } };
+// English UI words left in Ukrainian promo pages (weekly audit 26.11)
+{
+  let n = 0; const ex = [];
+  const dir = path.join(OUT, "uk", "p");
+  for (const s of (fs.existsSync(dir) ? fs.readdirSync(dir) : [])) {
+    const h = pageText(path.join("uk", "p", s, "index.html")).replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ");
+    const hit = h.match(/\b(Join [Nn]ow|Lucky Draw|Subscribe and receive|Sign up now|Claim now|Learn more)\b/);
+    if (hit) { n++; if (ex.length < 3) ex.push(`${s.slice(0, 30)}: ${hit[0]}`); }
+  }
+  if (n) W(null, `${n} uk promo pages still show English UI words (${ex.join("; ")})`);
+}
 const site = fs.readFileSync(path.join("src", "config", "site.ts"), "utf8");
 const refs = JSON.parse(fs.readFileSync(path.join("src", "config", "refs.json"), "utf8"));
 const hasRefs = Object.entries(refs).some(([k, v]) => !k.startsWith("_") && String(v).trim());

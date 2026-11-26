@@ -19,7 +19,7 @@ export type FactKey = "period" | "who" | "min" | "how" | "payout" | "region" | "
 export interface Fact { k: FactKey; text: string }
 export interface PromoDetails { blocks: Block[]; facts: Fact[]; at: number; partial?: boolean; v?: number; translated?: number; ex?: number; u?: string }
 
-const VER = 6;               // (6: 24.11 related-article bodies skipped) bump when the parser changes → cached promos are re-read
+const VER = 7;               // (7: 26.11 Telegram post text kept before the linked page) (6: 24.11 related-article bodies skipped) bump when the parser changes → cached promos are re-read
 const MAX_NEW = 90;          // new articles fetched per build
 const KEEP_MS = 45 * 86400_000;
 const FILE = () => path.join(process.cwd(), "data", "details.json");
@@ -215,9 +215,13 @@ function minEntryOf(lines: string[]): MinEntry | undefined {
       const dollar = m[1] || m[4];
       if (!dollar) continue;                                             // only dollar amounts (not "3 friends", "5 trades")
       const amount = Number(m[2].replace(/,/g, "")) * (m[3] ? (/m/i.test(m[3]) ? 1e6 : 1e3) : 1);
-      if (!(amount >= 1) || amount > 1e7) continue;
+      if (!(amount > 0) || amount > 1e7) continue;   // "minimum 0.1 USDT" is a real minimum too (weekly audit 26.11)
       const clause = line.slice(Math.max(0, m.index! - 70), m.index! + m[0].length + 40).split(/[.;]/).find((c) => c.includes(m[0])) ?? line;
       if (/\b(reward|prize|bonus|voucher|airdrop|pool|cap(ped)?|up to|max(imum)? (reward|payout))\b/i.test(clause.slice(0, clause.indexOf(m[0]))) && !/\b(volume|deposit|trade|stake|hold)\b/i.test(clause)) continue;
+      // weekly audit 26.11: "applies only to the user's first 200 USDT", "up to 200 USDT", "maximum 5,000 USDT per user" is a
+      // CAP of the bonus, not the minimum to join (Binance new-user 35 % showed "stake from 200 USDT"; the minimum is 0.1)
+      const lead = line.slice(Math.max(0, m.index! - 30), m.index!);
+      if (/\b(first|up to|maximum|max\.?|cap(ped)? at|limit(ed)? (of|to)|no more than|at most)\s*\$?\s*$/i.test(lead)) continue;
       // the word right before the amount decides the kind ("net deposit of at least 1,000 USDT, plus … trading volume")
       const near = line.slice(Math.max(0, m.index! - 40), m.index!);
       const kind = KIND_RE.find(([, re]) => re.test(near))?.[0] ?? KIND_RE.find(([, re]) => re.test(clause))?.[0];
@@ -462,6 +466,9 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
     const page = await getText(`https://t.me/${tail}?embed=1&mode=tme`, 10_000);
     const body = page.match(/<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/)?.[1];
     if (!body) return null;
+    // weekly audit 26.11: the post itself always comes first — Bitrue posts link to a page that is only the site menu, so
+    // "Nov 23 – Dec 23, 2026" in the post was lost and the promo had no dates
+    const postHtml = body.replace(/<i class="emoji"[^>]*><b>([^<]*)<\/b><\/i>/g, "$1").split(/<br\s*\/?>|\s{2,}/i).map((l) => `<p>${l}</p>`).join("");
     // the channel's own linked article usually holds the full rules
     if (p.url && !p.url.startsWith("https://t.me/")) {
       // Binance announcement linked from a post: read it through Binance's own CMS API (its pages block servers)
@@ -469,10 +476,10 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
       if (bn) {
         const j = await getJson<any>(`https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=${bn}`, 10_000).catch(() => null);
         const body = j?.data?.body;
-        if (body) return { html: binanceTree(typeof body === "string" ? JSON.parse(body) : body) };
+        if (body) return { html: postHtml + binanceTree(typeof body === "string" ? JSON.parse(body) : body) };
       }
       const art = await fromUrl(p.url).catch(() => "");
-      if (art) return { html: art };
+      if (art) return { html: postHtml + art };
     }
     // posts use <br> or, in the embed view, runs of spaces between lines
     const lines = body.replace(/<i class="emoji"[^>]*><b>([^<]*)<\/b><\/i>/g, "$1").split(/<br\s*\/?>|\s{2,}/i);

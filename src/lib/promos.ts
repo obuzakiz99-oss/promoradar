@@ -36,7 +36,12 @@ function localize(c: Collected, lang: "uk" | "ru"): Collected {
     [/Дорогі співробітники Binance/g, "Шановні користувачі Binance"], [/Приймайте участь/g, "Беріть участь"], [/приймайте участь/g, "беріть участь"],
     [/Слідкуйте/g, "Стежте"], [/слідкуйте/g, "стежте"], [/стейблкоін/g, "стейблкоїн"], [/Наторгуйте/g, "Торгуйте"], [/наторгуйте/g, "торгуйте"],
     [/^Товар$/, "Продукт"], [/самоуправством/g, "угодами із самим собою"],
-  ] : [[/Дорогие сотрудники Binance/g, "Уважаемые пользователи Binance"]];
+    // weekly audit 26.11: button / UI words the translators leave in English, and literal slips
+    [/\bJoin [Nn]ow\b/g, "Долучитися"], [/\bSubscribe and receive\b/g, "Підпишіться й отримайте"], [/\bLucky Draw\b/g, "розіграш"],
+    [/(^|[\s(«"])Rewards(?=[\s:»".,)]|$)/g, "$1Нагороди"], [/\bBuy the Dip\b/g, "«Купуй на просіданні»"], [/\bpending\b/g, "в очікуванні"],
+    [/\bReal-Time APR\b/g, "APR у реальному часі"], [/\bFast Exit\b/g, "швидкий вихід"], [/\bStandard Exit\b/g, "звичайний вихід"],
+    [/ваш вихід/g, "ваш хід"], [/ВАШ ВИХІД/g, "ВАШ ХІД"], [/Добавка вітається/g, "Повторні друзі теж рахуються"], [/&amp;/g, "&"],
+  ] : [[/Дорогие сотрудники Binance/g, "Уважаемые пользователи Binance"], [/\bJoin [Nn]ow\b/g, "Присоединиться"], [/\bLucky Draw\b/g, "розыгрыш"], [/&amp;/g, "&"]];
   const fix = (x: string) => FIX.reduce((a, [re, to]) => a.replace(re, to), x);
   const tr = (s: string) => { const x = dict[s.trim()]; return x ? fix(x) : s; };
   const promos = c.promos.map((p) => {
@@ -154,11 +159,20 @@ async function getPromosLive(): Promise<Collected> {
         // audit 25.11: the title counts too ("Canton Carnival: final week — Ends Nov 30, 18:00 (UTC+8)")
         const txt = [p.titleOrig ?? p.title, ...d.blocks.slice(0, 40).map((b) => b.x)].join(" ");
         const y0 = new Date(p.publishedAt || now).getUTCFullYear();
-        const range = txt.match(new RegExp(String.raw`\b(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?(?:,? \d{1,2}:\d{2})?\s*(?:[-–~]|to|until|through)\s*(?:(${M})[a-z]*\.? )?(\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`))
+        const range = txt.match(new RegExp(String.raw`\b(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?(?:,? \d{1,2}:\d{2})?\s*(?:[-–—~～]|to|until|through)\s*(?:(${M})[a-z]*\.? )?(\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`))
           ?? txt.match(new RegExp(String.raw`\b(?:until|till|through|[Ee]nds?(?: on)?|[Ee]nding(?: on)?)\s+()()()(${M})[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?:,? (20\d\d))?`));
-        if (range) {
+        // weekly audit 26.11: the end time and the offset count ("Dec 8, 14:00 (UTC+8)" showed 08:00 UTC instead of 06:00),
+        // and a verification / payout period is not the campaign end (Bitbase "May 5 to May 18" verification)
+        const at = range ? (range.index ?? 0) : 0;
+        const nearBefore = range ? txt.slice(Math.max(0, at - 80), at) : "";
+        if (range && !/\b(verification|verify|distribut\w*|payout|settlement|credited|claim period|review)\b[^.]{0,60}$/i.test(nearBefore)) {
           const mEnd = mon(range[4] || range[1]), dEnd = +range[5], yEnd = +(range[6] || range[3] || y0);
-          const end = Date.UTC(yEnd, mEnd, dEnd, 23, 59);
+          const after = txt.slice(at + range[0].length, at + range[0].length + 60);
+          const tm = after.match(/^,?\s*(?:at\s*)?(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?/i);
+          const off = (after + " " + txt.slice(Math.max(0, at - 40), at)).match(/(?:UTC|GMT)\s*([+-]\d{1,2})/i);
+          let h = tm ? +tm[1] : 23; const mi = tm ? +tm[2] : 59;
+          if (tm?.[3]) h = (h % 12) + (/pm/i.test(tm[3]) ? 12 : 0);
+          const end = Date.UTC(yEnd, mEnd, dEnd, h, mi) - (off ? +off[1] * 3600_000 : 0);
           if (mEnd >= 0 && dEnd >= 1 && dEnd <= 31 && Number.isFinite(end) && (!p.endsAt || end > p.endsAt)) { p.endsAt = end; meta.datesFromRules = true; }
         }
       }
@@ -272,6 +286,8 @@ async function getPromosLive(): Promise<Collected> {
     if (d && d.blocks.slice(0, 8).some((b) => /has been upgraded/i.test(b.x) && /\brefer to the (most recent|latest|new)\b/i.test(b.x))) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "upgraded", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
+    // weekly audit 26.11: BingX daily "buy the dip" tasks (/activity/task/) were filed as a ranking contest
+    if (p.category === "competition" && /\/(activity\/task|task-?center|tasks?)\b/i.test(p.url) && !/\b(rank|leaderboard|top \d+|competition|tournament)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)) p.category = "bonus";
     const geo = geoOf(p.title, d);
     // audit 23.11: a KuCoin Australia page (/en-au/) was shown to everyone
     if (!geo.only && /\/(en-au|au)\//i.test(p.url)) geo.only = "AU";
@@ -292,7 +308,9 @@ async function getPromosLive(): Promise<Collected> {
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z]\w*)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)
       || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))
       // audit 25.11 (deep): "only for users who have never used XT Earn", "new futures users only" sat in the rules, not the title
-      || (d?.blocks ?? []).slice(0, 25).some((b) => /\bnew (futures |spot |earn )?users? only\b|\bonly (for |available to |open to )?new (futures |spot )?(users|traders|customers)\b|\bexclusive(ly)? (for|to) new (users|traders)\b|\b(users|those) who have never (used|traded|deposited|registered)\b/i.test(b.x))) meta.forNew = true;
+      || (d?.blocks ?? []).slice(0, 25).some((b) => /\bnew (futures |spot |earn )?users? only\b|\bonly (for |available to |open to )?new (futures |spot )?(users|traders|customers)\b|\bexclusive(ly)? (for|to) new (users|traders)\b|\b(users|those) who have never (used|traded|deposited|registered)\b/i.test(b.x)
+        // weekly audit 26.11: HTX MAPO — "Events 1–2: new users only" is one part of a campaign open to everyone
+        && !/\b(event|task|part|activity|section|phase|bonus|reward) ?(\d|[ivx]+\b|one|two|three)/i.test(b.x))) meta.forNew = true;
     // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
     // (audit 2: + VVIP, broker referral codes, taker / market-share programmes, IPO subscribers)
     const AUD = /\b(P2P )?merchants?\b|\bV?VIP ?\d*\+?\s*(users|clients|members)?\b|\bbroker (referral )?code\b|\btaker program(me)?\b|\b(volume|market) share\b|\bexclusive to [A-Z][\w ]{0,30}subscribers\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
