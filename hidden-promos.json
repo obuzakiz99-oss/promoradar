@@ -1,5 +1,5 @@
 {
- "at": 1795687675216,
+ "at": 1795687904384,
  "items": [
   {
    "id": "binance:aa7c0612eea342c8ba65af4b56d31d6f",
@@ -1019,7 +1019,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2215.2,
+   "perUserUsd": 2216,
    "netUsd": 0.53
   },
   {
@@ -1058,14 +1058,6 @@
    "netUsd": 0.3
   },
   {
-   "id": "biconomy:64736417240601",
-   "venue": "Biconomy.com",
-   "title": "ELSA Futures Carnival · Trade & Win Up to 2,130 USDT!",
-   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64736417240601--ELSA-Futures-Carnival-Trade-Win-Up-to-2-130-USDT",
-   "why": "small",
-   "netUsd": -0.11
-  },
-  {
    "id": "biconomy:64736361543193",
    "venue": "Biconomy.com",
    "title": "Black Friday Crypto Mega Deals — Welcome Rewards, Earn & Trading Showdown!",
@@ -1088,7 +1080,7 @@
    "title": "Gate Launchpool Project #388: XAUT (Tether Gold). Stake USDT, GT, or XAUT to Claim Airdrops",
    "url": "https://www.gate.com/announcements/article/102994",
    "why": "small",
-   "netUsd": -3.34
+   "netUsd": -3.35
   },
   {
    "id": "tg:Bitget_Announcements/18511",
@@ -1215,8 +1207,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6091.91,
-   "netUsd": 121.34
+   "perUserUsd": 6098.650000000001,
+   "netUsd": 121.47
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1347,7 +1339,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.06
+   "netUsd": 4.07
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1362,7 +1354,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1205.008,
+   "perUserUsd": 1204.112,
    "netUsd": 0.25
   },
   {
@@ -1994,7 +1986,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6091.91,
+   "perUserUsd": 6098.650000000001,
    "netUsd": 250
   },
   {
@@ -2221,8 +2213,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 132.91199999999998,
-   "netUsd": 2.53
+   "perUserUsd": 132.96,
+   "netUsd": 2.54
   },
   {
    "id": "hibt:18401138213903",
@@ -2257,7 +2249,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6091.91,
+   "perUserUsd": 6098.650000000001,
    "netUsd": 8.77
   },
   {
