@@ -1,5 +1,5 @@
 {
- "at": 1795655575061,
+ "at": 1795655800199,
  "items": [
   {
    "id": "bitbase:5832222775326",
@@ -1038,7 +1038,7 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 7332.150000000001,
+   "perUserUsd": 7329.3,
    "netUsd": 0.93
   },
   {
@@ -1065,8 +1065,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6070.02,
-   "netUsd": 120.9
+   "perUserUsd": 6077.7300000000005,
+   "netUsd": 121.05
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1273,8 +1273,8 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1254.7359999999999,
-   "netUsd": 0.28
+   "perUserUsd": 1269.632,
+   "netUsd": 0.29
   },
   {
    "id": "tg:LBanknews/20939",
@@ -1472,7 +1472,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1378.24,
+   "perUserUsd": 1381.76,
    "netUsd": 0.36
   },
   {
@@ -1489,7 +1489,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.56,
+   "perUserUsd": 5.57,
    "netUsd": 0.03
   },
   {
@@ -1546,7 +1546,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1580.4,
+   "perUserUsd": 1578,
    "netUsd": 0.29
   },
   {
@@ -1611,7 +1611,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1247.55,
+   "perUserUsd": 1252.65,
    "netUsd": -0.6
   },
   {
@@ -1925,7 +1925,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6070.02,
+   "perUserUsd": 6077.7300000000005,
    "netUsd": 250
   },
   {
@@ -1968,7 +1968,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 24.23,
+   "perUserUsd": 24.6,
    "netUsd": -0.51
   },
   {
@@ -2169,7 +2169,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.536,
+   "perUserUsd": 133.63199999999998,
    "netUsd": 2.55
   },
   {
@@ -2219,7 +2219,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6070.02,
+   "perUserUsd": 6077.7300000000005,
    "netUsd": 8.77
   },
   {
@@ -2770,18 +2770,18 @@
    "venue": "KuCoin",
    "title": "Ding! — Your Upgrade (and Reward) Notification is Here!",
    "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
-   "why": "raffle",
-   "perUserUsd": 2,
-   "netUsd": 0.04
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 0
   },
   {
    "id": "tg:Kucoin_News/37142",
    "venue": "KuCoin",
    "title": "Everyone's busy exploring KuCoin 5.0—and the rewards are piling up! Also, the Pioneer Quest is live, and…",
    "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
-   "why": "raffle",
-   "perUserUsd": 2,
-   "netUsd": 0.04
+   "why": "small",
+   "perUserUsd": 5,
+   "netUsd": 0
   },
   {
    "id": "kucoin:355011",
