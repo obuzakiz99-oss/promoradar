@@ -38,8 +38,14 @@ const kebab = (s) => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().r
 const slugOf = (p) => { const text = p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? p.title : `${p.venue.name} ${p.title}`; return `${hash(p.id)}-${kebab(p.venue.kind === "airdrop" ? `${text} airdrop` : text) || "promo"}`; };
 const date = (ts) => new Date(ts).toISOString().slice(0, 10);
 
+// 26.11: posted.json is the only thing that stops reposts. A broken file falls back to the copy kept from the previous
+// save (posted.bak.json); without the data branch at all (checkout failed) nothing is posted, so a missing state can
+// never look like a "first run" or a reason to resend.
+if (!fs.existsSync(path.join("data", ".git")) && process.env.GITHUB_ACTIONS) { console.log("telegram: data branch not checked out — nothing posted this run"); process.exit(0); }
+const BACKUP = path.join("data", "posted.bak.json");
 let state = null;
-try { state = JSON.parse(fs.readFileSync(STATE, "utf8")); } catch {}
+for (const f of [STATE, BACKUP]) { try { state = JSON.parse(fs.readFileSync(f, "utf8")); if (state?.ids?.length) break; } catch { state = null; } if (fs.existsSync(f)) console.log(`telegram: ${f} unreadable, trying the backup`); }
+if (!state && (fs.existsSync(STATE) || fs.existsSync(BACKUP))) { console.log("telegram: posted state broken and no good backup — nothing posted, fix data/posted.json"); process.exit(0); }
 const firstRun = !state;
 state ??= { ids: [] };
 state.camps ??= {};
@@ -119,7 +125,13 @@ for (const o of read("earn").offers) {
   msgs.push([key, `<b>${L.earn} · ${esc(o.exchange)}</b>\n${esc(o.coin)} — <b>${o.apr}%</b>${o.days ? ` (${o.days}d)` : ""}\n${SITE ? `<a href="${SITE}/${LANG}/earn/">APR Radar →</a>` : ""}`]);
 }
 
-const saveState = () => { state.ids = [...seen].slice(-5000); fs.mkdirSync("data", { recursive: true }); fs.writeFileSync(STATE, JSON.stringify(state)); };
+let backedUp = false;
+const saveState = () => {
+  state.ids = [...seen].slice(-5000); fs.mkdirSync("data", { recursive: true });
+  // once per run: the good state from the last run becomes the backup before it is overwritten
+  if (!backedUp) { try { const old = fs.readFileSync(STATE, "utf8"); if (JSON.parse(old)?.ids?.length) fs.writeFileSync(BACKUP, old); } catch { /* nothing good to keep */ } backedUp = true; }
+  const tmp = `${STATE}.tmp`; fs.writeFileSync(tmp, JSON.stringify(state)); fs.renameSync(tmp, STATE);   // never a half-written file
+};
 if (firstRun) { msgs.forEach(([k]) => seen.add(k)); saveState(); console.log(`telegram: first run — recorded ${seen.size} items, nothing posted`); process.exit(0); }
 
 // audit 25.11 (deep): a network error mid-run crashed the script before the state was saved → the same posts went out
