@@ -72,7 +72,7 @@ for (const p of P) {
   const v = p.meta?.value;
   if (/\b(coming soon|is coming|are coming|stay tuned|starts tomorrow|launching soon)\b/i.test(head) && !(p.startsAt && p.startsAt <= now)) E(p, "a teaser (not started yet) is shown as a live promo");
   if (p.startsAt && p.startsAt > now && v?.net !== undefined && v.mech !== "apr") W(p, "an estimate for a promo that has not started");
-  if (v?.mech === "apr" && v.net !== undefined && v.net > 0 && p.meta?.aprStable === undefined && !/\b(USDT|USDC|USD1|FDUSD|USDE|DAI|stablecoins?)\b/i.test(head)) W(p, "APR estimate from a non-stablecoin rate?");
+  if (v?.mech === "apr" && v.net !== undefined && v.net > 0 && p.meta?.aprStable === undefined && !/\b(USDT|USDC|USD1|FDUSD|USDE|DAI|stablecoins?)\b/i.test(`${head} ${p.meta?.minEntry?.text ?? ""}`)) W(p, "APR estimate from a non-stablecoin rate?");   // (26.11: + the minimum line "hold a minimum of 0.01 USDe")
 }
 
 /* ---------- 5) categories & 0% fee ---------- */

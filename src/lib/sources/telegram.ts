@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Promo } from "../types";
-import { classify, cleanTitle, isPromo, parseReward, tidyHeadline } from "../parse";
+import { classify, cleanTitle, isPromo, isReferral, parseReward, tidyHeadline } from "../parse";
 import { decodeEntities, getText } from "./util";
 
 export type TgStatus = Record<string, { ok: boolean; count: number; error?: string }>;
@@ -11,12 +11,12 @@ const strip = (html: string) =>
   decodeEntities(html.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").trim();
 
 /** A post headline must itself announce a campaign (market chatter / memes are skipped). */
-const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|(?<!the )spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competition|challenge|tournament|giveaway|prize|campaign|carnival|rewards?|bonus|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referral|invite|lucky draw|mystery box|trade to earn|staking|festival|loss coverage)\b|\bpoints$/i;
-const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update|performance report|monthly report)\b/i;
+const STRONG = /\b(airdrops?|candybomb|candydrop|tokensplash|kickstarter|(?<!the )spotlight|launchx|hodler|token sale|tge|booster|puzzle hunt|launchpool|launchpad|megadrop|poolx|jumpstart|competitions?|challenges?|tournaments?|giveaways?|prizes?|campaigns?|carnival|rewards?|bonus(es)?|earn up to|apr|apy|share \$?\d[\d,.]*[kmb]?|win|vouchers?|cashback|points (program|campaign|season|airdrop)|quiz|learn to earn|referrals?|invite|lucky draw|mystery box|trade to earn|staking|festival|loss coverage)\b|\bpoints$/i;
+const CHATTER = /\?\s*$|^(gm|good morning|happy|mark your calendar)\b|\b(bullish|bearish|price prediction|long or short|is back at|jumps past|surges|plunges|recap|distributed|results|winners? (announced|list)|has ended|ended|proposal|governance|vote|rewards? (are|is|have been) (out|sent|credited)|rewards update|performance report|monthly report|buildathon|hackathon|grants?)\b/i;   // + builder grants (GMX Buildathon, 26.11)
 
 /** First meaningful line of a post, without leading emoji/bullets and channel boilerplate. */
 const postLines = (text: string) => text.split("\n")
-    .map((l) => l.replace(/^[^\p{L}\p{N}$#@]+/u, "").replace(/^(Bitrue Official Update|Official Update|Announcement)[\s ]*[—–:-][\s ]*/i, "").trim())
+    .map((l) => l.replace(/^\d️?⃣\s*/u, "").replace(/^[^\p{L}\p{N}$#@]+/u, "").replace(/^(Bitrue Official Update|Official Update|Announcement)[\s ]*[—–:-][\s ]*/i, "").trim())
     .filter((l) => l.length > 6 && !/^(bitrue official update|official update|announcement)$/i.test(l));
 const cap = (h: string) => (h.length > 170 ? `${h.slice(0, 167).replace(/\s+\S*$/, "")}…` : h);
 
@@ -42,7 +42,12 @@ function pickTitle(text: string): string {
   if (!AMOUNT.test(text.slice(0, 500))) return "";
   for (const l of postLines(text).slice(1, 4)) {
     if (/https?:\/\/|^(more )?details\b|^\d+[.)]\s|^(prize|note|tip)\s*:|^(connect|copy|click|tap|visit|go to|follow|log ?in|sign in|scan|download|open)\b/i.test(l)) continue;
-    const t = cleanTitle(cap(l.replace(/[:：]\s*$/, "")));
+    let t = cleanTitle(cap(l.replace(/[:：]\s*$/, "")));
+    // audit 26.11: MEXC "Maximum reward: $5,000 worth of XAUT." — a bare label line; name the programme from the lines above
+    if (/^(maximum|max\.?|total|top) (reward|prize|bonus)\b/i.test(t)) {
+      const name = text.slice(0, text.indexOf(l)).match(/\b((?:[A-Z][\w-]*\s){1,4}(?:Plan|Program|Programme|Campaign|Event|Festival|Carnival|Coverage))\b/);
+      if (name) t = cap(`${name[1].replace(/^(Our|The|This|Your)\s+/, "")}: ${t.replace(/^(\w+(?: \w+)?)\s*:\s*/, "$1 ").replace(/^\w/, (c) => c.toLowerCase())}`);
+    }
     if (t.length >= 20 && titleOk(t)) return t;
   }
   return "";
@@ -56,7 +61,7 @@ function pickTitle(text: string): string {
 const STORE = () => path.join(process.cwd(), "data", "telegram.json");
 const BACK_MS = 14 * 86400_000;
 type TgStore = { v?: number; backfilled: Record<string, number>; promos: Record<string, Promo> };
-const TG_VER = 7;   // 7: re-read 14 days with the fixed footer cut  6: footer cut, campaign links (audit 2)  5: raw headline kept for the AI  4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
+const TG_VER = 8;   // 8: plural promo words in headlines, "Maximum reward:" label lines named (26.11)  7: re-read 14 days with the fixed footer cut  6: footer cut, campaign links (audit 2)  5: raw headline kept for the AI  4: tidy headlines (25.11)  3: referral landing pages are never the campaign link (23.11)   // bump when post parsing changes → stored promos are re-read from Telegram
 let STORE_MEM: TgStore | null = null;
 function loadStore(): TgStore {
   if (STORE_MEM) return STORE_MEM;
@@ -146,7 +151,13 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
     const url = /^https?:\/\/[^/]+\/?$/.test(path(url0)) ? `https://t.me/${post}` : url0;
     out.push({
       id: `tg:${post}`, venue: venueOf(venue), title, url, joinUrl: VENUES[venue].refUrl || site,
-      category: classify(raw) !== "other" ? classify(raw) : classify(text.slice(0, 400)), publishedAt: date,
+      category: (() => {
+        // audit 26.11: the raw headline decides (the tidy title can be cut before "prize pool"); a "referral" read only from
+        // the raw tail (Ourbit "welcome gifts, BTC discounts and referral bonuses") is re-checked with the body as a hint
+        const c = classify(raw);
+        if (c === "referral" && !isReferral(title)) return classify(title, `${raw} ${text.slice(0, 400)}`);
+        return c !== "other" ? c : classify(raw, text.slice(0, 400));
+      })(), publishedAt: date,
       // audit 23.11: "up to 1,250 USDT per user", "Maximum reward: $5,000" are per-person caps, not the pool
       reward: /\b(per (user|person|participant|account|referral|friend)|each user|maximum reward|max(imum)? (of )?\$?[\d,.]+ ?(USDT|USDC|USD)? ?(per|each))\b/i.test(raw) ? undefined : parseReward(raw), tags: [],
       // audit 25.11 (deep): two posts about one campaign share a link (often a bit.ly) even when the post has no own-site article

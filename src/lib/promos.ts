@@ -269,7 +269,9 @@ async function getPromosLive(): Promise<Collected> {
       }
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
       if (!p.reward && p.category !== "farming") {
-        const pool = poolOf([p.title, ...d.blocks.map((b) => b.x)]);
+        // (audit 26.11: Binance Appreciation — a schedule row "Reward Period: 11-10 to 11-20 · Share 30.36 million WLFI" is one
+        // period's slice, not the campaign's pool)
+        const pool = poolOf([p.title, ...d.blocks.filter((b) => !(b.t === "tr" && /^(reward |distribution |snapshot )?(period|week|day|round|phase|batch)\b/i.test(b.x))).map((b) => b.x)]);
         // a "pool" 1,000x the per-person prize is another campaign's cross-promo in the rules (audit 14.11: a MENA demo
         // contest with 500 USDT prizes showed WSOT's 10M)
         const tooBig = !!pool && !!meta.perUser?.usd && /^(USD|USDT|USDC)$/.test(pool.unit) && pool.amount > 1000 * meta.perUser.usd;
@@ -286,6 +288,10 @@ async function getPromosLive(): Promise<Collected> {
     if (d && d.blocks.slice(0, 8).some((b) => /has been upgraded/i.test(b.x) && /\brefer to the (most recent|latest|new)\b/i.test(b.x))) { hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "upgraded", of: p.endsAt ? new Date(p.endsAt).toISOString().slice(0, 16) : undefined }); continue; }
     // region / audience / effort flags for the filters
     const meta = { ...(p.meta ?? {}) };
+    // audit 26.11: Binance "Community 3rd Appreciation Campaign" says nothing in its title — the rules open with
+    // "hold USD1 … enjoy up to 15% APR": a holding / APR offer is Earn
+    if (p.category === "other" && d && d.blocks.slice(0, 6).some((b) => /\b(enjoy|earn|get) up to [\d.]+\s?% (apr|apy)\b/i.test(b.x)) && d.blocks.slice(0, 8).some((b) => /\b(hold|holding|subscribe|stake)\b/i.test(b.x))
+      && !/\b(fee|fees|loss|taker|maker)\b/i.test(p.titleOrig ?? p.title)) p.category = "earn";
     // weekly audit 26.11: BingX daily "buy the dip" tasks (/activity/task/) were filed as a ranking contest
     if (p.category === "competition" && /\/(activity\/task|task-?center|tasks?)\b/i.test(p.url) && !/\b(rank|leaderboard|top \d+|competition|tournament)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)) p.category = "bonus";
     const geo = geoOf(p.title, d);
@@ -306,7 +312,7 @@ async function getPromosLive(): Promise<Collected> {
       hidden.push({ id: p.id, venue: p.venue.name, title: p.title, url: p.url, why: "region" }); continue;
     }
     if (/\b(new ?users?|newcomers?|new traders?|first[- ]time|welcome (offer|bonus|rewards?|gift)|sign[- ]?up bonus|newbies?|new to [A-Z]\w*)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)
-      || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text))
+      || d?.facts.some((f) => f.k === "who" && /\bonly\b[^.]{0,40}\bnew\b|\bnew users? only\b/i.test(f.text) && !/\bonly the first [\d,.]+\s*(k|m)?\s*(new|[A-Z])/i.test(f.text))   // "only the first 50,000 new USDT per user" is a cap (26.11)
       // audit 25.11 (deep): "only for users who have never used XT Earn", "new futures users only" sat in the rules, not the title
       || (d?.blocks ?? []).slice(0, 25).some((b) => /\bnew (futures |spot |earn )?users? only\b|\bonly (for |available to |open to )?new (futures |spot )?(users|traders|customers)\b|\bexclusive(ly)? (for|to) new (users|traders)\b|\b(users|those) who have never (used|traded|deposited|registered)\b/i.test(b.x)
         // weekly audit 26.11: HTX MAPO — "Events 1–2: new users only" is one part of a campaign open to everyone
@@ -341,7 +347,7 @@ async function getPromosLive(): Promise<Collected> {
   const facts = await getAssessments([...promos].sort((a, b) => Number(!!a.meta?.thin) - Number(!!b.meta?.thin) || b.publishedAt - a.publishedAt), details).catch(() => ({} as Awaited<ReturnType<typeof getAssessments>>));
   const kept: Promo[] = [];
   // several Telegram posts about one campaign link to the same page (KuCoin 5.0 ×3, MEXC Pre-IPO ×2): keep the newest
-  const seenUrl = new Map<string, string>(), dups = new Set<string>(), twin = new Map<string, { id: string; rule: string }>(), poolSeen = new Map<string, { t: number; tg: boolean; id: string }>();
+  const seenUrl = new Map<string, string>(), dups = new Set<string>(), twin = new Map<string, { id: string; rule: string }>(), poolSeen = new Map<string, { t: number; tg: boolean; id: string; end?: number }>();
   // audit 25.11 (deep): every hidden duplicate records its twin and the rule (data/hidden-promos.json) — 3 promos vanished
   // with no visible twin because the twin was later hidden as junk; such a duplicate now stands in for its twin
   const dupOf = (id: string, k: string, other?: string) => { dups.add(id); twin.set(id, { id: other ?? seenUrl.get(k) ?? "?", rule: k.split("|")[1] ?? "url" }); };
@@ -388,7 +394,9 @@ async function getPromosLive(): Promise<Collected> {
     const evKey = ev && (evName || /earn/i.test(ev[2])) ? `${p.venue.id}|event|${evName} ${ev[2].toLowerCase()}${ev[3] ? ` ${ev[3]}` : ""}` : "";
     if (evKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
       const prev = poolSeen.get(evKey);
-      if (prev && prev.t - p.publishedAt < 14 * 86400_000) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id });
+      // (audit 26.11: Bitget "Super Earn Festival" 09.11 page + 25.11 "Only 2 Weeks Left!" post — 16 days apart, one end date)
+      const sameEnd = !!prev?.end && !!p.endsAt && Math.abs(prev.end - p.endsAt) < 36 * 3600_000 && prev.t - p.publishedAt < 45 * 86400_000;
+      if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd)) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id, end: p.endsAt });
     }
     const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
     if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dupOf(p.id, series); else seenUrl.set(series, p.id); }

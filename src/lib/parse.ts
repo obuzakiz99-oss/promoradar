@@ -14,23 +14,34 @@ export function isPromo(title: string): boolean {
 }
 
 const REFERRAL = /(referral|invite friends|affiliate|refer )/i;
+export const isReferral = (t: string) => REFERRAL.test(t);
 export function classify(title: string, hint?: string): Category {
   if (has(title, REFERRAL)) return "referral";
   // audit 22.11: a "refer" somewhere in the message text made an OKX liquidity campaign a referral programme —
   // the message text decides "referral" only when the title itself says nothing about the kind of promo
-  if (hint && has(hint, REFERRAL)) { const own = kindOf(title); return own === "other" ? "referral" : own; }
+  // (audit 26.11: CoinW "TradFi Campaign Phase 4 … Share 100,000 USDT" is a trading campaign with a referral side task;
+  // Ourbit "Three Black Friday rewards" = welcome gifts + discounts + referral — neither is a referral programme)
+  if (hint && has(hint, REFERRAL)) {
+    const own = kindOf(title);
+    if (own !== "other") return own;
+    if (has(title, /\bshare\s+(up to\s+)?\$?\d[\d,.]*\s*(k|m|million)?\s*(usdt|usdc|usd)?\b/i)) return "competition";
+    if (has(hint, /\bwelcome (gifts?|bonus(es)?|rewards?|packs?)\b/i)) return "bonus";
+    return "referral";
+  }
   return kindOf(`${title} ${hint ?? ""}`);
 }
 
 function kindOf(t: string): Category {
   // audit 2 (25.11): Coinstore "Futures Trading Sprint", a "compete for…" airdrop / bonus were filed by their side words
   if (has(t, /\b(compete|competition|leaderboard|tournament|trading sprint|top \d+ traders)\b/i) && !has(t, /\b(yield|earn|apr|apy) arena\b/i)) return "competition";
+  // audit 26.11: MEXC "Futures Earn APR Booster: +150%" is an Earn rate boost, not a token launch
+  if (has(t, /\b(apr|apy|yield|rate|earn) boost(er)?\b/i) && !has(t, /\b(airdrop|launchpool|megadrop|hodler)\b/i)) return "earn";
   if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   // audit 23.11: MEXC "Futures Loss Coverage" (pays back futures losses) was filed as a deposit bonus
   if (has(t, /(loss (coverage|protection|compensation|rebate)|compensat\w* (for )?(your )?(futures )?loss|futures insurance)/i)) return "other";
   // audit 25.11 (deep): "New to CoinW? Complete tasks… Super Bonus" was filed as Earn
-  if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn)|new to [a-z]|complete (the |all |simple )?tasks|task (center|hub|centre)|super bonus)/i)) return "bonus";
+  if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn)|new to [a-z]|complete (the |all |simple )?tasks|task (center|hub|centre)|super bonus|claim (your |a )?\d[\d,.]* ?usdt futures bonus)/i)) return "bonus";   // + KuCoin "claim your 100 USDT futures bonus" (26.11)
   // 25.11: "Binance Earn Yield Arena" is an Earn offer, not a contest
   if (has(t, /\b(yield|earn|apr|apy) arena\b|\barena\b.{0,40}\b(apr|apy)\b/i)) return "earn";
   if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
@@ -109,6 +120,10 @@ export function tidyHeadline(s: string): string {
     .replace(/\s*(👉|➡️|→)\s*(more )?(details|learn more|join now|read more|here)\b.*$/i, "")
     .replace(/[\s\u{1F300}-\u{1FAFF}☀-➿️]+$/u, "")
     .replace(/^[\s\u{1F300}-\u{1FAFF}☀-➿️#]+/u, "")   // leading "🏆 " / "#" too (audit 2)
+    // audit 26.11: "0.01% fees 🎁 Enjoy up to 80% commission 🎁 Invite…" — an emoji between words is a separator;
+    // "#XRP and #Bitcoin", "on #Bitrue" — hashtags read as plain words (a "#4" campaign number stays)
+    .replace(/\s+[\u{1F300}-\u{1FAFF}☀-➿️]+\s+/gu, " — ")
+    .replace(/(^|[\s(])#(?=[A-Za-z$])/g, "$1")
     .trim();
   // the headline is its first part; a part with the money ("Share 10,000 USDT", "5% base APR") is kept next to it
   // (case-sensitive ticker: "Phase 4 is Live" is not an amount)
@@ -131,8 +146,29 @@ export function tidyHeadline(s: string): string {
     t = out;
   }
   if (t.length > 110) t = `${t.slice(0, 108).replace(/\s+\S*$/, "").replace(/[\s—:,;]+$/, "")}…`;
-  t = t.replace(/^[a-z]/, (c) => c.toUpperCase()).replace(/[.]$/, "");
+  t = unshout(t).replace(/^[a-z]/, (c) => c.toUpperCase()).replace(/\s*[.:;,]$/, "");
   return t || cleanTitle(s);
+}
+
+/** Names that keep their capital letter ("BLACK FRIDAY" → "Black Friday"). */
+const PROPER = /^(monday|tuesday|wednesday|thursday|friday|saturday|sunday|black|christmas|xmas|thanksgiving|halloween|easter|bitcoin|ethereum|solana|binance|bybit|bitget|kucoin|bitrue|bingx|gate|coinw|ourbit|toobit|poloniex|biconomy|bitmart|hibt|nvidia|tesla|apple|anthropic|january|february|march|april|june|july|august|september|october|november|december)$/i;
+/** Tickers and acronyms that stay in capitals when a SHOUTED headline is put in sentence case. */
+const KEEP_CAPS = /^(USDT|USDC|USDE|USD1|USD|FDUSD|DAI|APR|APY|BTC|ETH|SOL|XRP|BNB|TON|TRX|DOGE|VIP|VVIP|KYC|P2P|AI|NFT|TGE|IPO|CEX|DEX|DEFI|RWA|PNL|ROI|UTC|US|USA|UK|EU|OTC|API|TRADFI|LBANK|HTX|OKX|MEXC|KCS|BGB|XAUT|PAXG|ETF|AMA|CEO)$/;
+/**
+ * audit 26.11: "ONE WEEK LEFT — DON'T MISS THE DUAL INVESTMENT CAMPAIGN!", "500,000 USDT PRIZE POOL — TRADERS, YOU'RE UP"
+ * read as shouting on a card. A headline that is mostly capitals goes to sentence case; tickers ($ANTON, USDT, BTC),
+ * words with digits and known acronyms keep their capitals.
+ */
+export function unshout(t: string): string {
+  const shouty = (x: string, min: number, share: number) => { const l = x.replace(/[^A-Za-z]/g, ""); return l.length >= min && (l.match(/[A-Z]/g)?.length ?? 0) / l.length >= share; };
+  const fix = (x: string) => x.replace(/[$#]?[A-Za-z][A-Za-z0-9'’]*/g, (w) =>
+    /^[$#]/.test(w) || /\d/.test(w) || (w === w.toUpperCase() && KEEP_CAPS.test(w.replace(/['’]S$/i, "").toUpperCase())) ? w
+      : PROPER.test(w) ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase());
+  // the whole headline, or one shouted part of it ("$ANTON EARN: UP TO 30% APR! — LBank's limited-time…")
+  const out = shouty(t, 15, 0.75) ? fix(t) : t.split(/(\s+—\s+|:\s+|[!?]\s+)/).map((x) => (shouty(x, 6, 0.9) ? fix(x) : x)).join("");
+  if (out === t) return t;
+  // a capital again at the start of each sentence / part
+  return out.replace(/(^|[.!?]\s+|[—–]\s+)([a-z])/g, (_, p: string, c: string) => p + c.toUpperCase());
 }
 
 export function cleanTitle(s: string): string {
