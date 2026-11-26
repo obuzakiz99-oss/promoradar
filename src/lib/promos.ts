@@ -429,7 +429,7 @@ async function getPromosLive(): Promise<Collected> {
     if (p.reward && p.meta?.perUser && p.reward.unit.toUpperCase() === p.meta.perUser.unit.toUpperCase() && p.meta.perUser.amount >= p.reward.amount * 0.9 && !p.sponsored) {
       p.reward = undefined;
     }
-    const v = p.category === "farming" ? undefined : valueOf(p, a, px);
+    const v = p.category === "farming" ? undefined : valueOf(p, a, px, details[p.id]);
     if (v) p.meta = { ...(p.meta ?? {}), value: v };
     if (isZeroFee(p.titleOrig ?? p.title, details[p.id]?.blocks)) p.meta = { ...(p.meta ?? {}), zeroFee: true };
     // owner 16.11: nothing where one person can get under $15 at most — also competitions and promos the $30 rule

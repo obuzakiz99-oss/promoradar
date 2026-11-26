@@ -27,6 +27,9 @@ const VAL: Record<Locale, { real: string; high: string; mid: string; low: string
 };
 export function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boolean }) {
   if (!v || v.net === undefined || v.gross === undefined) return null;
+  // weekly audit 26.11: "pool ÷ a guessed crowd" and "a quarter of the 'up to'" are guesses, not what the rules say — printed as
+  // "you will really get ≈ $104" they read as fact (Aster, MEXC Futures League, BTSE). Kept for sorting / hiding, not shown.
+  if (v.basis === "chance" || v.basis === "max") return null;
   const L = VAL[lang];
   const usd = (x: number) => (x >= 1000 ? compactUsd(x, lang) : `$${x >= 10 ? Math.round(x) : num(x, lang, x >= 1 ? 1 : 2)}`);
   const title = [L.why[v.basis], v.cost ? L.cost(usd(v.cost)) : ""].filter(Boolean).join("; ");
@@ -43,7 +46,7 @@ export function ValueLine({ v, lang, big }: { v?: Value; lang: Locale; big?: boo
 }
 
 // audit 2 (25.11): the combined total uses realistic estimates, never a contest top prize
-const realOf = (q: Promo) => (q.meta?.value && q.meta.value.mech !== "apr" && q.meta.value.mech !== "top_n" && (q.meta.value.net ?? 0) > 0 ? q.meta.value.net : undefined);
+const realOf = (q: Promo) => (q.meta?.value && q.meta.value.mech !== "apr" && q.meta.value.mech !== "top_n" && q.meta.value.basis !== "chance" && q.meta.value.basis !== "max" && (q.meta.value.net ?? 0) > 0 ? q.meta.value.net : undefined);
 
 export const CAT_STYLE: Record<Promo["category"], { dot: string; text: string }> = {
   airdrop:     { dot: "#c8ff3d", text: "text-lime" },

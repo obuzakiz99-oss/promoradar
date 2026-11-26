@@ -227,7 +227,7 @@ const FEE = { spot: 0.001, futures: 0.0005 };
 /** What the locked money would earn elsewhere (flexible stablecoin earn), per year. */
 const IDLE_APR = 0.05;
 
-export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, number>): Value {
+export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, number>, d?: PromoDetails): Value {
   const usd = (x?: { amount: number; unit: string }) => usdOf(x, px);
   const m = p.meta ?? {};
   // audit 19.11: a pool shared by holdings with an APR ceiling ("MIN(pool ÷ all holdings × 365, 8%)", OKX Hold to Earn)
@@ -322,7 +322,10 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
       if (apr > 100) return out(undefined, "low", "none");
       // audit 24.11: Binance "35% bonus APR for new users" (only the first 200 USDT, only 7 days) read as ≈$24.66 — the AI gave
       // no cap / term, the rules quoted on the card did: "only applicable to the user's first 200 USDT", "effective for 7 days"
-      const txt = [m.minEntry?.text, m.perUser?.text, p.titleOrig ?? p.title].filter(Boolean).join(" ");
+      // weekly audit 26.11: Binance new-user 35 % still read as "+$25 on $1,000" — the "first 200 USDT" / "7 days" lines were
+      // only in the full rules, which this step never saw; the rules' lines about the rate now count too
+      const ruleLines = (d?.blocks ?? []).map((b) => b.x).filter((x) => /\b(apr|apy|interest|first|cap|maximum|days?)\b/i.test(x)).slice(0, 40);
+      const txt = [m.minEntry?.text, m.perUser?.text, p.titleOrig ?? p.title, ...ruleLines].filter(Boolean).join(" ");
       const capM = txt.match(/\b(?:first|up to|maximum of|max(?:imum)?|capped at|cap of|limit of)\s+([\d,]+(?:\.\d+)?)\s?(USDT|USDC|USD|FDUSD)\b/i);
       const daysM = txt.match(/\b(?:for|within|lasts?|effective for|valid for)\s+(\d{1,3})\s+days?\b|\b(\d{1,3})[- ]day\b/i);
       // audit 25.11: Dual Investment is a non-principal-protected option product; its "rate-up" coupons cover a few USDT

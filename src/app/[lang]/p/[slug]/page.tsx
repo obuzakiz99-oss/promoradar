@@ -352,7 +352,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   const combos = combosFor(p, promos, now);
   const C = COMBO_TX[lang];
   // audit 2 (25.11): "Разом до ≈$150K на людину" added 1st-place prizes — the sum is of realistic estimates, contests' tops excluded
-  const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.value && x.meta.value.mech !== "apr" && x.meta.value.mech !== "top_n" ? Math.max(0, x.meta.value.net ?? 0) : 0), 0);
+  const comboSum = [p, ...combos.map((c) => c.p)].reduce((s2, x) => s2 + (x.meta?.value && x.meta.value.mech !== "apr" && x.meta.value.mech !== "top_n" && x.meta.value.basis !== "chance" && x.meta.value.basis !== "max" ? Math.max(0, x.meta.value.net ?? 0) : 0), 0);
   // audit 23.11: on uk pages a Brazil-only promo showed under "Схожі акції" — the default country there is Ukraine
   // audit 23.11: also no promo the site itself marks as "no better than regular Earn" / "costs eat the bonus"
   const relOk = (x: (typeof promos)[number]) => (lang !== "uk" || geoAllowed(x, "ua")) && !(x.meta?.value?.net !== undefined && x.meta.value.net <= 0);
