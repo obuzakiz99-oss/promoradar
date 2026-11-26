@@ -329,7 +329,7 @@ async function getPromosLive(): Promise<Collected> {
     const AUD = /\b(P2P )?merchants?\b|\bV?VIP ?\d*\+?\s*(users|clients|members)?\b|\bbroker (referral )?code\b|\btaker program(me)?\b|\b(volume|market) share\b|\bexclusive to [A-Z][\w ]{0,30}subscribers\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
     if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text))
       // audit 25.11 (deep): KuCoin "only for users bound to the ChartControl broker code"
-      || (d?.blocks ?? []).slice(0, 25).some((b) => /\b(broker code|bound to (the )?broker|via (the )?[A-Z]\w+ broker|API (users|partners) only|institutional (users|clients) only)\b/i.test(b.x)))) meta.audience = true;
+      || (d?.blocks ?? []).slice(0, 25).some((b) => /\b(broker code|bound to (the )?broker|via (the )?[A-Z]\w+ broker|API (users|partners) only|institutional (users|clients) only|exclusively for returning|returning (users|traders|clients) only|(only|exclusively) for (users|traders) who (have not|haven't) (traded|logged))\b/i.test(b.x)))) meta.audience = true;   // weekly audit 26.11: Gate CFD "Exclusively for returning CFD traders"
     // (audit 14.11: a Toobit VIP draw needing 20,000 USDT of volume was pinned as "no deposit")
     const costs = /\b(trading volume|trade (at least|over|more than|a minimum)|volume of|cumulative (trading|futures)|net deposit|deposit (at least|of|a minimum)|minimum deposit|VIP\s?\d?|hold (at least|a minimum)|stake (at least|a minimum)|subscribe)\b/i;
     // audit 23.11 (beginner persona): HTX NVDA "free airdrop" needs a stock-token trade, a referral needs the friend to act —
@@ -395,7 +395,7 @@ async function getPromosLive(): Promise<Collected> {
     // audit 24.11: 8 near-identical "Biconomy.com Earn – DHN, GBCK, ATS & MTC Locked Products" cards — one per venue (the newest)
     // audit 2 (25.11): one named event posted twice (CoinW "TradFi Campaign Phase 4", Bitget "Super Earn Festival", MEXC
     // "Futures Earn" ×2 — one card $0, the other +$12): the event's own name, within two weeks
-    const ev = (p.meta?.rawTitle ?? head).match(/\b((?:[A-Z][\w×&'-]*\s+){0,3})(Festival|Carnival|Fest|Campaign|Futures Earn|Super Earn|Championship|League)\b(?:\s+(?:Phase|Season|S)\s?(\d+))?/);
+    const ev = (p.meta?.rawTitle ?? head).match(/\b((?:[A-Z][\w×&'-]*\s+){0,3})(Super Earn Festival|Festival|Carnival|Fest|Campaign|Futures Earn|Super Earn|Championship|League)\b(?:\s+(?:Phase|Season|S)\s?(\d+))?/);
     // the exchange's own name in front ("CoinW TradFi Campaign" vs "TradFi Campaign") is not part of the event's name
     const evName = ev ? ev[1].trim().toLowerCase().split(/\s+/).filter((w) => w && w !== p.venue.name.toLowerCase() && w !== p.venue.id).join(" ") : "";
     const evKey = ev && (evName || /earn/i.test(ev[2])) ? `${p.venue.id}|event|${evName} ${ev[2].toLowerCase()}${ev[3] ? ` ${ev[3]}` : ""}` : "";
@@ -403,7 +403,9 @@ async function getPromosLive(): Promise<Collected> {
       const prev = poolSeen.get(evKey);
       // (audit 26.11: Bitget "Super Earn Festival" 09.11 page + 25.11 "Only 2 Weeks Left!" post — 16 days apart, one end date)
       const sameEnd = !!prev?.end && !!p.endsAt && Math.abs(prev.end - p.endsAt) < 36 * 3600_000 && prev.t - p.publishedAt < 45 * 86400_000;
-      if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd)) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id, end: p.endsAt });
+      // weekly audit 26.11: a post without an end date about an event the other card says is still running (Bitget TG 18509)
+      const running = !!prev && prev.t - p.publishedAt < 45 * 86400_000 && ((!p.endsAt && !!prev.end && prev.end > p.publishedAt) || (!prev.end && !!p.endsAt && p.endsAt > prev.t));
+      if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd || running)) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id, end: p.endsAt });
     }
     const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
     if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dupOf(p.id, series); else seenUrl.set(series, p.id); }
