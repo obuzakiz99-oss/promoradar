@@ -1,5 +1,5 @@
 {
- "at": 1795658942962,
+ "at": 1795659210167,
  "items": [
   {
    "id": "bitbase:5832222775326",
@@ -306,6 +306,13 @@
    "url": "https://t.me/Bybit_Announcements/10115",
    "why": "ended",
    "of": "2026-11-23T08:00"
+  },
+  {
+   "id": "tg:Toobit_announcements/6083",
+   "venue": "Toobit",
+   "title": "A little gratitude, a big reward!",
+   "url": "https://t.me/Toobit_announcements/6083",
+   "why": "news"
   },
   {
    "id": "binance:3de1570577714ebea0ef67ab4aad554a",
@@ -1052,7 +1059,7 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 7196.249999999999,
+   "perUserUsd": 7224.3,
    "netUsd": 0.9
   },
   {
@@ -1079,8 +1086,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6081.360000000001,
-   "netUsd": 121.13
+   "perUserUsd": 6092.25,
+   "netUsd": 121.35
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1264,7 +1271,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.05
+   "netUsd": 4.06
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1279,7 +1286,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1248.128,
+   "perUserUsd": 1251.488,
    "netUsd": 0.28
   },
   {
@@ -1478,8 +1485,8 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1399.68,
-   "netUsd": 0.37
+   "perUserUsd": 1401.92,
+   "netUsd": 0.38
   },
   {
    "id": "tg:Bybit_Announcements/10170",
@@ -1495,7 +1502,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.57,
+   "perUserUsd": 5.58,
    "netUsd": 0.03
   },
   {
@@ -1552,7 +1559,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1582.8000000000002,
+   "perUserUsd": 1584.8,
    "netUsd": 0.29
   },
   {
@@ -1931,7 +1938,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6081.360000000001,
+   "perUserUsd": 6092.25,
    "netUsd": 250
   },
   {
@@ -1974,7 +1981,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 23.38,
+   "perUserUsd": 23.76,
    "netUsd": -0.51
   },
   {
@@ -2166,8 +2173,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.75199999999998,
-   "netUsd": 2.55
+   "perUserUsd": 134.016,
+   "netUsd": 2.56
   },
   {
    "id": "tg:MEXCofficialNews/38822",
@@ -2216,16 +2223,8 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6081.360000000001,
+   "perUserUsd": 6092.25,
    "netUsd": 8.77
-  },
-  {
-   "id": "tg:Toobit_announcements/6083",
-   "venue": "Toobit",
-   "title": "A little gratitude, a big reward!",
-   "url": "https://t.me/Toobit_announcements/6083",
-   "why": "raffle",
-   "netUsd": 0.2
   },
   {
    "id": "bitget:12560603900486",
