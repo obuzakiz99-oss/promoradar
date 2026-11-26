@@ -47,7 +47,8 @@ const TH: Record<Locale, { pool: string; time: string; more: string; rules: stri
 };
 const BEST: Record<Locale, string> = { uk: "Найкращий", en: "Best", ru: "Лучший" };
 const chgText = (x: number) => (x >= 0 ? "text-success" : "text-rose");
-const fmtUsd0 = (n: number, lang: string) => (n >= 1000 ? compactUsd(n, lang) : dec(`$${n.toFixed(n < 10 ? 2 : 0)}`, lang));
+// audit 26.11: "Your profit $0.04 · $0.00 /day" — a positive amount under a cent reads "< $0.01"
+const fmtUsd0 = (n: number, lang: string) => (n >= 1000 ? compactUsd(n, lang) : n > 0 && n < 0.005 ? dec("< $0.01", lang) : dec(`$${n.toFixed(n < 10 ? 2 : 0)}`, lang));
 
 interface Row {
   p: PoolProject; pool: Pool; price?: number; stakeCoins?: number; usd?: number; perDay?: number; profit?: number; capped: boolean; belowMin: boolean;

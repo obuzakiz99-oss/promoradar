@@ -711,14 +711,19 @@ export default async function PromoPage({ params }: { params: Params }) {
                 </div>
               ))}
             </div>
-            {ex.watch.length > 0 && (
+            {(() => {
+              // audit 26.11: the first three are already in the "Що варто знати" box under the steps — not twice on one page
+              const top = ex.watch.map((x) => x.replace(/^\s*[-–•]\s*/, "")).filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
+              const rest = ex.watch.filter((x) => !top.includes(x.replace(/^\s*[-–•]\s*/, "")));
+              return rest.length > 0 && (
               <>
                 <h3 className="mt-6 text-xs font-bold uppercase tracking-wider text-ink-3"><Icon name="alert" /> {FQ.watch}</h3>
                 <ul className="mt-3 space-y-2 text-sm text-ink-2">
-                  {ex.watch.map((x, i) => <li key={i} className="flex gap-2"><span className="text-amber">•</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>)}
+                  {rest.map((x, i) => <li key={i} className="flex gap-2"><span className="text-amber">•</span><span className="min-w-0 [overflow-wrap:anywhere]">{x}</span></li>)}
                 </ul>
               </>
-            )}
+              );
+            })()}
           </section>
         )}
 

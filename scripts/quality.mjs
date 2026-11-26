@@ -108,7 +108,9 @@ const pageText = (f) => { try { return fs.readFileSync(path.join(OUT, f), "utf8"
   let n = 0; const ex = [];
   const dir = path.join(OUT, "uk", "p");
   for (const s of (fs.existsSync(dir) ? fs.readdirSync(dir) : [])) {
-    const h = pageText(path.join("uk", "p", s, "index.html")).replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ");
+    const h = pageText(path.join("uk", "p", s, "index.html")).replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ")
+      // a button named as the exchange shows it («Join now», &laquo;…&raquo;) is right — the exchange's app is in English
+      .replace(/(«|&laquo;|&#171;)[^«»<]{0,60}?(»|&raquo;|&#187;)/g, " ");
     const hit = h.match(/\b(Join [Nn]ow|Lucky Draw|Subscribe and receive|Sign up now|Claim now|Learn more)\b/);
     if (hit) { n++; if (ex.length < 3) ex.push(`${s.slice(0, 30)}: ${hit[0]}`); }
   }

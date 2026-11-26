@@ -323,21 +323,25 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   const lo = (publishedAt || Date.now()) - 150 * 86400_000, hi = (publishedAt || Date.now()) + 400 * 86400_000;
   const ok = (ms: number) => ms > lo && ms < hi;
   const periodRe = FACT_RE[0][1];
-  const starts: number[] = [], ends: number[] = [];
+  const starts: number[] = [], ends: number[] = [], timed: number[] = [];
   for (const l of lines) {
     if (/distribut|credited|airdropp?ed|snapshot|listing|trading (opening|opens|starts)|deposit (opening|opens)|withdrawal/i.test(l) && !periodRe.test(l)) continue;
     // audit 25.11 (deep): "Verification period: … – 18.05" (Bitbase) and Binance's payout date (08.01) were read as the campaign end
     if (/\b(verification|settlement|payout|pay-?out|reward (distribution|issuance)|distribution (period|date|time)|claim (period|window)|review period|redemption|rewards? will be (distributed|credited|sent))\b/i.test(l)) continue;
     const ds = datesIn(l, publishedAt || undefined).filter((x) => ok(x.ms));
     if (ds.length >= 2 && (periodRe.test(l) || /\b(from|between)\b|\bto\b|[–—-]/i.test(l))) {
-      starts.push(ds[0].ms);
+      starts.push(ds[0].ms); if (ds[0].hasTime) timed.push(ds[0].ms);
       const e = ds[ds.length - 1];
       ends.push(e.hasTime ? e.ms : e.ms + 86400_000 - 60_000);             // a bare end date means the end of that day
     } else if (ds.length === 1 && /\b(ends?|until|deadline|closes?|expires?)\b/i.test(l) && !/\bstart/i.test(l)) {
       ends.push(ds[0].hasTime ? ds[0].ms : ds[0].ms + 86400_000 - 60_000);
     }
   }
-  if (starts.length) out.start = Math.min(...starts);
+  // audit 26.11: BTSE — the post says "Runs Nov 24 – Dec 15", the rules "24 Nov 08:00 (UTC+0)": a bare date gives way to
+  // a start time on that same day
+  const day = (ms: number) => Math.floor(ms / 86400_000);
+  const st = starts.filter((x) => timed.includes(x) || !timed.some((t) => day(t) === day(x)));
+  if (st.length) out.start = Math.min(...st);
   if (ends.length) out.end = Math.max(...ends);
   if (out.start && out.end && out.end <= out.start) { delete out.start; delete out.end; }
   out.perUser = perUserOf([title, ...lines], poolAmount);
@@ -413,7 +417,7 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
   // audit 23.11 (round 5): CEX.IO listed the countries where the offer runs — Ukraine was not on it, the page said "✓ Україна"
   const allow = bl.findIndex((b) => /\b(available|eligible|open|valid|applies)\b[^.]{0,40}\b(following|these|listed|supported|selected) (countries|regions|jurisdictions|markets)\b|\b(supported|eligible|participating) (countries|regions|jurisdictions)\s*[:：]/i.test(b.x)
     // weekly audit 26.11: CEX.IO "🌐 Available in the US, Cape Verde, Serbia, Albania…" — a plain country list
-    || /\bavailable (?:only )?in (?:the )?[A-Z][\w .'-]{1,30},\s*[A-Z][\w .'-]{1,30},/.test(b.x));
+    || /\b[Aa]vailable (?:only )?in (?:the )?[A-Z][\w .'-]{1,30},\s*[A-Z][\w .'-]{1,30},/.test(b.x));
   if (allow >= 0 && !g.only) {
     const list = bl.slice(allow, allow + 4).map((b) => b.x).join(" ");
     if (!/\bUkraine\b/i.test(list) && (list.match(/,/g)?.length ?? 0) >= 2) { g.only = "region"; g.text ??= bl[allow].x; }
