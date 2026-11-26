@@ -57,6 +57,12 @@ const fmtOf = (lc: string) => {
   return { usd, amt: (a: number, u: string) => (STABLE.test(u) ? usd(a) : `${a.toLocaleString(lc, { maximumFractionDigits: 4 })} ${u}`) };
 };
 
+/** The reward the minimum-entry rule line itself names ("reach 120,000 USDx … can receive 2 USDT"). */
+const entryPay = (t?: string): number | undefined => {
+  const x = t?.match(/\b(?:receive|get|earn|win|claim|rewarded with)\s+(?:a\s+)?\$?(\d[\d,]*(?:\.\d+)?)\s*(?:USDT|USDC|USD)\b/i);
+  return x ? Number(x[1].replace(/,/g, "")) : undefined;
+};
+
 /** "How much would I get" for one promo: threshold check, reward tier, exchange fees, net — or interest for APR promos. */
 /** `lock`: a fixed-term / locked product or Dual Investment (read from the title and rules on the page) — changes the risk line. */
 export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; endsAt?: number; now: number; lock?: "lock" | "dual" | "futures" }) {
@@ -101,6 +107,12 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
         lines.push({ text: T.tier(mine.reward) });
         if (STABLE.test(mine.unit)) rewardUsd = mine.amount;
         if (next) lines.push({ text: T.next(usd(next.min - v), next.reward), tone: "muted" });
+      } else if (m.perUser && entryPay(m.minEntry?.text) !== undefined && entryPay(m.minEntry?.text)! < m.perUser.amount && v < (m.minEntry?.amount ?? 0) * 2) {
+        // weekly audit 26.11: Gate CFD at the 120,000 minimum showed "≤ $962" — the rules pay 2 USDT there; 962 is the top tier
+        const e = entryPay(m.minEntry?.text)!;
+        big = amt(e, "USDT");
+        lines.push({ text: ({ uk: `На мінімальному порозі за правилами — ${amt(e, "USDT")}; до ${amt(m.perUser.amount, m.perUser.unit)} — лише за значно більший обсяг.`, en: `At the minimum the rules pay ${amt(e, "USDT")}; up to ${amt(m.perUser.amount, m.perUser.unit)} only for a much bigger volume.`, ru: `На минимальном пороге по правилам — ${amt(e, "USDT")}; до ${amt(m.perUser.amount, m.perUser.unit)} — только за значительно больший объём.` } as const)[lang] });
+        rewardUsd = e;
       } else if (m.perUser) {
         big = `≤ ${amt(m.perUser.amount, m.perUser.unit)}`;
         // audit 18.11: a fixed tier ladder (Bitget 50 / 400 / 6,000) was explained as "depends on other participants"
