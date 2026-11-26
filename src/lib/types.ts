@@ -59,7 +59,7 @@ export interface Promo {
     perUser?: { amount: number; unit: string; usd?: number; text: string };   // most one person can get (from the rules)
     minEntry?: { amount: number; unit: string; kind: "trade" | "deposit" | "stake" | "hold" | "buy"; text: string };   // smallest $ threshold that earns anything
     datesFromRules?: boolean;
-    geo?: { only?: string; noUA?: boolean; noEU?: boolean; text?: string };   // region-exclusive / country restrictions
+    geo?: { only?: string; noUA?: boolean; noEU?: boolean; text?: string; checked?: boolean; vague?: boolean; occupied?: boolean };   // region-exclusive / country restrictions
     zeroFee?: boolean;         // a 0% trading-fee offer (the "0 fees" tab)
     standing?: boolean;        // a standing policy with no end date (the `until` of a hand-added entry is only our re-check date)
     forNew?: boolean;          // only for new users

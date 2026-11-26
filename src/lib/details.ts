@@ -401,7 +401,10 @@ export function aprOf(title: string, lines: string[]): number | undefined {
 }
 
 /* ------------------------------------------------------------------ geography */
-export interface Geo { only?: string; noUA?: boolean; noEU?: boolean; text?: string }
+/** weekly audit 26.11: "✓ no restriction for Ukraine" was shown whenever nothing was found — even under "Geo restrictions
+ *  apply". Now: "checked" = the rules name the restricted countries and Ukraine is not among them (only then the ✓);
+ *  "vague" = the rules say there are country limits without naming them; "occupied" = only the occupied areas are out. */
+export interface Geo { only?: string; noUA?: boolean; noEU?: boolean; text?: string; checked?: boolean; vague?: boolean; occupied?: boolean }
 const REGION = "MENA|SEA|LATAM|CIS(?:\\s*(?:&|and)\\s*CEE)?|CEE|APAC|South Asia|Southeast Asia|Middle East|Africa|Türkiye|Turkey|India|Indonesia|Vietnam|Philippines|Nigeria|Kenya|Brazil|Pakistan|Bangladesh|Korea|Japan|Thailand|Argentina|Mexico|Europe|EEA|Ukraine|Kazakhstan|Uzbekistan|Russia";
 const REGION_TITLE = new RegExp(`(?:^|[\\[(\\s])(${REGION})\\b`, "i");
 const RESTRICT = /\b(not (be )?(available|eligible|open|permitted)|excluded|prohibited|restricted|ineligible|cannot participate|may not participate)\b/i;
@@ -427,13 +430,19 @@ export function geoOf(title: string, d?: PromoDetails): Geo {
     const only = !g.only && b.x.match(/\b(?:only (?:available|open|eligible) (?:to|for)|exclusively (?:available )?for|open only to) (?:users|residents|customers|participants) (?:in|from|of|located in|residing in) (?:the )?([A-Z][^.;:!?]{2,70})/);
     // the card says "Лише для окремих регіонів"; the exact list is the quoted line (g.text), translated on the promo page
     if (only) { const r = only[1].replace(/\s+(?:who|and who|with|that)\b.*$/, "").trim(); g.only = regionName(r, "uk") !== r ? r : "region"; g.text ??= b.x; }
+    // "Geo restrictions apply", "certain jurisdictions", "subject to local laws" — limits exist, the countries are not named
+    if (/\bgeo[- ]?(graphic(al)?)?[- ]?restrict|\b(certain|some|restricted|prohibited|sanctioned|excluded) (countries|regions|jurisdictions)\b|\bsubject to (local|applicable) (laws|regulations)\b|\bwhere (prohibited|restricted)\b/i.test(b.x)) { g.vague = true; g.text ??= b.x; }
     if (!RESTRICT.test(b.x)) continue;
+    if (/\b(crimea|donetsk|luhansk|sevastopol|occupied (areas|regions|territories))\b/i.test(b.x)) g.occupied = true;
     // occupied areas (Crimea, Donetsk, Luhansk…) are on most lists — that is not "Ukraine is excluded"
     const x = b.x.replace(/\b(crimea|donetsk|luhansk|sevastopol|kherson|zaporizh\w*)\b[^,;.]*/gi, "")
       .replace(/\b(occupied|non-government[- ]controlled|certain|temporarily occupied) (areas|regions|territories) of ukraine/gi, "");
     if (/\bUkraine\b/i.test(x)) { g.noUA = true; g.text ??= b.x; }
+    // a real list: several capitalised country names separated by commas
+    else if ((x.match(/\b[A-Z][a-z]+(?: [A-Z][a-z]+)?\s*(,|\band\b)/g)?.length ?? 0) >= 3) g.checked = true;
     if (/\b(EEA|European Economic Area|European Union|EU member states?|EU (users|residents)|users (in|from) (the )?(EU|Europe))\b/i.test(x)) { g.noEU = true; g.text ??= b.x; }
   }
+  if (g.checked) g.vague = undefined;   // the named list is the answer
   return g;
 }
 

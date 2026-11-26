@@ -109,13 +109,13 @@ const RULES_TX: Record<Locale, {
   title: string; keyTitle: string; keySub: string; translate: string; original: (v: string) => string; note: (v: string) => string; partial: string;
   none: (v: string) => string; more: string; signup: (v: string) => string; fact: Record<FactKey, string>;
   noteTr: (v: string) => string; keySubTr: string; coinMore: string;
-  calTitle: string; calIcs: string; calNote: string; geoTitle: string; geoOnly: (r: string) => string; geoNoUA: string; geoNoEU: string; geoAll: string; forNew: string;
+  calTitle: string; calIcs: string; calNote: string; geoTitle: string; geoOnly: (r: string) => string; geoNoUA: string; geoNoEU: string; geoAll: string; geoVague: string; geoOcc: string; geoNone: string; forNew: string;
   minTitle: string; from: string; kind: Record<"trade" | "deposit" | "stake" | "hold" | "buy", string>;
   perUser: string; upTo: string; noCap: string; published: string; noEnd: string; left: string; poolShared: string; noCapShort: string;
 }> = {
   uk: {
     coinMore: "усі акції та стейкінг", calTitle: "Дедлайн акції", calIcs: "iPhone / Outlook", calNote: "нагадування за день до кінця",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону: ${regionName(r, "uk")}`), geoNoUA: "В умовах Україна серед обмежених країн", geoNoEU: "В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "Обмежень для України в умовах не знайдено", forNew: "Лише для нових користувачів",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Лише для окремих регіонів — перевірте свою країну в умовах" : `Лише для регіону: ${regionName(r, "uk")}`), geoNoUA: "В умовах Україна серед обмежених країн", geoNoEU: "В умовах ЄС/ЄЕЗ серед обмежених регіонів", geoAll: "У списку обмежених країн України немає", geoVague: "Є обмеження за країнами, але список не наведено — перевірте свою країну на сайті біржі", geoOcc: "крім окупованих територій", geoNone: "Країни в умовах не згадано — перевірте на сайті біржі", forNew: "Лише для нових користувачів",
     noteTr: (v) => `Машинний переклад (DeepL) офіційних умов ${v}. Якщо щось незрозуміло або розходиться — діє оригінал на сайті біржі.`,
     keySubTr: "Ключові рядки з офіційних правил біржі (машинний переклад). Повний текст — нижче.",
     minTitle: "Щоб отримати хоч щось", from: "від", kind: { trade: "Торгівля", deposit: "Депозит", stake: "Стейк", hold: "Тримати", buy: "Купівля" },
@@ -131,7 +131,7 @@ const RULES_TX: Record<Locale, {
   },
   en: {
     coinMore: "all promos & staking", calTitle: "Promo deadline", calIcs: "iPhone / Outlook", calNote: "reminder a day before the end",
-    geoTitle: "Who it's for", geoOnly: (r) => (r === "region" ? "Selected regions only — check your country in the rules" : `${r} region only`), geoNoUA: "The rules list Ukraine as restricted", geoNoEU: "The rules list the EU/EEA as restricted", geoAll: "No restriction for Ukraine found in the rules", forNew: "New users only",
+    geoTitle: "Who it's for", geoOnly: (r) => (r === "region" ? "Selected regions only — check your country in the rules" : `${r} region only`), geoNoUA: "The rules list Ukraine as restricted", geoNoEU: "The rules list the EU/EEA as restricted", geoAll: "Ukraine is not on the restricted-countries list", geoVague: "Country limits apply but are not listed — check your country on the exchange site", geoOcc: "except the occupied territories", geoNone: "The rules do not mention countries — check on the exchange site", forNew: "New users only",
     noteTr: (v) => `Full conditions from the official ${v} announcement. If anything differs, the rules on the exchange's site apply.`,
     keySubTr: "Key lines from the exchange's official rules. Full text below.",
     minTitle: "To get anything at all", from: "from", kind: { trade: "Trade", deposit: "Deposit", stake: "Stake", hold: "Hold", buy: "Buy" },
@@ -147,7 +147,7 @@ const RULES_TX: Record<Locale, {
   },
   ru: {
     coinMore: "все акции и стейкинг", calTitle: "Дедлайн акции", calIcs: "iPhone / Outlook", calNote: "напоминание за день до конца",
-    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона: ${regionName(r, "ru")}`), geoNoUA: "В условиях Украина среди ограниченных стран", geoNoEU: "В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Ограничений для Украины в условиях не найдено", forNew: "Только для новых пользователей",
+    geoTitle: "Для кого", geoOnly: (r) => (r === "region" ? "Только для отдельных регионов — проверьте свою страну в условиях" : `Только для региона: ${regionName(r, "ru")}`), geoNoUA: "В условиях Украина среди ограниченных стран", geoNoEU: "В условиях ЕС/ЕЭЗ среди ограниченных регионов", geoAll: "Украины нет в списке ограниченных стран", geoVague: "Есть ограничения по странам, но список не приведён — проверьте свою страну на сайте биржи", geoOcc: "кроме оккупированных территорий", geoNone: "Страны в условиях не упомянуты — проверьте на сайте биржи", forNew: "Только для новых пользователей",
     noteTr: (v) => `Машинный перевод (DeepL) официальных условий ${v}. Если что-то непонятно или расходится — действует оригинал на сайте биржи.`,
     keySubTr: "Ключевые строки из официальных правил биржи (машинный перевод). Полный текст — ниже.",
     minTitle: "Чтобы получить хоть что-то", from: "от", kind: { trade: "Торговля", deposit: "Депозит", stake: "Стейк", hold: "Держать", buy: "Покупка" },
@@ -692,7 +692,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             {m.geo?.noUA && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose"><Icon name="alert" /> {R.geoNoUA}</span>}
             {m.geo?.noEU && <span className="rounded-md bg-rose/10 px-2 py-0.5 font-bold text-rose"><Icon name="alert" /> {R.geoNoEU}</span>}
             {m.forNew && <span className="rounded-md bg-sky/10 px-2 py-0.5 font-bold text-sky">{R.forNew}</span>}
-            {!m.geo?.only && !m.geo?.noUA && det && <span className="font-semibold text-ink-2">✓ {R.geoAll}</span>}
+            {!m.geo?.only && !m.geo?.noUA && det && (m.geo?.checked ? <span className="font-semibold text-ink-2">✓ {R.geoAll}{m.geo.occupied ? ` (${R.geoOcc})` : ""}</span>
+              : m.geo?.vague ? <span className="rounded-md bg-amber/10 px-2 py-0.5 font-semibold text-amber"><Icon name="alert" /> {R.geoVague}</span>
+              : <span className="text-ink-3">{R.geoNone}</span>)}
             {m.geo?.text && <span className="block w-full text-xs text-ink-3">“{m.geo.text}”</span>}
           </div>
         )}
