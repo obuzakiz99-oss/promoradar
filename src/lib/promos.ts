@@ -21,6 +21,20 @@ import type { Promo, Venue } from "./types";
  * otherwise a Telegram post appearing between the uk and en renders breaks the language links of promo pages.
  * So the first collection of a build is written to .next/cache/promos-build.json and reused for 20 minutes.
  */
+/**
+ * 27.11 (weekly audit: HTX "Free NVDA airdrop" showed "фонд 50K USDT"): a Telegram digest lists several offers as bullet
+ * lines — a pool named on another bullet is not this card's pool. Digest = ≥ 3 short lines that start with a bullet/emoji.
+ */
+function isDigest(p: Promo, d?: PromoDetails): boolean {
+  if (!p.id.startsWith("tg:") || !d) return false;
+  const bullets = d.blocks.slice(0, 15).filter((b) => b.x.length <= 90 && /^\s*(?:[•▪◦·\-–]|\p{Extended_Pictographic}|\p{Emoji_Presentation})/u.test(b.x));
+  if (bullets.length < 3) return false;
+  // …and this card's title IS one of those bullets (a post whose details are bullet points under its own headline keeps its pool)
+  const norm = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const t = norm(p.meta?.rawTitle ?? p.titleOrig ?? p.title).slice(0, 30);
+  return t.length >= 12 && bullets.some((b) => norm(b.x).includes(t));
+}
+
 export async function getPromos(lang?: string): Promise<Collected> {
   const c = await getPromosShared();
   return lang === "uk" || lang === "ru" ? localize(c, lang) : c;
@@ -268,7 +282,7 @@ async function getPromosLive(): Promise<Collected> {
         p.reward = undefined;
       }
       // the headline had no amount → take the prize pool from the rules ("Total prize pool: 10,000 USDT")
-      if (!p.reward && p.category !== "farming") {
+      if (!p.reward && p.category !== "farming" && !isDigest(p, d)) {
         // (audit 26.11: Binance Appreciation — a schedule row "Reward Period: 11-10 to 11-20 · Share 30.36 million WLFI" is one
         // period's slice, not the campaign's pool)
         const pool = poolOf([p.title, ...d.blocks.filter((b) => !(b.t === "tr" && /^(reward |distribution |snapshot )?(period|week|day|round|phase|batch)\b/i.test(b.x))).map((b) => b.x)]);
@@ -433,7 +447,7 @@ async function getPromosLive(): Promise<Collected> {
       } else if (!rewardCap && m.perUser && a.pool && m.perUser.unit.toUpperCase() === a.pool.unit.toUpperCase() && m.perUser.amount >= a.pool.amount * 0.99) {
         delete m.perUser;
       }
-      if (coin(a.pool) && a.pool && (!p.reward || !same(p.reward, a.pool))) p.reward = { amount: a.pool.amount, unit: a.pool.unit, usd: usdOf(a.pool, px), label: `${compact(a.pool.amount)} ${a.pool.unit}` };
+      if (coin(a.pool) && a.pool && (!p.reward || !same(p.reward, a.pool)) && !isDigest(p, details[p.id])) p.reward = { amount: a.pool.amount, unit: a.pool.unit, usd: usdOf(a.pool, px), label: `${compact(a.pool.amount)} ${a.pool.unit}` };
       p.meta = m;
     }
     // audit 25.11 (deep): Biconomy "up to 23,000 USDT" per-user ladders were printed as the pool too ("фонд 23.1K") — a pool
