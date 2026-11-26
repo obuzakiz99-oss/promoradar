@@ -1,5 +1,5 @@
 {
- "at": 1795678677939,
+ "at": 1795678877892,
  "items": [
   {
    "id": "tg:BingXAnnouncement/5416",
@@ -946,8 +946,8 @@
    "venue": "KuCoin",
    "title": "Last 5 days — Your exclusive rewards are waiting!",
    "url": "https://www.kucoin.com/competition/futures_proof_TisSeason261116?utm_source=FuturesTG&utm_medium=TG&utm_campaign=TisTheSeason&transparentTitle=true&loading=2&appNeedLang=true",
-   "why": "small",
-   "netUsd": 0.62
+   "why": "raffle",
+   "netUsd": 3.28
   },
   {
    "id": "tg:Toobit_announcements/6198",
@@ -1153,8 +1153,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6064.42,
-   "netUsd": 120.79
+   "perUserUsd": 6062.91,
+   "netUsd": 120.76
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1344,7 +1344,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1220.24,
+   "perUserUsd": 1222.368,
    "netUsd": 0.26
   },
   {
@@ -1551,7 +1551,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1388.16,
+   "perUserUsd": 1391.68,
    "netUsd": 0.37
   },
   {
@@ -1993,7 +1993,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6064.42,
+   "perUserUsd": 6062.91,
    "netUsd": 250
   },
   {
@@ -2219,7 +2219,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.224,
+   "perUserUsd": 133.176,
    "netUsd": 2.54
   },
   {
@@ -2262,7 +2262,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6064.42,
+   "perUserUsd": 6062.91,
    "netUsd": 8.77
   },
   {
@@ -2747,7 +2747,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 24.08,
+   "perUserUsd": 23.55,
    "netUsd": -0.51
   },
   {
