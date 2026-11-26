@@ -235,7 +235,11 @@ export function valueOf(p: Promo, a: Assess | undefined, px: Record<string, numb
   const yieldPool = a?.mech === "pool_share" && a.aprPct !== undefined && (a.act.kind === "hold" || a.act.kind === "stake" || a.act.kind === "deposit");
   const mech: Mech = yieldPool ? "apr" : a?.mech ?? (p.category === "referral" ? "referral" : p.category === "competition" ? "top_n" : m.aprPct !== undefined || p.category === "earn" ? "apr" : "unknown");
   const max = usd(a?.max) ?? m.perUser?.usd;
-  const typical = usd(a?.typical);
+  // weekly audit 26.11: BingX "New user? Complete your 1st trade → 50 USDT" — the AI's "typical" was the new-user gift, shown
+  // as what everyone gets; an amount the rules tie to new users only counts when the whole promo is for new users
+  const newOnlyAmt = !!a?.typical && !m.forNew && (d?.blocks ?? []).some((b) => /\bnew (users?|traders?|customers?|accounts?)\b/i.test(b.x)
+    && new RegExp(`(?<![\\d.,])${String(a.typical!.amount).replace(".", "\\.")}(?![\\d.,])`).test(b.x.replace(/,/g, "")));
+  const typical = newOnlyAmt ? undefined : usd(a?.typical);
   const pool = usd(a?.pool) ?? p.reward?.usd;
   // cost of qualifying: trading fees on the required volume, or what the locked money would have earned elsewhere
   const kind = a?.act.kind ?? (m.minEntry?.kind === "trade" ? (m.futures ? "trade_futures" : "trade_spot") : m.minEntry?.kind) ?? (m.noDeposit ? "none" : "other");
