@@ -123,5 +123,18 @@ export function fixWording(s: string, lang: string): string {
   if (lang === "en") return s;
   let x = s.replace(/(^|[\s(«"])\$([A-Z][A-Z0-9]{1,9})\b/g, "$1$2").replace(/(^|\s)#([A-Za-z][\w]{2,30})\b/g, "$1$2").replace(/(^|\s)@([A-Za-z][\w]{2,30})\b/g, "$1$2");
   for (const [re, to] of WORDING[lang] ?? []) x = x.replace(re, to);
-  return x;
+  return quoteUi(x);
+}
+/**
+ * audit 26.11: uk/ru texts named the exchange's English buttons bare ("натисніть Join Now", "[Join Now]", "участь у PROOF
+ * Lucky Draw") — a beginner reads that as an untranslated leftover. The button keeps its English name (that is what the
+ * app shows) but goes in «» like the hand translations do; an event name takes the capitalised words before it along.
+ * Text already inside «…» is left alone.
+ */
+const UI_NAME = /\[?\b((?:Join|Register|Sign up|Claim|Subscribe|Learn more|Participate)(?: [Nn]ow)?|(?:[A-Z][\w-]*\s){0,3}Lucky Draw(?: #\d+)?)\b\]?/g;
+function quoteUi(s: string): string {
+  if (!/Join|Register|Sign up|Claim|Subscribe|Learn more|Participate|Lucky Draw/.test(s)) return s;
+  return s.replace(/«[^«»]*»|[^«]+/g, (seg) => seg.startsWith("«") ? seg : seg.replace(UI_NAME, (m, name: string) =>
+    // a lone verb ("Claim", "Subscribe") is only a button when bracketed or followed by "Now"; "Lucky Draw" always is a name
+    /Lucky Draw|\s[Nn]ow$/.test(name) || m.startsWith("[") || /^(Learn more|Sign up)$/.test(name) ? `«${name}»` : m));
 }
