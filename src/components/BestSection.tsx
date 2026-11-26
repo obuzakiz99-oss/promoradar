@@ -1,3 +1,4 @@
+import { catLabel } from "@/lib/catlabel";
 import { lpSlug } from "@/lib/lpslug";
 import { getDict } from "@/lib/i18n";
 import { TOOLS } from "@/lib/i18n-tools";
@@ -49,7 +50,7 @@ export async function BestSection({ lang }: { lang: Locale }) {
 
   // 3) biggest live prize pools
   const top: PromoItem[] = promos.filter((p) => (p.reward?.usd ?? 0) > 0 && statusOf(p, now) !== "upcoming").sort((a, b) => b.reward!.usd! - a.reward!.usd!).slice(0, 6)
-    .map((p) => ({ key: p.id, venue: p.venue, title: p.title, usd: p.reward!.usd!, label: t.cat[p.category], href: withBase(`/${lang}/p/${slugOf(p)}/`) }));
+    .map((p) => ({ key: p.id, venue: p.venue, title: p.title, usd: p.reward!.usd!, label: catLabel(p, lang, t.cat), href: withBase(`/${lang}/p/${slugOf(p)}/`) }));
 
   const live = pools.projects.filter((p) => p.status === "live");
   const exchanges = Object.fromEntries(LP_API.map((id) => [id, venueOf(id)]));

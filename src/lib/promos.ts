@@ -294,6 +294,13 @@ async function getPromosLive(): Promise<Collected> {
       && !/\b(fee|fees|loss|taker|maker)\b/i.test(p.titleOrig ?? p.title)) p.category = "earn";
     // weekly audit 26.11: BingX daily "buy the dip" tasks (/activity/task/) were filed as a ranking contest
     if (p.category === "competition" && /\/(activity\/task|task-?center|tasks?)\b/i.test(p.url) && !/\b(rank|leaderboard|top \d+|competition|tournament)\b/i.test(p.meta?.rawTitle ?? p.titleOrig ?? p.title)) p.category = "bonus";
+    // weekly audit 26.11 (2): trading campaigns sat under "Earn / Стейкінг" (Gate CFD, Aster "trade & hold RWA perps for a
+    // share of …") — Earn is for deposits that pay interest; a campaign you join by trading is a bonus or a contest
+    {
+      const tt = p.meta?.rawTitle ?? p.titleOrig ?? p.title;
+      if (p.category === "earn" && /\b(trade|trading|perps?|futures|cfd|contracts?)\b/i.test(tt) && !/\b(apr|apy|simple earn|savings|staking|stake|lend(ing)?|vaults?|interest)\b/i.test(tt))
+        p.category = /\b(share of|prize pool|leaderboard|rank(ing)?|compet\w*)\b/i.test(tt) ? "competition" : "bonus";
+    }
     const geo = geoOf(p.title, d);
     // audit 23.11: a KuCoin Australia page (/en-au/) was shown to everyone
     if (!geo.only && /\/(en-au|au)\//i.test(p.url)) geo.only = "AU";

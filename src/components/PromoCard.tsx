@@ -1,3 +1,4 @@
+import { catLabel } from "@/lib/catlabel";
 import type { Promo } from "@/lib/types";
 import type { Dict, Locale } from "@/lib/i18n";
 import { ago, compactUsd, duration, fmtLabel, money, num, shortDate, sentenceCase } from "@/lib/format";
@@ -141,7 +142,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
               : null}
           </div>
           <div className={`mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs font-semibold ${cs.text}`}>
-            <span className="inline-flex items-center gap-1.5 whitespace-nowrap"><span className="size-1.5 rounded-full" style={{ background: cs.dot }} />{m.zeroFee && p.category === "other" ? ZF[lang].badge : t.cat[p.category]}</span>
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap"><span className="size-1.5 rounded-full" style={{ background: cs.dot }} />{m.zeroFee && p.category === "other" ? ZF[lang].badge : catLabel(p, lang, t.cat)}</span>
             <span className={`nov ml-1 rounded px-1.5 py-px text-xs font-bold ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
           </div>
         </div>

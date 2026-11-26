@@ -1,3 +1,4 @@
+import { catLabel } from "@/lib/catlabel";
 import { ldJson } from "@/lib/ldjson";
 import { endedBySlug, endedPromos } from "@/lib/archive";
 import { EndedPromo } from "./ended";
@@ -83,7 +84,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const pm = p.meta;
   const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(p.reward.label) : pm?.apr ? `+${num(pm.apr, lang)}% APR` : "";
   const till = p.endsAt ? D.till(new Date(p.endsAt).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" })) : "";
-  const bits = `${p.venue.name} · ${t.cat[p.category]}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
+  const bits = `${p.venue.name} · ${catLabel(p, lang, t.cat)}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
   const head = sentenceCase(noEmoji(p.title)).replace(/\s{2,}/g, " ").trim();
   // audit 23.11 (SEO): titles ran 24–118 characters and Google cuts at ~60 — our structured title ("Earn: USDT → до 10% APR")
@@ -417,7 +418,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
               <span className={`inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-1 ${CAT_STYLE[p.category].text}`}>
-                <span className="size-1.5 rounded-full" style={{ background: CAT_STYLE[p.category].dot }} /> {p.meta?.zeroFee && p.category === "other" ? ({ uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } as const)[lang] : t.cat[p.category]}
+                <span className="size-1.5 rounded-full" style={{ background: CAT_STYLE[p.category].dot }} /> {p.meta?.zeroFee && p.category === "other" ? ({ uk: "0% комісії", en: "0% fees", ru: "0% комиссии" } as const)[lang] : catLabel(p, lang, t.cat)}
               </span>
               <span className={`rounded-md px-2 py-1 ${st === "ending" ? "bg-rose/10 text-rose" : st === "upcoming" ? "bg-sky/10 text-sky" : "bg-lime/10 text-lime"}`}>{t.status[st]}</span>
               {m.confirmed && <span className="rounded-md bg-teal/10 px-2 py-1 text-teal">✓ {t.card.confirmed}</span>}
