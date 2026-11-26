@@ -405,7 +405,10 @@ async function getPromosLive(): Promise<Collected> {
       const sameEnd = !!prev?.end && !!p.endsAt && Math.abs(prev.end - p.endsAt) < 36 * 3600_000 && prev.t - p.publishedAt < 45 * 86400_000;
       // weekly audit 26.11: a post without an end date about an event the other card says is still running (Bitget TG 18509)
       const running = !!prev && prev.t - p.publishedAt < 45 * 86400_000 && ((!p.endsAt && !!prev.end && prev.end > p.publishedAt) || (!prev.end && !!p.endsAt && p.endsAt > prev.t));
-      if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd || running)) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id, end: p.endsAt });
+      // the exchange's own article beats a Telegram retelling (weekly audit 26.11: the TG copy had no end date and mixed in a VIP airdrop)
+      if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd || running) && prev.tg && !p.id.startsWith("tg:") && !dups.has(prev.id)) {
+        dupOf(prev.id, evKey, p.id); poolSeen.set(evKey, { t: p.publishedAt, tg: false, id: p.id, end: p.endsAt });
+      } else if (prev && (prev.t - p.publishedAt < 14 * 86400_000 || sameEnd || running)) dupOf(p.id, evKey, prev.id); else if (!prev) poolSeen.set(evKey, { t: p.publishedAt, tg: p.id.startsWith("tg:"), id: p.id, end: p.endsAt });
     }
     const series = /^[\w.]+ Earn\s*[–—-]\s*.{0,60}\b(Locked|Flexible|Fixed) Products?\b/i.test(head) ? `${p.venue.id}|series|earn-products` : "";
     if (series && !dups.has(p.id)) { if (seenUrl.has(series)) dupOf(p.id, series); else seenUrl.set(series, p.id); }
