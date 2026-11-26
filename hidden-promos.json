@@ -1,5 +1,5 @@
 {
- "at": 1795652229507,
+ "at": 1795652460159,
  "items": [
   {
    "id": "bitbase:5832222775326",
@@ -275,7 +275,7 @@
    "title": "Predict Soccer Matches: Trade to Earn 200 Gems!",
    "url": "https://www.ourbit.com/activity/kol?id=c84b557ae98043dd92c050a757c2f7c9",
    "why": "ended",
-   "of": "2026-09-23T03:59"
+   "of": "2026-11-22T15:59"
   },
   {
    "id": "tg:coinstore_global/10376",
@@ -352,13 +352,6 @@
    "url": "https://www.coinstore.com/launchpadDetail?activityId=242&fromPath=%2Flaunchpad%3Fts%3D1794378965407&ts=1794378970155",
    "why": "ended",
    "of": "2026-11-22T15:59"
-  },
-  {
-   "id": "tg:Kucoin_News/37172",
-   "venue": "KuCoin",
-   "title": "The Signs You Can’t Ignore: Sky-High Rewards Ahead!",
-   "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
-   "why": "news"
   },
   {
    "id": "tg:Bybit_Announcements/10108",
@@ -1059,7 +1052,7 @@
    "title": "Spot Trading Tournament Season 11: Trade to Share Up to 5,000,000 NIGHT Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/02d95f971d714e5ab5a429a8a8aba438",
    "why": "small",
-   "perUserUsd": 7414.95,
+   "perUserUsd": 7382.7,
    "netUsd": 0.94
   },
   {
@@ -1086,15 +1079,16 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6143.51,
-   "netUsd": 122.37
+   "perUserUsd": 6107.490000000001,
+   "netUsd": 121.65
   },
   {
    "id": "tg:Bitrue_official/11299",
    "venue": "Bitrue",
    "title": "Trade on #Bitrue for a chance to win AirPods Max and share $60,000 in rewards!",
    "url": "https://www.bitrue.com/black-friday-spot-futures?cn=399990",
-   "why": "raffle"
+   "why": "raffle",
+   "netUsd": 29.95
   },
   {
    "id": "tg:HotsCoinAnnouncements/2819",
@@ -1270,7 +1264,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.1
+   "netUsd": 4.07
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1293,8 +1287,8 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1256.752,
-   "netUsd": 0.29
+   "perUserUsd": 1251.9360000000001,
+   "netUsd": 0.28
   },
   {
    "id": "tg:LBanknews/20939",
@@ -1492,7 +1486,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1377.6,
+   "perUserUsd": 1378.24,
    "netUsd": 0.36
   },
   {
@@ -1509,7 +1503,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.62,
+   "perUserUsd": 5.58,
    "netUsd": 0.03
   },
   {
@@ -1574,7 +1568,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1582,
+   "perUserUsd": 1577.2,
    "netUsd": 0.29
   },
   {
@@ -1639,7 +1633,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1258.5,
+   "perUserUsd": 1257,
    "netUsd": -0.6
   },
   {
@@ -1797,8 +1791,8 @@
    "title": "Share 2,000,000 VET — Biconomy × UNUS SED LEO Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64490879907865--Share-2-000-000-VET-Biconomy-UNUS-SED-LEO-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 902.79097048,
-   "netUsd": -0.05
+   "perUserUsd": 911.5360602599999,
+   "netUsd": -0.04
   },
   {
    "id": "mexc:17827791539811",
@@ -1944,7 +1938,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6143.51,
+   "perUserUsd": 6107.490000000001,
    "netUsd": 250
   },
   {
@@ -1987,7 +1981,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 24.53,
+   "perUserUsd": 24.32,
    "netUsd": -0.51
   },
   {
@@ -2197,8 +2191,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 134.76,
-   "netUsd": 2.57
+   "perUserUsd": 134.016,
+   "netUsd": 2.56
   },
   {
    "id": "tg:MEXCofficialNews/38822",
@@ -2247,7 +2241,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6143.51,
+   "perUserUsd": 6107.490000000001,
    "netUsd": 8.77
   },
   {
@@ -2395,7 +2389,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 7.89
+   "perUserUsd": 7.88
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -2488,7 +2482,8 @@
    "title": "Celebrate World Science Day with KuCoin and grab your chance to claim a 100 USDT Futures Bonus from a…",
    "url": "https://www.kucoin.com/campaigns/World_Science_Day?utm_source=World_Science_Day&utm_medium=Community&utm_campaign=World_Science_Day",
    "why": "small",
-   "perUserUsd": 5
+   "perUserUsd": 100,
+   "netUsd": 10
   },
   {
    "id": "tg:Kucoin_News/37287",
@@ -2496,8 +2491,8 @@
    "title": "YOU’RE NOT ALONE! — CLAIM YOUR 100 USDT FUTURES BONUS!",
    "url": "https://www.kucoin.com/campaigns/World_Science_Day?utm_source=World_Science_Day&utm_medium=Community&utm_campaign=World_Science_Day",
    "why": "small",
-   "perUserUsd": 5,
-   "netUsd": -5.5
+   "perUserUsd": 100,
+   "netUsd": 10
   },
   {
    "id": "biconomy:64662106557849",
@@ -2782,6 +2777,15 @@
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64380597298585-Biconomy-com-Earn-SOXSB-BMT-KGEN-SHELL-Locked-Products-Enjoy-Up-to-30-42-APR-in-Rewards",
    "why": "duplicate",
    "of": "biconomy:64710415983385 (series)"
+  },
+  {
+   "id": "tg:Kucoin_News/37172",
+   "venue": "KuCoin",
+   "title": "The Signs You Can’t Ignore: Sky-High Rewards Ahead!",
+   "url": "https://www.kucoin.com/campaigns/5_Version_Upgrade?utm_source=5.0_Version_Upgrade&utm_medium=Community&utm_campaign=5.0_Version_Upgrade",
+   "why": "raffle",
+   "perUserUsd": 2,
+   "netUsd": 0.04
   },
   {
    "id": "kucoin:355011",
