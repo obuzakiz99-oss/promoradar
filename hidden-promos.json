@@ -1,5 +1,5 @@
 {
- "at": 1795762604254,
+ "at": 1795764167259,
  "items": [
   {
    "id": "hotcoin:9th-anniversary-is-coming",
@@ -349,6 +349,13 @@
    "url": "https://www.htx.com/en-us/mars/activity-center?callId=179430294751972",
    "why": "ended",
    "of": "2026-11-25T10:00"
+  },
+  {
+   "id": "tg:HTXGlobalAnnouncementChannel/15848",
+   "venue": "HTX",
+   "title": "Latest standings of the HTX Top 10 Trading Opportunities Futures Trading Competition",
+   "url": "https://t.me/HTXGlobalAnnouncementChannel/15848",
+   "why": "news"
   },
   {
    "id": "tg:Bitrue_official/11239",
@@ -756,10 +763,10 @@
    "why": "news"
   },
   {
-   "id": "tg:Bitrue_official/11220",
+   "id": "tg:Bitrue_official/11222",
    "venue": "Bitrue",
    "title": "Bitrue AI Bot Short Grid: 2,221.56% Backtested APY!",
-   "url": "https://www.bitrue.com/bitrue-ai/land?cn=399990",
+   "url": "https://www.bitrue.com/bitrue-ai/land?cn=777773",
    "why": "news"
   },
   {
@@ -981,7 +988,7 @@
    "title": "Gate Futures Points Airdrop #174: Claim 0.017 QQQG & 100 USDT",
    "url": "https://www.gate.com/announcements/article/103017",
    "why": "small",
-   "perUserUsd": 13.03
+   "perUserUsd": 13.01
   },
   {
    "id": "tg:KCEX_announcements/5797",
@@ -1007,7 +1014,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 906.699703,
+   "perUserUsd": 904.9131026,
    "netUsd": -0.05
   },
   {
@@ -1057,7 +1064,7 @@
    "title": "Last 5 Hours: BTC Launchpad Is Filling Fast!",
    "url": "https://www.mexc.com/launchpad/bitcoin/93?utm_source=community&utm_medium=tg&utm_campaign=btc-launchpad",
    "why": "small",
-   "netUsd": 4.11
+   "netUsd": 4.12
   },
   {
    "id": "tg:HotsCoinAnnouncements/2822",
@@ -1217,7 +1224,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2264.4,
+   "perUserUsd": 2266.8,
    "netUsd": 0.56
   },
   {
@@ -1315,6 +1322,15 @@
    "netUsd": 12.5
   },
   {
+   "id": "tg:Toobit_announcements/6186",
+   "venue": "Toobit",
+   "title": "Every Milestone Brings You Closer to Bigger Rewards!",
+   "url": "https://t.me/Toobit_announcements/6186",
+   "why": "small",
+   "perUserUsd": 200,
+   "netUsd": 5.75
+  },
+  {
    "id": "tg:Kucoin_News/37300",
    "venue": "KuCoin",
    "title": "Three stops on the way to the stars: Sign up, complete the task, and claim your reward!",
@@ -1362,8 +1378,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6172.43,
-   "netUsd": 122.95
+   "perUserUsd": 6186.39,
+   "netUsd": 123.23
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1413,7 +1429,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 72.804,
+   "perUserUsd": 72.432,
    "netUsd": 0.6
   },
   {
@@ -1494,7 +1510,7 @@
    "title": "BTC Launchpad: Share 1.6 BTC at Up to 50% Off",
    "url": "https://www.mexc.com/announcements/article/btc-launchpad-17827791539925",
    "why": "small",
-   "netUsd": 4.11
+   "netUsd": 4.12
   },
   {
    "id": "tg:Kucoin_News/37288",
@@ -1509,8 +1525,8 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1170.1760000000002,
-   "netUsd": 0.23
+   "perUserUsd": 1184.512,
+   "netUsd": 0.24
   },
   {
    "id": "tg:LBanknews/20939",
@@ -1678,6 +1694,15 @@
    "netUsd": 1.5
   },
   {
+   "id": "tg:Toobit_announcements/6161",
+   "venue": "Toobit",
+   "title": "Make your first Futures bot trade count and unlock a chance to receive a 50 USDT Futures Position Voucher!",
+   "url": "https://t.me/Toobit_announcements/6161",
+   "why": "small",
+   "perUserUsd": 50,
+   "netUsd": 2.45
+  },
+  {
    "id": "tg:Bitget_Announcements/18470",
    "venue": "Bitget",
    "title": "1,000 USDT Prize Pool",
@@ -1691,7 +1716,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1419.84,
+   "perUserUsd": 1417.92,
    "netUsd": 0.39
   },
   {
@@ -1708,7 +1733,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.66,
+   "perUserUsd": 5.67,
    "netUsd": 0.03
   },
   {
@@ -1765,7 +1790,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1572,
+   "perUserUsd": 1569.6,
    "netUsd": 0.28
   },
   {
@@ -1839,7 +1864,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1334.3999999999999,
+   "perUserUsd": 1315.35,
    "netUsd": -0.6
   },
   {
@@ -1848,7 +1873,7 @@
    "title": "Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64536163317529--Share-2-000-000-ARK-Biconomy-ARK-DeFAI-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 18.2812832,
+   "perUserUsd": 18.4616768,
    "netUsd": -0.49
   },
   {
@@ -2091,7 +2116,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6172.43,
+   "perUserUsd": 6186.39,
    "netUsd": 250
   },
   {
@@ -2167,7 +2192,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 910.0500000000001,
+   "perUserUsd": 905.4,
    "netUsd": 1.81
   },
   {
@@ -2177,15 +2202,6 @@
    "url": "https://t.me/Bybit_Announcements/10123",
    "why": "raffle",
    "netUsd": 0.17
-  },
-  {
-   "id": "tg:HTXGlobalAnnouncementChannel/15848",
-   "venue": "HTX",
-   "title": "Latest standings of the HTX Top 10 Trading Opportunities Futures Trading Competition",
-   "url": "https://t.me/HTXGlobalAnnouncementChannel/15848",
-   "why": "small",
-   "perUserUsd": 3000,
-   "netUsd": -4.85
   },
   {
    "id": "bitget:12560603900389",
@@ -2238,7 +2254,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 135.864,
+   "perUserUsd": 136.008,
    "netUsd": 2.59
   },
   {
@@ -2274,7 +2290,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6172.43,
+   "perUserUsd": 6186.39,
    "netUsd": 8.77
   },
   {
@@ -2460,14 +2476,6 @@
    "netUsd": 0.5
   },
   {
-   "id": "tg:Toobit_announcements/6186",
-   "venue": "Toobit",
-   "title": "Every Milestone Brings You Closer to Bigger Rewards!",
-   "url": "https://t.me/Toobit_announcements/6186",
-   "why": "duplicate",
-   "of": "tg:Toobit_announcements/6188 (link)"
-  },
-  {
    "id": "binance:00326c1f822a43f1bb6f4ef15b24ade9",
    "venue": "Binance",
    "title": "The big Binance bonanza: Black Friday Frenzy, Thanksgiving Giving, Share in 1,000,000 USDC",
@@ -2552,14 +2560,6 @@
    "of": "tg:Bitrue_official/11288 (url)"
   },
   {
-   "id": "tg:Toobit_announcements/6161",
-   "venue": "Toobit",
-   "title": "Make your first Futures bot trade count and unlock a chance to receive a 50 USDT Futures Position Voucher!",
-   "url": "https://t.me/Toobit_announcements/6161",
-   "why": "duplicate",
-   "of": "tg:Toobit_announcements/6188 (link)"
-  },
-  {
    "id": "tg:MEXCofficialNews/38851",
    "venue": "MEXC",
    "title": "How your Futures Earn APR stacks — 5% base APR: futures balance of 100+ USDT, no position needed",
@@ -2574,14 +2574,6 @@
    "url": "https://www.ourbit.com/activity/kol?id=5cd33c00d38d4b69a6057a0559f1ae78",
    "why": "duplicate",
    "of": "tg:ourbitofficial/4251 (url)"
-  },
-  {
-   "id": "tg:Toobit_announcements/6156",
-   "venue": "Toobit",
-   "title": "Let your trading bots unlock more rewards!",
-   "url": "https://t.me/Toobit_announcements/6156",
-   "why": "duplicate",
-   "of": "tg:Toobit_announcements/6188 (link)"
   },
   {
    "id": "tg:LBanknews/20914",
@@ -2736,8 +2728,8 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 27.49,
-   "netUsd": -0.49
+   "perUserUsd": 25.82,
+   "netUsd": -0.5
   },
   {
    "id": "tg:Bitget_Announcements/18438",
