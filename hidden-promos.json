@@ -1,5 +1,5 @@
 {
- "at": 1795758592738,
+ "at": 1795758831075,
  "items": [
   {
    "id": "hotcoin:9th-anniversary-is-coming",
@@ -967,7 +967,15 @@
    "title": "Share 400,000 CLEAR — Biconomy × Clearpool Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--Share-400-000-CLEAR-Biconomy-Clearpool-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 2.25
+   "perUserUsd": 2.26
+  },
+  {
+   "id": "binance:2bd181fe130a41868e054b959586cb40",
+   "venue": "Binance",
+   "title": "Binance Blockchain Week: Share Your Experience and Celebrate Your Community Hero to Share 1,000 USDC!",
+   "url": "https://www.binance.com/en/support/announcement/detail/2bd181fe130a41868e054b959586cb40",
+   "why": "small",
+   "netUsd": 0.01
   },
   {
    "id": "gate:103015",
@@ -1177,7 +1185,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2266,
+   "perUserUsd": 2266.8,
    "netUsd": 0.56
   },
   {
@@ -1348,8 +1356,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6176.51,
-   "netUsd": 123.03
+   "perUserUsd": 6174.43,
+   "netUsd": 122.99
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1399,7 +1407,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 75.152,
+   "perUserUsd": 75.032,
    "netUsd": 0.6
   },
   {
@@ -1495,7 +1503,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1178.1280000000002,
+   "perUserUsd": 1177.792,
    "netUsd": 0.24
   },
   {
@@ -1686,8 +1694,8 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1432.32,
-   "netUsd": 0.4
+   "perUserUsd": 1429.76,
+   "netUsd": 0.39
   },
   {
    "id": "tg:Bybit_Announcements/10170",
@@ -1760,7 +1768,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1569.6,
+   "perUserUsd": 1571.2,
    "netUsd": 0.28
   },
   {
@@ -1834,7 +1842,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1313.8500000000001,
+   "perUserUsd": 1314.75,
    "netUsd": -0.6
   },
   {
@@ -2086,7 +2094,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6176.51,
+   "perUserUsd": 6174.43,
    "netUsd": 250
   },
   {
@@ -2162,7 +2170,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 939.4,
+   "perUserUsd": 937.9,
    "netUsd": 1.81
   },
   {
@@ -2240,7 +2248,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 135.96,
+   "perUserUsd": 136.008,
    "netUsd": 2.59
   },
   {
@@ -2276,7 +2284,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6176.51,
+   "perUserUsd": 6174.43,
    "netUsd": 8.77
   },
   {
