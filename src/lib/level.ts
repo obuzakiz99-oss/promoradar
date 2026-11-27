@@ -7,11 +7,17 @@ export type Level = "easy" | "medium" | "hard";
 const STABLE = /^(USDT|USDC|USD1|USDG|FDUSD|DAI|PYUSD|USDE|U)$/i;
 const MAJOR = /^(BTC|ETH|BNB|SOL|XRP|TRX|TON|GT|KCS|BGB|MX|OKB|HTX|WBT|LBK)$/i;
 const RISKY_WORDS = /\b(futures|perp(etual)?s?|leverage|margin|copy ?trad|demo|stock futures|cfd|options?|gstocks?)\b/i;
+// beginner walkthrough 27.11: the uk/ru title is translated ("ф'ючерсний ваучер"), so the English words above missed the MEXC
+// futures voucher and Bitget CandyBomb futures — they were badged "Просто"; the exchange's own headline is checked too
+const RISKY_UA = /ф[''ʼ]?ючерс|фьючерс|маржин|кредитн\p{L}* плеч|з плечем|с плечом|опціон|опцион/iu;
+// buying a falling coin / points instead of money: the result depends on the price or on unknown rules
+const MEDIUM_WORDS = /\b(buy the dip|dip|points?|lucky draw|raffle)\b/i;
 
-export function promoLevel(p: { category: Category; title: string; evergreen?: boolean; venue?: { kind?: string } }): Level {
+export function promoLevel(p: { category: Category; title: string; titleOrig?: string; evergreen?: boolean; venue?: { kind?: string } }): Level {
   if (p.category === "farming" || p.venue?.kind === "dex" || p.venue?.kind === "defi") return "hard";
-  if (RISKY_WORDS.test(p.title)) return "hard";
-  if (p.category === "competition") return "medium";
+  const head = `${p.titleOrig ?? ""} ${p.title}`;
+  if (RISKY_WORDS.test(head) || RISKY_UA.test(head)) return "hard";
+  if (p.category === "competition" || MEDIUM_WORDS.test(head)) return "medium";
   if (p.category === "earn" || p.category === "bonus" || p.category === "referral") return "easy";
   if (p.category === "airdrop" || p.category === "listing") return "easy";
   return "medium";

@@ -116,7 +116,6 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
   // owner 23.11: the likely amount is the headline number whenever the max is 2x it or more (was 10x)
   const oversell = m.value?.net !== undefined && m.value.net > 0 && (m.perUser?.usd ?? 0) >= 2 * Math.max(1, m.value.net);
   // audit 23.11: "max per person $5 000 · pool for everyone $5 000" — the same figure parsed twice; the pool line goes
-  const samePool = !!(m.perUser && p.reward && p.reward.amount === m.perUser.amount && p.reward.unit === m.perUser.unit);
   return (
     <article data-tour="card"
       className={`card group relative flex min-w-0 flex-col p-5 animate-fade-up has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-lime ${p.sponsored ? "ring-1 ring-lime/40" : ""} ${lvl === "hard" ? "adv" : ""} ${fresh ? "ring-1 ring-lime/60" : ""}`}
@@ -208,7 +207,8 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{PER_T[lang]}</div>
               <div className={`mt-0.5 font-mono font-bold tracking-tight ${oversell ? "text-base text-ink-2" : "text-xl text-lime"}`}>{money(m.perUser.amount, m.perUser.unit, lang)}{m.perUser.usd && !/^USD/.test(m.perUser.unit) ? <span className="text-xs font-semibold text-ink-3"> ≈ {compactUsd(m.perUser.usd, lang)}</span> : null}</div>
-              {!samePool && <div className="mt-0.5 font-mono text-xs text-ink-3">{t.card.pool}: {fmtLabel(p.reward.label, lang)}{p.reward.usd && !/^USD/.test(p.reward.unit) ? ` ≈ ${compactUsd(p.reward.usd, lang)}` : ""}</div>}
+              {/* owner 27.11 (beginners): "до 1 000 USDT на людину" next to "фонд 150 тис. на всіх" read as two prizes — the card keeps
+                  the per-person figure, the shared pool is on the promo page */}
               {m.minEntry && <div className="mt-0.5 font-mono text-xs font-bold text-amber">{MIN[lang]} ${num(m.minEntry.amount, lang)}</div>}
             </div>
           ) : p.reward ? (
