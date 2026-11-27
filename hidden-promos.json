@@ -1,5 +1,5 @@
 {
- "at": 1795756877911,
+ "at": 1795758592738,
  "items": [
   {
    "id": "hotcoin:9th-anniversary-is-coming",
@@ -749,13 +749,6 @@
    "why": "news"
   },
   {
-   "id": "tg:btsenews/5722",
-   "venue": "BTSE",
-   "title": "A big win for the team behind the scenes",
-   "url": "https://t.me/btsenews/5722",
-   "why": "news"
-  },
-  {
    "id": "kraken:https://blog.kraken.com/product/promotions/black-friday-deposit-trade-bonus",
    "venue": "Kraken",
    "title": "Get up to $100 in BTC with our Black Friday Deposit & Trade Bonus",
@@ -969,6 +962,14 @@
    "netUsd": 10
   },
   {
+   "id": "biconomy:64773258141977",
+   "venue": "Biconomy.com",
+   "title": "Share 400,000 CLEAR — Biconomy × Clearpool Trading Airdrop!",
+   "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--Share-400-000-CLEAR-Biconomy-Clearpool-Trading-Airdrop",
+   "why": "small",
+   "perUserUsd": 2.25
+  },
+  {
    "id": "gate:103015",
    "venue": "Gate",
    "title": "Trenches 7-Day Check-in Sprint Phase 4: Get 2 USDT Daily, Up to 101 USDT per User",
@@ -1176,7 +1177,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2265.6,
+   "perUserUsd": 2266,
    "netUsd": 0.56
   },
   {
@@ -1347,8 +1348,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6172.630000000001,
-   "netUsd": 122.95
+   "perUserUsd": 6176.51,
+   "netUsd": 123.03
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1398,7 +1399,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 73.136,
+   "perUserUsd": 75.152,
    "netUsd": 0.6
   },
   {
@@ -1494,8 +1495,8 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1174.8799999999999,
-   "netUsd": 0.23
+   "perUserUsd": 1178.1280000000002,
+   "netUsd": 0.24
   },
   {
    "id": "tg:LBanknews/20939",
@@ -1685,7 +1686,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1432.64,
+   "perUserUsd": 1432.32,
    "netUsd": 0.4
   },
   {
@@ -1702,7 +1703,7 @@
    "title": "Word of the Day: Test Your Knowledge on “TradFi Products on Binance” to Unlock BNB Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/f4e10dc4e2d643eab9e98f89589f77cc",
    "why": "small",
-   "perUserUsd": 5.66,
+   "perUserUsd": 5.67,
    "netUsd": 0.03
   },
   {
@@ -1759,7 +1760,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1569.2,
+   "perUserUsd": 1569.6,
    "netUsd": 0.28
   },
   {
@@ -1833,7 +1834,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1300.05,
+   "perUserUsd": 1313.8500000000001,
    "netUsd": -0.6
   },
   {
@@ -1842,7 +1843,7 @@
    "title": "Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64536163317529--Share-2-000-000-ARK-Biconomy-ARK-DeFAI-Trading-Airdrop",
    "why": "small",
-   "perUserUsd": 17.9260896,
+   "perUserUsd": 18.088304,
    "netUsd": -0.49
   },
   {
@@ -2085,7 +2086,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6172.630000000001,
+   "perUserUsd": 6176.51,
    "netUsd": 250
   },
   {
@@ -2161,7 +2162,7 @@
    "title": "10,000 USDT in rewards — Who’s taking the top spot?",
    "url": "https://www.lbank.com/event-new/10003930-pearl-trading-contest?qcode=9ira8&scode=smarket-tg&utm_source=tg&utm_medium=post&utm_campaign=asset-activity-mkt&utm_term=of&utm_content=lbank-mkt",
    "why": "small",
-   "perUserUsd": 914.2,
+   "perUserUsd": 939.4,
    "netUsd": 1.81
   },
   {
@@ -2239,7 +2240,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 135.93599999999998,
+   "perUserUsd": 135.96,
    "netUsd": 2.59
   },
   {
@@ -2275,7 +2276,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6172.630000000001,
+   "perUserUsd": 6176.51,
    "netUsd": 8.77
   },
   {
@@ -2374,7 +2375,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.1
+   "perUserUsd": 8.15
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
@@ -2737,7 +2738,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 29.34,
+   "perUserUsd": 28.78,
    "netUsd": -0.49
   },
   {
