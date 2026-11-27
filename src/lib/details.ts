@@ -334,12 +334,16 @@ export function termsOf(d: PromoDetails | undefined, title: string, publishedAt:
   const lo = (publishedAt || Date.now()) - 150 * 86400_000, hi = (publishedAt || Date.now()) + 400 * 86400_000;
   const ok = (ms: number) => ms > lo && ms < hi;
   const periodRe = FACT_RE[0][1];
+  // audit 27.11 (accuracy): Coinstore states "(UTC+8)" once and then lists "2026-12-08 14:00:00" bare — those were read as
+  // UTC and the countdown ran 8 h long; a single time zone named in the rules applies to the lines that name none
+  const zones = new Set(lines.map((l) => l.match(/\b(?:UTC|GMT)\s*[+-]\s*\d{1,2}(?::?\d{2})?/i)?.[0].replace(/\s+/g, "").toUpperCase().replace("GMT", "UTC")).filter(Boolean));
+  const docTz = zones.size === 1 ? [...zones][0] : undefined;
   const starts: number[] = [], ends: number[] = [], timed: number[] = [];
   for (const l of lines) {
     if (/distribut|credited|airdropp?ed|snapshot|listing|trading (opening|opens|starts)|deposit (opening|opens)|withdrawal/i.test(l) && !periodRe.test(l)) continue;
     // audit 25.11 (deep): "Verification period: … – 18.05" (Bitbase) and Binance's payout date (08.01) were read as the campaign end
     if (/\b(verification|settlement|payout|pay-?out|reward (distribution|issuance)|distribution (period|date|time)|claim (period|window)|review period|redemption|rewards? will be (distributed|credited|sent))\b/i.test(l)) continue;
-    const ds = datesIn(l, publishedAt || undefined).filter((x) => ok(x.ms));
+    const ds = datesIn(docTz && !/\b(?:UTC|GMT)\b/i.test(l) ? `${l} (${docTz})` : l, publishedAt || undefined).filter((x) => ok(x.ms));
     if (ds.length >= 2 && (periodRe.test(l) || /\b(from|between)\b|\bto\b|[–—-]/i.test(l))) {
       starts.push(ds[0].ms); if (ds[0].hasTime) timed.push(ds[0].ms);
       const e = ds[ds.length - 1];
