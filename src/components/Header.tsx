@@ -19,7 +19,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
     { href: withBase(`/${lang}/zero-fees/`), label: { uk: "0% комісії", en: "0% fees", ru: "0% комиссии" }[lang], wide: "lg:block", match: ["zero-fees"] },
     // exchange rating hidden for now (owner, 12.11) — the page stays at /exchanges/, only the menu entry is off
     // { href: withBase(`/${lang}/exchanges/`), label: { uk: "Біржі", en: "Exchanges", ru: "Биржи" }[lang], wide: "md:block", match: ["exchanges"] },
-    { href: withBase(`/${lang}/launchpools/`), label: { uk: "Дохідність", en: "Yield", ru: "Доходность" }[lang], match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
+    { href: withBase(`/${lang}/launchpools/`), label: { uk: "Пасивний дохід", en: "Passive income", ru: "Пассивный доход" }[lang] /* owner 27.11: plainer than "Дохідність" */, match: ["launchpools", "earn", "dex", "lp", "fixed", "history", "insights", "hedge"] },
     // audit 18.11: with Unlocks added the bar pushed the language switch 59px off a 768px tablet; the calendar is a tab on
     // the Unlocks page, so tablets drop this entry (as the phone bar does)
     { href: withBase(`/${lang}/calendar/`), label: { uk: "Календар", en: "Calendar", ru: "Календарь" }[lang], wide: "lg:block", match: ["calendar", "sales"] },
