@@ -135,7 +135,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
     if (kind === "trade") {
       const rate = m.futures ? 0.0005 : 0.001;
       const fee = v * rate;
-      lines.push({ text: T.fee(usd(fee), m.futures ? "0.05%" : "0.1%"), tone: "muted" });
+      lines.push({ text: T.fee(usd(fee), `${num(rate * 100, lang)}%`) /* audit 27.11 (evening): "0.05%" stayed English in uk/ru */, tone: "muted" });
       if (rewardUsd !== undefined && v >= min) {
         const net = rewardUsd - fee;
         lines.push(net >= 0 ? { text: T.net(usd(net)), tone: "good" } : { text: T.netNeg(`−${usd(-net)}`), tone: "bad" });

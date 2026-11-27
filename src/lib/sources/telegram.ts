@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { TELEGRAM, VENUES, venueOf } from "@/config/site";
 import type { Promo } from "../types";
-import { classify, cleanTitle, isPromo, isReferral, parseReward, tidyHeadline } from "../parse";
+import { classify, cleanTitle, earnVerbCategory, isPromo, isReferral, parseReward, tidyHeadline } from "../parse";
 import { decodeEntities, getText } from "./util";
 
 export type TgStatus = Record<string, { ok: boolean; count: number; error?: string }>;
@@ -156,6 +156,9 @@ export function parsePage(html: string, venue: string, ch: string): { promos: Pr
         // the raw tail (Ourbit "welcome gifts, BTC discounts and referral bonuses") is re-checked with the body as a hint
         const c = classify(raw);
         if (c === "referral" && !isReferral(title)) return classify(title, `${raw} ${text.slice(0, 400)}`);
+        // audit 27.11 (evening): Ourbit "Create a Team and Earn Up to 130,000 USDT as Captain" (a futures team showdown) was
+        // filed as Earn — "earn up to <amount>" is how a reward is worded; without an Earn-product word the body decides
+        if (c === "earn") return earnVerbCategory(raw, text.slice(0, 400)) ?? c;
         return c !== "other" ? c : classify(raw, text.slice(0, 400));
       })(), publishedAt: date,
       // audit 23.11: "up to 1,250 USDT per user", "Maximum reward: $5,000" are per-person caps, not the pool

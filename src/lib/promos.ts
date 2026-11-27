@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { collectAll, type Collected } from "./sources";
 import { VENUES, SPONSORED, MANUAL, venueOf } from "@/config/site";
-import { compact, parseReward } from "./parse";
+import { compact, earnVerbCategory, parseReward } from "./parse";
 import { aprOf, factsOf, geoOf, getDetails, poolOf, termsOf, tiersOf, type PromoDetails } from "./details";
 import { prices } from "./pools";
 import { translateAll } from "./translate";
@@ -315,6 +315,9 @@ async function getPromosLive(): Promise<Collected> {
       if (p.category === "earn" && /\b(trade|trading|perps?|futures|cfd|contracts?)\b/i.test(tt) && !/\b(apr|apy|simple earn|savings|staking|stake|lend(ing)?|vaults?|interest)\b/i.test(tt))
         p.category = /\b(share of|prize pool|leaderboard|rank(ing)?|compet\w*)\b/i.test(tt) ? "competition" : "bonus";
     }
+    // audit 27.11 (evening): "Create a Team and Earn Up to 130,000 USDT" — the verb "earn" is not an Earn product; stored posts
+    // are re-checked here with their rules (see earnVerbCategory)
+    if (p.category === "earn" && d) p.category = earnVerbCategory(p.meta?.rawTitle ?? p.titleOrig ?? p.title, d.blocks.slice(0, 12).map((b) => b.x).join(" ").slice(0, 600)) ?? p.category;
     const geo = geoOf(p.title, d);
     // audit 23.11: a KuCoin Australia page (/en-au/) was shown to everyone
     if (!geo.only && /\/(en-au|au)\//i.test(p.url)) geo.only = "AU";

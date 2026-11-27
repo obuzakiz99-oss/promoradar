@@ -3,7 +3,7 @@ import { ldJson } from "@/lib/ldjson";
 import { endedBySlug, endedPromos } from "@/lib/archive";
 import { EndedPromo } from "./ended";
 import { geoAllowed } from "@/lib/geo";
-import { alt } from "@/lib/seo";
+import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -71,8 +71,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!p) {
     const e = endedBySlug(live, slug);
     if (!e) return { title: "404" };
-    const tt = lang === "en" ? e.title : (e.titles[lang] ?? fixWording(e.title, lang));
-    return { title: `${({ uk: "Завершилась", en: "Ended", ru: "Завершилась" } as const)[lang]}: ${tt}`, robots: { index: false, follow: true }, alternates: alt(lang, `/p/${slug}`) };
+    const tt = noEmoji(lang === "en" ? e.title : (e.titles[lang] ?? fixWording(e.title, lang))).replace(/\s{2,}/g, " ").trim();   // audit 27.11 (evening): "… 👉 Деталі" in <title>
+    // audit 27.11 (evening): ended pages shared the home page's og:title/description in Telegram / X previews
+    return withOg({ title: `${({ uk: "Завершилась", en: "Ended", ru: "Завершилась" } as const)[lang]}: ${tt}`, robots: { index: false, follow: true }, alternates: alt(lang, `/p/${slug}`) });
   }
   const t = getDict(lang);
   // a real sentence instead of "Bybit · Реферальна · 250 USDT" (audit 14.11): reward, what to do, deadline, what the page gives
@@ -99,11 +100,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const desc = cap(`${tpl && tpl !== head ? `${head}${/[.!?…]$/.test(head) ? "" : "."} ` : ""}${bits}`, 155);   // Google shows ~155 (audit 2)
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
-  return {
+  return withOg({
     title, description: desc, alternates: alt(lang, `/p/${slug}`),
     openGraph: { title, description: desc, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description: desc, images: [image] },
-  };
+  });
 }
 
 const RULES_TX: Record<Locale, {
@@ -518,7 +519,7 @@ export default async function PromoPage({ params }: { params: Params }) {
             <SummaryTiles lang={lang} tiles={[
               {
                 icon: "coins", label: U.reward, tone: "text-lime",
-                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${m.aprPct}% APR` : m.zeroFee ? ({ uk: "0% комісії за торгівлю", en: "0% trading fees", ru: "0% комиссии за торговлю" } as const)[lang] : U.noAmount}
+                value: <>{pu && refBoth ? REF[lang].both(`${R.upTo} ${money(pu.amount, pu.unit, lang)}`) : pu ? `${R.upTo} ${money(pu.amount, pu.unit, lang)}` : p.reward ? `${U.fund} ${fmtLabel(p.reward.label, lang)}` : m.aprPct !== undefined ? `+${num(m.aprPct, lang)}% APR` : m.zeroFee ? ({ uk: "0% комісії за торгівлю", en: "0% trading fees", ru: "0% комиссии за торговлю" } as const)[lang] : U.noAmount}
                   {(pu ? puUsd : rewardUsd) ? <span className="text-sm font-normal text-ink-3"> ≈ {compactUsd((pu ? puUsd : rewardUsd)!, lang)}</span> : null}
                   {/* the maximum is the top tier, not what the minimum entry gets (audit 14.11: "до 500 USDT" next to "від 50 USDT") */}
                   {pu && (m.tiers?.length ?? 0) > 1 && <span className="block text-sm font-normal text-ink-3">{({ uk: "за найвищий рівень; поріг входу дає менше", en: "for the top tier; the entry threshold pays less", ru: "за высший уровень; порог входа даёт меньше" } as const)[lang]}</span>}</>,

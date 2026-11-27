@@ -208,7 +208,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
           const key = `${o.exchange}${o.type}${o.days}${i}`;
           const top = i === 0 && !o.newUsers;
           const base = o.maxAmount ? Math.min(qty, o.maxAmount) : qty;   // capped offers earn only up to the cap
-          const yr = o.apr > 0 && qty > 0 ? (base * o.apr) / 100 : 0;
+          // audit 27.11 (evening): Bybit on-chain "Мін. 5 000" still showed "+3,96 USDT/міс" for the default 1 000 — below the minimum it earns nothing
+          const yr = o.apr > 0 && qty > 0 && !(o.minAmount && qty < o.minAmount) ? (base * o.apr) / 100 : 0;
           return { o, v, key, top, yr, pc: earnPC(lang, o, avg) };
         });
         type R = (typeof rows)[number];

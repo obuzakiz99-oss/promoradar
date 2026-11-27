@@ -274,13 +274,18 @@ function perUserOf(lines: string[], poolAmount?: number): PerUser | undefined {
       if (!unit || !(amount > 0) || amount > 5e8) continue;
       // staking / deposit / volume limits per user are not winnings
       const before = line.slice(0, m.index!).split(/[,.;:!?]/).pop() ?? "";        // same clause only
-      const around = before.slice(-45) + m[0];
-      if (/\b(stak\w*|deposit\w*|subscri\w*|invest\w*|lock\w*|position|volume|limit|quota|hold(ing)?s?|borrow\w*|loan|margin|principal)\b/i.test(around)) continue;
+      // audit 27.11 (evening): HTX "✔️ Whale-Friendly Cap: Up to $70M per user" became "Нагорода до $70 000 000" — the label
+      // before a colon belongs to this clause too, and a cap is a limit
+      const pre = line.slice(0, m.index!), colon = Math.max(pre.lastIndexOf(":"), pre.lastIndexOf("："));
+      const label = colon >= 0 && pre.length - colon <= 12 ? pre.slice(0, colon).split(/[,.;!?]/).pop() ?? "" : "";
+      const around = label.slice(-45) + " " + before.slice(-45) + m[0];
+      if (/\b(stak\w*|deposit\w*|subscri\w*|invest\w*|lock\w*|position|volume|limit|caps?|quota|hold(ing)?s?|borrow\w*|loan|margin|principal)\b/i.test(around)) continue;
       // equal to the headline prize pool → that's the whole pool, unless the line itself says "per person"
       if (poolAmount && amount >= poolAmount * 0.999 && re !== PER_USER[0] && re !== PER_USER[2]) continue;
       // headline style "earn up to 600%" / "earn 10 USDT APR…" isn't a per-person amount
       if (re === PER_USER[3] && /^\s*(%|apr|apy)/i.test(line.slice(m.index! + m[0].length, m.index! + m[0].length + 8))) continue;
-      amount = Math.round(amount * 100) / 100;
+      // audit 27.11 (evening): Gate "0.017 QQQG" showed as "до 0,02 QQQG" — amounts under 1 keep 3 significant digits
+      amount = amount >= 1 ? Math.round(amount * 100) / 100 : +amount.toPrecision(3);
       return { amount, unit, text: line };
     }
   }
@@ -602,6 +607,21 @@ function load(): Record<string, PromoDetails> {
   return MEM!;
 }
 
+/**
+ * audit 27.11 (evening): Ourbit links (/activity/kol?id=…, /activity/staking) serve one stale September page to servers —
+ * appended to the Black Friday and Aave Earn posts it gave them "start 2 вересня", "Торгівля від 50 000 USDT" and a
+ * 2.5M pool. A Telegram post is stored as <p> lines only (a short post line ending in ":" becomes a heading but keeps its
+ * colon; real headings lose theirs), so the linked article starts at its first colon-less heading; an article
+ * whose own campaign period ended before the post was published is another (old) campaign and is dropped.
+ */
+function staleArticle(p: Promo, blocks: Block[]): Block[] {
+  if (!p.id.startsWith("tg:") || !p.publishedAt) return blocks;
+  const i = blocks.findIndex((b) => b.t === "h" && !/[:：]$/.test(b.x));
+  if (i <= 0) return blocks;
+  const end = termsOf({ blocks: blocks.slice(i) } as PromoDetails, "", p.publishedAt).end;
+  return end && end < p.publishedAt - 86400_000 ? blocks.slice(0, i) : blocks;
+}
+
 /** Details for the given promos: cached ones + up to MAX_NEW freshly fetched. Never throws. */
 export async function getDetails(promos: Promo[]): Promise<Record<string, PromoDetails>> {
   const now = Date.now();
@@ -658,8 +678,9 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
   for (const p of promos) if (store[p.id]) {
-    let blocks = dropBoilerplate(joinCells(store[p.id].blocks), p.id, store);
-    const page = store[p.id].partial ? pageOf(p) : [];
+    let blocks = staleArticle(p, dropBoilerplate(joinCells(store[p.id].blocks), p.id, store));
+    // audit 27.11 (evening): the laptop-read page skipped joinCells — "§L§ 7 §L§ 90" (Coinstore), "§H§Мінімальний обсяг" (LBank)
+    const page = store[p.id].partial ? joinCells(pageOf(p)) : [];
     if (page.length) {
       const seen = new Set(blocks.map((b) => b.x));
       blocks = [...blocks, { t: "h", x: EX_HEAD }, ...page.filter((b) => !seen.has(b.x))];

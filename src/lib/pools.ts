@@ -304,7 +304,8 @@ async function getPoolsLive(): Promise<PoolsData> {
   const now = Date.now();
   const src = { gate, binance, mexc, kucoin, bitget, lbank } as const;
   const keys = Object.keys(src) as (keyof typeof src)[];
-  const [res, market] = await Promise.all([Promise.allSettled(keys.map((k) => src[k](now))), prices().catch(() => ({ px: {}, chg: {} }) as { px: Record<string, number>; chg: Record<string, number> })]);
+  const [res, market] = await Promise.all([Promise.allSettled(keys.map((k) => src[k](now))), // audit 27.11 (evening): a failed ticker call lost the stablecoin = $1 prices too — "у винагородах зараз —" with 50K USDT live
+    prices().catch(() => ({ px: Object.fromEntries([...STABLE].map((s) => [s, 1])), chg: Object.fromEntries([...STABLE].map((s) => [s, 0])) }) as { px: Record<string, number>; chg: Record<string, number> })]);
   const { px, chg } = market;
   const status: PoolsData["status"] = {};
   const projects: PoolProject[] = [];

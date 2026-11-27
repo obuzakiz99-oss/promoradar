@@ -1,5 +1,5 @@
 import type { Promo } from "./types";
-import { money, num } from "./format";
+import { fmtLabel, money, num } from "./format";
 
 /**
  * Our own short card title, built from the parsed facts instead of a raw headline (audits 08.11):
@@ -66,7 +66,8 @@ function subject(title: string, lang: L, venue: string, noPrize = false): { text
 
 // the parser's label is language-neutral ("2,000 USDC"); amounts under 10K get the reader's format ("2 000 USDC"),
 // bigger ones keep the compact K/M form
-const poolLabel = (r: NonNullable<Promo["reward"]>, lang: L) => (r.amount > 0 && r.amount < 1e4 ? money(r.amount, r.unit, lang) : r.label);
+// audit 27.11 (evening): the compact form stayed English in uk/ru ("фонд 6.25M USD1", "27.8K USDT") — fmtLabel localizes it
+const poolLabel = (r: NonNullable<Promo["reward"]>, lang: L) => (r.amount > 0 && r.amount < 1e4 ? money(r.amount, r.unit, lang) : fmtLabel(r.label, lang));
 const VAGUE = /\b(limited[- ]time|exclusive|special|rewards?|benefits?|perks?|offers?|bonanza|new and existing|all users|everyone)\b/i;
 const FRAG = /^(don['’]?t miss|do not miss|maximum reward|max(imum)? (prize|reward)s?\s*:|breakdown|what['’]?s more|here['’]?s (how|what)|plus[,:]|also[,:]|in addition|on top of that|for this occasion|to celebrate (this|the)|join us|read more|details)\b|[:…]\s*$|\b(link|button) below\b/i;
 const cyr = (s: string) => /[а-яіїєґё]/i.test(s);

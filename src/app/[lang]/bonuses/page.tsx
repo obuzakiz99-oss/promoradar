@@ -27,12 +27,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // the same set as the "Бонуси" filter on the promo list (category bonus) plus anything marked "for new users" — audit 08.11:
 // the page showed 1 promo while the list filter said 29
 // audit 14.11: community / P2P-merchant / VIP / region-only campaigns are not new-user bonuses
-const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?)\b/i;
+// audit 27.11 (evening): Gate "Perp Comeback Rewards: Return to Trading" (inactive users), HTX "Thankful to have you with us",
+// MEXC "Futures League" (a team contest) were listed as newcomer bonuses
+const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?|comeback|return(ing)? to trad\w*|welcome back|thankful|loyal\w*|league)\b/i;
 // audit 2 (25.11): a trading competition is not a newcomer bonus (Coinstore "0-fee sprint" showed "up to $15K per newcomer")
 // audit 27.11 (sections): Gate "Exclusively for returning CFD traders" (meta.audience) showed "до $962 новачку"
 const isNewUser = (p: Promo) => !p.meta?.geo?.only && !p.meta?.audience && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title) && (
   p.category === "bonus" || !!p.meta?.forNew
-  || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title)));
+  || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|start (your|the)( \w+)? journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
 // audit 27.11: Coinstore "10% cashback on losses … 50,000 USDT max per user" — a cap on a % refund is not what one gets
 const perHead = (p: Promo) => (/\bwin|\bwon|вигр|выигр|\d\s?%\s*(cashback|кешбек|кэшбэк|of (your |the )?loss)/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);

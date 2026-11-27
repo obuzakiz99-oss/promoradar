@@ -11,6 +11,9 @@ export type Verdict =
   | { kind: "unknown"; host: string; http?: boolean }
   | { kind: "invalid" };
 
+const BIG = new Set(["google.com", "apple.com", "microsoft.com", "youtube.com", "wikipedia.org", "amazon.com", "cloudflare.com", "coingecko.com", "coinmarketcap.com", "medium.com", "reddit.com", "x.com", "twitter.com"]);
+const WORDY = new Set(["crypto", "gemini", "kraken", "lighter", "aster", "bluefin", "meteora"]);
+
 /** example.co.uk → example.co.uk, app.uniswap.org → uniswap.org */
 export function registrable(host: string): string {
   const p = host.toLowerCase().replace(/\.$/, "").split(".");
@@ -70,10 +73,13 @@ export function checkLink(raw: string, off: Official): Verdict {
   }
   // brand name inside another domain: binance-bonus.com, bybit.rewards-claim.net, okx-airdrop.io
   const label = norm(host.replace(/\.[^.]+$/, ""));
+  // audit 27.11 (evening): gemini.google.com was "a fake of gemini.com", cryptopanic.com "a fake of crypto.com" — a subdomain of a
+  // big well-known site is not a phishing copy, and brands that are plain words match only as a whole word
+  if (BIG.has(reg)) return { kind: "unknown", host, http };
   for (const d of off.domains) {
     const ob = norm(base(d.domain));
-    const re = ob.length >= 5 ? new RegExp(ob) : new RegExp(`(^|[.-])${ob}([.-]|$)`);
-    if (re.test(ob.length >= 5 ? label : host.replace(/\.[^.]+$/, ""))) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "contains", host };
+    const re = ob.length >= 5 && !WORDY.has(ob) ? new RegExp(ob) : new RegExp(`(^|[.-])${ob}([.-]|$)`);
+    if (re.test(ob.length >= 5 && !WORDY.has(ob) ? label : host.replace(/\.[^.]+$/, ""))) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "contains", host };
   }
   return { kind: "unknown", host, http };
 }

@@ -15,6 +15,17 @@ export function isPromo(title: string): boolean {
 
 const REFERRAL = /(referral|invite friends|affiliate|refer )/i;
 export const isReferral = (t: string) => REFERRAL.test(t);
+/**
+ * audit 27.11 (evening): Ourbit "Create a Team and Earn Up to 130,000 USDT as Captain" (a futures team showdown) was filed
+ * as Earn — "earn up to <amount>" is how a reward is worded; without an Earn-product word in the headline the body decides.
+ * Returns the body's category, or undefined when the headline is a real Earn offer / the body says nothing.
+ */
+export function earnVerbCategory(title: string, body: string): Category | undefined {
+  if (!/\bearn\s+(up to\s+)?\$?\d/i.test(title) || /\b(apr|apy|stak\w*|savings|yield|subscri\w*|lock\w*|interest|dual investment|hold\w*|deposit\w*)\b|%/i.test(title)) return undefined;
+  const c = classify(title.replace(/\bearn\b/gi, "get"), body);
+  return c !== "other" && c !== "earn" ? c : undefined;
+}
+
 export function classify(title: string, hint?: string): Category {
   if (has(title, REFERRAL)) return "referral";
   // audit 22.11: a "refer" somewhere in the message text made an OKX liquidity campaign a referral programme —
@@ -44,7 +55,7 @@ function kindOf(t: string): Category {
   if (has(t, /(new user|newcomer|welcome|first deposit|fiat|sign[- ]?up|kyc|start your .*journey|deposit (&|and) (trade|earn)|new to [a-z]|complete (the |all |simple )?tasks|task (center|hub|centre)|super bonus|claim (your |a )?\d[\d,.]* ?usdt futures bonus)/i)) return "bonus";   // + KuCoin "claim your 100 USDT futures bonus" (26.11)
   // 25.11: "Binance Earn Yield Arena" is an Earn offer, not a contest
   if (has(t, /\b(yield|earn|apr|apy) arena\b|\barena\b.{0,40}\b(apr|apy)\b/i)) return "earn";
-  if (has(t, /(competition|tournament|challenge|showdown|arena|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
+  if (has(t, /(competition|tournament|challenge|showdown|arena|\bleague\b|prize pool|trade[- ]to[- ](earn|share)|trading (contest|campaign)|leaderboard|wsot|trade\b.*\b(share|win)|futures .*share)/i)) return "competition";
   if (has(t, /deposit/i)) return "bonus";
   if (has(t, /(earn|staking|stake|savings|apr|apy|hold to|\bhold\b.*\bshare\b|yield|dual investment|loan|subscribe|subscription)/i)) return "earn";
   if (has(t, /(listing campaign|giveaway|listing|celebrat)/i)) return "listing";

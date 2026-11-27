@@ -1,4 +1,4 @@
-import { alt } from "@/lib/seo";
+import { alt, OG_LOCALE } from "@/lib/seo";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 // self-hosted variable fonts (Latin + Cyrillic), preloaded — see lib/fonts.ts
@@ -10,7 +10,7 @@ import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
 // audit 27.11 (tech): og:locale wants language_TERRITORY ("uk_UA"), not "uk"
-const OG_LOCALE: Record<string, string> = { uk: "uk_UA", en: "en_US", ru: "ru_RU" };
+
 import { InstallApp } from "@/components/InstallApp";
 import { PopoverClose } from "@/components/PopoverClose";
 import { MobileTabBar } from "@/components/MobileTabBar";

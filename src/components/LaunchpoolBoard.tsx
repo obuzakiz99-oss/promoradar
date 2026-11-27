@@ -166,7 +166,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const [openRow, setOpenRow] = useState<string | null>(null);
   const rank = useMemo(() => {
     const out = [...rowsRaw];
-    if (sort === "profit") out.sort((a, b) => (b.profit ?? -1) - (a.profit ?? -1));
+    if (sort === "profit") out.sort((a, b) => (b.profit ?? -1) - (a.profit ?? -1) || (b.pool.apr ?? -1) - (a.pool.apr ?? -1));   // audit 27.11 (evening): no prices → rSPY 20% above rNVDA 44%
     if (sort === "apr") out.sort((a, b) => (b.pool.apr ?? -1) - (a.pool.apr ?? -1));
     // "hedged": real dollar yield — stable stakes use plain APR, volatile ones their hedged APR (or −∞ if not hedgeable)
     const realApr = (r: Row) => (!r.hc.needed ? r.pool.apr ?? -1 : r.hc.possible ? r.hc.hedgedApr ?? -1 : -1e9);

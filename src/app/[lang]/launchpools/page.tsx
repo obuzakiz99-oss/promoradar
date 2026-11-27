@@ -103,7 +103,7 @@ export default async function Launchpools({ params }: { params: Params }) {
             {[
               [String(livePools.length), L.statLive],
               [rewardsUsd ? compactUsd(rewardsUsd, lang) : "—", L.statRewards],
-              [bestApr ? `${bestApr >= 100 ? Math.round(bestApr) : bestApr.toFixed(1)}%` : "—", L.statBest],
+              [bestApr ? `${aprFmt(bestApr, lang)}%` : "—", L.statBest],   // audit 27.11 (evening): "44.5%" next to the cards' "44,5%"
               [String(EX_IDS.length + ANN_IDS.length), L.statEx],
             ].map(([v, l]) => (
               <div key={l} className="min-w-0 rounded-2xl border border-line bg-white/[0.02] px-2.5 py-2.5 sm:px-4 sm:py-3.5">
