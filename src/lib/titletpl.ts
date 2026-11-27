@@ -89,7 +89,9 @@ export function titleOf(p: Promo, lang: L): string | undefined {
   const much = p.category === "earn" && rate ? rate
     // audit 2 (25.11): in a ranking contest the per-person figure is the 1st-place prize, not what one person gets
     // (BingX "ANTHROPIC → до 150 000 USDT на 1 людину")
-    : m.perUser && (p.category === "competition" || m.value?.mech === "top_n") ? TOP[lang](money(m.perUser.amount, m.perUser.unit, lang))
+    // audit 27.11 (accuracy): "1-ше місце" on contests with no ranking — Biconomy ELSA (tasks + volume ladder), CoinW
+    // (welcome pack) — only a ranking (top_n or rank words in the rule/headline) gets the 1st-place wording
+    : m.perUser && (m.value?.mech === "top_n" || (p.category === "competition" && /\b(1st|first place|top[\s-]?\d+|ranks?|ranking|leaderboard|places?)\b/i.test(`${m.perUser.text ?? ""} ${p.titleOrig ?? p.title}`))) ? TOP[lang](money(m.perUser.amount, m.perUser.unit, lang))
     : m.perUser ? PER[lang](money(m.perUser.amount, m.perUser.unit, lang))
     : rate ?? (p.reward ? POOL[lang](poolLabel(p.reward, lang)) : undefined);
   const what = m.minEntry ? DO[lang][m.minEntry.kind](money(m.minEntry.amount, m.minEntry.unit, lang)) : m.noDeposit ? FREE[lang] : undefined;

@@ -12,7 +12,7 @@ import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
 import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
-import { aprText, compactUsd, dec, duration, money } from "@/lib/format";
+import { aprText, compactUsd, dec, duration, fmtLabel, money } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 import { Icon } from "./Icon";
 
@@ -30,10 +30,12 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
 }
 // tiny amounts keep 2 significant digits ("0.000031 XAUT"), never round down to a bare "0"
 const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : n >= 0.01 || n <= 0 ? `${+n.toFixed(n < 1 ? 4 : 2)}` : n < 1e-6 ? "<0.000001" : (+n.toPrecision(2)).toFixed(Math.min(8, 1 - Math.floor(Math.log10(n)))));
+// audit 27.11 (texts): the board printed "Мін. 0.000030 · Макс. 500K" on uk/ru — reader's decimal comma and тис./млн
+const fmtN = (lang: string, n: number) => dec(fmtLabel(fmtNum(n), lang), lang);
 const UNIT: Record<Locale, { label: string; hint: string }> = {
-  uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку — і суму можна буде ввести в ній (наприклад, 0.05 BTC)." },
+  uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку — і суму можна буде ввести в ній (наприклад, 0,05 BTC)." },
   en: { label: "Amount unit", hint: "Pick a stake coin on the right — then you can enter the amount in it (e.g. 0.05 BTC)." },
-  ru: { label: "Единица суммы", hint: "Выберите монету для стейка справа — и сумму можно будет ввести в ней (например, 0.05 BTC)." },
+  ru: { label: "Единица суммы", hint: "Выберите монету для стейка справа — и сумму можно будет ввести в ней (например, 0,05 BTC)." },
 };
 const PICK: Record<Locale, { off: string; on: string; mine: string }> = {
   uk: { off: "Рахувати для цього пулу", on: "Обрано", mine: "обраний пул" },
@@ -65,7 +67,8 @@ function HedgeBox({ r, L, lang }: { r: Row; L: Dict["lp"]; lang: Locale }) {
   const fmtUsd = (n: number) => fmtUsd0(n, lang);
   const hc = r.hc;
   if (!hc.needed) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-2">{L.hedgeNotNeeded}</div>;
-  if (!hc.possible) return <div className="rounded-xl bg-white/[0.03] px-3.5 py-3 text-[12.5px] font-semibold text-ink-3">{L.hedgeImpossible.replace("{c}", r.pool.stake)}</div>;
+  // audit 27.11 (texts): "no perpetual" was said three times on one card — the venue list and the cons already say it
+  if (!hc.possible) return null;
   const good = (hc.hedgedApr ?? 0) > 0;
   return (
     <div className={`rounded-xl border px-3.5 py-3 ${good ? "border-teal/25 bg-teal/[0.06]" : "border-line bg-white/[0.03]"}`} title={L.hedgeNote}>
@@ -227,7 +230,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
             </div>
             {coinPrice ? (
               <div className="mt-1.5 font-mono text-xs text-ink-3">
-                {inCoin ? `≈ ${fmtUsd(amount)}` : `≈ ${fmtNum(amount / coinPrice)} ${coin}`} · 1 {coin} = {fmtUsd(coinPrice)}
+                {inCoin ? `≈ ${fmtUsd(amount)}` : `≈ ${fmtN(lang, amount / coinPrice)} ${coin}`} · 1 {coin} = {fmtUsd(coinPrice)}
               </div>
             ) : coin === "all" ? <div className="mt-1.5 text-xs text-ink-3">{UNIT[lang].hint}</div> : null}
             <div className="mt-2 flex gap-2">
@@ -249,7 +252,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
           <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-lime/25 bg-lime/[0.06] px-4 py-3 text-sm">
             <span className="font-bold text-lime">★ {L.yourProfit}{pickedRow ? ` · ${PICK[lang].mine}` : ""}:</span>
             <span className="font-mono text-lg font-bold text-ink">{fmtUsd(best.profit)}</span>
-            {prices[best.p.token] ? <span className="font-mono text-sm font-bold text-lime">≈ {fmtNum(best.profit / prices[best.p.token])} {best.p.token}</span> : null}
+            {prices[best.p.token] ? <span className="font-mono text-sm font-bold text-lime">≈ {fmtN(lang, best.profit / prices[best.p.token])} {best.p.token}</span> : null}
             <span className="text-ink-2">{L.total} · {best.p.name} · {L.stake} {best.pool.stake} · {exchanges[best.p.exchange]?.name}</span>
             {best.adjusted !== undefined && best.danger && (
               <span className="basis-full text-xs font-semibold text-ink-3">{L.ifPrice}: <span className={best.adjusted < 0 ? "text-rose" : "text-lime"}>{best.adjusted < 0 ? "−" : "+"}{fmtUsd(Math.abs(best.adjusted))}</span></span>
@@ -340,7 +343,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                 {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
                 <div className="font-mono text-xs text-ink-3">
-                  {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
+                  {pool.minStake ? `${L.min} ${fmtN(lang, pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtN(lang, pool.maxStake)}` : ""}
                 </div>
               </div>
 
@@ -351,12 +354,12 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                   <>
                     {r.belowMin ? (
                       // below the pool's minimum stake there is nothing to earn — say so instead of a crossed-out $0.00
-                      <div className="text-sm font-bold text-amber">{BELOW[lang](`${fmtNum(pool.minStake ?? 0)} ${pool.stake}`)}</div>
+                      <div className="text-sm font-bold text-amber">{BELOW[lang](`${fmtN(lang, pool.minStake ?? 0)} ${pool.stake}`)}</div>
                     ) : (
                       <>
                         <div className="font-mono text-xl font-bold text-ink">{fmtUsd(r.profit)}</div>
                         {/* the same income in the reward token — what actually lands in the account */}
-                        {prices[p.token] ? <div className="font-mono text-xs font-semibold text-lime">≈ {fmtNum(r.profit / prices[p.token])} {p.token}</div> : null}
+                        {prices[p.token] ? <div className="font-mono text-xs font-semibold text-lime">≈ {fmtN(lang, r.profit / prices[p.token])} {p.token}</div> : null}
                         <div className="font-mono text-xs text-ink-3">{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
                       </>
                     )}
@@ -482,7 +485,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                         <VenueLogo v={tokenVenue(pool.stake, pool.stakeLogo)} size={18} rounded="rounded-full" />{pool.stake}<span className="text-ink-3">→</span>{p.token}
                       </div>
                       <div className="font-mono text-xs text-ink-3">
-                        {pool.minStake ? `${L.min} ${fmtNum(pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtNum(pool.maxStake)}` : ""}
+                        {pool.minStake ? `${L.min} ${fmtN(lang, pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtN(lang, pool.maxStake)}` : ""}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -493,10 +496,10 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
                       {r.profit === undefined ? <span className="text-ink-3">—</span>
-                        : r.belowMin ? <span className="font-sans text-xs font-bold text-amber">{BELOW[lang](`${fmtNum(pool.minStake ?? 0)} ${pool.stake}`)}</span>
+                        : r.belowMin ? <span className="font-sans text-xs font-bold text-amber">{BELOW[lang](`${fmtN(lang, pool.minStake ?? 0)} ${pool.stake}`)}</span>
                         : <>
                           <div className="font-bold text-lime">{fmtUsd(r.profit)}</div>
-                          <div className="text-xs text-ink-3">{prices[p.token] ? `≈ ${fmtNum(r.profit / prices[p.token])} ${p.token} · ` : ""}{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
+                          <div className="text-xs text-ink-3">{prices[p.token] ? `≈ ${fmtN(lang, r.profit / prices[p.token])} ${p.token} · ` : ""}{fmtUsd(r.perDay ?? 0)}{L.perDay}{r.capped ? ` · ${L.capped}` : ""}</div>
                           {r.adjusted !== undefined && r.danger && <div className="text-xs font-semibold text-ink-3" title={L.ifPriceNote}>{L.ifPrice}: <span className={r.adjusted < 0 ? "text-rose" : "text-lime"}>{r.adjusted < 0 ? "−" : "+"}{fmtUsd(Math.abs(r.adjusted))}</span></div>}
                         </>}
                     </td>
