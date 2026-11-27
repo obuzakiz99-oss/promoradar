@@ -200,7 +200,8 @@ export interface MinEntry { amount: number; unit: string; kind: EntryKind; text:
 export interface Terms { start?: number; end?: number; perUser?: PerUser; minEntry?: MinEntry }
 
 /** The smallest dollar threshold that earns anything ("trade at least 500 USDT", "volume ≥ 500 USDT", "deposit at least $100"). */
-const ENTRY_RE = /(?:at least|minimum(?: of)?|min\.?|no less than|≥|>=|reach(?:es|ing)?|exceed(?:s|ing)?|greater than or equal to(?: the equivalent of)?)\s*(\$)?\s?(\d[\d,]*(?:\.\d+)?)\s*(k\b|m\b)?\s*(USDT|USDC|USD|FDUSD|\$)?/gi;
+// audit 27.11 (night): Bitget rToken Boost "Start with just 10,000 USDT in new holdings" — the calculator offered $1 000 / $2 000
+const ENTRY_RE = /(?:at least|minimum(?: of)?|min\.?|no less than|start(?:ing)? with(?: just| only| as little as)?|≥|>=|reach(?:es|ing)?|exceed(?:s|ing)?|greater than or equal to(?: the equivalent of)?)\s*(\$)?\s?(\d[\d,]*(?:\.\d+)?)\s*(k\b|m\b)?\s*(USDT|USDC|USD|FDUSD|\$)?/gi;
 const KIND_RE: Array<[EntryKind, RegExp]> = [
   ["trade", /\b(trad(e|es|ed|ing)|volume|futures|spot|perps?|swap|copy)\b/i],
   ["deposit", /\b(deposit\w*|top[- ]?up|net inflow|fiat)\b/i],
@@ -741,7 +742,7 @@ const SIGN = /^(?:the\s+)?[\p{L}\d.]{2,20}(?:\s+[\p{L}\d.]{2,20})?\s+team\.?$|^(
 function dropTail(blocks: Block[], head: string): Block[] {
   const out: Block[] = [];
   const seenRule = new Set<string>();
-  let cut = false;
+  let cut = false, linkTail = false;
   for (const b0 of blocks) {
     if (b0.x === head) { cut = false; out.push(b0); continue; }   // a new segment (the exchange page) starts
     if (cut) continue;
@@ -761,6 +762,15 @@ function dropTail(blocks: Block[], head: string): Block[] {
     if (/^(download|завантаження)\s*[:：]?\s*$/i.test(x)) continue;
     if (/^(trending|in trend|hot now|popular)\s*[:：]/i.test(x) || /\byou are (about to|going to) (leave|go to|open)\b|\bthird[- ]party (app|application|website|site)\b/i.test(x)) continue;
     if (b.t !== "tr" && x.length <= 16 && /^[+\-–]?[\d\s,.+\-–/]+$/.test(x)) continue;   // stray counters ("+1-284", "+0")
+    // audit 27.11 (night): LBank "Level up with #YourGoToCryptoPlug 👇", Bitget "🔗 Join the campaign:" + a bare URL + "About
+    // Bitget🔹", BingX "Official channels" (one "Website: https://…" per line) were left in the rules
+    // (only the link right after such a pointer / inside the channels block goes: a bare form link or "Follow X: …" can be a task)
+    if (b.t !== "tr" && x.length <= 90 && /(👇|⬇️?|👉)\s*$|^🔗[^.]{0,60}[:：]\s*$/u.test(x)) { linkTail = true; continue; }
+    if (b.t !== "tr" && x.length <= 100 && /^([\p{L}\d.]+\s+)?(official (channels|links|community)|офіційні (канали|посилання)|официальные (каналы|ссылки))(\s+[\p{L}\d.]+)?\s*([:：]?\s*$|[^.]{0,40}https?:\/\/\S+$)/iu.test(x)) { linkTail = true; continue; }
+    if (linkTail && b.t !== "tr" && x.length <= 120 && /^([\p{L}\s.()]{0,40}[:：]\s*)?https?:\/\/\S+$/iu.test(x)) continue;
+    linkTail = false;
+    // Bitget's "About Bitget🔹" company blurb (a token's "About SXT" in a Launchpool post is real content — no emoji there)
+    if (out.length >= 3 && x.length <= 30 && /^(about|про|о)\s+[\p{L}\d.]+\s*[\u{1F539}\u{1F538}\u{1F537}\u{1F536}]\s*$/iu.test(x)) { cut = true; continue; }
     out.push(b);
   }
   return out;

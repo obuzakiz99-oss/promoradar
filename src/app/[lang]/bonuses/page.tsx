@@ -37,7 +37,8 @@ const isNewUser = (p: Promo) => !p.meta?.geo?.only && !p.meta?.audience && p.cat
   || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|start (your|the)( \w+)? journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
 // audit 27.11: Coinstore "10% cashback on losses … 50,000 USDT max per user" — a cap on a % refund is not what one gets
-const perHead = (p: Promo) => (/\bwin|\bwon|вигр|выигр|\d\s?%\s*(cashback|кешбек|кэшбэк|of (your |the )?loss)/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);
+// audit 27.11 (night): Coinstore "Buy the dip" (a pool share, basis chance) ranked first with "до $50 тис. на людину"
+const perHead = (p: Promo) => (p.meta?.value?.basis === "chance" || p.meta?.value?.mech === "pool_share" || /\bwin|\bwon|вигр|выигр|\d\s?%\s*(cashback|кешбек|кэшбэк|of (your |the )?loss)/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);
 /** "новачку" only when the promo is really for newcomers; other bonuses say "на людину". */
 const forNewcomer = (p: Promo) => !!p.meta?.forNew || /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|new to)\b/i.test(p.titleOrig ?? p.title);   // "win $30,000" is a prize, not a bonus
 

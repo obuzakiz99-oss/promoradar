@@ -21,9 +21,11 @@ export const isReferral = (t: string) => REFERRAL.test(t);
  * Returns the body's category, or undefined when the headline is a real Earn offer / the body says nothing.
  */
 export function earnVerbCategory(title: string, body: string): Category | undefined {
-  if (!/\bearn\s+(up to\s+)?\$?\d/i.test(title) || /\b(apr|apy|stak\w*|savings|yield|subscri\w*|lock\w*|interest|dual investment|hold\w*|deposit\w*)\b|%/i.test(title)) return undefined;
+  // audit 27.11 (night): KuCoin "Earn extra draw entries for a chance to get surprise prizes" (a margin campaign) was filed as Earn
+  const extra = /\bearn\s+(extra|more|bonus|additional)\s+(draw|lucky|raffle|spin|entr|ticket|chance|point)/i.test(title);
+  if ((!extra && !/\bearn\s+(up to\s+)?\$?\d/i.test(title)) || /\b(apr|apy|stak\w*|savings|yield|subscri\w*|lock\w*|interest|dual investment|hold\w*|deposit\w*)\b|%/i.test(title)) return undefined;
   const c = classify(title.replace(/\bearn\b/gi, "get"), body);
-  return c !== "other" && c !== "earn" ? c : undefined;
+  return c !== "other" && c !== "earn" ? c : extra ? "other" : undefined;
 }
 
 export function classify(title: string, hint?: string): Category {
@@ -46,7 +48,8 @@ function kindOf(t: string): Category {
   // audit 2 (25.11): Coinstore "Futures Trading Sprint", a "compete for…" airdrop / bonus were filed by their side words
   if (has(t, /\b(compete|competition|leaderboard|tournament|trading sprint|top \d+ traders)\b/i) && !has(t, /\b(yield|earn|apr|apy) arena\b/i)) return "competition";
   // audit 26.11: MEXC "Futures Earn APR Booster: +150%" is an Earn rate boost, not a token launch
-  if (has(t, /\b(apr|apy|yield|rate|earn) boost(er)?\b/i) && !has(t, /\b(airdrop|launchpool|megadrop|hodler)\b/i)) return "earn";
+  // audit 27.11 (night): Bitget "rToken Boost Season 4 — earn up to 20% APR" was filed as an airdrop by "season 4"
+  if (has(t, /\b(apr|apy|yield|rate|earn|rtoken|holdings?|interest) boost(er)?\b/i) && !has(t, /\b(airdrop|launchpool|megadrop|hodler)\b/i)) return "earn";
   if (has(t, /(launchpool|launchpad|launchx|airdrop|hodler|jumpstart|megadrop|candybomb|candydrop|tokensplash|kickstarter|spotlight|token sale|\bieo\b|\btge\b|booster|puzzle hunt|poolx|gempool|startup|points? (program|season|campaign)|season \d)/i)) return "airdrop";
   if (has(t, /(pool rewards|liquidity (mining|rewards|incentive)|provid(e|ing) liquidity|liquidity provi|lp rewards|(?<!non-)\bfarm(ing)?\b)/i)) return "farming";
   // audit 23.11: MEXC "Futures Loss Coverage" (pays back futures losses) was filed as a deposit bonus

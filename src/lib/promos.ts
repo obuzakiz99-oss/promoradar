@@ -404,6 +404,13 @@ async function getPromosLive(): Promise<Collected> {
       const prev = poolSeen.get(poolKey), tg = p.id.startsWith("tg:");
       if (prev && prev.tg !== tg && prev.t - p.publishedAt < 7 * 86400_000) dupOf(p.id, poolKey, prev.id); else if (!prev) poolSeen.set(poolKey, { t: p.publishedAt, tg, id: p.id });
     }
+    // audit 27.11 (night): MEXC "Share $10M — win a gold bar" (Telegram, bonus, USD) and "Golden Gratitude Gala … 10,000,000 USDT
+    // prize pool" (site, competition) were two cards — a pool of ≥ 1M is one campaign whatever the category and USD/USDT/USDC
+    const bigKey = p.reward && p.reward.amount >= 1e6 && /^(usd|usdt|usdc|\$)$/i.test(p.reward.unit) ? `${p.venue.id}|bigpool|${Math.round(p.reward.amount)}` : "";
+    if (bigKey && !p.sponsored && !p.evergreen && !dups.has(p.id)) {
+      const prev = poolSeen.get(bigKey), tg = p.id.startsWith("tg:");
+      if (prev && prev.tg !== tg && prev.t - p.publishedAt < 7 * 86400_000) dupOf(p.id, bigKey, prev.id); else if (!prev) poolSeen.set(bigKey, { t: p.publishedAt, tg, id: p.id });
+    }
     // same venue + same tickers + same numbers in the headline = the same offer
     const head = p.titleOrig ?? p.title;
     const toks = [...new Set([...(head.match(/\$?\b[A-Z][A-Z0-9]{1,9}\b/g) ?? []).map((x) => x.replace("$", "")), ...(head.match(/\d+(?:[.,]\d+)?\s?%?/g) ?? []).map((x) => x.replace(/\s/g, ""))])].sort();

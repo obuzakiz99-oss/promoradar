@@ -127,7 +127,8 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
         // audit 18.11: a fixed tier ladder (Bitget 50 / 400 / 6,000) was explained as "depends on other participants"
         const shared = !m.value || (["pool_share", "top_n", "lucky_draw", "first_n", "unknown"] as string[]).includes(m.value.mech);
         lines.push({ text: T.upTo(amt(m.perUser.amount, m.perUser.unit), shared) });
-        rewardUsd = m.perUser.usd;
+        // audit 27.11 (night): BTSE "up to $218" (shared) printed "≈ $217 net after fees" — a ceiling is not a sure amount
+        rewardUsd = shared ? undefined : m.perUser.usd;
       } else {
         lines.push({ text: T.share, tone: "muted" });
       }
@@ -153,7 +154,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <label className="flex h-12 items-center gap-2 rounded-xl border border-line bg-white/[0.03] px-3 focus-within:border-sky/50">
           <span className="text-sm font-semibold text-ink-3">{T.input[kind]}</span>
-          <input type="number" min={0} step={50} value={v || ""} placeholder="0" onChange={(e) => setV(Math.max(0, Number(e.target.value) || 0))}
+          <input type="number" min={0} step={50} value={v || ""} placeholder="0" onChange={(e) => setV(Math.min(1e9, Math.max(0, Number(e.target.value) || 0)))}
             className="w-28 bg-transparent font-mono text-xl font-bold text-ink focus:outline-none" />
         </label>
         <div className="flex gap-1.5">

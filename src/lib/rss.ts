@@ -10,7 +10,8 @@ export async function rssResponse(lang: Locale): Promise<Response> {
   const t = getDict(lang);
   const base = `https://${SITE.domain}`;
   const { promos } = await getPromos(lang);
-  const items = promos.filter((p) => p.publishedAt > 0).slice(0, 60).map((p) => `
+  // audit 27.11 (night): the feed took the first 60 in ranking order — 16 of the 60 newest (Toobit 25.11, Binance 24.11) were missing
+  const items = promos.filter((p) => p.publishedAt > 0).sort((a, b) => b.publishedAt - a.publishedAt).slice(0, 60).map((p) => `
     <item>
       <title>${esc(p.title.toLowerCase().startsWith(p.venue.name.toLowerCase()) ? p.title : `${p.venue.name}: ${p.title}`)}</title>
       <link>${base}/${lang}/p/${slugOf(p)}/</link>

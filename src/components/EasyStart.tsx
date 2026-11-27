@@ -23,7 +23,9 @@ export function EasyStart({ promos, lang, now }: { promos: Promo[]; lang: Locale
   const list = promos
     .filter((p) => p.venue.kind === "cex" && promoLevel(p) === "easy" && !p.sponsored
       && !(p.startsAt && p.startsAt > now) && !(p.endsAt && p.endsAt < now)
-      && (lang !== "uk" || geoAllowed(p, "ua")) && !p.meta?.audience && net(p) >= 3)
+      && (lang !== "uk" || geoAllowed(p, "ua")) && !p.meta?.audience && net(p) >= 3
+      // audit 27.11 (night): MEXC "Share $10M — win a gold bar" (a lucky draw, conf low) showed as "реально ≈ $417"
+      && p.meta?.value?.conf !== "low" && p.meta?.value?.basis !== "chance")
     .sort((a, b) => Number(!!b.meta?.forNew) - Number(!!a.meta?.forNew) || net(b) - net(a))
     .slice(0, 4);
   if (list.length < 2) return null;

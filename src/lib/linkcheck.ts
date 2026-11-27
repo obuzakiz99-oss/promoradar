@@ -32,6 +32,17 @@ function lev(a: string, b: string): number {
   return d[a.length][b.length];
 }
 
+// audit 27.11 (night): "any one edit" of a 5–7 letter brand flagged real sites as fakes — bank.com (LBank), bingo.com (BingX),
+// coin.com (CoinW), bitset.com (Bitget), paradox.com (Paradex), fighter.com (Lighter). Short brands: only the edits phishers
+// use — a doubled letter (bybbit) or a look-/sound-alike letter swap (binanse, bltget, kucoim)
+const ALIKE = new Set(["il", "ij", "lj", "sz", "cs", "ck", "ks", "uv", "vw", "gq", "mn", "yi", "xk"]);
+function shortTypo(ob: string, b: string): boolean {
+  if (b.length === ob.length + 1) return [...b].some((c, i) => i > 0 && c === b[i - 1] && b.slice(0, i) + b.slice(i + 1) === ob);
+  if (b.length !== ob.length) return false;
+  const diff = [...ob].map((c, i) => [c, b[i]]).filter(([x, y]) => x !== y);
+  return diff.length === 1 && ALIKE.has([...diff[0]].sort().join(""));
+}
+
 export function checkLink(raw: string, off: Official): Verdict {
   let s = raw.trim();
   if (!s) return { kind: "invalid" };
@@ -69,7 +80,7 @@ export function checkLink(raw: string, off: Official): Verdict {
   for (const d of off.domains) {
     const ob = norm(base(d.domain));
     if (ob === b) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "tld", host };                       // binance.cc
-    if (ob.length >= 5 && lev(ob, b) <= (ob.length >= 8 ? 2 : 1)) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "typo", host }; // binanse.com
+    if (ob.length >= 8 ? lev(ob, b) <= 2 : ob.length >= 5 && shortTypo(ob, b)) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "typo", host }; // binanse.com
   }
   // brand name inside another domain: binance-bonus.com, bybit.rewards-claim.net, okx-airdrop.io
   const label = norm(host.replace(/\.[^.]+$/, ""));

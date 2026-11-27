@@ -23,7 +23,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return withOg({ alternates: alt(lang, "/fixed"), title: PROX[lang].fixTitle, description: PROX[lang].fixSub });
 }
 
-const usd = (x: number, lang = "en") => dec(String((x >= 1e9 ? `$${(x / 1e9).toFixed(1)}B` : `$${(x / 1e6).toFixed(1)}M`)), lang);
+// audit 27.11 (night): uk/ru showed "$21,8M" (Latin M) — "$21,8 млн" / "$1,2 млрд" like the pool cards
+const usd = (x: number, lang = "en") => { const s = dec(String((x >= 1e9 ? `$${(x / 1e9).toFixed(1)}B` : `$${(x / 1e6).toFixed(1)}M`)), lang); return lang === "en" ? s : s.replace(/M$/, " млн").replace(/B$/, " млрд"); };
 
 // sort + filter (owner 13.11)
 const FT = {
@@ -67,7 +68,7 @@ export default async function FixedPage({ params }: { params: Params }) {
                     data-f-chain={r.chain} data-f-term={FT[lang].terms[termOf((r.expiry - fetchedAt) / 86400_000)]} data-q={`pt-${r.name} ${r.chain}`}>
                     <td className="rt-wide px-4 py-3 font-bold"><a href={r.url} target="_blank" rel="noopener" className="hover:text-lime">PT-{r.name} ↗</a></td>
                     <td data-l={P.fixCols[1]} className="px-4 py-3 text-ink-2">{r.chain}</td>
-                    <td data-l={P.fixCols[2]} className="px-4 py-3 text-right font-mono font-bold text-lime">{r.apy.toFixed(2)}%</td>
+                    <td data-l={P.fixCols[2]} className="px-4 py-3 text-right font-mono font-bold text-lime">{dec(r.apy.toFixed(2), lang)}%</td>
                     <td data-l={P.fixCols[3]} className="px-4 py-3 text-right font-mono text-xs text-ink-2">{shortDate(r.expiry, lang)} {new Date(r.expiry).getFullYear()} · {Math.round((r.expiry - fetchedAt) / 86400_000)} {P.days}</td>
                     <td data-l={P.fixCols[4]} className="px-4 py-3 text-right font-mono text-xs text-ink-3">{usd(r.liquidity, lang)}</td>
                   </tr>

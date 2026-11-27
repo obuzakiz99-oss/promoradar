@@ -60,7 +60,8 @@ interface Row {
   hc: HedgeCalc;                           // delta-neutral version of this pool
 }
 
-const fmtPct = (x: number) => `${x >= 100 || x <= -100 ? Math.round(x) : x.toFixed(1)}%`;
+// audit 27.11 (night): the hedge box printed "≈-17.7%", "+3.4%/рік" on uk/ru (dot, hyphen) next to "Bitget +3,4%", "Gate −1,9%"
+const fmtPct = (x: number, lang: string) => `${dec(`${x >= 100 || x <= -100 ? Math.round(x) : x.toFixed(1)}`, lang).replace(/^-/, "−")}%`;
 
 /** "Hedged APR" panel: where to short, funding, entry/exit cost and the size up to which it still makes sense. */
 function HedgeBox({ r, L, lang }: { r: Row; L: Dict["lp"]; lang: Locale }) {
@@ -74,12 +75,12 @@ function HedgeBox({ r, L, lang }: { r: Row; L: Dict["lp"]; lang: Locale }) {
     <div className={`rounded-xl border px-3.5 py-3 ${good ? "border-teal/25 bg-teal/[0.06]" : "border-line bg-white/[0.03]"}`} title={L.hedgeNote}>
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-xs font-semibold text-ink-3">{L.hedgeApr}</span>
-        <span className={`font-mono text-lg font-bold ${good ? "text-teal" : "text-ink-3"}`}>≈{fmtPct(hc.hedgedApr ?? 0)}</span>
+        <span className={`font-mono text-lg font-bold ${good ? "text-teal" : "text-ink-3"}`}>≈{fmtPct(hc.hedgedApr ?? 0, lang)}</span>
       </div>
       <ul className="mt-1.5 space-y-0.5 text-xs text-ink-2">
         <li>• {L.shortOn.replace("{c}", r.pool.stake).replace("{ex}", hc.venue ?? "")}</li>
-        <li>• {L.funding.replace("{x}", `${(hc.fundingApr ?? 0) > 0 ? "+" : ""}${fmtPct(hc.fundingApr ?? 0)}`)}</li>
-        <li>• {L.hedgeCost.replace("{x}", fmtPct(hc.costPct ?? 0))}</li>
+        <li>• {L.funding.replace("{x}", `${(hc.fundingApr ?? 0) > 0 ? "+" : ""}${fmtPct(hc.fundingApr ?? 0, lang)}`)}</li>
+        <li>• {L.hedgeCost.replace("{x}", fmtPct(hc.costPct ?? 0, lang))}</li>
         {hc.sensibleUsd !== undefined && (hc.sensibleUsd >= 50
           ? <li className="font-semibold text-ink">• {L.sensible.replace("{x}", fmtUsd(hc.sensibleUsd))}</li>
           : <li className="font-semibold text-ink-3">• {L.notWorth}</li>)}
@@ -490,7 +491,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className={`font-mono text-base font-bold ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? aprText(pool.apr, lang, 2) : "—"}</div>
-                      {r.hc.needed && r.hc.possible && r.hc.hedgedApr !== undefined && <div className={`adv text-xs font-semibold ${r.hc.hedgedApr > 0 ? "text-teal" : "text-amber"}`} title={L.hedgeNote}>{TH[lang].hedged} {fmtPct(r.hc.hedgedApr)}</div>}
+                      {r.hc.needed && r.hc.possible && r.hc.hedgedApr !== undefined && <div className={`adv text-xs font-semibold ${r.hc.hedgedApr > 0 ? "text-teal" : "text-amber"}`} title={L.hedgeNote}>{TH[lang].hedged} {fmtPct(r.hc.hedgedApr, lang)}</div>}
                       {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
                       {spark && <div className="flex justify-end"><Spark points={spark} title="APR · 7d" /></div>}
                     </td>

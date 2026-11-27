@@ -160,7 +160,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
           </h3>
           <div className="mt-2 flex flex-wrap gap-1.5 text-xs font-semibold text-ink-3">
             {m.chain && <span className="rounded-md bg-white/5 px-1.5 py-0.5">{m.chain}</span>}
-            {p.tags.includes("stable") && <span className="rounded-md bg-teal/10 px-1.5 py-0.5 text-teal">stable</span>}
+            {p.tags.includes("stable") && <span className="rounded-md bg-teal/10 px-1.5 py-0.5 text-teal">{lang === "en" ? "stable" : "стейбл"}</span>}{/* audit 27.11 (night): English "stable" on uk/ru cards */}
           </div>
         </div>
       ) : (
@@ -202,7 +202,7 @@ export function PromoCard({ p, t, lang, now, index, fresh, pin, combos }: { p: P
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.card.apr}</div>
               <div className="mt-0.5 font-mono text-2xl font-bold tracking-tight text-success">+{num(m.apr ?? 0, lang)}%</div>
-              {m.baseApr ? <div className="font-mono text-xs text-ink-3">+{m.baseApr}% {t.card.base}</div> : null}
+              {m.baseApr ? <div className="font-mono text-xs text-ink-3">+{num(m.baseApr, lang)}% {t.card.base}</div> : null}
             </div>
           ) : m.perUser && p.reward ? (
             <div>
