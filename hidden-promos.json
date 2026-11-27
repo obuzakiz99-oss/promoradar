@@ -1,5 +1,5 @@
 {
- "at": 1795769655611,
+ "at": 1795769921107,
  "items": [
   {
    "id": "hotcoin:9th-anniversary-is-coming",
@@ -399,14 +399,6 @@
    "title": "Trade & Earn: Trade $TSLA, $NVDA, $AAPL & more to unlock up to 200 USDT in trading rewards!",
    "url": "https://t.me/Bitrue_official/11238",
    "why": "news"
-  },
-  {
-   "id": "gate:102812",
-   "venue": "Gate",
-   "title": "Gate Prediction Markets Crypto Kickoff Week: 20,000 USDT in First-Trade and Leaderboard Rewards",
-   "url": "https://www.gate.com/announcements/article/102812",
-   "why": "ended",
-   "of": "2026-11-24T08:00"
   },
   {
    "id": "binance:dd87c69ba67c4695bdd9836bca73ebb9",
@@ -906,6 +898,20 @@
    "of": "2026-11-20T08:00"
   },
   {
+   "id": "mexc:17827791539539",
+   "venue": "MEXC",
+   "title": "Alpha Quest: Unlock Alpha Trader Benefits and Share a $30,000 Prize Pool",
+   "url": "https://www.mexc.com/announcements/article/alpha-quest-17827791539539",
+   "why": "news"
+  },
+  {
+   "id": "mexc:17827791539537",
+   "venue": "MEXC",
+   "title": "MEXC Card Events Hub: Explore Trending Events and Exclusive Rewards in One Place",
+   "url": "https://www.mexc.com/announcements/article/mexc-card-events-hub-17827791539537",
+   "why": "news"
+  },
+  {
    "id": "okx:sol-solana-staking-additional-rewards-campaign-announcement",
    "venue": "OKX",
    "title": "SOL (Solana) Staking Additional Rewards Campaign Announcement",
@@ -947,6 +953,20 @@
    "url": "https://support.hibt.com/hc/en-us/articles/18223840075407-Hibt-Launches-Trade-FOREVER-Share-a-15-500-FOREVER-Reward-Pool-Campaign",
    "why": "ended",
    "of": "2026-11-04T16:00"
+  },
+  {
+   "id": "mexc:17827791539462",
+   "venue": "MEXC",
+   "title": "Canton 0-Fee Carnival Now Live: $1,000,000 Up for Grabs",
+   "url": "https://www.mexc.com/announcements/article/canton-0-fee-carnival-now-live-17827791539462",
+   "why": "news"
+  },
+  {
+   "id": "mexc:17827791539413",
+   "venue": "MEXC",
+   "title": "Earnings Season Battle: Join a Team & Share $100,000 in Rewards",
+   "url": "https://www.mexc.com/announcements/article/earnings-season-battle-17827791539413",
+   "why": "news"
   },
   {
    "id": "hibt:18179590325263",
@@ -1012,6 +1032,51 @@
    "why": "raffle"
   },
   {
+   "id": "gate:103024",
+   "venue": "Gate",
+   "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
+   "url": "https://www.gate.com/announcements/article/103024",
+   "why": "small",
+   "perUserUsd": 70,
+   "netUsd": 0.5
+  },
+  {
+   "id": "gate:103023",
+   "venue": "Gate",
+   "title": "ANT(Anthropic) Futures Trading Carnival: 3 USDT on Your First Trade, Up to 8,000 USDT in Rewards",
+   "url": "https://www.gate.com/announcements/article/103023",
+   "why": "small",
+   "perUserUsd": 8000,
+   "netUsd": 1
+  },
+  {
+   "id": "gate:103022",
+   "venue": "Gate",
+   "title": "Swap 7-day Arena: Share 1,000 USDT (W6)",
+   "url": "https://www.gate.com/announcements/article/103022",
+   "why": "small",
+   "perUserUsd": 120,
+   "netUsd": 4.7
+  },
+  {
+   "id": "gate:103021",
+   "venue": "Gate",
+   "title": "Stock Trading Kickoff: From Registration to Trading, New Stock Traders Share 41,000 USDT",
+   "url": "https://www.gate.com/announcements/article/103021",
+   "why": "small",
+   "perUserUsd": 14,
+   "netUsd": 0.27
+  },
+  {
+   "id": "gate:103020",
+   "venue": "Gate",
+   "title": "CFD Rewards Discovery: Invite Friends to Trade and Win a Prize on Every Draw",
+   "url": "https://www.gate.com/announcements/article/103020",
+   "why": "small",
+   "perUserUsd": 150,
+   "netUsd": 5
+  },
+  {
    "id": "tg:coinstore_global/10411",
    "venue": "Coinstore",
    "title": "Coinstore Buy the Dip Spot Challenge is LIVE!",
@@ -1039,6 +1104,15 @@
    "netUsd": 2.45
   },
   {
+   "id": "gate:103019",
+   "venue": "Gate",
+   "title": "Perp Comeback Rewards: Return to Trading and Earn Up to 86 USDT",
+   "url": "https://www.gate.com/announcements/article/103019",
+   "why": "small",
+   "perUserUsd": 86,
+   "netUsd": -4.91
+  },
+  {
    "id": "xt:64775743568665",
    "venue": "XT.com",
    "title": "ZRO · MIHAO · FLOAT · PIEVERSE · VVV Trading Carnival: Trade to Share $20,000 in Rewards!",
@@ -1046,6 +1120,15 @@
    "why": "raffle",
    "perUserUsd": 400,
    "netUsd": 3.9
+  },
+  {
+   "id": "gate:103017",
+   "venue": "Gate",
+   "title": "Gate Futures Points Airdrop #174: Claim 0.017 QQQG & 100 USDT",
+   "url": "https://www.gate.com/announcements/article/103017",
+   "why": "small",
+   "perUserUsd": 100,
+   "netUsd": 5
   },
   {
    "id": "tg:KCEX_announcements/5797",
@@ -1071,7 +1154,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 895.9801006000001,
+   "perUserUsd": 898.6600012,
    "netUsd": -0.05
   },
   {
@@ -1081,6 +1164,31 @@
    "url": "https://www.binance.com/en/support/announcement/detail/2bd181fe130a41868e054b959586cb40",
    "why": "small",
    "netUsd": 0.01
+  },
+  {
+   "id": "gate:103015",
+   "venue": "Gate",
+   "title": "Trenches 7-Day Check-in Sprint Phase 4: Get 2 USDT Daily, Up to 101 USDT per User",
+   "url": "https://www.gate.com/announcements/article/103015",
+   "why": "small",
+   "perUserUsd": 101,
+   "netUsd": 0.3
+  },
+  {
+   "id": "gate:103014",
+   "venue": "Gate",
+   "title": "Gate Research: BTC Consolidates Above 60,000 USDT, U.S. Bitcoin ETF Monthly Net Outflows Surpass the..",
+   "url": "https://www.gate.com/announcements/article/103014",
+   "why": "news"
+  },
+  {
+   "id": "gate:103013",
+   "venue": "Gate",
+   "title": "Trenches Hot Tokens Competition Phase 73: Trade Snowball, SpaceXCoin and Other Hot Tokens to Share a..",
+   "url": "https://www.gate.com/announcements/article/103013",
+   "why": "small",
+   "perUserUsd": 10,
+   "netUsd": 0.66
   },
   {
    "id": "toobit:1006107",
@@ -1096,7 +1204,7 @@
    "title": "Last 5 Hours: BTC Launchpad Is Filling Fast!",
    "url": "https://www.mexc.com/launchpad/bitcoin/93?utm_source=community&utm_medium=tg&utm_campaign=btc-launchpad",
    "why": "small",
-   "netUsd": 4.12
+   "netUsd": 4.11
   },
   {
    "id": "tg:HotsCoinAnnouncements/2822",
@@ -1112,13 +1220,6 @@
    "url": "https://www.coinstore.com/help/article/hc_ji5wdvitjz",
    "why": "raffle",
    "netUsd": 125
-  },
-  {
-   "id": "mexc:17827791539961",
-   "venue": "MEXC",
-   "title": "Esports Claw Machine: Play to Win the GTA 6 Ultimate Setup & More",
-   "url": "https://www.mexc.com/announcements/article/esports-claw-machine-17827791539961",
-   "why": "raffle"
   },
   {
    "id": "tg:Kucoin_News/37316",
@@ -1347,13 +1448,6 @@
    "netUsd": 3.45
   },
   {
-   "id": "mexc:17827791539942",
-   "venue": "MEXC",
-   "title": "MEXC Earn Thanksgiving Season: iPhone Duo Giveaway & 60,000 USDT Prize Pool",
-   "url": "https://www.mexc.com/announcements/article/mexc-earn-thanksgiving-season-17827791539942",
-   "why": "raffle"
-  },
-  {
    "id": "bitget:12560603901610",
    "venue": "Bitget",
    "title": "CFD Super Wednesday (Round 5): Call XAUUSD up or down — Share a prize pool of up to $10,000!",
@@ -1367,8 +1461,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 6173.02,
-   "netUsd": 122.96
+   "perUserUsd": 6171.37,
+   "netUsd": 122.93
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1418,7 +1512,7 @@
    "title": "Hibt Launches \"Trade PEARL – Share a 300 PEARL Reward Pool\" Campaign",
    "url": "https://support.hibt.com/hc/en-us/articles/18519418280591-Hibt-Launches-Trade-PEARL-Share-a-300-PEARL-Reward-Pool-Campaign",
    "why": "small",
-   "perUserUsd": 72.256,
+   "perUserUsd": 72.196,
    "netUsd": 0.6
   },
   {
@@ -1506,7 +1600,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1194.144,
+   "perUserUsd": 1193.36,
    "netUsd": 0.25
   },
   {
@@ -1696,7 +1790,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1425.92,
+   "perUserUsd": 1425.28,
    "netUsd": 0.39
   },
   {
@@ -1748,15 +1842,6 @@
    "netUsd": 0.1
   },
   {
-   "id": "gate:102916",
-   "venue": "Gate",
-   "title": "Gate Square × Trader Champions League S2: Share Strategies, Split 50,000 USDT & Win 10 GT",
-   "url": "https://www.gate.com/announcements/article/102916",
-   "why": "social",
-   "perUserUsd": 200,
-   "netUsd": 0.33
-  },
-  {
    "id": "tg:coinstore_global/10397",
    "venue": "Coinstore",
    "title": "PIXA Lucky Spin Campaign is Kicking Off",
@@ -1778,8 +1863,8 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1576,
-   "netUsd": 0.29
+   "perUserUsd": 1572.8,
+   "netUsd": 0.28
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15882",
@@ -1856,6 +1941,14 @@
    "netUsd": -0.6
   },
   {
+   "id": "mexc:17827791539878",
+   "venue": "MEXC",
+   "title": "$200,000 Futures League: Choose Your Team and Compete to Win a Share",
+   "url": "https://www.mexc.com/announcements/article/200-000-futures-league-17827791539878",
+   "why": "small",
+   "netUsd": 8.33
+  },
+  {
    "id": "biconomy:64536163317529",
    "venue": "Biconomy.com",
    "title": "Share 2,000,000 ARK — Biconomy × ARK DeFAI Trading Airdrop!",
@@ -1914,13 +2007,6 @@
    "netUsd": 1.05
   },
   {
-   "id": "gate:102883",
-   "venue": "Gate",
-   "title": "Gate IPO Access Phase 3: Anthropic (ANT) Share Allocation Confirmed, Total Allocation: 92,100 ANT Sh..",
-   "url": "https://www.gate.com/announcements/article/102883",
-   "why": "news"
-  },
-  {
    "id": "tg:Kucoin_News/37246",
    "venue": "KuCoin",
    "title": "Thinking That Free Airdrop Is Money in Your Pocket?",
@@ -1967,6 +2053,13 @@
    "url": "https://www.okx.com/campaigns/anthropic-ipo-campaign?channelid=ACE505900",
    "why": "small",
    "netUsd": 3.33
+  },
+  {
+   "id": "mexc:17827791539811",
+   "venue": "MEXC",
+   "title": "Q4 Spotlights: New Listings Lucky Wheel",
+   "url": "https://www.mexc.com/announcements/article/q4-spotlights-17827791539811",
+   "why": "raffle"
   },
   {
    "id": "tg:Bybit_Announcements/10143",
@@ -2104,7 +2197,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 6173.02,
+   "perUserUsd": 6171.37,
    "netUsd": 250
   },
   {
@@ -2253,7 +2346,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 6173.02,
+   "perUserUsd": 6171.37,
    "netUsd": 8.77
   },
   {
@@ -2262,7 +2355,7 @@
    "title": "CandyBomb x SOL: Trade futures to share 180 SOL!",
    "url": "https://www.bitget.com/support/articles/12560603900486",
    "why": "small",
-   "netUsd": 0.27
+   "netUsd": 0.28
   },
   {
    "id": "bydfi:17827791534758",
@@ -2345,7 +2438,7 @@
    "title": "Binance’s Community Appreciation 2nd Earn Campaign",
    "url": "https://www.binance.com/en/support/announcement/detail/f8e719ab5ce440cfb564858c27f2a6f3",
    "why": "small",
-   "perUserUsd": 8.14
+   "perUserUsd": 8.13
   },
   {
    "id": "bybit:fiat-welcome-offer-deposit-trade-and-earn-10-usdt-on-bybit--art82e3ac8aa3af",
