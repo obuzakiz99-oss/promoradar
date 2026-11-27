@@ -39,7 +39,7 @@ export function Header({ lang, t }: { lang: Locale; t: Dict }) {
           <span className="hidden md:inline-flex"><MyStar href={withBase(`/${lang}/my/`)} label={({ uk: "Мої акції", en: "My promos", ru: "Мои акции" } as const)[lang]} /></span>
           <LangSwitch current={lang} />
           {HAS_TG && (
-            <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm lg:inline-flex">
+            <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-ghost hidden h-9 px-3.5 text-sm xl:inline-flex" /* 27.11: at exactly 1024px it ran 20px past the bar */>
               <TgIcon /> {t.nav.telegram}
             </a>
           )}
