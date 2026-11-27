@@ -7,6 +7,7 @@ import { slugOf } from "@/lib/slug";
 import { tokenRich, getTokens } from "@/lib/tokens";
 import { getPools, lpPaged, lpSlug } from "@/lib/pools";
 import { GUIDE_IDS } from "@/lib/guides";
+import { ARTICLE_IDS } from "@/lib/articles";
 
 export const revalidate = 3600;
 
@@ -31,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const id of Object.keys(VENUES)) out.push({ url: `${base}/${l}/v/${id}`, lastModified: byVenue(id) });
     out.push({ url: `${base}/${l}/t`, lastModified: newest });
     for (const id of GUIDE_IDS) out.push({ url: `${base}/${l}/learn/guide/${id}`, lastModified: TEXT_DATE });
+    for (const id of ARTICLE_IDS) out.push({ url: `${base}/${l}/learn/a/${id}`, lastModified: new Date("2026-11-27T00:00:00Z") });   // search articles (27.11)
     // exchange rating hidden for now (owner, 12.11): page kept, not linked or listed
     // out.push({ url: `${base}/${l}/exchanges`, lastModified: now });
     for (const [sym, tk] of tokens) if (tokenRich(tk)) out.push({ url: `${base}/${l}/t/${sym}`, lastModified: newest });

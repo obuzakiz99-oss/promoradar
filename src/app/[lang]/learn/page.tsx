@@ -10,6 +10,8 @@ import { LearnCards } from "@/components/LearnProgress";
 import { SiteTour, TourButton } from "@/components/SiteTour";
 import { LEARN_TOUR } from "@/lib/tours/learn";
 import { tourOf } from "@/lib/tours/types";
+import Link from "next/link";
+import { ARTICLES } from "@/lib/articles";
 
 type Params = Promise<{ lang: string }>;
 
@@ -33,6 +35,16 @@ export default async function LearnHub({ params }: { params: Params }) {
           ...LEARN_IDS.map((id) => ({ id, href: `/${lang}/learn/${id}`, icon: LEARN_ICON[id], title: L.cards[id][0], sub: L.cards[id][1] })),
           { id: "check", href: `/${lang}/check`, icon: "search" as const, title: TOOLS[lang].tools.check[0], sub: TOOLS[lang].tools.check[1] },
         ]} />
+        {/* search articles (owner 27.11): plain answers to what beginners google */}
+        <h2 className="mt-12 font-display text-2xl font-semibold tracking-tight">{({ uk: "Статті", en: "Articles", ru: "Статьи" } as const)[lang]}</h2>
+        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          {ARTICLES[lang].map((a) => (
+            <Link key={a.id} href={`/${lang}/learn/a/${a.id}`} className="card block p-5">
+              <div className="font-bold leading-snug text-ink">{a.title}</div>
+              <p className="mt-1 text-sm text-ink-2">{a.sub}</p>
+            </Link>
+          ))}
+        </div>
       </main>
       <Footer t={t} fetchedAt={Date.now()} lang={lang} />
       <SiteTour lang={lang} {...tourOf(LEARN_TOUR, lang)} />
