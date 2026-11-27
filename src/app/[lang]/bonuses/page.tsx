@@ -32,8 +32,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?|comeback|return(ing)? to trad\w*|welcome back|thankful|loyal\w*|league)\b/i;
 // audit 2 (25.11): a trading competition is not a newcomer bonus (Coinstore "0-fee sprint" showed "up to $15K per newcomer")
 // audit 27.11 (sections): Gate "Exclusively for returning CFD traders" (meta.audience) showed "до $962 новачку"
-const isNewUser = (p: Promo) => !p.meta?.geo?.only && !p.meta?.audience && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title) && (
-  p.category === "bonus" || !!p.meta?.forNew
+// beginner walkthrough 27.11: half the page was not a welcome bonus (Coinstore dip buy, MEXC gold bar, futures CandyBomb,
+// referral) — only offers marked for new users stay, and futures / margin / referral ones go
+const NOT_BEGINNER = /\b(futures?|perps?|perpetual|margin|leverage|buy the dip|dip|lucky draw|gold bar|referr\w*|invite\w*|candybomb|web3)\b/i;
+const isNewUser = (p: Promo) => !p.meta?.geo?.only && !p.meta?.audience && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title)
+  && !NOT_BEGINNER.test(p.titleOrig ?? p.title) && (
+  !!p.meta?.forNew
   || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|start (your|the)( \w+)? journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
 // audit 27.11: Coinstore "10% cashback on losses … 50,000 USDT max per user" — a cap on a % refund is not what one gets
@@ -87,7 +91,7 @@ export default async function Bonuses({ params }: { params: Params }) {
             })}
           </div>
         )}
-        <p className="mt-8 text-xs text-ink-3">{t.footer.disclaimer}</p>
+        {/* beginner walkthrough 27.11: the disclaimer was printed twice — the footer already has it */}
       </main>
       <Footer t={t} fetchedAt={fetchedAt} lang={lang} />
     </>
