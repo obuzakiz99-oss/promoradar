@@ -19,7 +19,9 @@ export interface EarnOffer {
 
 export interface EarnData { offers: EarnOffer[]; status: Record<string, { ok: boolean; count: number; error?: string }>; fetchedAt: number }
 
-const n = (x: unknown) => { const v = Number(String(x ?? "").replace("%", "")); return Number.isFinite(v) ? v : undefined; };
+// audit 27.11 (sections): Binance fixed products send marketApr: null — Number("") is 0, not undefined, so the apy
+// fallback never ran and 136 offers showed 0%
+const n = (x: unknown) => { if (x === null || x === undefined || x === "") return undefined; const v = Number(String(x).replace("%", "")); return Number.isFinite(v) ? v : undefined; };
 const fmtAmt = (x: number) => (x >= 1e6 ? `${x / 1e6}M` : x >= 1e3 ? `${x / 1e3}K` : String(x));
 
 /* Binance Simple Earn (public web API used by the Earn page). */

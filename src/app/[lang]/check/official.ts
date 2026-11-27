@@ -5,6 +5,12 @@ import { registrable, type Official } from "@/lib/linkcheck";
 const ALIASES: Array<{ domain: string; venue: string }> = [
   { domain: "gate.io", venue: "gate" },
   { domain: "huobi.com", venue: "htx" },
+  // audit 27.11 (sections): the exchanges' own regional entities were called fakes ("НЕ офіційний сайт")
+  { domain: "binance.us", venue: "binance" },
+  { domain: "binance.th", venue: "binance" },
+  { domain: "bybit.eu", venue: "bybit" },
+  { domain: "gate.us", venue: "gate" },
+  { domain: "gate.tr", venue: "gate" },
 ];
 
 /** The official list = every venue site we link to + their official Telegram channels (config/site.ts). */

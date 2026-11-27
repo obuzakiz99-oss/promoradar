@@ -212,7 +212,7 @@ export const MANUAL: Array<{
       "Referred users also get about 10% lower trading fees. Referrers earn a share of their friends' fees (the temporary 4x referrer boost ended on November 2, 2026; referrers now get 1.5x — 37.5% of referred users' fees).",
       "Installments are credited after review. Pump.fun has not announced an end date — check the in-app Rewards section before inviting.",
     ],
-    checked: "2026-11-07",
+    checked: "2026-11-07", standing: true,   // audit 27.11: no end date announced — "until" is the re-check date, not a countdown
   },
   /* ---- standing referral programmes (official help pages, checked 07.11.2026); they have no end date, so each entry
          is re-checked monthly: `until` = end of the month, then the entry is renewed or removed by hand ---- */

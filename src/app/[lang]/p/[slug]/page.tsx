@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getPromos } from "@/lib/promos";
 import { findBySlug, slugOf, statusOf } from "@/lib/slug";
-import { compactUsd, duration, fixWording, fmtLabel, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
+import { compactUsd, duration, fixWording, fmtLabel, localNums, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
 import { SITE, VENUES, HAS_TG } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     ru: { per: (x: string) => `до ${x} на 1 человека`, pool: (x: string) => `фонд ${x}`, till: (d: string) => `до ${d}`, tail: "Условия по-русски, риски и как забрать награду." },
   } as const)[lang];
   const pm = p.meta;
-  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(p.reward.label) : pm?.apr ? `+${num(pm.apr, lang)}% APR` : "";
+  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(fmtLabel(p.reward.label, lang)) : pm?.apr ? `+${num(pm.apr, lang)}% APR` : "";
   const till = p.endsAt ? D.till(new Date(p.endsAt).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" })) : "";
   const bits = `${p.venue.name} · ${catLabel(p, lang, t.cat)}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   // audit 2 (25.11): 243 titles ran past 60 characters with " · PromoRadar" (13) added by the layout template
   const title = p.venue.kind === "airdrop" ? `${cap(head, 38)} Airdrop` : cap(named, 47);
   // audit 23.11 (SEO): 9 Biconomy pages shared one description — the promo's own headline makes each unique
-  const desc = cap(`${tpl && tpl !== head ? `${head}. ` : ""}${bits}`, 155);   // Google shows ~155 (audit 2)
+  const desc = cap(`${tpl && tpl !== head ? `${head}${/[.!?…]$/.test(head) ? "" : "."} ` : ""}${bits}`, 155);   // Google shows ~155 (audit 2)
   // share card made by scripts/og-cards.mjs after the build (amount, deadline, exchange)
   const image = `https://${SITE.domain}/og/${slug}.png`;
   return {
@@ -178,7 +178,13 @@ function BlockView({ b }: { b: Block }) {
 }
 
 /** Original rules: headings, paragraphs, bullet lines and tables (consecutive rows grouped); long texts fold after the first part. */
-function Rules({ blocks, more }: { blocks: Block[]; more: string }) {
+// audit 27.11 (texts): "🔗👉 Дізнатися більше", "🛒👉 Внести зараз", a lone "👉" or "👉 https://…" — dead calls to action
+// from the post (no link here); rules cells kept "3,000 USDT" under "150 000 USDT"
+const CTA_LINE = /^[\s\p{Extended_Pictographic}\u{FE0F}\u{200D}→➡]*[\p{Extended_Pictographic}→➡][\s\p{Extended_Pictographic}\u{FE0F}\u{200D}→➡]*(https?:\/\/\S+|[^\d\n]{0,45})$/u;
+function Rules({ blocks: all, more, lang }: { blocks: Block[]; more: string; lang: string }) {
+  const L = (x: string) => localNums(x, lang);
+  const blocks = all.filter((b) => b.t === "tr" || !CTA_LINE.test(b.x.trim()) || /[:：]$/.test(b.x.trim()))
+    .map((b) => ({ ...b, x: L(b.x), cells: b.cells?.map(L) }));
   const groups: Array<Block | Block[]> = [];
   for (const b of blocks) {
     const last = groups[groups.length - 1];
@@ -382,10 +388,10 @@ export default async function PromoPage({ params }: { params: Params }) {
       {puUsd !== undefined && pu.unit !== "USD" && !/^USD/.test(pu.unit) && <span className="text-ink-3"> (≈{compactUsd(puUsd, lang)})</span>}
       {pu.text.trim() && <span className="mt-1 block text-xs font-normal text-ink-3">“{pu.text}”</span>}
     </span>
-  ) : <span className="font-normal text-ink-2">{p.category === "earn" ? ({ uk: "Дохід залежить від суми й ставки — див. калькулятор нижче.", en: "Income depends on the amount and the rate — see the calculator below.", ru: "Доход зависит от суммы и ставки — см. калькулятор ниже." } as const)[lang]
+  ) : <span className="font-normal text-ink-2">{p.category === "earn" || m.aprPct !== undefined || m.apr !== undefined ? ({ uk: "Дохід залежить від суми й ставки (APR) — нічого не ділиться між учасниками; ліміт суми дивіться в умовах.", en: "Income depends on the amount and the rate (APR) — nothing is split between participants; see the rules for the amount limit.", ru: "Доход зависит от суммы и ставки (APR) — ничего не делится между участниками; лимит суммы смотрите в условиях." } as const)[lang]
     : p.category === "referral" ? ({ uk: "Нагорода — за кожного друга, який виконав умову.", en: "The reward is per friend who meets the condition.", ru: "Награда — за каждого друга, выполнившего условие." } as const)[lang] : R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{num(m.apr, lang)}% APR</span> : p.reward ? <>{p.reward.label}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{num(m.apr, lang)}% APR</span> : p.reward ? <>{fmtLabel(p.reward.label, lang)}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],
@@ -798,7 +804,7 @@ export default async function PromoPage({ params }: { params: Params }) {
           {det && det.blocks.length > 0 ? (
             <>
               <p className="mt-1 text-xs text-ink-3">{(det.translated ?? 0) > 0.5 ? R.noteTr(p.venue.name) : R.note(p.venue.name)}{det.partial ? ` ${R.partial}` : ""}</p>
-              <Rules blocks={det.blocks} more={R.more} />
+              <Rules blocks={det.blocks} more={R.more} lang={lang} />
             </>
           ) : (
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{R.none(p.venue.name)}</p>

@@ -29,11 +29,15 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // audit 14.11: community / P2P-merchant / VIP / region-only campaigns are not new-user bonuses
 const NOT_NEW = /\b(appreciation|merchants?|vip|institutional|market makers?|affiliates?|kol|ambassadors?)\b/i;
 // audit 2 (25.11): a trading competition is not a newcomer bonus (Coinstore "0-fee sprint" showed "up to $15K per newcomer")
-const isNewUser = (p: Promo) => !p.meta?.geo?.only && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title) && (
+// audit 27.11 (sections): Gate "Exclusively for returning CFD traders" (meta.audience) showed "до $962 новачку"
+const isNewUser = (p: Promo) => !p.meta?.geo?.only && !p.meta?.audience && p.category !== "competition" && !NOT_NEW.test(p.titleOrig ?? p.title) && (
   p.category === "bonus" || !!p.meta?.forNew
   || (p.venue.kind === "cex" && /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|journey|new to)\b/i.test(p.titleOrig ?? p.title)));
 /** What one newcomer can get: the per-person amount from the rules (a prize pool is not a bonus). */
-const perHead = (p: Promo) => (/\bwin|\bwon|вигр|выигр/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);   // "win $30,000" is a prize, not a bonus
+// audit 27.11: Coinstore "10% cashback on losses … 50,000 USDT max per user" — a cap on a % refund is not what one gets
+const perHead = (p: Promo) => (/\bwin|\bwon|вигр|выигр|\d\s?%\s*(cashback|кешбек|кэшбэк|of (your |the )?loss)/i.test(p.meta?.perUser?.text ?? "") ? 0 : p.meta?.perUser?.usd ?? 0);
+/** "новачку" only when the promo is really for newcomers; other bonuses say "на людину". */
+const forNewcomer = (p: Promo) => !!p.meta?.forNew || /\b(new users?|newcomers?|welcome|first[- ](deposit|trade|convert)|sign[- ]?up|starter|new to)\b/i.test(p.titleOrig ?? p.title);   // "win $30,000" is a prize, not a bonus
 
 export default async function Bonuses({ params }: { params: Params }) {
   const { lang } = await params;
@@ -63,7 +67,7 @@ export default async function Bonuses({ params }: { params: Params }) {
                     <div>
                       <div className="text-lg font-bold">{v.name}</div>
                       <div className="text-xs font-semibold text-ink-3">{list.length} {plural(list.length, lang, "promo")}</div>
-                      {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best), lang)}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{({ uk: "новачку", en: "per newcomer", ru: "новичку" } as const)[lang]}</span></div>}
+                      {perHead(best) > 0 && <div className="mt-1 font-mono text-xl font-bold text-lime">{({ uk: "до ", en: "up to ", ru: "до " } as const)[lang]}{compactUsd(perHead(best), lang)}<span className="ml-1 font-sans text-xs font-semibold text-ink-3">{(forNewcomer(best) ? { uk: "новачку", en: "per newcomer", ru: "новичку" } as const : { uk: "на людину", en: "per person", ru: "на человека" } as const)[lang]}</span></div>}
                     </div>
                   </div>
                   <ul className="space-y-1.5 text-sm">

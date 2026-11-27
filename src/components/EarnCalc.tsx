@@ -58,9 +58,14 @@ const fmtOf = (lc: string) => {
 };
 
 /** The reward the minimum-entry rule line itself names ("reach 120,000 USDx … can receive 2 USDT"). */
+// audit 27.11 (accuracy): on /uk and /ru the rule line is already translated ("можуть отримати 2 USDT") — the English-only
+// match never fired there and the Gate CFD minimum still showed "≤ $962"
 const entryPay = (t?: string): number | undefined => {
-  const x = t?.match(/\b(?:receive|get|earn|win|claim|rewarded with)\s+(?:a\s+)?\$?(\d[\d,]*(?:\.\d+)?)\s*(?:USDT|USDC|USD)\b/i);
-  return x ? Number(x[1].replace(/,/g, "")) : undefined;
+  const x = t?.match(/(?:\b(?:receive|get|earn|win|claim|rewarded with)|отрима\p{L}*|получ\p{L}*|виграт\p{L}*|выигра\p{L}*)\s+(?:a\s+|до\s+)?\$?(\d[\d,  ]*(?:[.,]\d+)?)\s*(?:USDT|USDC|USD)\b/iu);
+  if (!x) return undefined;
+  const raw = x[1].trim().replace(/[  ]/g, "").replace(/,(?=\d{3}(\D|$))/g, "").replace(",", ".");
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : undefined;
 };
 
 /** "How much would I get" for one promo: threshold check, reward tier, exchange fees, net — or interest for APR promos. */
@@ -69,15 +74,19 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
   const T = TX[lang];
   const { usd, amt } = fmtOf(nfLocale(lang));
   const kind = m.aprPct !== undefined ? "apr" : m.minEntry?.kind ?? (m.tiers?.length ? "trade" : "any");
-  const start = m.minEntry?.amount ?? m.tiers?.[0]?.min ?? 1000;
+  // audit 27.11 (sections): an Earn APR took a futures-volume rule as its minimum deposit (Ourbit Aave: $50 000), and a
+  // 0.01 USDT minimum made every figure "$0" with no quick buttons — the APR minimum is a deposit-type rule of $100+
+  const aprMin = m.aprPct !== undefined && m.minEntry && m.minEntry.kind !== "trade" ? m.minEntry : undefined;
+  const raw0 = kind === "apr" ? aprMin?.amount : m.minEntry?.amount ?? m.tiers?.[0]?.min;
+  const start = raw0 !== undefined && raw0 >= (kind === "apr" ? 100 : 1) ? raw0 : 1000;
   const [v, setV] = useState(start);
 
   const lines: Array<{ text: string; tone?: "good" | "bad" | "muted" }> = [];
   let big: string | undefined;
 
-  if (m.aprPct !== undefined && m.minEntry && v < m.minEntry.amount) {
+  if (m.aprPct !== undefined && aprMin && v < aprMin.amount) {
     // audit 23.11 (round 5): KuCoin KCUSD showed "+$5,75 for 30 days" on $1 000 although no bonus is paid below 50 000 USDT
-    lines.push({ text: T.short(usd(m.minEntry.amount - v)), tone: "bad" });
+    lines.push({ text: T.short(usd(aprMin.amount - v)), tone: "bad" });
   } else if (m.aprPct !== undefined) {
     const day = (v * m.aprPct) / 100 / 365;
     const left = m.aprDays ?? (endsAt && endsAt > now ? Math.max(1, Math.round((endsAt - now) / 86400_000)) : undefined);
@@ -159,7 +168,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
           <li key={i} className={l.tone === "good" ? "font-semibold text-lime" : l.tone === "bad" ? "font-semibold text-rose" : l.tone === "muted" ? "text-ink-3" : "text-ink"}>{l.text}</li>
         ))}
       </ul>
-      {m.tiers && m.tiers.length > 1 && (
+      {m.aprPct === undefined && m.tiers && m.tiers.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-1.5 text-xs font-mono">
           {m.tiers.map((t) => <span key={t.min} className={`rounded-md px-1.5 py-0.5 ${t.min <= v ? "bg-lime/10 text-lime" : "bg-white/5 text-ink-3"}`}>≥{usd(t.min)} → {t.reward}</span>)}
         </div>

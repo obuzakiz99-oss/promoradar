@@ -9,6 +9,8 @@ import { SITE } from "@/config/site";
 import { Header } from "@/components/Header";
 import { withBase } from "@/lib/base";
 import { NOVICE_BOOT } from "@/lib/novice";
+// audit 27.11 (tech): og:locale wants language_TERRITORY ("uk_UA"), not "uk"
+const OG_LOCALE: Record<string, string> = { uk: "uk_UA", en: "en_US", ru: "ru_RU" };
 import { InstallApp } from "@/components/InstallApp";
 import { PopoverClose } from "@/components/PopoverClose";
 import { MobileTabBar } from "@/components/MobileTabBar";
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     title: { default: title, template: `%s · ${SITE.name}` },
     description: t.hero.sub,
     alternates: alt(lang),
-    openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: lang, type: "website", images: [{ url: "/og-home.png", width: 1200, height: 630, alt: SITE.name }] },
+    openGraph: { title, description: t.hero.sub, siteName: SITE.name, locale: OG_LOCALE[lang], alternateLocale: Object.entries(OG_LOCALE).filter(([k]) => k !== lang).map(([, v]) => v), type: "website", images: [{ url: "/og-home.png", width: 1200, height: 630, alt: SITE.name }] },
     twitter: { card: "summary_large_image", title, description: t.hero.sub, images: ["/og-home.png"] },
     // 25.11: + favicon.ico / PNG — Google results, Telegram and Bing don't use the SVG and showed a blank globe
     icons: {

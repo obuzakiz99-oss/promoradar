@@ -1,7 +1,7 @@
 import type { Dict } from "./i18n";
 
 export function compactUsd(n: number, lang = "en"): string {
-  const s = n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`;
+  const s = n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e4 ? `$${Math.round(n / 1e3)}K` : n >= 1e3 ? `$${+(n / 1e3).toFixed(2)}K` : `$${Math.round(n)}`;
   if (lang === "en") return s;
   // audit 23.11 (uk/ru editors): "$1,4 млн", "$60 тис." instead of the English K/M
   const W = lang === "ru" ? { K: " тыс.", M: " млн", B: " млрд" } : { K: " тис.", M: " млн", B: " млрд" };
@@ -60,8 +60,21 @@ export function aprText(x: number, lang: string, digits = 1): string {
 /** Decimal comma for uk/ru in an already formatted string ("7.05%" → "7,05%"); audit 23.11: boards mixed "7.05%" with
  *  translated "4,25%". */
 export const dec = (s: string, lang: string) => (lang === "en" ? s : s.replace(/(\d)\.(\d)/g, "$1,$2"));
+// audit 27.11 (texts): AI texts kept source dates — "з 2026-11-25 00:00", "Nov 13, 18:00 – Nov 30" — next to "24 листопада"
+const MON_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MON_GEN: Record<string, string[]> = {
+  uk: ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"],
+  ru: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+};
+function isoDates(s: string, lang: string): string {
+  const G = MON_GEN[lang];
+  if (!G) return s;
+  return s
+    .replace(/\b(20\d\d)-(0[1-9]|1[0-2])-([0-2]\d|3[01])(?:[ T](\d\d:\d\d)(?::\d\d)?)?\b/g, (_, y: string, m: string, d: string, t?: string) => `${d}.${m}.${y}${t ? ` ${t}` : ""}`)
+    .replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? ([1-9]|[12]\d|3[01])\b(?:,? (20\d\d))?/g, (_, mo: string, d: string, y?: string) => `${d} ${G[MON_EN.indexOf(mo)]}${y ? ` ${y}` : ""}`);
+}
 /** AI texts in uk/ru: "$2,500" -> "$2 500", "1.5%" -> "1,5%" (dates like 16.11.2026 stay). */
-export const localNums = (s: string, lang: string) => (lang === "en" ? s : s
+export const localNums = (s: string, lang: string) => (lang === "en" ? s : isoDates(s, lang)
   .replace(/\b([1-9]\d{0,2})((?:,\d{3})+)(?![,\d]|\s?%)/g, (_, a: string, b: string) => a + b.replace(/,/g, "\u00a0"))
   // audit 2: a day.month date (19.11, 05.12) not followed by a unit stays a date ("коригування 19,11 і 29.11")
   .replace(/(?<![.\d])(\d+)\.(\d+)(?![.\d])/g, (m: string, a: string, b: string, i: number, all: string) =>
@@ -93,7 +106,11 @@ function sentenceCase1(s: string, min: number): string {
 }
 
 /** A source label in the reader's number format: "5,000 USDT" → "5 000 USDT" on uk/ru (audit 14.11: mixed formats). */
-export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s.replace(/\d{1,3}(?:,\d{3})+(?:\.\d+)?/g, (m) => Number(m.replace(/,/g, "")).toLocaleString(nfLocale(lang))));
+// audit 27.11 (texts): pools read "40K USDT", "6.25M USD1" next to "$215 тис." — K/M/B become тис./млн/млрд too
+const KMB: Record<string, Record<string, string>> = { uk: { K: "тис.", M: "млн", B: "млрд" }, ru: { K: "тыс.", M: "млн", B: "млрд" } };
+export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s
+  .replace(/\d{1,3}(?:,\d{3})+(?:\.\d+)?/g, (m) => Number(m.replace(/,/g, "")).toLocaleString(nfLocale(lang)))
+  .replace(/(?<![\w.,])(\d+(?:\.\d+)?)([KMB])(?![A-Za-z\d])/g, (_, n: string, u: string) => `${n.replace(".", ",")} ${KMB[lang]?.[u] ?? u}`));
 
 /**
  * audit 23.11 (round 5): machine-translation slips that came back in new translations / AI texts — fixed at render time so

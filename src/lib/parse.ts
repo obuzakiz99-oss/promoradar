@@ -74,6 +74,8 @@ export function parseReward(title: string): Reward | undefined {
   // audit 25.11: "$1.8B in weekly spot volume" (Bitrue) was posted as the pool — market figures are not prizes,
   // and "earn up to $300 daily" / "per friend" is what one person gets, not a pool
   const t = t0
+    // audit 27.11 (texts): Bitrue "Bitcoin reclaims $61,000" became a "$61K" pool — a market price is not a prize
+    .replace(/\b(reclaims?|above|below|hits?|breaks?|crosses|price of|priced at)\s+\$?\s?[\d][\d,.]*\s?(k|m)?\b/gi, " ")
     // (audit 2, 25.11: "liquidity / deposits / traders" and a bare "each" / "daily" also ate real pools — "Share 100,000 USDT
     // in Liquidity Rewards", "Win 20,000 USDT Daily Prize Pool", "Top 100 traders share 30,000 USDT each week")
     .replace(/\$?\s?[\d][\d,.]*\s?(k|m|b|million|billion)?\+?\s*([A-Z][A-Z0-9]{1,9}\s)?(in )?((weekly|daily|monthly|total|24h|record)\s)*(spot |futures |trading )?(volume|TVL|market cap|valuation)\b/gi, " ")
