@@ -1,5 +1,5 @@
 {
- "at": 1795803272544,
+ "at": 1795803597756,
  "items": [
   {
    "id": "kraken:https://blog.kraken.com/product/promotions/100000-kraken-pro-xstocks-trading-challenge",
@@ -990,7 +990,7 @@
    "title": "Binance Alpha Trading Competition: Trade Concrete (CT) and Share $200K Worth of Rewards (2026-11-27)",
    "url": "https://www.binance.com/en/support/announcement/detail/e6020e34cae84cb282b9e4dff1e0048c",
    "why": "small",
-   "perUserUsd": 54.86,
+   "perUserUsd": 55.03,
    "netUsd": 0.73
   },
   {
@@ -1023,7 +1023,7 @@
    "title": "Weekend Power Station: Register to Claim 75 XRP, Trade to Earn Another 150 XRP",
    "url": "https://www.gate.com/announcements/article/103027",
    "why": "raffle",
-   "perUserUsd": 142.2,
+   "perUserUsd": 142.275,
    "netUsd": -0.18
   },
   {
@@ -1039,7 +1039,7 @@
    "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
    "url": "https://www.gate.com/announcements/article/103024",
    "why": "small",
-   "perUserUsd": 68.6,
+   "perUserUsd": 68.5,
    "netUsd": 0.5
   },
   {
@@ -1120,7 +1120,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 917.8659555,
+   "perUserUsd": 920.5458561,
    "netUsd": -0.04
   },
   {
@@ -1409,8 +1409,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5991.830000000001,
-   "netUsd": 119.34
+   "perUserUsd": 5990.09,
+   "netUsd": 119.3
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1523,7 +1523,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1138.816,
+   "perUserUsd": 1135.904,
    "netUsd": 0.21
   },
   {
@@ -1706,8 +1706,8 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1398.4,
-   "netUsd": 0.37
+   "perUserUsd": 1400.32,
+   "netUsd": 0.38
   },
   {
    "id": "tg:Bybit_Announcements/10170",
@@ -2098,7 +2098,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 5991.830000000001,
+   "perUserUsd": 5990.09,
    "netUsd": 250
   },
   {
@@ -2238,7 +2238,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5991.830000000001,
+   "perUserUsd": 5990.09,
    "netUsd": 8.77
   },
   {
