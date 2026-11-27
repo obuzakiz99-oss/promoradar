@@ -1,1 +1,1 @@
-{"id":"tg:LBanknews/20913","h":"n4d0bmE2Bv0xmF30","v":1,"at":1795766459173,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"deposit","usd":100},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":20,"unit":"USDT"},"pool":{"amount":50000,"unit":"USDT"}}}
+{"id":"tg:LBanknews/20913","h":"Ej-RYg_Dvx9m9n-E","v":1,"at":1795808307880,"data":{"isPromo":true,"socialOnly":false,"mech":"fixed","act":{"kind":"trade_spot","usd":50},"typical":{"amount":5,"unit":"USDT"},"max":{"amount":20,"unit":"USDT"},"pool":{"amount":50000,"unit":"USDT"}}}
