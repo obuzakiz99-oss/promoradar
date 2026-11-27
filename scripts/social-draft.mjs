@@ -83,6 +83,17 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 </svg>`;
 const base = path.join(out, `${date}-${fmt}`);
 await sharp(Buffer.from(svg)).png().toFile(`${base}.png`);
-fs.writeFileSync(`${base}.txt`, text + "\n");
-console.log(JSON.stringify({ fmt, png: `${base}.png`, txt: `${base}.txt`, chars: text.length }));
-console.log("----\n" + text);
+// owner 28.11: posts must not be copies across networks — one voice per platform
+const lines = text.split("\n");
+const link = (r) => lines[lines.length - 1].replace(/promoradar\.xyz(\/\S*)?/, (m) => `${m}${m.includes("?") ? "&" : "?"}ref=${r}`);
+const threads = [...lines.slice(0, -1), link("threads")].join("\n");                       // conversational, link works
+const HOOK = { weekly: "Зберігай 📌 — бонуси, які реально можна забрати цього тижня:", earn: "Тримаєш USDT на біржі й нічого не отримуєш? Ось де за це платять 👇", explain: "Пояснюю за 20 секунд, без складних слів 👇" };
+const insta = [HOOK[fmt], "", ...lines.slice(1, -1).filter((l, i, a) => !(l === "" && a[i - 1] === "")),
+  "👆 Посилання на всі акції — у профілі @promoradar.ua", "",
+  fmt === "earn" ? "#криптовалюта #пасивнийдохід #USDT #біржа #earn" : fmt === "explain" ? "#криптовалюта #крипта #новачкам #біткоїн #навчання" : "#криптовалюта #бонус #біржа #airdrop #крипта"].join("\n");
+const x = (rows.length
+  ? `${title}:\n${rows.map(([a, b]) => `• ${a} — ${b}`).join("\n")}\n\nБез «до 5 000$» — реальні цифри 👇`
+  : `${title}: ${(text.split("\n\n")[1] ?? "").split(/(?<=\.)\s/)[0]}\n\n👇`) + `\n${link("x").replace(/^.*?(promoradar\.xyz\S*).*$/, "$1")}`;
+for (const [k, v] of Object.entries({ threads, instagram: insta, x })) fs.writeFileSync(`${base}.${k}.txt`, v + "\n");
+console.log(JSON.stringify({ fmt, png: `${base}.png`, threads: threads.length, instagram: insta.length, x: x.length }));
+for (const [k, v] of Object.entries({ threads, instagram: insta, x })) console.log(`---- ${k}\n${v}`);
