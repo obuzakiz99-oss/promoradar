@@ -21,7 +21,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Конфіденційність", sub: "Коротко: ми не збираємо ваших персональних даних і не маємо акаунтів.", blocks: [
       ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, вибрана країна і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
       ["Хостинг", "Сайт розміщено на GitHub Pages. GitHub як хостинг може технічно обробляти IP-адреси відвідувачів для безпеки й роботи сервісу — див. GitHub Privacy Statement. Трафік проходить через Cloudflare (захист від атак і кеш), який так само технічно бачить IP-адреси — див. Cloudflare Privacy Policy."],
-      ["Файли cookie та аналітика", "Ми не використовуємо cookie та рекламні трекери. Для підрахунку відвідувань працює GoatCounter: він не ставить cookie, не зберігає IP-адреси й не збирає персональних даних — лише загальні числа (сторінка, країна, браузер, звідки прийшли). Ця статистика не публічна."],
+      ["Файли cookie та аналітика", "Ми не використовуємо cookie та рекламні трекери. Для підрахунку відвідувань працюють GoatCounter і Cloudflare Web Analytics: вони не ставлять cookie, не зберігають IP-адреси й не збирають персональних даних — лише загальні числа (сторінка, країна, браузер, звідки прийшли). Ця статистика не публічна."],
       ["Зовнішні сайти", "Посилання ведуть на сайти бірж і протоколів — у них свої правила конфіденційності."],
       ["Зв'язок", `Питання щодо даних: hello@promoradar.xyz`],
     ] },
@@ -44,7 +44,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Privacy", sub: "In short: we collect no personal data and have no accounts.", blocks: [
       ["What we store", "Nothing on our servers. Saved promos (★), your tracker, chosen country and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
       ["Hosting", "The site is hosted on GitHub Pages. As the host, GitHub may technically process visitors' IP addresses for security and operation — see the GitHub Privacy Statement. Traffic passes through Cloudflare (attack protection and caching), which likewise technically sees IP addresses — see the Cloudflare Privacy Policy."],
-      ["Cookies and analytics", "We use no cookies or ad trackers. Visits are counted with GoatCounter: it sets no cookies, stores no IP addresses and collects no personal data — only totals (page, country, browser, referrer). These stats are not public."],
+      ["Cookies and analytics", "We use no cookies or ad trackers. Visits are counted with GoatCounter and Cloudflare Web Analytics: they set no cookies, store no IP addresses and collect no personal data — only totals (page, country, browser, referrer). These stats are not public."],
       ["External sites", "Links lead to exchange and protocol sites, which have their own privacy policies."],
       ["Contact", `Data questions: hello@promoradar.xyz`],
     ] },
@@ -67,7 +67,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
     privacy: { title: "Конфиденциальность", sub: "Коротко: мы не собираем ваших персональных данных и не имеем аккаунтов.", blocks: [
       ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, выбранная страна и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],
       ["Хостинг", "Сайт размещён на GitHub Pages. GitHub как хостинг может технически обрабатывать IP-адреса посетителей для безопасности и работы сервиса — см. GitHub Privacy Statement. Трафик проходит через Cloudflare (защита от атак и кеш), который так же технически видит IP-адреса — см. Cloudflare Privacy Policy."],
-      ["Cookie и аналитика", "Мы не используем cookie и рекламные трекеры. Посещения считает GoatCounter: он не ставит cookie, не хранит IP-адреса и не собирает персональные данные — только общие числа (страница, страна, браузер, откуда пришли). Эта статистика не публичная."],
+      ["Cookie и аналитика", "Мы не используем cookie и рекламные трекеры. Посещения считают GoatCounter и Cloudflare Web Analytics: они не ставят cookie, не хранят IP-адреса и не собирают персональные данные — только общие числа (страница, страна, браузер, откуда пришли). Эта статистика не публичная."],
       ["Внешние сайты", "Ссылки ведут на сайты бирж и протоколов — у них свои правила конфиденциальности."],
       ["Связь", `Вопросы о данных: hello@promoradar.xyz`],
     ] },
