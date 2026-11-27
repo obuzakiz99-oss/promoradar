@@ -105,7 +105,7 @@ for (const p of promos) {
   const days = p.endsAt ? Math.max(1, Math.ceil((p.endsAt - Date.now()) / 86400_000)) : 0;
   const head = [`${icon} <b>${esc(p.venue.name)}</b> · ${kind}`, `<b>${esc((tr ?? p.title).replace(/\s+/g, " ").trim())}</b>`];
   const info = [est || max, pool, entry, p.meta?.forNew ? `🆕 ${T.forNew}` : "", p.endsAt ? `⏳ ${L.ends} ${human(p.endsAt)} (${T.left(days)})` : ""].filter(Boolean);
-  const foot = [SITE ? `👉 <a href="${SITE}/${LANG}/p/${slugOf(p)}/">${T.cta}</a>` : `👉 <a href="${esc(p.url)}">${T.cta}</a>`, `${tag(p.venue.name)} ${tag(kind.toLowerCase())}`];
+  const foot = [SITE ? `👉 <a href="${SITE}/${LANG}/p/${slugOf(p)}/?ref=tg-channel">${T.cta}</a>` : `👉 <a href="${esc(p.url)}">${T.cta}</a>`, `${tag(p.venue.name)} ${tag(kind.toLowerCase())}`];
   const camps = campsOf(p);
   const recent = (c) => state.camps[c] && Date.now() - state.camps[c] < (c.startsWith("pool:") ? 7 : 30) * 86400_000;
   if (camps.some(recent)) { seen.add(key); continue; }
@@ -183,7 +183,7 @@ for (const [key, text] of msgs.slice(0, MAX_PER_RUN)) {
         && (!p.endsAt || p.endsAt - Date.now() > 2 * 86400_000);
     }).sort((a, b) => b.meta.value.net - a.meta.value.net).slice(0, 5);
     if (top.length >= 3) {
-      const rows = top.map((p, i) => `${i + 1}. <b>${esc(p.venue.name)}</b> — ≈ $${Math.round(p.meta.value.net)}\n${esc(trTitle(p))}${SITE ? `\n<a href="${SITE}/${LANG}/p/${slugOf(p)}/">${L.more} →</a>` : ""}`);
+      const rows = top.map((p, i) => `${i + 1}. <b>${esc(p.venue.name)}</b> — ≈ $${Math.round(p.meta.value.net)}\n${esc(trTitle(p))}${SITE ? `\n<a href="${SITE}/${LANG}/p/${slugOf(p)}/?ref=tg-channel">${L.more} →</a>` : ""}`);
       const text = [W.head, W.sub, "", rows.join("\n\n"), SITE ? `\n<a href="${SITE}/${LANG}/">${W.all} →</a>` : ""].filter((x) => x !== undefined).join("\n");
       const r = await send(text);
       if (r.ok) { state.weekly = week; saveState(); console.log(`telegram: weekly top-${top.length} sent (${week})`); }

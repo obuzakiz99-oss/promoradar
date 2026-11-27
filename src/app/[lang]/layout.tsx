@@ -12,6 +12,7 @@ import { NOVICE_BOOT } from "@/lib/novice";
 // audit 27.11 (tech): og:locale wants language_TERRITORY ("uk_UA"), not "uk"
 
 import { InstallApp } from "@/components/InstallApp";
+import { Track } from "@/components/Track";
 import { PopoverClose } from "@/components/PopoverClose";
 import { MobileTabBar } from "@/components/MobileTabBar";
 
@@ -59,6 +60,8 @@ export default async function LangLayout({ children, params }: { children: React
         {process.env.SITE_HOST ? <script data-goatcounter="https://promoradar.goatcounter.com/count" async src="https://gc.zgo.at/count.js" /> : null}
       </head>
       <body className="min-h-dvh pb-16 md:pb-0">
+        {/* owner 27.11: what visitors click / search / calculate — GoatCounter events, no cookies */}
+        {process.env.SITE_HOST ? <Track /> : null}
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-lime focus:px-4 focus:py-2 focus:font-bold focus:text-on-accent">{({ uk: "До вмісту", en: "Skip to content", ru: "К содержимому" } as const)[lang]}</a>
         <div className="page-bg" aria-hidden="true" />
         <Header lang={lang} t={t} />
