@@ -66,7 +66,7 @@ export function AdsSection({ t }: { t: Dict }) {
         <div>
           <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{t.ads.title}</h2>
           <p className="mt-3 max-w-md text-ink-2">{t.ads.sub}</p>
-          <a href={SITE.telegram} target="_blank" rel="noopener" className="btn btn-primary mt-6 h-12 px-6"><TgIcon /> {t.ads.cta}</a>
+          <a href={SITE.contact} target="_blank" rel="noopener" className="btn btn-primary mt-6 h-12 px-6"><TgIcon /> {t.ads.cta}</a>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {t.ads.plans.map(([name, desc, price]) => (

@@ -832,7 +832,7 @@ export default async function PromoPage({ params }: { params: Params }) {
         <div data-tour="promo-share" className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Share href={`https://${SITE.domain}/${lang}/p/${slug}/`} title={p.title} label={t.detail.share} copyLabel={t.detail.copy} copiedLabel={t.detail.copied} />
           {/* audit 23.11: with no channel set the link opened Telegram's front page */}
-          {HAS_TG && <a href={SITE.telegram} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>}
+          {HAS_TG && <a href={SITE.contact} target="_blank" rel="noopener" className="text-sm font-semibold text-ink-3 hover:text-ink"><Icon name="flag" /> {t.detail.report}</a>}
         </div>
 
         {related.length > 0 && (

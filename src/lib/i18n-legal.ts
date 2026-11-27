@@ -9,7 +9,6 @@ export const LEGAL_NAV: Record<Locale, Array<[LegalSlug, string]>> = {
   ru: [["about", "О нас"], ["privacy", "Конфиденциальность"], ["terms", "Условия использования"], ["api", "API"]],
 };
 
-const ISSUES = "https://github.com/obuzakiz99-oss/promoradar/issues";
 
 export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
   uk: {
@@ -17,7 +16,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Що ми робимо", "Кожні 30 хвилин автоматично збираємо акції з офіційних джерел бірж і протоколів: їхніх API, оголошень, офіційних Telegram-каналів і блогів, а також відкриті дані DefiLlama. Рахуємо APR, прибуток, ризики і показуємо все в одному форматі."],
       ["Незалежність", "Ми не є біржею і не зберігаємо ваші кошти. Ми не використовуємо реферальних посилань і не отримуємо комісій від бірж — порядок акцій у списках залежить лише від їхньої вигоди для вас."],
       ["Точність", "Дані беруться автоматично і оновлюються кожні 30 хвилин, тож можуть відставати від біржі або містити помилки джерела. Перед участю завжди перевіряйте умови на сторінці організатора — посилання є біля кожної акції."],
-      ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть на hello@promoradar.xyz або в Telegram t.me/promoradarapp (є й GitHub: ${ISSUES})`],
+      ["Зв'язок", `Помилки, пропозиції, нові джерела акцій — пишіть у Telegram @Arturkagtr (t.me/Arturkagtr)`],
     ] },
     privacy: { title: "Конфіденційність", sub: "Коротко: ми не збираємо ваших персональних даних і не маємо акаунтів.", blocks: [
       ["Які дані ми зберігаємо", "Жодних на наших серверах. Збережені акції (★), ваш трекер, вибрана країна і мова зберігаються лише у вашому браузері (localStorage) і нікуди не передаються. Їх можна видалити, очистивши дані сайту в браузері."],
@@ -40,7 +39,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["What we do", "Every 30 minutes we automatically collect promos from official sources: exchange and protocol APIs, announcements, official Telegram channels and blogs, plus DefiLlama open data. We calculate APR, profit and risks and show everything in one format."],
       ["Independence", "We're not an exchange and never hold your funds. We use no referral links and take no commissions from exchanges — the order of promos depends only on their value to you."],
       ["Accuracy", "Data is collected automatically and can lag the exchange by a few minutes or contain source errors. Always check the terms on the organiser's page before joining — every promo links to it."],
-      ["Contact", `Bugs, ideas, new promo sources — write to hello@promoradar.xyz or on Telegram t.me/promoradarapp (GitHub too: ${ISSUES})`],
+      ["Contact", `Bugs, ideas, new promo sources — message @Arturkagtr on Telegram (t.me/Arturkagtr)`],
     ] },
     privacy: { title: "Privacy", sub: "In short: we collect no personal data and have no accounts.", blocks: [
       ["What we store", "Nothing on our servers. Saved promos (★), your tracker, chosen country and language live only in your browser (localStorage) and are never sent anywhere. Clear the site's data in your browser to remove them."],
@@ -63,7 +62,7 @@ export const LEGAL: Record<Locale, Record<Exclude<LegalSlug, "api">, Doc>> = {
       ["Что мы делаем", "Каждые 30 минут автоматически собираем акции из официальных источников бирж и протоколов: их API, анонсов, официальных Telegram-каналов и блогов, а также открытые данные DefiLlama. Считаем APR, прибыль, риски и показываем всё в одном формате."],
       ["Независимость", "Мы не биржа и не храним ваши средства. Мы не используем реферальных ссылок и не получаем комиссий от бирж — порядок акций зависит только от их выгоды для вас."],
       ["Точность", "Данные собираются автоматически и могут отставать от биржи на несколько минут или содержать ошибки источника. Перед участием всегда проверяйте условия на странице организатора — ссылка есть у каждой акции."],
-      ["Связь", `Ошибки, предложения, новые источники акций — пишите на hello@promoradar.xyz или в Telegram t.me/promoradarapp (есть и GitHub: ${ISSUES})`],
+      ["Связь", `Ошибки, предложения, новые источники акций — пишите в Telegram @Arturkagtr (t.me/Arturkagtr)`],
     ] },
     privacy: { title: "Конфиденциальность", sub: "Коротко: мы не собираем ваших персональных данных и не имеем аккаунтов.", blocks: [
       ["Какие данные мы храним", "Никаких на наших серверах. Сохранённые акции (★), ваш трекер, выбранная страна и язык хранятся только в вашем браузере (localStorage) и никуда не передаются. Удалить их можно, очистив данные сайта в браузере."],

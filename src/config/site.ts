@@ -7,6 +7,7 @@ export const SITE = {
   // your domain: set NEXT_PUBLIC_SITE_DOMAIN in Vercel once you connect one; until then the Vercel URL is used
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || process.env.VERCEL_PROJECT_PRODUCTION_URL || "promoradar.xyz",
   telegram: "https://t.me/promoradarapp", // official channel (created 24.11)
+  contact: "https://t.me/Arturkagtr",     // owner's personal Telegram: contact line, "report error", ads (27.11)
   contactEmail: "hello@promoradar.xyz",
   revalidateSeconds: 900,                 // feeds are re-read every 15 min
   freshDays: 30,                          // dated promos older than this (and without an end date) are hidden
