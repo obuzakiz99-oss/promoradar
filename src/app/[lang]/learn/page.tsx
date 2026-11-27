@@ -12,6 +12,10 @@ import { LEARN_TOUR } from "@/lib/tours/learn";
 import { tourOf } from "@/lib/tours/types";
 import Link from "next/link";
 import { ARTICLES } from "@/lib/articles";
+import { getPromos } from "@/lib/promos";
+import { getEarn } from "@/lib/earn";
+import { EasyStart } from "@/components/EasyStart";
+import { EasyEarn } from "@/components/EasyEarn";
 
 type Params = Promise<{ lang: string }>;
 
@@ -25,6 +29,8 @@ export default async function LearnHub({ params }: { params: Params }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getDict(lang), L = LEARN[lang];
+  // owner 27.11: the beginners' tab also shows the easiest live offers and the simplest Earn — not only lessons
+  const [{ promos, fetchedAt }, earn] = await Promise.all([getPromos(lang), getEarn().catch(() => ({ offers: [] }))]);
   return (
     <>
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6">
@@ -35,6 +41,8 @@ export default async function LearnHub({ params }: { params: Params }) {
           ...LEARN_IDS.map((id) => ({ id, href: `/${lang}/learn/${id}`, icon: LEARN_ICON[id], title: L.cards[id][0], sub: L.cards[id][1] })),
           { id: "check", href: `/${lang}/check`, icon: "search" as const, title: TOOLS[lang].tools.check[0], sub: TOOLS[lang].tools.check[1] },
         ]} />
+        <div className="-mx-4 sm:-mx-6"><EasyStart promos={promos} lang={lang} now={fetchedAt} /></div>
+        <EasyEarn offers={earn.offers} lang={lang} />
         {/* search articles (owner 27.11): plain answers to what beginners google */}
         <h2 className="mt-12 font-display text-2xl font-semibold tracking-tight">{({ uk: "Статті", en: "Articles", ru: "Статьи" } as const)[lang]}</h2>
         <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
