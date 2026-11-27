@@ -13,6 +13,7 @@ import { findBySlug, slugOf, statusOf } from "@/lib/slug";
 import { compactUsd, duration, fixWording, fmtLabel, localNums, money, nfLocale, noEmoji, num, sentenceCase } from "@/lib/format";
 import { SITE, VENUES, HAS_TG } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
+import { PromoTldr } from "@/components/PromoTldr";
 import { Icon, type IconName } from "@/components/Icon";
 // fact labels get an SVG icon instead of the emoji that used to be part of the text
 /** Key facts grouped under one label each (audit 12.11: "Who can join" twice in a row), list dashes dropped,
@@ -256,7 +257,7 @@ const UI_TX: Record<Locale, {
 }> = {
   uk: {
     reward: "Нагорода", action: "Що зробити", time: "Час", who: "Хто може", allUsers: "Усі користувачі",
-    cat: { competition: "Торгувати — рейтинг", referral: "Запросити друзів", airdrop: "Виконати завдання", listing: "Торгувати новим токеном", bonus: "Депозит або торгівля", earn: "Покласти в Earn", other: "Виконати умови" }, fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
+    cat: { competition: "Торгувати — рейтинг", referral: "Запросити друзів", airdrop: "Виконати завдання", listing: "Торгувати новим токеном", bonus: "Виконати умови бонусу", earn: "Покласти в Earn", other: "Виконати умови" }, fund: "фонд", noAmount: "не вказано", noDeposit: "Без вкладень", tasks: "Завдання", seeRules: "див. умови",
     left: "залишилось", startsIn: "старт через", noEnd: "без дати", forAll: "Обмежень не знайдено", uaOk: "Україна", notUA: "Не для України", onlyNew: "Лише нові", kyc: "KYC", region: (r) => (r === "region" ? "Окремі регіони" : `Лише ${regionName(r, "uk")}`),
     todo: "Що зробити", good: "Що варто знати", more: "Показати умови повністю", ex: "Завдання на сторінці біржі", exTasks: "Кожне завдання — окрема нагорода", quote: "Як написано в правилах",
     s: {
@@ -267,7 +268,7 @@ const UI_TX: Record<Locale, {
   },
   en: {
     reward: "Reward", action: "What to do", time: "Time", who: "Who can join", allUsers: "All users",
-    cat: { competition: "Trade — leaderboard", referral: "Invite friends", airdrop: "Do the tasks", listing: "Trade the new token", bonus: "Deposit or trade", earn: "Put in Earn", other: "Meet the conditions" }, fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
+    cat: { competition: "Trade — leaderboard", referral: "Invite friends", airdrop: "Do the tasks", listing: "Trade the new token", bonus: "Meet the bonus conditions", earn: "Put in Earn", other: "Meet the conditions" }, fund: "pool", noAmount: "not stated", noDeposit: "No deposit", tasks: "Tasks", seeRules: "see the rules",
     left: "left", startsIn: "starts in", noEnd: "no end date", forAll: "No restrictions found", uaOk: "Ukraine", notUA: "Not for Ukraine", onlyNew: "New users only", kyc: "KYC", region: (r) => (r === "region" ? "Some regions" : `${r} only`),
     todo: "What to do", good: "Good to know", more: "Show the full conditions", ex: "Tasks on the exchange page", exTasks: "Each task is a separate reward", quote: "As written in the rules",
     s: {
@@ -278,7 +279,7 @@ const UI_TX: Record<Locale, {
   },
   ru: {
     reward: "Награда", action: "Что сделать", time: "Время", who: "Кто может", allUsers: "Все пользователи",
-    cat: { competition: "Торговать — рейтинг", referral: "Пригласить друзей", airdrop: "Выполнить задания", listing: "Торговать новым токеном", bonus: "Депозит или торговля", earn: "Положить в Earn", other: "Выполнить условия" }, fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
+    cat: { competition: "Торговать — рейтинг", referral: "Пригласить друзей", airdrop: "Выполнить задания", listing: "Торговать новым токеном", bonus: "Выполнить условия бонуса", earn: "Положить в Earn", other: "Выполнить условия" }, fund: "фонд", noAmount: "не указано", noDeposit: "Без вложений", tasks: "Задания", seeRules: "см. условия",
     left: "осталось", startsIn: "старт через", noEnd: "без даты", forAll: "Ограничений не найдено", uaOk: "Украина", notUA: "Не для Украины", onlyNew: "Только новые", kyc: "KYC", region: (r) => (r === "region" ? "Отдельные регионы" : `Только ${regionName(r, "ru")}`),
     todo: "Что сделать", good: "Что стоит знать", more: "Показать условия полностью", ex: "Задания на странице биржи", exTasks: "Каждое задание — отдельная награда", quote: "Как написано в правилах",
     s: {
@@ -448,6 +449,9 @@ export default async function PromoPage({ params }: { params: Params }) {
             <TourButton lang={lang} className="mt-2" />
           </div>
         </header>
+
+        {/* owner 27.11 (beginners): what you get / what to do / how risky, in three plain lines before everything else */}
+        {p.category !== "farming" && <PromoTldr p={p} m={m} lang={lang} futures={lock === "futures"} />}
 
         <div data-tour="promo-actions" className="mt-8 flex flex-wrap items-center gap-3">
           <a href={joinUrl} target="_blank" rel="noopener" className="btn btn-primary h-12 px-6 text-base">{p.category === "farming" ? t.card.open : t.card.join} ↗</a>
