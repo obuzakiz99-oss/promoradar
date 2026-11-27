@@ -1,1 +1,1 @@
-{"id":"tg:coinstore_global/10391","h":"9tSOhVP_ARXPgf44","v":1,"at":1795302366124,"data":{"isPromo":true,"socialOnly":false,"mech":"apr","act":{"kind":"stake"},"aprPct":7.5}}
+{"id":"tg:coinstore_global/10391","h":"RFvv9caAVpcAVzC8","v":1,"at":1795766459174,"data":{"isPromo":true,"socialOnly":false,"mech":"apr","act":{"kind":"stake","lockDays":7},"aprPct":7.5}}
