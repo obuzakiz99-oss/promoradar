@@ -53,7 +53,8 @@ for (const p of [...P].sort((a, b) => b.publishedAt - a.publishedAt)) {
   dup(`${p.venue.id}|t|${(p.titleOrig ?? p.title).toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 40)}`, p, "same headline");
   // same rule as promos.ts: only campaign-like links, never a footer link most posts carry
   const lk = p.meta?.linkKey;
-  if (lk && P.filter((x) => x.venue.id === p.venue.id && x.meta?.linkKey === lk).length <= 4 && (/^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lk) || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lk))) dup(`${p.venue.id}|l|${lk}`, p, "same campaign link");
+  const short = !!lk && /^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lk);   // same limits as promos.ts
+  if (lk && P.filter((x) => x.venue.id === p.venue.id && x.meta?.linkKey === lk).length <= (short ? 8 : 4) && (short || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lk))) dup(`${p.venue.id}|l|${lk}`, p, "same campaign link");
   try { const u = new URL(p.url); if (u.host !== "t.me" && u.pathname.length > 1 && !/^\/[a-z-]+\/?$/i.test(u.pathname) && !/\/rewards\/mobile|\/download|channel-verification/i.test(u.pathname)) dup(`${p.venue.id}|u|${u.host.replace(/^www\./, "")}${u.pathname.replace(/\/$/, "")}`, p, "same page"); } catch { /* bad url → below */ }
 }
 

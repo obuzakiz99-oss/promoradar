@@ -389,8 +389,11 @@ async function getPromosLive(): Promise<Collected> {
     // Only a campaign-like link counts, and never one most posts of the channel carry (Bitrue puts /rewards/mobile in
     // every post — the first version merged 8 different Bitrue promos)
     const lkRaw = p.meta?.linkKey;
-    const lkOk = !!lkRaw && (linkUse.get(`${p.venue.id}|${lkRaw}`) ?? 0) <= 4
-      && (/^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lkRaw) || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lkRaw));
+    // audit 27.11 (evening): Toobit posted its Futures Bot campaign 5 times with one bit.ly — a short link is made for one
+    // campaign, so it may repeat up to 8 times (site paths like Bitrue /rewards/mobile still stop at 4)
+    const short = !!lkRaw && /^(bit\.ly|tinyurl\.com|t\.co|rb\.gy|shorturl\.at|s\.[a-z]+\.com)\//.test(lkRaw);
+    const lkOk = !!lkRaw && (linkUse.get(`${p.venue.id}|${lkRaw}`) ?? 0) <= (short ? 8 : 4)
+      && (short || /\/(land|event|events|campaigns?|activity|activities|promo|competition|rank|topic|launchhub|act)\b/.test(lkRaw));
     const lk = lkOk ? `${p.venue.id}|link|${lkRaw}` : "";
     if (lk && !p.sponsored && !dups.has(p.id)) { if (seenUrl.has(lk)) dupOf(p.id, lk); else seenUrl.set(lk, p.id); }
     // the site's own page and a Telegram post about it point to the same article path
