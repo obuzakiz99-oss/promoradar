@@ -8,6 +8,7 @@ import { useEffect } from "react";
  *  click/<section>/<label>  — buttons, tabs, filter chips, FAQ items (numbers stripped: "Бонуси 13" → "Бонуси")
  *  search/<section>/<text>  — what people look for in the site's search boxes (short, letters and digits only)
  *  calc/<section>           — someone typed an amount into a calculator (once per page view)
+ *  stay/<section>           — the page stayed open and visible 30 s (views minus these ≈ who left at once)
  */
 type GC = { count: (o: { path: string; title?: string; event: boolean }) => void };
 
@@ -54,9 +55,21 @@ export function Track() {
         if (q.length >= 2) send(`search/${section()}/${q}`);
       }
     };
+    // "stay/<section>": the visitor kept the page open and visible for 30 s — page views minus these = who left at once
+    let seen = 0, last = Date.now(), done = false, page = location.pathname;
+    const tick = () => {
+      if (location.pathname !== page) { page = location.pathname; seen = 0; done = false; last = Date.now(); return; }   // in-site navigation = a new page view
+      if (done) return;
+      if (document.visibilityState === "visible") seen += Date.now() - last;
+      last = Date.now();
+      if (seen >= 30_000) { done = true; send(`stay/${section()}`); }
+    };
+    const timer = window.setInterval(tick, 5000);
+    const onVis = () => { tick(); last = Date.now(); };
+    document.addEventListener("visibilitychange", onVis);
     document.addEventListener("click", onClick, true);
     document.addEventListener("change", onChange, true);
-    return () => { document.removeEventListener("click", onClick, true); document.removeEventListener("change", onChange, true); };
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", onVis); document.removeEventListener("click", onClick, true); document.removeEventListener("change", onChange, true); };
   }, []);
   return null;
 }
