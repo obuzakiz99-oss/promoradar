@@ -50,11 +50,14 @@ export const LEVEL_CLS: Record<Level, string> = {
 };
 
 /** "$100 → +$0.83 a month" — profit in plain dollars. */
-export function plainProfit(apr: number, lang: Locale, amount = 100): string {
+// audit 27.11 (texts): a 2-day 600% product read "$100 → ≈ +$50 за місяць" — a term under a month shows income for the term
+export function plainProfit(apr: number, lang: Locale, amount = 100, days?: number): string {
   // a pool that has just opened (almost nothing staked yet) shows an APR that collapses within hours
   if (apr >= 1000) return { uk: "Пул щойно відкрився — APR швидко впаде", en: "Pool just opened — the APR will drop fast", ru: "Пул только открылся — APR быстро упадёт" }[lang];
-  const m = (amount * apr) / 100 / 12;
+  const short = days !== undefined && days > 0 && days < 30;
+  const m = short ? (amount * apr) / 100 * days! / 365 : (amount * apr) / 100 / 12;
   const v = m >= 10 ? m.toFixed(0) : m >= 1 ? m.toFixed(1) : m.toFixed(2);
   const vl = lang === "en" ? v : v.replace(".", ",");   // decimal comma in uk/ru (audit 2)
+  if (short) return { uk: `$${amount} → ≈ +$${vl} за ${days} дн.`, en: `$${amount} → ≈ +$${v} in ${days} days`, ru: `$${amount} → ≈ +$${vl} за ${days} дн.` }[lang];
   return { uk: `$${amount} → ≈ +$${vl} за місяць`, en: `$${amount} → ≈ +$${v} a month`, ru: `$${amount} → ≈ +$${vl} в месяц` }[lang];
 }

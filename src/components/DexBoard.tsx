@@ -60,6 +60,21 @@ function logo(p: DexPool) {
   return { name: p.project, logo: p.logo, color: `hsl(${h} 65% 60%)`, ink: "#0b0d10", monogram: p.project.slice(0, 2).toUpperCase() };
 }
 
+// audit 27.11 (texts): DefiLlama pool notes stayed English on uk/ru — "For LP | Maturity 17DEC2026", "Expert Mode",
+// "Concentrated - 0.1%"; the common ones are translated, the rest keep the decimal comma
+const MON3 = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const META_TX: Record<"uk" | "ru", Array<[RegExp, string]>> = {
+  uk: [[/\bFor LP\b/gi, "для LP"], [/\bFor buying (PT)-\S+/gi, "купівля $1"], [/\bMaturity\b/gi, "погашення"], [/\bExpert Mode\b/gi, "експертний режим"], [/\bConcentrated\b/gi, "концентрована ліквідність"], [/\bStable\b/g, "стабільний"], [/\bVolatile\b/g, "волатильний"]],
+  ru: [[/\bFor LP\b/gi, "для LP"], [/\bFor buying (PT)-\S+/gi, "покупка $1"], [/\bMaturity\b/gi, "погашение"], [/\bExpert Mode\b/gi, "экспертный режим"], [/\bConcentrated\b/gi, "концентрированная ликвидность"], [/\bStable\b/g, "стабильный"], [/\bVolatile\b/g, "волатильный"]],
+};
+function metaOf(m: string, lang: Locale): string {
+  let s = m.replace(/\s*\|\s*/g, " · ").replace(/\s+-\s+/g, " · ");
+  if (lang === "en") return s;
+  for (const [re, to] of META_TX[lang]) s = s.replace(re, to);
+  s = s.replace(/\b(\d{1,2})(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(20\d\d)\b/g, (_, d: string, mo: string, y: string) => d.padStart(2, "0") + "." + String(MON3.indexOf(mo) + 1).padStart(2, "0") + "." + y);
+  return dec(s, lang);
+}
+
 export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl, hedge = {} }: { pools: DexPool[]; chains: string[]; categories: string[]; t: Dict; lang: Locale; fullUrl?: string; hedge?: Record<string, Hedge> }) {
   // audit 23.11: decimal comma on uk/ru
   const pct = (...a: Parameters<typeof pct0>) => dec(pct0(...a), lang);
@@ -265,7 +280,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
                         {p.stable && <span className="rounded bg-teal/10 px-1 font-sans text-xs text-teal">{A.stableTag}</span>}
                         {p.il && <span className="rounded bg-amber/10 px-1 font-sans text-xs text-amber"><Term k="il" lang={lang}>{A.il}</Term></span>}
                       </div>
-                      <div className="break-words text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${p.meta}` : ""}</div>
+                      <div className="break-words text-xs font-semibold text-ink-3">{p.project}{p.meta ? ` · ${metaOf(p.meta, lang)}` : ""}</div>
                     </div>
                   </div>
                 </td>
