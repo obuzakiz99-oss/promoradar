@@ -88,7 +88,7 @@ const uk = {
     disclaimer: "APR — оцінка біржі на момент оновлення; фактичний дохід залежить від ціни токена і кількості учасників.",
   },
   filters: { all: "Усі", search: "Пошук: токен, біржа, протокол…", sort: "Сортувати", newest: "Нові", ending: "Скоро завершуються", biggest: "Найбільша винагорода", venues: "Майданчики", more: "Ще", less: "Згорнути", reset: "Скинути", empty: "Нічого не знайдено. Спробуйте інші фільтри.", results: "результатів" },
-  cat: { airdrop: "Аірдроп / Launchpool", competition: "Змагання", bonus: "Бонуси", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Інше" } as Record<Category, string>,
+  cat: { airdrop: "Роздачі токенів", competition: "Змагання", bonus: "Бонуси", earn: "Earn / Стейкінг", farming: "Фарм ліквідності", listing: "Лістинг-кампанія", referral: "Реферальна", other: "Інше" } as Record<Category, string>,
   card: {
     join: "Взяти участь", details: "Умови", pool: "Загальний фонд на всіх", endsIn: "Завершиться через", started: "Опубліковано", new: "Нове", sponsored: "Реклама", soon: "Старт",
     apr: "APR винагород", base: "базовий", tvl: "TVL", ongoing: "Постійна програма", actions: "Що зробити", via: "джерело", confirmed: "Підтверджено", hot: "Гаряче", open: "Відкрити", requires: "Потрібно",

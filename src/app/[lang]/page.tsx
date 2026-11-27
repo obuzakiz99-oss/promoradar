@@ -67,7 +67,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         }).replace(/</g, "\\u003c") }} />
         <Hero t={t} active={promos.filter((p) => (lang !== "uk" || geoAllowed(p, "ua")) && !(p.startsAt && p.startsAt > Date.now())).length /* audit 27.11 (evening): not-started promos were counted as active */} poolsUsd={maxPerUser} poolsLabel={({ uk: "реально отримаєте в найкращій акції", en: "you can really get in the best promo", ru: "реально получите в лучшей акции" } as const)[lang]} sources={venueCount} radar={radar} radarVenues={radarVenues} venueBase={withBase(`/${lang}/v/`)}
           live={{ at: fetchedAt, newDay, lang }}
-          learn={{ href: withBase(`/${lang}/learn/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
+          learn={{ href: withBase(`/${lang}/learn/start/`), label: { uk: "Вперше в крипті? Почніть тут →", en: "New to crypto? Start here →", ru: "Впервые в крипте? Начните здесь →" }[lang] }}
           tour={{ href: tourHref(withBase(""), lang), label: TOUR_LABEL[lang] }} />
         {/* owner 27.11: beginners first see up to 4 easy offers explained in one line */}
         <EasyStart promos={promos} lang={lang} now={fetchedAt} />

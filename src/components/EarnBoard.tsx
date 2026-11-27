@@ -214,6 +214,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         });
         type R = (typeof rows)[number];
         // audit 27.11: a fixed product shorter than a month earns only for its term ("2 дн. 600%" showed "+100 USDT/міс")
+        // beginner walkthrough 27.11: "+0 USDT/міс" next to 4,75% looked like a bug — below the minimum say so
+        const under = (r: R) => (r.o.minAmount && qty > 0 && qty < r.o.minAmount ? ({ uk: `менше мінімуму (${fmtCoin(r.o.minAmount)})`, en: `below the minimum (${fmtCoin(r.o.minAmount)})`, ru: `меньше минимума (${fmtCoin(r.o.minAmount)})` } as const)[lang] : undefined);
         const termInc = (r: R) => (r.o.days && r.o.days < 30 ? { v: (r.yr * r.o.days) / 365, s: ` / ${r.o.days} ${A.days}` } : { v: r.yr / 12, s: C.mo });
         const usdOf = (x: number) => (price && !STABLE.test(coin) ? ` ≈ ${fmtUsd(x * price)}` : "");
         const nameCell = ({ o, v, top }: R) => (
@@ -280,7 +282,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                     <div className="text-right">{aprCell(r.o)}</div>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 font-mono text-xs">
-                    <div><div className="font-sans text-ink-3">{COLS[lang].income}</div><span className="font-bold text-lime">+{fmtCoin(termInc(r).v)} {r.o.coin}</span>{termInc(r).s}</div>
+                    <div><div className="font-sans text-ink-3">{COLS[lang].income}</div>{under(r) ? <span className="font-sans font-semibold text-amber">{under(r)}</span> : <><span className="font-bold text-lime">+{fmtCoin(termInc(r).v)} {r.o.coin}</span>{termInc(r).s}</>}</div>
                     <div><div className="font-sans text-ink-3">{COLS[lang].limits}</div>{limits(r.o)}</div>
                   </div>
                   <div data-tour={ri === 0 ? "earn-actions" : undefined} className="mt-3">{pcButton(r, "w-full justify-center")}</div>
@@ -312,7 +314,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
                             {r.yr > 0 ? <>
                               <div className="font-bold text-lime">+{fmtCoin(termInc(r).v)} {r.o.coin}<span className="text-xs font-semibold text-ink-3">{termInc(r).s}</span></div>
                               <div className="text-xs text-ink-3">{fmtCoin(r.yr)} {r.o.coin}{C.yr}{usdOf(r.yr)}</div>
-                            </> : <span className="text-ink-3">—</span>}
+                            </> : under(r) ? <span className="font-sans text-xs font-semibold text-amber">{under(r)}</span> : <span className="text-ink-3">—</span>}
                           </td>
                           <td className="px-4 py-3 text-right font-mono text-xs text-ink-2">{limits(r.o)}</td>
                           <td data-tour={ri === 0 ? "earn-actions" : undefined} className="px-4 py-3 text-right"><div className="flex justify-end gap-2">
