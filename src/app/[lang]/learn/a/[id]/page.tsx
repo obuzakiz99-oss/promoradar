@@ -8,6 +8,7 @@ import { ARTICLES, ARTICLE_IDS } from "@/lib/articles";
 import { ldJson } from "@/lib/ldjson";
 import { SITE } from "@/config/site";
 import { Footer } from "@/components/Sections";
+import { AutoTerms } from "@/components/AutoTerms";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return ARTICLE_IDS.map((id) => ({ id })); }
@@ -54,7 +55,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
         {a.sections.map((s) => (
           <section key={s.h} className="mt-8">
             <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">{s.h}</h2>
-            {s.p.map((p) => <p key={p.slice(0, 40)} className="mt-3 leading-relaxed text-ink-2">{p}</p>)}
+            {s.p.map((p) => <p key={p.slice(0, 40)} className="mt-3 leading-relaxed text-ink-2"><AutoTerms text={p} lang={lang} /></p>)}
           </section>
         ))}
 

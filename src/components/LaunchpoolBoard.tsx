@@ -16,7 +16,7 @@ import { aprText, compactUsd, dec, duration, fmtLabel, money } from "@/lib/forma
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 import { Icon } from "./Icon";
 
-type Sort = "profit" | "apr" | "hedged" | "end";
+type Sort = "easy" | "profit" | "apr" | "hedged" | "end";
 const BELOW: Record<Locale, (min: string) => string> = { uk: (m) => `Сума менша за мінімум (від ${m})`, en: (m) => `Below the minimum (from ${m})`, ru: (m) => `Сумма меньше минимума (от ${m})` };
 const HEDGE_LOSS: Record<Locale, string> = { uk: "хедж коштує більше, ніж дає пул", en: "the hedge costs more than the pool pays", ru: "хедж стоит больше, чем даёт пул" };
 const HEDGE_VIA: Record<Locale, (c: string, ex: string) => string> = { uk: (c, ex) => `шорт ${c} на ${ex}`, en: (c, ex) => `short ${c} on ${ex}`, ru: (c, ex) => `шорт ${c} на ${ex}` };
@@ -123,7 +123,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
     setText(String(u === "coin" ? +(amount / coinPrice).toPrecision(6) : Math.round(amount)));
     setUnit(u);
   };
-  const [sort, setSort] = useState<Sort>("profit");
+  const [sort, setSort] = useState<Sort>("easy");   // owner 27.11 (beginners): simple pools first by default
   const novice = useNovice();
   useEffect(() => { setNow(Date.now()); const i = setInterval(() => setNow(Date.now()), 30_000); return () => clearInterval(i); }, []);
 
@@ -171,6 +171,8 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const rank = useMemo(() => {
     const out = [...rowsRaw];
     if (sort === "profit") out.sort((a, b) => (b.profit ?? -1) - (a.profit ?? -1) || (b.pool.apr ?? -1) - (a.pool.apr ?? -1));   // audit 27.11 (evening): no prices → rSPY 20% above rNVDA 44%
+    const lv = (r: Row) => ({ easy: 0, medium: 1, hard: 2 } as const)[poolLevel(r.pool.stake, r.p.token)] + (r.danger ? 3 : 0);
+    if (sort === "easy") out.sort((a, b) => lv(a) - lv(b) || (b.profit ?? -1) - (a.profit ?? -1) || (b.pool.apr ?? -1) - (a.pool.apr ?? -1));
     if (sort === "apr") out.sort((a, b) => (b.pool.apr ?? -1) - (a.pool.apr ?? -1));
     // "hedged": real dollar yield — stable stakes use plain APR, volatile ones their hedged APR (or −∞ if not hedgeable)
     const realApr = (r: Row) => (!r.hc.needed ? r.pool.apr ?? -1 : r.hc.possible ? r.hc.hedgedApr ?? -1 : -1e9);
@@ -266,9 +268,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
       <div data-tour="launchpools-sort" className="mt-6 flex items-center justify-between gap-3">
         <div className="font-mono text-xs text-ink-3">{rows.length} {L.statLive}</div>
         <div className="flex h-10 items-center rounded-xl border border-line bg-white/[0.02] p-1" role="group">
-          {(["profit", "hedged", "apr", "end"] as Sort[]).map((s) => (
+          {(["easy", "profit", "hedged", "apr", "end"] as Sort[]).map((s) => (
             <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s} className={`${s === "hedged" ? "adv " : ""}h-full rounded-lg px-2.5 text-xs font-bold sm:px-3 ${sort === s ? "bg-white/10 text-ink" : "text-ink-3 hover:text-ink"}`}>
-              {s === "profit" ? L.sortProfit : s === "apr" ? L.sortApr : s === "hedged" ? L.hedgeApr : L.sortEnd}
+              {s === "easy" ? ({ uk: "Для новачків", en: "Beginner-first", ru: "Для новичков" } as const)[lang] : s === "profit" ? L.sortProfit : s === "apr" ? L.sortApr : s === "hedged" ? L.hedgeApr : L.sortEnd}
             </button>
           ))}
         </div>
@@ -345,6 +347,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
                 <div className="font-mono text-xs text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtN(lang, pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtN(lang, pool.maxStake)}` : ""}
+                  {(() => { const d = Math.min(r.chgStake ?? 0, r.chgReward ?? 0); const c = (r.chgStake ?? 0) <= (r.chgReward ?? 0) ? pool.stake : p.token;
+                    // beginner walkthrough 27.11: INFI 194% APR while the coin was −36% in 24 h — say it in red, in words
+                    return d <= -20 ? <div className="mt-1 font-sans text-xs font-bold text-rose">⚠ {({ uk: `${c} впав на ${Math.round(-d)}% за добу — можна втратити більше, ніж дасть пул`, en: `${c} fell ${Math.round(-d)}% in 24 h — you can lose more than the pool pays`, ru: `${c} упал на ${Math.round(-d)}% за сутки — можно потерять больше, чем даст пул` } as const)[lang]}</div> : null; })()}
                 </div>
               </div>
 
@@ -487,6 +492,9 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                       </div>
                       <div className="font-mono text-xs text-ink-3">
                         {pool.minStake ? `${L.min} ${fmtN(lang, pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtN(lang, pool.maxStake)}` : ""}
+                        {(() => { const d = Math.min(r.chgStake ?? 0, r.chgReward ?? 0); const c = (r.chgStake ?? 0) <= (r.chgReward ?? 0) ? pool.stake : p.token;
+                    // beginner walkthrough 27.11: INFI 194% APR while the coin was −36% in 24 h — say it in red, in words
+                    return d <= -20 ? <div className="mt-1 font-sans text-xs font-bold text-rose">⚠ {({ uk: `${c} впав на ${Math.round(-d)}% за добу — можна втратити більше, ніж дасть пул`, en: `${c} fell ${Math.round(-d)}% in 24 h — you can lose more than the pool pays`, ru: `${c} упал на ${Math.round(-d)}% за сутки — можно потерять больше, чем даст пул` } as const)[lang]}</div> : null; })()}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">

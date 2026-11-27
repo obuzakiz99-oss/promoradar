@@ -19,6 +19,7 @@ import { LEARN } from "@/lib/i18n-learn";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoExplorer } from "@/components/PromoExplorer";
 import { VenueHowTo } from "@/components/VenueHowTo";
+import { promoLevel } from "@/lib/level";
 import { Footer } from "@/components/Sections";
 import { SiteTour, TourButton } from "@/components/SiteTour";
 import { VENUE_TOUR } from "@/lib/tours/venue";
@@ -131,7 +132,7 @@ export default async function VenuePage({ params }: { params: Params }) {
         </section>
 
         {/* owner 27.11: "як отримати бонус на <біржа>" — the search question, answered on the exchange's own page */}
-        {VENUES[id].kind === "cex" && <VenueHowTo lang={lang} name={VENUES[id].name} live={mine.length} liveNew={mine.filter((p) => p.meta?.forNew).length} />}
+        {VENUES[id].kind === "cex" && <VenueHowTo lang={lang} name={VENUES[id].name} live={mine.length} liveNew={mine.filter((p) => p.meta?.forNew).length} id={id} easy={mine.filter((p) => promoLevel(p) === "easy").length} />}
 
         <section data-tour="venue-others" className="mt-16">
           <h2 className="text-xs font-bold uppercase tracking-wider text-ink-3">{t.venue.all}</h2>

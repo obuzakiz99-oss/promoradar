@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { AutoTerms } from "./AutoTerms";
+import type { Locale } from "@/lib/i18n";
 
 export interface CheckStep { h: string; b: string; img?: string; alt?: string }
 // owner 13.11: it was not clear how the progress fills — every step now has a labelled "Done" check and a hint
@@ -43,7 +45,7 @@ export function CheckSteps({ id, steps, lang = "uk", big = false, cols = 1 }: { 
                 </span>
                 <div className="min-w-0 flex-1">
                   <h3 className={`font-bold ${big ? "text-lg" : ""} ${on ? "line-through decoration-lime/60" : ""}`}>{s.h}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-2">{s.b}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-2"><AutoTerms text={s.b} lang={lang as Locale} /></p>
                   <button type="button" onClick={() => toggle(i)} aria-pressed={on}
                     className={`mt-3 inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 text-xs font-bold transition ${on ? "border-lime/50 bg-lime/10 text-lime" : "border-line text-ink-2 hover:border-lime/40 hover:text-ink"}`}>
                     <span aria-hidden="true" className={`grid size-4 place-items-center rounded border ${on ? "border-lime bg-lime text-on-accent" : "border-ink-3"}`}>{on ? "✓" : ""}</span>

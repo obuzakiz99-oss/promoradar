@@ -14,6 +14,7 @@ import { compactUsd, duration, fixWording, fmtLabel, localNums, money, nfLocale,
 import { SITE, VENUES, HAS_TG } from "@/config/site";
 import { VenueLogo } from "@/components/VenueLogo";
 import { PromoTldr } from "@/components/PromoTldr";
+import { AutoTerms } from "@/components/AutoTerms";
 import { Icon, type IconName } from "@/components/Icon";
 // fact labels get an SVG icon instead of the emoji that used to be part of the text
 /** Key facts grouped under one label each (audit 12.11: "Who can join" twice in a row), list dashes dropped,
@@ -597,7 +598,7 @@ export default async function PromoPage({ params }: { params: Params }) {
                 {steps.map(([ic, x], i) => (
                   <li key={i} className="flex gap-3 rounded-xl bg-white/[0.03] p-3">
                     <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-lime/10 font-mono text-sm font-bold text-lime">{i + 1}</span>
-                    <span className="min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]"><Icon name={ic} className="mr-1 size-4 text-ink-3" />{x}</span>
+                    <span className="min-w-0 text-sm leading-snug text-ink [overflow-wrap:anywhere]"><Icon name={ic} className="mr-1 size-4 text-ink-3" /><AutoTerms text={x} lang={lang} /></span>
                   </li>
                 ))}
               </ol>

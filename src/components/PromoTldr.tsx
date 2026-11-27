@@ -2,6 +2,7 @@ import type { Promo } from "@/lib/types";
 import type { Locale } from "@/lib/i18n";
 import { compactUsd, money, num } from "@/lib/format";
 import { FORM_BADGE } from "@/lib/payout-i18n";
+import { AutoTerms } from "./AutoTerms";
 
 /**
  * "Коротко" — three plain lines at the top of a promo page (owner 27.11: make the site easier for people who don't know
@@ -69,9 +70,9 @@ export function PromoTldr({ p, m, lang, futures }: { p: Promo; m: M; lang: Local
     <section className="mt-6 rounded-2xl border border-lime/25 bg-lime/[0.04] p-4 sm:p-5">
       <h2 className="text-xs font-bold uppercase tracking-wider text-lime">{T.h}</h2>
       <dl className="mt-3 space-y-2.5">
-        {row(T.get, <>{get}{form && <span className="ml-2 rounded-md bg-white/[0.06] px-1.5 py-0.5 text-xs font-bold text-ink-2">{form}</span>}</>)}
-        {row(T.todo, <>{todo.charAt(0).toUpperCase() + todo.slice(1)}{end && <span className="text-ink-3"> · {T.until(end)}</span>}</>)}
-        {row(T.risk, <span className={`inline-flex items-center gap-2 ${risk.c}`}><span className={`size-2 shrink-0 rounded-full ${risk.dot}`} />{risk.t}</span>)}
+        {row(T.get, <><AutoTerms text={get} lang={lang} />{form && <span className="ml-2 rounded-md bg-white/[0.06] px-1.5 py-0.5 text-xs font-bold text-ink-2">{form}</span>}</>)}
+        {row(T.todo, <><AutoTerms text={todo.charAt(0).toUpperCase() + todo.slice(1)} lang={lang} />{end && <span className="text-ink-3"> · {T.until(end)}</span>}</>)}
+        {row(T.risk, <span className={`inline-flex items-center gap-2 ${risk.c}`}><span className={`size-2 shrink-0 rounded-full ${risk.dot}`} /><span><AutoTerms text={risk.t} lang={lang} /></span></span>)}
       </dl>
     </section>
   );

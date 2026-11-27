@@ -59,12 +59,29 @@ const TX: Record<Locale, { h: (v: string) => string; steps: (v: string) => Array
   },
 };
 
-export function VenueHowTo({ lang, name, live, liveNew }: { lang: Locale; name: string; live: number; liveNew: number }) {
-  const T = TX[lang], faq = T.faq(name, live, liveNew);
+// beginner walkthrough 27.11: Bybit's page had only 4 trading contests — a newcomer found nothing to do there
+const EASY: Record<Locale, (v: string) => { h: string; b: string; earn: string; bonuses: string }> = {
+  uk: (v) => ({ h: `Що тут може новачок`, b: `Зараз у ${v} немає простих акцій для новачка — лише змагання для трейдерів. Найпростіше на цій біржі — покласти USDT в Earn: відсотки щодня, забрати можна будь-коли.`, earn: `Ставки Earn на ${v} →`, bonuses: "Прості бонуси на інших біржах →" }),
+  en: (v) => ({ h: "What a beginner can do here", b: `${v} has no easy promos right now — only contests for traders. The simplest thing here is USDT in Earn: interest every day, withdraw any time.`, earn: `Earn rates on ${v} →`, bonuses: "Easy bonuses on other exchanges →" }),
+  ru: (v) => ({ h: "Что здесь может новичок", b: `Сейчас у ${v} нет простых акций для новичка — только соревнования для трейдеров. Проще всего на этой бирже — положить USDT в Earn: проценты каждый день, забрать можно в любой момент.`, earn: `Ставки Earn на ${v} →`, bonuses: "Простые бонусы на других биржах →" }),
+};
+
+export function VenueHowTo({ lang, name, live, liveNew, id, easy = 1 }: { lang: Locale; name: string; live: number; liveNew: number; id?: string; easy?: number }) {
+  const T = TX[lang], faq = T.faq(name, live, liveNew), E = EASY[lang](name);
   return (
     <section className="mt-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson({ "@context": "https://schema.org", "@type": "FAQPage",
         mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) }) }} />
+      {id && easy === 0 && (
+        <div className="mb-6 rounded-2xl border border-lime/25 bg-lime/[0.04] p-5">
+          <div className="font-bold text-ink">🌱 {E.h}</div>
+          <p className="mt-1 text-sm leading-relaxed text-ink-2">{E.b}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a href={`/${lang}/earn/?ex=${id}`} className="btn btn-primary h-10 px-4 text-sm">{E.earn}</a>
+            <a href={`/${lang}/bonuses/`} className="btn btn-ghost h-10 px-4 text-sm">{E.bonuses}</a>
+          </div>
+        </div>
+      )}
       <h2 className="font-display text-2xl font-semibold tracking-tight">{T.h(name)}</h2>
       <ol className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
         {T.steps(name).map(([h, b], i) => (
