@@ -11,7 +11,7 @@ import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { venueOf } from "@/config/site";
-import { compactUsd, shortDate } from "@/lib/format";
+import { compactUsd, fmtLabel, shortDate } from "@/lib/format";
 import { LaunchpoolBoard } from "@/components/LaunchpoolBoard";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
@@ -136,7 +136,7 @@ export default async function Launchpools({ params }: { params: Params }) {
         {/* board */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6">
           <LaunchpoolBoard projects={active} prices={prices} changes={changes} hedge={hedge} exchanges={exchanges} t={t} lang={lang} serverNow={now} sparks={sparks}
-            extra={ann.map((p) => ({ id: p.id, href: withBase(`/${lang}/p/${slugOf(p)}/`), venue: p.venue, title: p.title, date: p.publishedAt || undefined, reward: p.reward?.label, endsAt: p.endsAt }))} />
+            extra={ann.map((p) => ({ id: p.id, href: withBase(`/${lang}/p/${slugOf(p)}/`), venue: p.venue, title: p.title, date: p.publishedAt || undefined, reward: p.reward?.label && fmtLabel(p.reward.label, lang), endsAt: p.endsAt }))} />
           <p className="mt-4 text-xs text-ink-3">{L.disclaimer}</p>
 
           {quiet.length > 0 && (

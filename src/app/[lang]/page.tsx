@@ -1,3 +1,4 @@
+import { fmtLabel } from "@/lib/format";
 import { ldJson } from "@/lib/ldjson";
 import { rankOf, friendlyRank } from "@/lib/rank";
 import { notFound } from "next/navigation";
@@ -32,7 +33,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const radarVenues = Object.fromEntries([...new Set(promos.map((p) => p.venue.id))].filter((id) => VENUES[id]).map((id) => [id, promos.find((p) => p.venue.id === id)!.venue]));
   // audit 23.11: the radar said "Binance 19" while the list (UA filter) showed 12 — count what this reader sees
   const radar: RadarItem[] = promos.filter((p) => radarVenues[p.venue.id] && (lang !== "uk" || geoAllowed(p, "ua"))).map((p) => ({
-    id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label, href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
+    id: p.id, venue: p.venue.id, title: p.title, category: p.category, usd: p.reward?.usd, label: p.reward?.label && fmtLabel(p.reward.label, lang), href: withBase(`/${lang}/p/${slugOf(p)}/`), hard: promoLevel(p) === "hard",
   }));
   // first screen of the feed (best value first, as the feed sorts by default); the rest is loaded from /api/promos.json
   const pins = todayPins(promos, lang, fetchedAt);

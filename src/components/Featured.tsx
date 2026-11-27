@@ -1,7 +1,7 @@
 import { catLabel } from "@/lib/catlabel";
 import type { Promo } from "@/lib/types";
 import type { Dict } from "@/lib/i18n";
-import { compactUsd } from "@/lib/format";
+import { compactUsd, fmtLabel } from "@/lib/format";
 import { VenueLogo } from "./VenueLogo";
 import { CAT_STYLE } from "./PromoCard";
 import { promoLevel } from "@/lib/level";
@@ -22,7 +22,7 @@ export function Ticker({ promos, t, lang }: { promos: Promo[]; t: Dict; lang: st
           <VenueLogo v={p.venue} size={22} rounded="rounded-md" />
           <span className="font-bold text-ink">{p.venue.name}</span>
           <a href={page(p, lang)} tabIndex={aria ? -1 : undefined} className="text-ink-2 hover:text-ink">{p.title}</a>
-          {p.reward && <span className="rounded-md bg-lime/10 px-1.5 py-0.5 font-mono text-xs font-bold text-lime">{p.reward.label}</span>}
+          {p.reward && <span className="rounded-md bg-lime/10 px-1.5 py-0.5 font-mono text-xs font-bold text-lime">{fmtLabel(p.reward.label, lang)}</span>}
         </li>
       ))}
     </ul>

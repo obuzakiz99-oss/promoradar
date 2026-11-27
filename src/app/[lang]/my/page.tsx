@@ -1,3 +1,4 @@
+import { fmtLabel } from "@/lib/format";
 import { alt, withOg } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -28,7 +29,7 @@ export default async function My({ params }: { params: Params }) {
   const t = getDict(lang), T = TOOLS[lang];
   const { promos, fetchedAt } = await getPromos(lang);
   const light: MyPromo[] = promos.map((p) => ({
-    id: p.id, title: p.title, venue: p.venue, url: p.url, href: withBase(`/${lang}/p/${slugOf(p)}/`), endsAt: p.endsAt, category: p.category, reward: p.reward?.label,
+    id: p.id, title: p.title, venue: p.venue, url: p.url, href: withBase(`/${lang}/p/${slugOf(p)}/`), endsAt: p.endsAt, category: p.category, reward: p.reward?.label && fmtLabel(p.reward.label, lang),
   }));
   return (
     <>
