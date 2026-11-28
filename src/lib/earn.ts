@@ -101,7 +101,12 @@ async function mexc(): Promise<EarnOffer[]> {
     const base = n(p.showApr) ?? n(p.baseApr) ?? 0;
     const best = Math.max(base, ...tiers.map((t: any) => t.apr));
     const fixed = p.investPeriodType === "FIXED";
+    // audit 28.11 (sections): the boosted tier's limit was read but never stored — "1,50% до 13,0%" was counted at 1,5%
+    // on any amount and showed no "≤ N" note; like Binance/Bybit, the first tier (from 0) carries the boosted rate
+    const t0 = tiers[0], lo = tiers.length ? Math.min(...tiers.map((t: any) => t.apr)) : base;
+    const tierMax = t0 && t0.apr === best && best > lo + 0.01 && (t0.end ?? 0) > 0 ? t0.end : undefined;
     out.push({
+      tierMax, tierNote: tierMax ? `≤ ${fmtAmt(tierMax)} ${p.currency}` : undefined,
       exchange: "mexc", coin: p.currency, type: fixed ? "fixed" : "flexible",
       apr: tiers.length ? Math.min(...tiers.map((t: any) => t.apr)) : base, aprMax: best > base + 0.01 || tiers.length ? best : undefined,
       days: fixed ? n(p.fixedInvestPeriodCount) : undefined, url: "https://www.mexc.com/earn",
@@ -156,7 +161,8 @@ export async function getEarn(): Promise<EarnData> {
     const k = keys[i];
     if (r.status === "rejected") { status[k] = { ok: false, count: 0, error: String(r.reason).slice(0, 140) }; return; }
     // sanity: drop absurd values (data errors)
-    const clean = r.value.filter((o) => o.apr < 1000 && (o.aprMax ?? 0) < 5000);
+    // audit 28.11 (sections): Binance listed RLUSD/WBETH/BNSOL at 0% (only its loader had no apr > 0 filter)
+    const clean = r.value.filter((o) => o.apr > 0 && o.apr < 1000 && (o.aprMax ?? 0) < 5000);
     offers.push(...clean);
     status[k] = { ok: true, count: clean.length };
   });

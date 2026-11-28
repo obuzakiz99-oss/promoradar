@@ -69,7 +69,7 @@ Strict rules:
 - Keep amounts, tickers and dates exactly as in the rules; write times with their timezone.
 - No promises of profit, no investment advice. Never suggest multiple accounts, VPNs, fake KYC or any way around the rules.
 - Plain, friendly language, short sentences; explain jargon in a few words when used.
-- Write three versions with the same content: "uk" in natural Ukrainian, "en" in English, "ru" in natural Russian. Each must read as written by a native speaker, not as a literal translation.`;
+- Write three versions with the same content: "uk" in natural Ukrainian, "en" in English, "ru" in natural Russian. Each must read as written by a native speaker, not as a literal translation. In "uk" and "ru" translate every quoted phrase and term (keep English only for exact button/menu labels in «» and for brand names and tickers), and never mention "the provided text" — say "the rules" / "the announcement".`;   // audit 28.11 (texts): uk/ru explainers quoted «share up to 1 000», «take it all», "(14 business days)", «в наданому тексті»
 
 function rulesText(p: Promo, d: PromoDetails): string {
   const lines = d.blocks.map((b) => (b.t === "h" ? `## ${b.x}` : b.t === "li" ? `- ${b.x}` : b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x));

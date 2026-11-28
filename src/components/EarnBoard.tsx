@@ -237,11 +237,14 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
             </div>
           </div>
         );
+        // audit 28.11 (sections): the "$100 →" hint passed 100 coins to earnYear, but tierMax is in coins — Bitget BTC
+        // (0,12% up to 1,88% ≤ 0,003 BTC) showed "+$0,01 a month" instead of ≈ $0,16; $100 is converted to coins first
+        const apr100 = (o: EarnOffer) => { const pr = STABLE.test(o.coin) ? 1 : prices[o.coin]; if (!pr) return o.apr; const q = 100 / pr; return (earnYear(o, q) / q) * 100; };
         const aprCell = (o: EarnOffer) => (
           <>
             <div className={`font-mono text-base font-bold ${o.apr >= 10 ? "text-lime" : "text-ink"}`}>{pct(o.apr)}</div>
             {o.aprMax ? <div className="font-mono text-xs font-semibold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${fmtLabel(o.tierNote, lang) /* audit 28.11: "≤ 300K USDT" on uk/ru */}` : ""}</div> : null}
-            {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(earnYear(o, 100) /* audit 28.11: tier rate on the first $100 */, lang, 100, o.days)}</div>}
+            {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(apr100(o), lang, 100, o.days)}</div>}
           </>
         );
         const limits = (o: EarnOffer) => [o.minAmount ? `${A.min} ${fmtCoin(o.minAmount)}` : "", o.maxAmount ? `${A.max} ${fmtCoin(o.maxAmount)}` : ""].filter(Boolean).join(" · ") || "—";

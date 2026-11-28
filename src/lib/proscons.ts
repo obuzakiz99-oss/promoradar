@@ -1,5 +1,5 @@
 import type { Locale } from "./i18n";
-import { compactUsd, localNums } from "./format";
+import { compactUsd, localNums, num } from "./format";
 import type { Hedge, Pool, PoolProject } from "./pools";
 import type { EarnOffer } from "./earn";
 import type { DexPool } from "./dexpools";
@@ -150,7 +150,8 @@ const MAJORS = new Set(["BTC", "ETH", "BNB", "SOL", "XRP", "GT", "KCS", "TON", "
 
 // audit 28.11 (texts): "Великий фонд винагород $153K" on uk/ru — compactUsd gives "$153 тис."
 const usd = (n: number, lang: string) => compactUsd(n, lang);
-const pct = (n: number) => { const a = Math.abs(n); return `${a >= 100 ? Math.round(n) : a >= 10 ? n.toFixed(1) : n.toFixed(2)}%`; };
+// audit 28.11 (texts): "на старті було 1752%" on uk/ru — 4-digit APRs got no thousands space (localNums only regroups "1,752")
+const pct = (n: number) => { const a = Math.abs(n); return `${a >= 100 ? Math.round(n).toLocaleString("en-US") : a >= 10 ? n.toFixed(1) : n.toFixed(2)}%`; };
 const sign = (n: number) => `${n > 0 ? "+" : ""}${pct(n)}`;
 
 /** Coins with deep books everywhere and long histories: no "thin order book", not "a new token" (audit 14.11: BTC, ETH, XAUT). */
@@ -236,7 +237,7 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
   if ((ctx.chgReward ?? 0) <= -10) cons.push(f("dump", sign(ctx.chgReward!), p.token));
   else if (!STABLE.has(p.token) && !BIG.has(p.token) && pool.stake !== p.token && (ctx.chgReward ?? 0) < 0) cons.push(f("rewardNew", "", p.token));
   if (pool.aprStart && apr && pool.aprStart > apr * 1.3) cons.push(f("aprFalling", pct(pool.aprStart)));
-  if (pool.minStake && ctx.price && pool.minStake * ctx.price >= 1000) cons.push(f("highMin", `${pool.minStake.toLocaleString("en-US")} ${pool.stake}`));
+  if (pool.minStake && ctx.price && pool.minStake * ctx.price >= 1000) cons.push(f("highMin", `${num(pool.minStake, lang)} ${pool.stake}` /* audit 28.11: "10,000" on uk/ru */));
   if (pool.maxStake && ctx.price && pool.maxStake * ctx.price < 1000) cons.push(f("smallMax", usd(pool.maxStake * ctx.price, lang)));
   if (pool.newUsers) cons.push(f("special"));
   if (p.status === "live" && left < 48) cons.push(f("endsSoon", left < 24 ? `${Math.max(1, Math.round(left))} ${({ uk: "год", en: "h", ru: "ч" } as const)[lang]}` : ({ uk: "2 дні", en: "2 days", ru: "2 дня" } as const)[lang]));

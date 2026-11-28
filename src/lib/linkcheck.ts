@@ -24,6 +24,9 @@ export function registrable(host: string): string {
 const base = (reg: string) => reg.split(".")[0];
 // common look-alike swaps: 0→o, 1→l, rn→m, vv→w
 const norm = (s: string) => s.replace(/0/g, "o").replace(/1/g, "l").replace(/rn/g, "m").replace(/vv/g, "w").replace(/[-_]/g, "");
+// audit 28.11 (sections): 0kx-airdrop.io / g4te-bonus.com were "unknown" — the short-brand whole-word test ran on the raw host;
+// same swaps (plus 4→a, 3→e) but dots and hyphens kept, so the word boundaries still work
+const normKeep = (s: string) => s.replace(/0/g, "o").replace(/1/g, "l").replace(/4/g, "a").replace(/3/g, "e").replace(/rn/g, "m").replace(/vv/g, "w").replace(/_/g, "-");
 
 function lev(a: string, b: string): number {
   const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
@@ -95,7 +98,7 @@ export function checkLink(raw: string, off: Official): Verdict {
     const ob = norm(base(d.domain));
     // audit 28.11 (sections): okxairdrop.io (short brand glued to a phishing word) was "unknown"
     const re = ob.length >= 5 && !WORDY.has(ob) ? new RegExp(ob) : new RegExp(`(^|[.-])${ob}([.-]|$|(airdrop|bonus|claim|login|gift|reward|giveaway|wallet|support|verify)s?([.-]|$))`);
-    if (re.test(ob.length >= 5 && !WORDY.has(ob) ? label : host.replace(/\.[^.]+$/, ""))) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "contains", host };
+    if (re.test(ob.length >= 5 && !WORDY.has(ob) ? label : normKeep(host.replace(/\.[^.]+$/, "")))) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "contains", host };
   }
   return { kind: "unknown", host, http };
 }

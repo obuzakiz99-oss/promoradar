@@ -211,7 +211,13 @@ async function getPromosLive(): Promise<Collected> {
       const lastN = head5.match(/\b(?:last|final|only) (\d{1,2}) days?\b|\b(\d{1,2}) days? (?:left|remaining|to go)\b/i);
       const weekN = /\b(?:final|last|this) week\b/i.test(p.titleOrig ?? p.title);
       const nDays = lastN ? +(lastN[1] ?? lastN[2]) : weekN ? 7 : 0;
-      if (!p.endsAt && p.publishedAt && nDays > 0) { p.endsAt = p.publishedAt + nDays * 86400_000; meta.datesFromRules = true; }
+      // audit 28.11 (accuracy): the end was the post time + N days to the second (MEXC "7 days left in Referral Rush", posted
+      // 24.11 15:35 → "1 грудня, 15:35:48 UTC"; the rush counts November) — today is day 1, so it ends at the end of day N
+      if (!p.endsAt && p.publishedAt && nDays > 0) {
+        const pd = new Date(p.publishedAt);
+        p.endsAt = Date.UTC(pd.getUTCFullYear(), pd.getUTCMonth(), pd.getUTCDate() + nDays - 1, 23, 59, 59);
+        meta.datesFromRules = true;
+      }
       // audit 19.11: a timeline of bare dates with no "period" line ("Subscription channel closes 2026-11-18") — when every
       // date in the rules is over a day old the campaign is over (a Bitget IPO challenge kept saying «Триває» after it closed)
       if (!p.endsAt && !p.evergreen) {
@@ -349,7 +355,7 @@ async function getPromosLive(): Promise<Collected> {
         && !/\b(event|task|part|activity|section|phase|bonus|reward) ?(\d|[ivx]+\b|one|two|three)/i.test(b.x))) meta.forNew = true;
     // audit 23.11 (round 5): "Хто може: усі користувачі" for Kenyan P2P merchants, new VIPs, Anthropic IPO subscribers
     // (audit 2: + VVIP, broker referral codes, taker / market-share programmes, IPO subscribers)
-    const AUD = /\b(P2P )?merchants?\b|\bV?VIP ?\d*\+?\s*(users|clients|members)?\b|\bbroker (referral )?code\b|\btaker program(me)?\b|\b(volume|market) share\b|\bexclusive to [A-Z][\w ]{0,30}subscribers\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b/i;
+    const AUD = /\b(P2P )?merchants?\b|\bV?VIP ?\d*\+?\s*(users|clients|members)?\b|\bbroker (referral )?code\b|\btaker program(me)?\b|\b(volume|market) share\b|\bexclusive to [A-Z][\w ]{0,30}subscribers\b|\b(selected|invited|whitelisted|verified and selected|designated) (users|participants|clients)\b|\b(subscribers?|participants) (of|in) (the )?[A-Z]|\bwho (have )?(subscribed|participated|registered) (to|in|for) (the )?[A-Z]|\bKOLs?\b|\baffiliates? only\b|\b(existing|invited|eligible|current|approved) (affiliates?|partners?)\b|\bsub-?affiliates?\b/i;   // audit 28.11 (accuracy): Binance Sub-Affiliate showed «Усі користувачі»
     if (!meta.forNew && (AUD.test(p.titleOrig ?? p.title) || d?.facts.some((f) => f.k === "who" && /\b(only|exclusive(ly)?|eligible|open to|limited to)\b/i.test(f.text) && AUD.test(f.text))
       // audit 25.11 (deep): KuCoin "only for users bound to the ChartControl broker code"
       || (d?.blocks ?? []).slice(0, 25).some((b) => /\b(broker code|broker(?:'s)? referral code|(?:registered|signed up) (?:via|through|with) [\w' ]{2,40}broker|bound to (the )?broker|via (the )?[A-Z]\w+ broker|API (users|partners) only|institutional (users|clients) only|exclusively for returning|returning (users|traders|clients) only|(only|exclusively) for (users|traders) who (have not|haven't) (traded|logged))\b/i.test(b.x)))) meta.audience = true;   // weekly audit 26.11: Gate CFD "Exclusively for returning CFD traders"; 27.11: KuCoin "registered via ChartControl AI's Broker referral code"

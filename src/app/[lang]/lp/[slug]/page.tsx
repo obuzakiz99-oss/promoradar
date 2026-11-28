@@ -8,7 +8,7 @@ import { getPromos } from "@/lib/promos";
 import { slugOf } from "@/lib/slug";
 import { withBase } from "@/lib/base";
 import { venueOf } from "@/config/site";
-import { compactUsd, duration, num, shortDate } from "@/lib/format";
+import { compactUsd, duration, num, shortDate, aprText } from "@/lib/format";
 import { hedgeCalc, poolPC } from "@/lib/proscons";
 import { GUIDES } from "@/lib/guides";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -94,7 +94,8 @@ const X: Record<Locale, {
 
 // audit 28.11 (texts): "Фонд винагород 30K USDT", "1,8K" on uk/ru — the shared compactNum gives "30 тис.", "1,8 тис."
 const fmtNum = (n?: number, lang = "en") => (n === undefined ? "—" : compactNum(n, lang));
-const fmtApr = (x?: number, lang = "en") => dec(String((x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`)), lang);
+// audit 28.11 (texts): "на старті 1752%" on uk/ru — no thousands space; the shared aprText gives "1 752%"
+const fmtApr = (x?: number, lang = "en") => (x === undefined ? "—" : aprText(x, lang, 2));
 // site-wide number format: uk/ru "$1 000", en "$1,000"
 // audit 26.11: a few tenths of a cent a day showed as "$0.00 /day" — under a cent reads "< $0.01"
 const usd = (x: number, lang: string) => (x >= 100 ? `$${num(Math.round(x), lang, 0)}` : x > 0 && x < 0.005 ? "< $0.01" : `$${dec(x.toFixed(2), lang)}`); // audit 28.11: "$0.32", "$4.95/день" on uk/ru

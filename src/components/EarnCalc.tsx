@@ -90,14 +90,20 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
   } else if (m.aprPct !== undefined) {
     const day = (v * m.aprPct) / 100 / 365;
     const left = m.aprDays ?? (endsAt && endsAt > now ? Math.max(1, Math.round((endsAt - now) / 86400_000)) : undefined);
+    // audit 28.11 (sections): the APR branch ignored the per-user cap — Bitget rToken S4 (20%, "up to 1,000 USDT per user")
+    // showed "+$1 699 in total" on $100 000; income figures are now clipped to the cap with a note
+    const cap = m.perUser?.usd && m.perUser.usd > 0 ? m.perUser.usd : undefined;
+    const clip = (x: number) => (cap !== undefined ? Math.min(x, cap) : x);
+    const capped = cap !== undefined && day * Math.max(30, left ?? 0) > cap;
     // boosted promo rates (> 50 %) last days and apply to a capped amount — show per day, not "a month" (audit 14.11: +$205)
-    big = `${m.aprUpTo ? "≤ " : "+"}${m.aprPct > 50 ? `${usd(day)} ${T.perDay}` : `${usd(day * 30)} ${T.perMonth}`}`;
+    big = `${m.aprUpTo ? "≤ " : "+"}${m.aprPct > 50 ? `${usd(clip(day))} ${T.perDay}` : `${usd(clip(day * 30))} ${T.perMonth}`}`;
     if (m.aprUpTo) lines.push({ text: ({ uk: "Це максимальна ставка («до»): базова зазвичай значно нижча, решта — за умови (обсяг, рівень, позиція).", en: "This is the maximum (“up to”) rate: the base is usually much lower, the rest depends on conditions.", ru: "Это максимальная ставка («до»): базовая обычно значительно ниже, остальное — при условиях." } as const)[lang], tone: "bad" });
     if (m.aprPct > 50) lines.push({ text: ({ uk: "Підвищена ставка зазвичай діє кілька днів і на обмежену суму — строк і ліміт дивіться в умовах.", en: "A boosted rate usually lasts a few days and covers a capped amount — check the term and limit in the rules.", ru: "Повышенная ставка обычно действует несколько дней и на ограниченную сумму — срок и лимит смотрите в условиях." } as const)[lang], tone: "bad" });
     lines.push({ text: m.aprPct > 50 ? `${num(m.aprPct, lang)}% APR` : `+${usd(day)} ${T.perDay} · ${num(m.aprPct, lang)}% APR` });
     if (left && m.aprPct <= 50) lines.push({ text: m.aprDays
-      ? `+${usd(day * left)} ${({ uk: "загалом", en: "in total", ru: "всего" } as const)[lang]} (${T.days(left)}, ${num(m.aprPct * left / 365, lang)}% ${({ uk: "від суми", en: "of the amount", ru: "от суммы" } as const)[lang]})`
-      : `+${usd(day * left)} ${T.untilEnd} (${T.days(left)})` });
+      ? `+${usd(clip(day * left))} ${({ uk: "загалом", en: "in total", ru: "всего" } as const)[lang]} (${T.days(left)}, ${num(m.aprPct * left / 365, lang)}% ${({ uk: "від суми", en: "of the amount", ru: "от суммы" } as const)[lang]})`
+      : `+${usd(clip(day * left))} ${T.untilEnd} (${T.days(left)})` });
+    if (capped) lines.push({ text: ({ uk: `Обмеження правил: не більше ${usd(cap!)} на одного учасника — більша сума дохід не збільшить.`, en: `Rules cap: at most ${usd(cap!)} per participant — a bigger amount won't earn more.`, ru: `Ограничение правил: не больше ${usd(cap!)} на одного участника — большая сумма доход не увеличит.` } as const)[lang], tone: "bad" });
     lines.push({ text: lock === "futures" ? T.keepFut : lock === "dual" ? T.keepDual : lock === "lock" ? T.keepLock : T.keep, tone: lock ? "bad" : "muted" });
   } else {
     // audit 23.11: $100 below the first tier (Toobit: >= $1 000 -> 60 USDT) fell through to the top prize "<= $12 000" --
@@ -171,7 +177,7 @@ export function EarnCalc({ lang, m, endsAt, now, lock }: { lang: Locale; m: M; e
       </ul>
       {m.aprPct === undefined && m.tiers && m.tiers.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-1.5 text-xs font-mono">
-          {m.tiers.map((t) => <span key={t.min} className={`rounded-md px-1.5 py-0.5 ${t.min <= v ? "bg-lime/10 text-lime" : "bg-white/5 text-ink-3"}`}>≥{usd(t.min)} → {t.reward}</span>)}
+          {m.tiers.map((t) => <span key={t.min} className={`rounded-md px-1.5 py-0.5 ${t.min <= v ? "bg-lime/10 text-lime" : "bg-white/5 text-ink-3"}`}>≥{usd(t.min)} → {t.amount ? amt(t.amount, t.unit) : t.reward}</span>)}
         </div>
       )}
       <p className="mt-3 text-xs text-ink-3">{T.note}</p>

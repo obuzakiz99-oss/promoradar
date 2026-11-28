@@ -493,6 +493,18 @@ const bybitMap = () => (bybitCache ??= getJson<any>("https://api.bybit.com/v5/an
   .then((j) => new Map<string, string>((j?.result?.list ?? []).map((a: any) => [String(a.url).split("/").filter(Boolean).pop() ?? "", `<p>${a.description ?? ""}</p>`])))
   .catch(() => new Map()));
 
+// audit 28.11 (texts): the rules block of a Bitrue post kept its whole footer — "━━━━", "Поповніть рахунок зараз 👉 Деталі",
+// "🎁 Зареєструйтеся ТУТ…"; the headline already cut it (sources/telegram.ts). Same rule here: the part after the LAST
+// separator line is a footer when it is the smaller part of the post; separator-only lines never carry text
+const SEP_LINE = /^\s*[_━─=]{5,}\s*$/;
+function postLines(body: string): string[] {
+  const lines = body.replace(/<i class="emoji"[^>]*><b>([^<]*)<\/b><\/i>/g, "$1").split(/<br\s*\/?>|\s{2,}/i);
+  const txt = (l: string) => l.replace(/<[^>]+>/g, "").trim();
+  const last = lines.map(txt).findLastIndex((l) => SEP_LINE.test(l));
+  const len = (a: string[]) => a.map(txt).join("").length;
+  const kept = last > 0 && len(lines.slice(last + 1)) < len(lines.slice(0, last)) ? lines.slice(0, last) : lines;
+  return kept.filter((l) => !SEP_LINE.test(txt(l)));
+}
 async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): Promise<{ html: string; partial?: boolean } | null> {
   const v = p.venue.id;
   const tail = p.id.slice(p.id.indexOf(":") + 1);
@@ -503,7 +515,7 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
     if (!body) return null;
     // weekly audit 26.11: the post itself always comes first — Bitrue posts link to a page that is only the site menu, so
     // "Nov 23 – Dec 23, 2026" in the post was lost and the promo had no dates
-    const postHtml = body.replace(/<i class="emoji"[^>]*><b>([^<]*)<\/b><\/i>/g, "$1").split(/<br\s*\/?>|\s{2,}/i).map((l) => `<p>${l}</p>`).join("");
+    const postHtml = postLines(body).map((l) => `<p>${l}</p>`).join("");
     // the channel's own linked article usually holds the full rules
     if (p.url && !p.url.startsWith("https://t.me/")) {
       // Binance announcement linked from a post: read it through Binance's own CMS API (its pages block servers)
@@ -517,7 +529,7 @@ async function fetchHtml(p: Promo, feeds: () => Promise<Map<string, string>>): P
       if (art) return { html: postHtml + art };
     }
     // posts use <br> or, in the embed view, runs of spaces between lines
-    const lines = body.replace(/<i class="emoji"[^>]*><b>([^<]*)<\/b><\/i>/g, "$1").split(/<br\s*\/?>|\s{2,}/i);
+    const lines = postLines(body);
     return { html: lines.map((l) => `<p>${l}</p>`).join(""), partial: true };
   }
   if (v === "binance") {
@@ -629,6 +641,16 @@ function staleArticle(p: Promo, blocks: Block[]): Block[] {
   return end && end < p.publishedAt - 86400_000 ? blocks.slice(0, i) : blocks;
 }
 
+/** The same footer cut on stored blocks (applied at output time, so posts already read are cleaned without a re-fetch). */
+function tgFooter(p: Promo, blocks: Block[]): Block[] {
+  if (!p.id.startsWith("tg:")) return blocks;
+  const last = blocks.findLastIndex((b) => SEP_LINE.test(b.x));
+  const len = (a: Block[]) => a.reduce((n, b) => n + b.x.length, 0);
+  const kept = last > 0 && len(blocks.slice(last + 1)) < len(blocks.slice(0, last)) ? blocks.slice(0, last) : blocks;
+  // a bare call-to-action line "Deposit Now 👉 Details" (the link text) says nothing about the rules
+  return kept.filter((b) => !SEP_LINE.test(b.x) && !/^[^.:]{0,40}(?:👉|➡️|➡)\s*(?:details|learn more|join now|here)\s*$/iu.test(b.x));
+}
+
 /** Details for the given promos: cached ones + up to MAX_NEW freshly fetched. Never throws. */
 export async function getDetails(promos: Promo[]): Promise<Record<string, PromoDetails>> {
   const now = Date.now();
@@ -685,7 +707,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
   const out: Record<string, PromoDetails> = {};
   // facts are re-derived from the stored text so parser changes apply without re-fetching
   for (const p of promos) if (store[p.id]) {
-    let blocks = staleArticle(p, dropBoilerplate(joinCells(store[p.id].blocks), p.id, store));
+    let blocks = tgFooter(p, staleArticle(p, dropBoilerplate(joinCells(store[p.id].blocks), p.id, store)));
     // audit 27.11 (evening): the laptop-read page skipped joinCells — "§L§ 7 §L§ 90" (Coinstore), "§H§Мінімальний обсяг" (LBank)
     const page = store[p.id].partial ? joinCells(pageOf(p)) : [];
     if (page.length) {
@@ -709,7 +731,7 @@ export async function getDetails(promos: Promo[]): Promise<Record<string, PromoD
  * within a few blocks. Checked 13.11 on all 244 live promo pages: ≥ 15 blocks at ≥ 90 % labels hits only menus
  * (CandyBomb widget runs are 13 and keep "New futures traders only").
  */
-const SOCIAL = /^(?:[^\p{L}\p{N}]*\b(?:telegram|whatsapp|facebook|instagram|discord|twitter|x|youtube|tiktok|reddit|website|linkedin|medium|download(?: \w+)?(?: app)?|join the \w+ community)\b[^\p{L}\p{N}]*)+$/iu;
+const SOCIAL = /^(?:[^\p{L}\p{N}]*\b(?:telegram|whatsapp|facebook|instagram|discord|twitter|x|youtube|tiktok|reddit|website|linkedin|medium|announcements?|download(?: \w+)?(?: app)?|join the \w+ community)\b[^\p{L}\p{N}]*)+$/iu;
 function chromeLabel(b: Block): boolean {
   if (b.t === "tr") return false;
   const x = b.x.trim();
@@ -718,7 +740,8 @@ function chromeLabel(b: Block): boolean {
   return !/\d/.test(x) || /[a-z][A-Z][a-z]/.test(x);                           // label, or label glued to its text
 }
 function dropChrome(blocks: Block[]): Block[] {
-  const keep = blocks.map((b) => !SOCIAL.test(b.x.trim()));
+  // audit 28.11 (texts): Bitrue's "𝕏 | Announcements | Telegram" footer stayed — 𝕏 is a letter to \p{L}, so it is read as "x"
+  const keep = blocks.map((b) => !SOCIAL.test(b.x.trim().replace(/\u{1D54F}/gu, "x")));
   const f = blocks.map(chromeLabel);
   for (let i = 0; i < blocks.length;) {
     if (!f[i]) { i++; continue; }

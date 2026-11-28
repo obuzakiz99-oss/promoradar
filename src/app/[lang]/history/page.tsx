@@ -10,7 +10,7 @@ import { getInsights } from "@/lib/insights";
 import { InsightsSections } from "@/components/InsightsSections";
 import { decayCurve, lpStats } from "@/lib/lpstats";
 import { venueOf } from "@/config/site";
-import { compactUsd, shortDate, dec } from "@/lib/format";
+import { compactUsd, shortDate, dec, aprText } from "@/lib/format";
 import { LineChart, seriesColor, thinPoints, type Series } from "@/components/LineChart";
 import { ChartPicker } from "@/components/ChartPicker";
 import { VenueLogo } from "@/components/VenueLogo";
@@ -38,7 +38,7 @@ const H: Record<Locale, {
     drop: "Як падає APR зараз", dropSub: "Зміна APR живих пулів у % від першого значення, яке ми побачили (знімок кожні 30 хв). Нижче нуля — APR впав.",
     dropCols: ["Пул", "Перший APR", "Зараз", "Зміна", "Від старту біржі"], dropNone: "Поки замало знімків — графік з'явиться після кількох годин спостереження за пулом.", launchNote: "«Від старту біржі» — порівняння з APR, який біржа оцінила на запуску (є лише в Gate).",
     list: "Усі пули за 3 місяці", listCols: ["Старт", "Біржа", "Токен", "Стейк", "APR на старті", "Фінальний APR", "Зміна"], earn: "Ставки Earn", stable: "стейбл", other: "інші", days: "дн.",
-    curve: "Типова крива падіння", curveSub: "Медіанний APR як частка стартового через N годин після відкриття пулу. ×0.5 = APR упав удвічі. Наповнюється з кожним новим пулом.", after: (h) => (h < 48 ? `через ${h} год` : `через ${h / 24} дн.`), pools: "пулів", collecting: "збираємо дані",
+    curve: "Типова крива падіння", curveSub: "Медіанний APR як частка стартового через N годин після відкриття пулу. ×0,5 = APR упав удвічі. Наповнюється з кожним новим пулом.", after: (h) => (h < 48 ? `через ${h} год` : `через ${h / 24} дн.`), pools: "пулів", collecting: "збираємо дані",
   },
   en: {
     past: "Launchpools over 3 months", pastSub: "Every pool that started in the last 90 days on the exchanges we track (from the exchanges' own archives).",
@@ -58,11 +58,12 @@ const H: Record<Locale, {
     drop: "Как падает APR сейчас", dropSub: "Изменение APR живых пулов в % от первого значения, которое мы увидели (снимок каждые 30 мин). Ниже нуля — APR упал.",
     dropCols: ["Пул", "Первый APR", "Сейчас", "Изменение", "От старта биржи"], dropNone: "Пока мало снимков — график появится после нескольких часов наблюдения за пулом.", launchNote: "«От старта биржи» — сравнение с APR, который биржа оценила на запуске (есть только у Gate).",
     list: "Все пулы за 3 месяца", listCols: ["Старт", "Биржа", "Токен", "Стейк", "APR на старте", "Финальный APR", "Изменение"], earn: "Ставки Earn", stable: "стейбл", other: "другие", days: "дн.",
-    curve: "Типичная кривая падения", curveSub: "Медианный APR как доля стартового через N часов после открытия пула. ×0.5 = APR упал вдвое. Наполняется с каждым новым пулом.", after: (h) => (h < 48 ? `через ${h} ч` : `через ${h / 24} дн.`), pools: "пулов", collecting: "собираем данные",
+    curve: "Типичная кривая падения", curveSub: "Медианный APR как доля стартового через N часов после открытия пула. ×0,5 = APR упал вдвое. Наполняется с каждым новым пулом.", after: (h) => (h < 48 ? `через ${h} ч` : `через ${h / 24} дн.`), pools: "пулов", collecting: "собираем данные",
   },
 };
 
-const pct = (x?: number, lang = "en") => dec(String((x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(1)}%`)), lang);
+// audit 28.11 (texts): "1752%", "×0.55" on uk/ru — big APRs had no thousands space, ratios kept the decimal point
+const pct = (x?: number, lang = "en") => (x === undefined ? "—" : aprText(x, lang, 1));
 const chg = (x?: number) => (x === undefined ? <span className="text-ink-3">—</span> : <span className={x < 0 ? "text-rose" : "text-lime"}>{x > 0 ? "+" : ""}{x.toFixed(0)}%</span>);
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -138,7 +139,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
           <div data-tour="history-curve" className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {curve.map((c) => (
               <div key={c.h} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
-                <div className={`font-display text-2xl font-semibold ${c.ratio === undefined ? "text-ink-3" : c.ratio < 0.7 ? "text-rose" : c.ratio < 0.95 ? "text-amber" : "text-lime"}`}>{c.ratio === undefined ? "…" : `×${c.ratio.toFixed(2)}`}</div>
+                <div className={`font-display text-2xl font-semibold ${c.ratio === undefined ? "text-ink-3" : c.ratio < 0.7 ? "text-rose" : c.ratio < 0.95 ? "text-amber" : "text-lime"}`}>{c.ratio === undefined ? "…" : dec(`×${c.ratio.toFixed(2)}`, lang)}</div>
                 <div className="mt-1 text-xs font-semibold text-ink-2">{X.after(c.h)}</div>
                 <div className="mt-0.5 font-mono text-xs text-ink-3">{c.ratio === undefined ? X.collecting : `${c.n} ${X.pools}`}</div>
               </div>
@@ -155,7 +156,7 @@ export default async function HistoryPage({ params }: { params: Params }) {
               [String(S.totals.projects), X.tiles[0]], [String(S.totals.pools), X.tiles[1]],
               [pct(S.totals.medStable, lang), X.tiles[2]], [pct(S.totals.medOther, lang), X.tiles[3]],
               [S.totals.medDays ? S.totals.medDays.toFixed(0) : "—", X.tiles[4]],
-              [S.totals.medDecay ? `×${S.totals.medDecay.toFixed(2)}` : "—", X.tiles[5]],
+              [S.totals.medDecay ? dec(`×${S.totals.medDecay.toFixed(2)}`, lang) : "—", X.tiles[5]],
             ] as const).map(([v, l]) => (
               <div key={l} className="rounded-2xl border border-line bg-white/[0.02] px-4 py-3.5">
                 <dd className="font-display text-2xl font-semibold tracking-tight">{v}</dd>

@@ -2,7 +2,7 @@ import type { Locale } from "@/lib/i18n";
 import { PROX } from "@/lib/i18n-pro";
 import type { getInsights } from "@/lib/insights";
 import { venueOf } from "@/config/site";
-import { shortDate } from "@/lib/format";
+import { shortDate, dec, aprText } from "@/lib/format";
 import { VenueLogo } from "./VenueLogo";
 import { Hint } from "./Hint";
 
@@ -80,7 +80,7 @@ export function InsightsSections({ lang, data }: { lang: Locale; data: Awaited<R
             <div data-tour="history-decay">
               {decayMedian !== undefined && (
                 <div className="mt-6 w-fit rounded-2xl border border-line bg-white/[0.02] px-5 py-4">
-                  <div className="font-display text-3xl font-semibold text-amber">×{decayMedian.toFixed(2)}</div>
+                  <div className="font-display text-3xl font-semibold text-amber">{dec(`×${decayMedian.toFixed(2)}`, lang) /* audit 28.11 (texts): "×0.55" on uk/ru */}</div>
                   <div className="mt-1 text-xs font-semibold text-ink-3">{P.median} · {P.decayCols[3]}</div>
                 </div>
               )}
@@ -93,9 +93,9 @@ export function InsightsSections({ lang, data }: { lang: Locale; data: Awaited<R
                     {decay.map((d, i) => (
                       <tr key={i} className="hover:bg-white/[0.02]">
                         <td className="px-4 py-2.5 font-bold">{d.name} <span className="font-normal text-ink-3">· {d.stake}</span></td>
-                        <td className="px-4 py-2.5 text-right font-mono text-xs">{d.start.toFixed(1)}%</td>
-                        <td className="px-4 py-2.5 text-right font-mono text-xs">{d.final.toFixed(1)}%</td>
-                        <td className={`px-4 py-2.5 text-right font-mono text-xs font-bold ${d.final < d.start ? "text-amber" : "text-lime"}`}>×{(d.final / d.start).toFixed(2)}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs">{aprText(d.start, lang)}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-xs">{aprText(d.final, lang)}</td>
+                        <td className={`px-4 py-2.5 text-right font-mono text-xs font-bold ${d.final < d.start ? "text-amber" : "text-lime"}`}>{dec(`×${(d.final / d.start).toFixed(2)}`, lang)}</td>
                       </tr>
                     ))}
                   </tbody>
