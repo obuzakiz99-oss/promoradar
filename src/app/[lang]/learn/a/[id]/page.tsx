@@ -40,6 +40,9 @@ export default async function ArticlePage({ params }: { params: Params }) {
       <main className="mx-auto max-w-3xl px-4 pb-20 pt-10 sm:px-6">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson([
           { "@context": "https://schema.org", "@type": "Article", headline: a.title, description: a.sub, inLanguage: lang, url, mainEntityOfPage: url,
+            // audit 28.11: Article had no dates/image/author — Search Console flags it as incomplete; date = sitemap lastmod for articles
+            datePublished: "2026-11-27T00:00:00Z", dateModified: "2026-11-27T00:00:00Z", image: `https://${SITE.domain}/og-home.png`,
+            author: { "@type": "Organization", name: SITE.name, url: `https://${SITE.domain}/` },
             publisher: { "@type": "Organization", name: SITE.name, url: `https://${SITE.domain}/` } },
           { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
             { "@type": "ListItem", position: 1, name: SITE.name, item: `https://${SITE.domain}/${lang}/` },
