@@ -58,10 +58,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <>
       <main>
         {/* audit 23.11 (SEO): who publishes the site and what it is called */}
+        {/* audit 28.11: one #org entity had 4 different urls (/, /uk/, /en/, /ru/) and no logo — same url + logo as the root page now */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson({
           "@context": "https://schema.org",
           "@graph": [
-            { "@type": "Organization", "@id": `https://${SITE.domain}/#org`, name: "PromoRadar", url: `https://${SITE.domain}/${lang}/` },
+            { "@type": "Organization", "@id": `https://${SITE.domain}/#org`, name: "PromoRadar", url: `https://${SITE.domain}/`, logo: `https://${SITE.domain}/icon-512.png` },
             { "@type": "WebSite", name: "PromoRadar", url: `https://${SITE.domain}/${lang}/`, inLanguage: lang, publisher: { "@id": `https://${SITE.domain}/#org` } },
           ],
         }).replace(/</g, "\\u003c") }} />
