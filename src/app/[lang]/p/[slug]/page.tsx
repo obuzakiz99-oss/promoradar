@@ -1,3 +1,4 @@
+import type { Promo } from "@/lib/types";
 import { catLabel } from "@/lib/catlabel";
 import { ldJson } from "@/lib/ldjson";
 import { endedBySlug, endedPromos } from "@/lib/archive";
@@ -85,7 +86,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     ru: { per: (x: string) => `до ${x} на 1 человека`, pool: (x: string) => `фонд ${x}`, till: (d: string) => `до ${d}`, tail: "Условия по-русски, риски и как забрать награду." },
   } as const)[lang];
   const pm = p.meta;
-  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(fmtLabel(p.reward.label, lang)) : pm?.apr ? `+${num(pm.apr, lang)}% APR` : "";
+  const amount = pm?.perUser ? D.per(money(pm.perUser.amount, pm.perUser.unit, lang)) : p.reward ? D.pool(fmtLabel(p.reward.label, lang)) : pm?.apr ? aprLabel(p, pm.apr, lang) : "";
   const till = p.endsAt ? D.till(new Date(p.endsAt).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" })) : "";
   const bits = `${p.venue.name} · ${catLabel(p, lang, t.cat)}${amount ? `: ${amount}` : ""}${till ? `, ${till}` : ""}. ${D.tail}`;
   // browser tab / search / Telegram preview: no emoji, no SHOUTING, at most ~90 characters (audit 12.11)
@@ -319,6 +320,14 @@ const REF = {
   ru: { both: (x: string) => `${x} вам и столько же другу`, link: "Возьмите свою реферальную ссылку или код в разделе «Пригласить друзей»", friend: (c: string) => `Друг регистрируется по вашей ссылке${c ? ` и ${c}` : " и выполняет условие акции"}`, does: { trade: (a: string, f: boolean) => `торгует на сумму от ${a}${f ? " на фьючерсах" : ""}`, deposit: (a: string) => `вносит депозит от ${a}`, stake: (a: string) => `стейкает от ${a}`, hold: (a: string) => `держит от ${a}`, buy: (a: string) => `покупает на сумму от ${a}` }, paid: "Бонус начисляется вам после выполнения условий другом", paidBoth: "Бонус получаете и вы, и друг — после выполнения условий" },
 } as const;
 
+// audit 28.11 (accuracy): HTX SmartEarn "Up to 12% APY", BingX "up to 4.9% APY" (the total rate) showed "+12% APR" like a boost —
+// "+" only when the headline says the rate is extra, and the unit the exchange used
+function aprLabel(p: Promo, apr: number, lang: string): string {
+  const h = p.titleOrig ?? p.title;
+  const plus = /\b(boost(ed)?|extra|bonus|additional)\b[^.]{0,20}\b(APR|APY)\b|\+\s?\d+(\.\d+)?\s?%/i.test(h) ? "+" : "";
+  return `${plus}${num(apr, lang)}% ${/\bAPY\b/.test(h) && !/\bAPR\b/.test(h) ? "APY" : "APR"}`;
+}
+
 export default async function PromoPage({ params }: { params: Params }) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
@@ -394,7 +403,7 @@ export default async function PromoPage({ params }: { params: Params }) {
   ) : <span className="font-normal text-ink-2">{p.category === "earn" || m.aprPct !== undefined || m.apr !== undefined ? ({ uk: "Дохід залежить від суми й ставки (APR) — нічого не ділиться між учасниками; ліміт суми дивіться в умовах.", en: "Income depends on the amount and the rate (APR) — nothing is split between participants; see the rules for the amount limit.", ru: "Доход зависит от суммы и ставки (APR) — ничего не делится между участниками; лимит суммы смотрите в условиях." } as const)[lang]
     : p.category === "referral" ? ({ uk: "Нагорода — за кожного друга, який виконав умову.", en: "The reward is per friend who meets the condition.", ru: "Награда — за каждого друга, выполнившего условие." } as const)[lang] : R.noCap}</span>;
   const facts: Array<[string, React.ReactNode]> = [
-    [t.detail.reward, m.apr !== undefined ? <span className="text-success">+{num(m.apr, lang)}% APR</span> : p.reward ? <>{fmtLabel(p.reward.label, lang)}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
+    [t.detail.reward, m.apr !== undefined ? <span className="text-success">{aprLabel(p, m.apr, lang)}</span> : p.reward ? <>{fmtLabel(p.reward.label, lang)}{rewardUsd ? <span className="text-ink-3"> ≈ {compactUsd(rewardUsd, lang)}</span> : null}</> : t.detail.noData],
       ...(p.category !== "farming" ? [[R.perUser, perUserCell] as [string, React.ReactNode]] : []),
     [t.detail.start, p.startsAt ? dateFull(p.startsAt, lang) : t.detail.noData],
     [t.detail.end, p.endsAt ? <>{dateFull(p.endsAt, lang)} <span className="text-ink-3">· {duration(p.endsAt - now, t.time)}</span></> : p.evergreen ? t.card.ongoing : t.detail.noData],

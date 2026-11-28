@@ -12,7 +12,7 @@ import { withBase } from "@/lib/base";
 import { lpSlug } from "@/lib/lpslug";
 import { HedgeVenues } from "./HedgeVenues";
 import { ProsCons } from "./ProsCons";
-import { aprText, compactUsd, dec, duration, fmtLabel, money } from "@/lib/format";
+import { aprText, compactUsd, dec, duration, fmtLabel, money, parseAmount, AMOUNT_CHARS } from "@/lib/format";
 import { hedgeCalc, poolPC, type HedgeCalc } from "@/lib/proscons";
 import { Icon } from "./Icon";
 
@@ -31,6 +31,8 @@ function tokenVenue(name: string, logo?: string): Pick<Venue, "name" | "logo" | 
 // tiny amounts keep 2 significant digits ("0.000031 XAUT"), never round down to a bare "0"
 const fmtNum = (n: number) => (n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : n >= 0.01 || n <= 0 ? `${+n.toFixed(n < 1 ? 4 : 2)}` : n < 1e-6 ? "<0.000001" : (+n.toPrecision(2)).toFixed(Math.min(8, 1 - Math.floor(Math.log10(n)))));
 // audit 27.11 (texts): the board printed "Мін. 0.000030 · Макс. 500K" on uk/ru — reader's decimal comma and тис./млн
+// audit 28.11 (texts): the sparkline tooltip read "APR · 7d" on uk/ru
+const SPARK_T: Record<Locale, string> = { uk: "APR · 7 дн.", en: "APR · 7d", ru: "APR · 7 дн." };
 const fmtN = (lang: string, n: number) => dec(fmtLabel(fmtNum(n), lang), lang);
 const UNIT: Record<Locale, { label: string; hint: string }> = {
   uk: { label: "Одиниця суми", hint: "Оберіть монету для стейку — і суму можна буде ввести в ній (наприклад, 0,05 BTC)." },
@@ -89,7 +91,8 @@ function HedgeBox({ r, L, lang }: { r: Row; L: Dict["lp"]; lang: Locale }) {
   );
 }
 
-const fmtChg = (c: number) => `${c > 0 ? "+" : ""}${Math.abs(c) >= 10 ? c.toFixed(0) : c.toFixed(1)}%`;
+// audit 28.11 (texts): "XAUT +0.1%" on uk/ru — decimal comma
+const fmtChg = (c: number, lang = "en") => dec(`${c > 0 ? "+" : ""}${Math.abs(c) >= 10 ? c.toFixed(0) : c.toFixed(1)}%`, lang);
 
 /** Launchpool-type campaigns known only from an exchange's official announcement (OKX, HTX, Bybit…): no API numbers. */
 export interface AnnPool { id: string; href: string; venue: Venue; title: string; date?: number; reward?: string; endsAt?: number }
@@ -105,7 +108,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
   const [coin, setCoinS] = useState("all");
   // the amount can be typed in dollars or in the chosen stake coin (0.05 BTC, 500 KOR); everything below works in dollars
   const [unit, setUnit] = useState<"usd" | "coin">("usd");
-  const typed = Math.min(1e12, Number(text.replace(/[^\d.]/g, "")) || 0);
+  const typed = Math.min(1e12, parseAmount(text) || 0);
   const coinPrice = coin !== "all" ? prices[coin] : undefined;
   const inCoin = unit === "coin" && !!coinPrice;
   const amount = Math.min(1e9, inCoin ? typed * coinPrice! : typed);
@@ -216,7 +219,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                   inputMode="decimal"
                   autoComplete="off"
                   value={text}
-                  onChange={(e) => setText(e.target.value.replace(/[^\d.\s]/g, "").slice(0, 13))}
+                  onChange={(e) => setText(e.target.value.replace(AMOUNT_CHARS, "").slice(0, 13)) /* audit 28.11: "0,05 BTC" from the hint read as 5 BTC */}
                   onWheel={(e) => (e.target as HTMLInputElement).blur()}
                   className={`h-16 w-full rounded-2xl border border-line-2 bg-bg/60 font-display text-3xl font-semibold tracking-tight text-ink focus:border-lime/60 focus:outline-none ${inCoin ? "pl-4 pr-24" : "pl-10 pr-4"}`}
                 />
@@ -306,7 +309,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                     <a href={withBase(`/${lang}/lp/${lpSlug(p)}/`)} className="break-words font-bold after:absolute after:inset-0 after:rounded-2xl after:content-['']">{p.name}</a>
                     {r.chgReward !== undefined && (
                       <span className={`font-mono text-xs font-bold ${chgText(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>
-                        {p.token} {fmtChg(r.chgReward)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>
+                        {p.token} {fmtChg(r.chgReward, lang)} <span className="font-sans font-semibold opacity-75">{L.chg24}</span>
                       </span>
                     )}
                     {isBest && <span className="rounded-md border border-lime/40 px-1.5 py-0.5 text-xs font-semibold text-lime">{BEST[lang]}</span>}
@@ -344,7 +347,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                 <div className="text-xs font-semibold text-ink-3"><Term k="apr" lang={lang}>{L.apr}</Term></div>
                 <div className={`font-mono text-2xl font-bold tracking-tight ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? aprText(pool.apr, lang, 2) : "—"}</div>
                 {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
-                {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={`APR · 7d`} />}
+                {sparks[`${p.exchange}:${p.id}:${pool.stake}`] && <Spark points={sparks[`${p.exchange}:${p.id}:${pool.stake}`]} title={SPARK_T[lang]} />}
                 <div className="font-mono text-xs text-ink-3">
                   {pool.minStake ? `${L.min} ${fmtN(lang, pool.minStake)}` : ""}{pool.minStake && pool.maxStake ? " · " : ""}{pool.maxStake ? `${L.max} ${fmtN(lang, pool.maxStake)}` : ""}
                   {(() => { const d = Math.min(r.chgStake ?? 0, r.chgReward ?? 0); const c = (r.chgStake ?? 0) <= (r.chgReward ?? 0) ? pool.stake : p.token;
@@ -481,7 +484,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                           <div className="flex flex-wrap items-center gap-x-1.5 text-xs font-semibold text-ink-3">
                             <span>{ex?.name}</span>·<span className={live ? "text-lime" : "text-sky"}>{live ? L.live : L.upcoming}</span>
                             <span className={`nov rounded px-1.5 ${LEVEL_CLS[lvl]}`} title={LEVEL_TXT[lang][lvl][1]}>{LEVEL_TXT[lang][lvl][0]}</span>
-                            {r.chgReward !== undefined && <span className={`font-mono ${chgText(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>{p.token} {fmtChg(r.chgReward)}</span>}
+                            {r.chgReward !== undefined && <span className={`font-mono ${chgText(r.chgReward)}`} title={`${p.token} ${L.chg24}`}>{p.token} {fmtChg(r.chgReward, lang)}</span>}
                           </div>
                         </div>
                       </div>
@@ -501,7 +504,7 @@ export function LaunchpoolBoard({ projects, prices, changes = {}, hedge = {}, ex
                       <div className={`font-mono text-base font-bold ${(pool.apr ?? 0) >= 50 ? "text-lime" : "text-ink"}`}>{pool.apr !== undefined ? aprText(pool.apr, lang, 2) : "—"}</div>
                       {r.hc.needed && r.hc.possible && r.hc.hedgedApr !== undefined && <div className={`adv text-xs font-semibold ${r.hc.hedgedApr > 0 ? "text-teal" : "text-amber"}`} title={L.hedgeNote}>{TH[lang].hedged} {fmtPct(r.hc.hedgedApr, lang)}</div>}
                       {pool.apr !== undefined && <div className="nov text-xs font-semibold text-lime">{plainProfit(pool.apr, lang)}</div>}
-                      {spark && <div className="flex justify-end"><Spark points={spark} title="APR · 7d" /></div>}
+                      {spark && <div className="flex justify-end"><Spark points={spark} title={SPARK_T[lang]} /></div>}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-mono">
                       {r.profit === undefined ? <span className="text-ink-3">—</span>

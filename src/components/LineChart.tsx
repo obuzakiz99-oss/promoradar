@@ -1,3 +1,5 @@
+import { compactNum, compactUsd, dec, num } from "@/lib/format";
+
 /** Minimal multi-series SVG line chart (server-rendered, theme-aware via CSS variables). */
 export interface Series { name: string; color: string; points: Array<[number, number]> } // [time ms, value]
 
@@ -28,10 +30,15 @@ export function LineChart({ series, height = 220, unit = "%", locale = "uk-UA", 
   const X = (t: number) => L + ((t - x0) / Math.max(1, x1 - x0)) * (W - L - R);
   const Y = (v: number) => Tp + (1 - (v - y0) / (y1 - y0)) * (H - Tp - B);
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((k) => y0 + (y1 - y0) * k);
-  const short = (v: number) => { const a = Math.abs(v); return a >= 1e9 ? `${+(v / 1e9).toFixed(1)}B` : a >= 1e6 ? `${+(v / 1e6).toFixed(1)}M` : a >= 1e3 ? `${+(v / 1e3).toFixed(1)}K` : `${Math.round(v)}`; };
+  // audit 28.11 (texts): uk/ru charts read "$15.7M", "2.8K", "4.79%", "1100277%" — the reader's format, a just-opened pool capped
+  const lang = locale.startsWith("en") ? "en" : locale.startsWith("ru") ? "ru" : "uk";
+  const short = (v: number) => (v < 0 ? "-" : "") + (Math.abs(v) >= 1e3 ? compactNum(Math.abs(v), lang) : `${Math.round(Math.abs(v))}`);
   const fmt = (v: number) => {
-    if (kind !== "pct") return `${kind === "usd" ? "$" : ""}${short(v)}`;
-    const a = Math.abs(v), s = a >= 100 ? Math.round(v).toString() : a >= 10 ? v.toFixed(1) : v.toFixed(signed ? 1 : 2); return signed && v > 0 ? `+${s}` : s;
+    if (kind === "usd") return v < 0 ? `-${compactUsd(-v, lang)}` : compactUsd(v, lang);
+    if (kind !== "pct") return short(v);
+    const a = Math.abs(v);
+    if (a >= 10_000) return `${v < 0 ? "<-" : ">"}${num(10_000, lang)}`;
+    const s = a >= 100 ? num(Math.round(v), lang, 0) : dec(a >= 10 ? v.toFixed(1) : v.toFixed(signed ? 1 : 2), lang); return signed && v > 0 ? `+${s}` : s;
   };
   if (kind !== "pct") unit = "";
   const dates = [x0, x0 + (x1 - x0) / 2, x1];

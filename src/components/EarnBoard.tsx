@@ -1,6 +1,7 @@
 "use client";
 import { useUrlState } from "@/lib/useUrlState";
-import { dec } from "@/lib/format";
+import { dec, fmtLabel, nfLocale, parseAmount, AMOUNT_CHARS } from "@/lib/format";
+import { earnYear } from "@/lib/earn-calc";
 import { useNovice } from "./NoviceToggle";
 import { Term } from "./Term";
 import { plainProfit } from "@/lib/level";
@@ -35,8 +36,9 @@ const CALC: Record<Locale, { amount: string; mo: string; yr: string; note: strin
   ru: { amount: "Сумма", mo: "/мес", yr: "/год", note: "Доход считается в той же монете, которую вы вкладываете; в долларах — по текущей цене." },
 };
 const STABLE = /^(USDT|USDC|FDUSD|USD1|DAI|USDS|USDE|PYUSD|TUSD)$/;
-const fmtCoin0 = (n: number) => (n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
-const fmtUsd0 = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-UA") : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
+// audit 28.11 (sections): /en/earn/ showed "Max 20 000 000" — formatters take the reader's locale
+const fmtCoin0 = (n: number, loc = "uk-UA") => (n >= 1000 ? Math.round(n).toLocaleString(loc) : n >= 1 ? +n.toFixed(2) + "" : +n.toPrecision(3) + "");
+const fmtUsd0 = (n: number, loc = "uk-UA") => `$${n >= 1000 ? Math.round(n).toLocaleString(loc) : n >= 10 ? n.toFixed(0) : n.toFixed(2)}`;
 
 /**
  * `offers` may be only the popular coins (the page ships those in its HTML, audit 14.11: all ~2,100 offers made /earn/
@@ -45,8 +47,8 @@ const fmtUsd0 = (n: number) => `$${n >= 1000 ? Math.round(n).toLocaleString("uk-
 export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge = {}, prices = {}, allCoins, src }: { offers: EarnOffer[]; popular: string[]; exchanges: Record<string, Venue>; t: Dict; lang: Locale; hedge?: Record<string, Hedge>; prices?: Record<string, number>; allCoins?: string[]; src?: string }) {
   // audit 23.11: decimal comma on uk/ru
   const pct = (...a: Parameters<typeof pct0>) => dec(pct0(...a), lang);
-  const fmtCoin = (...a: Parameters<typeof fmtCoin0>) => dec(fmtCoin0(...a), lang);
-  const fmtUsd = (...a: Parameters<typeof fmtUsd0>) => dec(fmtUsd0(...a), lang);
+  const fmtCoin = (n: number) => dec(fmtCoin0(n, nfLocale(lang)), lang);
+  const fmtUsd = (n: number) => dec(fmtUsd0(n, nfLocale(lang)), lang);
   const [offers, setOffers] = useState(initial);
   useEffect(() => {
     if (!src) return;
@@ -62,7 +64,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
   const price = STABLE.test(coin) ? 1 : prices[coin];
   const [amtText, setAmt] = useState("1000");
   const [unit, setUnit] = useState<"coin" | "usd">("usd");
-  const typed = Number(amtText.replace(/[^0-9.]/g, "")) || 0;
+  const typed = parseAmount(amtText) || 0;
   const qty = unit === "usd" ? (price ? typed / price : 0) : typed;
   const C = CALC[lang];
   const [q, setQ] = useState("");
@@ -169,7 +171,7 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
       <div data-tour="earn-calc" className="mt-3 flex flex-wrap items-center gap-2">
         <label className="flex h-11 items-center gap-2 rounded-xl border border-lime/40 bg-lime/[0.06] pl-3 pr-1 text-sm font-bold text-ink">
           {C.amount}
-          <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(/[^0-9.]/g, "").slice(0, 12))} inputMode="decimal"
+          <input value={amtText} onChange={(e) => setAmt(e.target.value.replace(AMOUNT_CHARS, "").slice(0, 12)) /* audit 28.11: decimal comma kept */} inputMode="decimal"
             className="h-9 w-28 rounded-lg border border-line bg-surface px-2 font-mono text-sm text-ink focus:border-lime/50 focus:outline-none" />
         </label>
         {!STABLE.test(coin) && (
@@ -209,7 +211,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
           const top = i === 0 && !o.newUsers;
           const base = o.maxAmount ? Math.min(qty, o.maxAmount) : qty;   // capped offers earn only up to the cap
           // audit 27.11 (evening): Bybit on-chain "Мін. 5 000" still showed "+3,96 USDT/міс" for the default 1 000 — below the minimum it earns nothing
-          const yr = o.apr > 0 && qty > 0 && !(o.minAmount && qty < o.minAmount) ? (base * o.apr) / 100 : 0;
+          // audit 28.11 (sections): the boosted tier was ignored — the first tierMax coins earn aprMax, the rest the base rate
+          const yr = o.apr > 0 && qty > 0 && !(o.minAmount && qty < o.minAmount) ? earnYear(o, base) : 0;
           return { o, v, key, top, yr, pc: earnPC(lang, o, avg) };
         });
         type R = (typeof rows)[number];
@@ -237,8 +240,8 @@ export function EarnBoard({ offers: initial, popular, exchanges, t, lang, hedge 
         const aprCell = (o: EarnOffer) => (
           <>
             <div className={`font-mono text-base font-bold ${o.apr >= 10 ? "text-lime" : "text-ink"}`}>{pct(o.apr)}</div>
-            {o.aprMax ? <div className="font-mono text-xs font-semibold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${o.tierNote}` : ""}</div> : null}
-            {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(o.apr, lang, 100, o.days)}</div>}
+            {o.aprMax ? <div className="font-mono text-xs font-semibold text-lime">{A.upTo} {pct(o.aprMax)}{o.tierNote ? ` · ${fmtLabel(o.tierNote, lang) /* audit 28.11: "≤ 300K USDT" on uk/ru */}` : ""}</div> : null}
+            {o.apr > 0 && <div className="nov text-xs font-semibold text-lime">{plainProfit(earnYear(o, 100) /* audit 28.11: tier rate on the first $100 */, lang, 100, o.days)}</div>}
           </>
         );
         const limits = (o: EarnOffer) => [o.minAmount ? `${A.min} ${fmtCoin(o.minAmount)}` : "", o.maxAmount ? `${A.max} ${fmtCoin(o.maxAmount)}` : ""].filter(Boolean).join(" · ") || "—";

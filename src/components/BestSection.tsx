@@ -1,3 +1,4 @@
+import { fmtLabel } from "@/lib/format";
 import { catLabel } from "@/lib/catlabel";
 import { lpSlug } from "@/lib/lpslug";
 import { getDict } from "@/lib/i18n";
@@ -36,7 +37,7 @@ export async function BestSection({ lang }: { lang: Locale }) {
     if (!SAFE.test(o.coin) || o.newUsers || o.type === "fixed") continue;
     const key = `earn:${o.exchange}`;
     if ((bestEarn.get(key)?.apr ?? -1) >= o.apr) continue;
-    bestEarn.set(key, { key, venue: venueOf(o.exchange), title: `${o.coin} · ${A.type[o.type]}`, sub: `${venueOf(o.exchange).name} Earn${o.tierNote ? ` · ↑ ${o.tierNote}` : ""}`, apr: o.apr, aprMax: o.aprMax, url: o.url });
+    bestEarn.set(key, { key, venue: venueOf(o.exchange), title: `${o.coin} · ${A.type[o.type]}`, sub: `${venueOf(o.exchange).name} Earn${o.tierNote ? ` · ↑ ${fmtLabel(o.tierNote, lang)}` : ""}`, apr: o.apr, aprMax: o.aprMax, url: o.url });
   }
   const lpSafe: SafeItem[] = pools.projects.filter((p) => p.status === "live").flatMap((p) => p.pools.filter((x) => SAFE.test(x.stake) && (x.apr ?? 0) > 0).map((x) => ({
     key: `lp:${p.id}:${x.stake}`, venue: venueOf(p.exchange), title: `${x.stake} → ${p.token} · Launchpool`,

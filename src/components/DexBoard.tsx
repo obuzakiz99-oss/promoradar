@@ -6,7 +6,7 @@ import type { DexPool } from "@/lib/dexpools";
 import { VenueLogo } from "./VenueLogo";
 import { Term } from "./Term";
 import { ProsCons } from "./ProsCons";
-import { compactUsd, num, dec } from "@/lib/format";
+import { compactUsd, num, dec, parseAmount } from "@/lib/format";
 import { dexPC } from "@/lib/proscons";
 import type { Hedge } from "@/lib/pools";
 import { dexHedge } from "@/lib/dexhedge";
@@ -45,7 +45,8 @@ const CALC: Record<Locale, { amount: string; col: (a: string) => string; mo: str
 };
 // site-wide number format: uk/ru "$1 000", en "$1,000"
 const usdFmt = (lang: Locale) => (x: number) => "$" + (x >= 1000 ? num(Math.round(x), lang, 0) : x >= 10 ? x.toFixed(0) : x.toFixed(2));
-const digits = (s: string) => s.replace(/[^0-9.]/g, "");
+// audit 28.11 (sections): a decimal comma ("0,05") is kept and read as a decimal — parseAmount
+const digits = (s: string) => s.replace(/[^0-9.,]/g, "");
 const TVLS = [500_000, 1_000_000, 10_000_000, 100_000_000];
 // the default filter; dex/page.tsx ships the top pools above it (audit 18.11: `touched` compared against TVLS[0], so the
 // full list always swapped in on load and re-sorted the table, CLS 0.26)
@@ -103,7 +104,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
       if (u.sort === "apy" || u.sort === "tvl" || u.sort === "reward") setSort(u.sort);
     });
   // empty field → the default amount (the placeholder), never "$0.00" everywhere
-  const amount = Math.min(1e9, Number(digits(amtText)) || 1000);
+  const amount = Math.min(1e9, parseAmount(amtText) || 1000);
   const C = CALC[lang];
   const money = usdFmt(lang);
   useEffect(() => setLimit(PAGE), [cat, chain, stable, noIl, minTvl, q, sort]);
@@ -313,7 +314,7 @@ export function DexBoard({ pools: initial, chains, categories, t, lang, fullUrl,
         </table>
       </div>
       <div data-tour="dex-more" className="mt-4 flex items-center justify-between gap-3 text-xs text-ink-3">
-        <span className="font-mono">{A.shown.charAt(0).toUpperCase()}{A.shown.slice(1)} {Math.min(limit, list.length)} {A.of} {total.toLocaleString(lang === "en" ? "en-US" : "uk-UA")}{minTvl > 0 ? ` · TVL ≥ $${minTvl >= 1e6 ? `${minTvl / 1e6}M` : `${minTvl / 1e3}K`}` : ""}</span>
+        <span className="font-mono">{A.shown.charAt(0).toUpperCase()}{A.shown.slice(1)} {Math.min(limit, list.length)} {A.of} {total.toLocaleString(lang === "en" ? "en-US" : "uk-UA")}{minTvl > 0 ? ` · TVL ≥ ${compactUsd(minTvl, lang)}` : ""}</span>
         {(list.length > limit || (!touched && total > list.length)) && <button onClick={() => setLimit((l) => l + PAGE)} className="btn btn-ghost h-10 px-5 text-sm">{A.more}</button>}
       </div>
     </div>

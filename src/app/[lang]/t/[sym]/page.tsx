@@ -103,7 +103,7 @@ export default async function TokenPage({ params }: { params: Params }) {
             <div className="text-right">
               <div className="text-xs font-bold uppercase tracking-wider text-ink-3">{T.price}</div>
               <div className="font-mono text-2xl font-bold">{fmtPrice(tk.price, nfLocale(lang))}</div>
-              {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{tk.change.toFixed(1)}% · {lang === "en" ? "24h" : lang === "ru" ? "24 ч" : "24 год"}</div>}
+              {tk.change !== undefined && <div className={`font-mono text-sm font-bold ${tk.change >= 0 ? "text-lime" : "text-rose"}`}>{tk.change >= 0 ? "+" : ""}{num(+tk.change.toFixed(1), lang, 1) /* audit 28.11: "-2.9%" on uk/ru */}% · {lang === "en" ? "24h" : lang === "ru" ? "24 ч" : "24 год"}</div>}
             </div>
           )}
         </header>

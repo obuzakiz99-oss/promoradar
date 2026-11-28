@@ -29,7 +29,7 @@ const W = String.raw`(?:\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten
 const D = String.raw`(?:${W}\s*(?:to|-|–)\s*)?(\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten|fourteen|fifteen|twenty|thirty)\s*(?:\(\d+\)\s*)?`;
 
 // voucher-like: the reward cannot be withdrawn as such ("token vouchers" are NOT here: they redeem into real tokens)
-const VOUCHER = /\b(futures (trial )?bonus(es)?|bonus (voucher|credit)s?|(futures|trading|deduction|fee|copy ?trad\w*|margin|position|interest[- ]free|apr|earn|crypto) (vouchers?|coupons?)|(?<!token )vouchers?|coupons?|position airdrops?|fee savers?|trial funds?|experience (funds?|money)|bonus(es)? (can only|cannot|can't|are non-withdrawable|is non-withdrawable)|non-withdrawable|cannot be withdrawn|can ?not be withdrawn|not withdrawable)\b/i;
+const VOUCHER = /\b(futures (trial )?bonus(es)?|bonus (voucher|credit)s?|(futures|trading|deduction|fee|copy ?trad\w*|margin|position|interest[- ]free|apr|earn|crypto) (vouchers?|coupons?)|(?<!token )vouchers?|coupons?|position airdrops?|airdrop positions?|fee savers?|trial funds?|experience (funds?|money)|bonus(es)? (can only|cannot|can't|are non-withdrawable|is non-withdrawable)|non-withdrawable|cannot be withdrawn|can ?not be withdrawn|not withdrawable)\b/i;
 // cash-like: explicitly withdrawable, or paid straight into a normal balance
 const CASH = /\b((can|may) be (freely )?(withdrawn|transferred out)|withdrawable|fully owned by you|paid (directly )?into your (existing )?balance|in the same (stablecoin|asset) you hold|token vouchers?|[\d,.]+ ?(USDT|USDC|USD) in cash|(distributed|credited|airdropped|paid|sent) (directly )?(in|as) (USDT|USDC|FDUSD|USD1|[A-Z]{2,10} tokens?)\b(?! (bonus|voucher|coupon|trial))|wallet address(es)?|[\d,.]+ (in|of) (crypto|bitcoin)|tokeni[sz]ed (stocks?|shares?|equit\w*)|[A-Z][A-Za-z]+ (stocks?|shares?) \+|in [A-Z][A-Za-z]+ (stocks?|shares?))\b/i;
 // "… distributed to users' Spot Accounts …", "credited in USDT to your Funding account" — a normal wallet, not a bonus balance
@@ -39,7 +39,9 @@ const TO_WALLET = {
     && !/\b(transfers? from|only transfers|count(s|ed)? toward|excluded?|net transfer|deduct\w*)\b/i.test(x)
     && !/\b(coupons?|vouchers?|bonus(es)?) (will be |are |is )?(credited|distributed|sent|issued)\b/i.test(x),
 } as unknown as RegExp;
-const POINTS = /\b(XP|points? (will be|are) (distributed|credited|awarded)|earn (your share of )?[\d,.]+[MK]? ?(XP|points))\b/;
+// audit 28.11 (accuracy): Ourbit "XP Arena · Futures Team Showdown" (prizes in USDT) got "Бали, не гроші" — a bare XP is a
+// product name; XP counts only as an amount ("500 XP") or as what is credited, and not when the post names a USDT/USD prize
+const POINTS = /\b([\d,.]+[MK]? ?XP|XP (rewards? )?(will be|are|is) (distributed|credited|awarded)|points? (will be|are) (distributed|credited|awarded)|earn (your share of )?[\d,.]+[MK]? ?(XP|points))\b/;
 const TOKEN_VOUCHER_OK = /token voucher[^.]{0,200}\b(withdraw|fully owned|transferred)/i;
 
 const CLAIM = [
@@ -67,7 +69,8 @@ export function payoutOf(lines: string[]): Payout | undefined {
   const voucher = pick((x) => VOUCHER.test(x) && !aside(x) && !/\b(XP|points?)\b/.test(x));
   // "profits made with the bonus are withdrawable" is about a voucher, not a cash reward
   const cash = pick((x) => (CASH.test(x) || TOKEN_VOUCHER_OK.test(x) || TO_WALLET.test(x)) && !/\bprofits?\b/i.test(x) && !aside(x));
-  const points = !voucher && !cash && !!hit(POINTS);
+  const moneyPrize = ss.some((x) => /\b(win|earn|share|prizes?|rewards?|up to)\b[^.]{0,40}([\d,.]+[KM]? ?(USDT|USDC|USD)\b|\$[\d,.]+)/i.test(x) && !/\b(XP|points?) (worth|equal|=)/i.test(x));
+  const points = !voucher && !cash && !moneyPrize && !!hit(POINTS);
   const form: PayoutForm | undefined = voucher && cash ? "mixed" : voucher ? "voucher" : cash ? "cash" : points ? "points" : undefined;
 
   const num = (re: RegExp) => { const s = ss.find((x) => re.test(x)); if (!s) return undefined; const m = s.match(re)!; const v = n(m.slice(1).find((g) => g && n(g) !== undefined) ?? ""); if (v && v <= 120) { quotes.add(s); return v; } return undefined; };

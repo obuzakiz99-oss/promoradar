@@ -10,7 +10,7 @@ import { dropstabCoin, getUnlocks, isBig, UNLOCK_SRC, type Unlock } from "@/lib/
 import { trList } from "@/lib/translate";
 import { getTokens } from "@/lib/tokens";
 import { withBase } from "@/lib/base";
-import { compactUsd, duration, num, dec } from "@/lib/format";
+import { compactUsd, compactNum, duration, num, dec } from "@/lib/format";
 import { deadlineReminder } from "@/lib/ics";
 import { VenueLogo } from "@/components/VenueLogo";
 import { Footer } from "@/components/Sections";
@@ -66,7 +66,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return withOg({ title: X[lang].title, description: X[lang].sub, alternates: alt(lang, "/unlocks") });
 }
 
-const fmtNum = (n: number, lang = "en") => dec(String((n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`)), lang);
+// audit 28.11 (texts): K/M stayed English on uk/ru — shared compactNum
+const fmtNum = (n: number, lang = "en") => compactNum(n, lang);
 const pressCls = (x: number) => (x >= 5 ? "bg-rose/15 text-rose" : x >= 1 ? "bg-amber/15 text-amber" : "bg-white/5 text-ink-2");
 const day = (ms: number, lang: Locale) => new Date(ms).toLocaleDateString(lang === "uk" ? "uk-UA" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 

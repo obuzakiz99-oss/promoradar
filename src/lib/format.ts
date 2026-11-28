@@ -75,10 +75,25 @@ function isoDates(s: string, lang: string): string {
 }
 /** AI texts in uk/ru: "$2,500" -> "$2 500", "1.5%" -> "1,5%" (dates like 16.11.2026 stay). */
 export const localNums = (s: string, lang: string) => (lang === "en" ? s : isoDates(s, lang)
-  .replace(/\b([1-9]\d{0,2})((?:,\d{3})+)(?![,\d]|\s?%)/g, (_, a: string, b: string) => a + b.replace(/,/g, "\u00a0"))
+  .replace(/\b([1-9]\d{0,2})((?:,\d{3})+)(?!\d|,\d|\s?%)/g, (_, a: string, b: string) => a + b.replace(/,/g, "\u00a0"))
+  // audit 28.11 (texts): translated titles kept "Розділіть $10M" — dollar K/M/B become тис./млн/млрд like fmtLabel
+  .replace(/\$(\d+(?:\.\d+)?)([KMB])(?![A-Za-z\d])/g, (_, n: string, u: string) => `$${n} ${KMB[lang]?.[u] ?? u}`)
   // audit 2: a day.month date (19.11, 05.12) not followed by a unit stays a date ("коригування 19,11 і 29.11")
   .replace(/(?<![.\d])(\d+)\.(\d+)(?![.\d])/g, (m: string, a: string, b: string, i: number, all: string) =>
     +a >= 1 && +a <= 31 && /^(0[1-9]|1[0-2])$/.test(b) && !/^\s?(%|[A-Z$€]|x\b|тис|млн)/.test(all.slice(i + m.length)) ? m : `${a},${b}`));
+/**
+ * audit 28.11 (sections): amount inputs dropped the comma — the uk hint says "0,05 BTC", the field read "005" = 5 BTC (100×).
+ * A typed amount in any format: "0,05" / "0.05" → 0.05, "1 000,5" → 1000.5, "1,000" / "1,000.5" (en grouping) → 1000 / 1000.5.
+ */
+export const AMOUNT_CHARS = /[^\d.,\s]/g;
+export function parseAmount(s: string): number {
+  let x = s.replace(/[^\d.,]/g, "");
+  if (x.includes(".") && x.includes(",")) x = x.replace(/,/g, "");          // en "1,000.5"
+  else if (/^[1-9]\d{0,2}(,\d{3})+$/.test(x)) x = x.replace(/,/g, "");       // en "1,000", "25,000"
+  else x = x.replace(/,/g, ".");                                              // uk/ru decimal comma
+  const n = Number(x.replace(/\.(?=.*\.)/g, ""));                             // a stray second dot is dropped
+  return Number.isFinite(n) ? n : 0;
+}
 /** Money: "$50 000" for dollars, "50 000 USDT" for coins. */
 export function money(n: number, unit: string, lang: string): string {
   return unit === "USD" ? `$${num(n, lang)}` : `${num(n, lang)} ${unit}`;
@@ -110,7 +125,16 @@ function sentenceCase1(s: string, min: number): string {
 const KMB: Record<string, Record<string, string>> = { uk: { K: "тис.", M: "млн", B: "млрд" }, ru: { K: "тыс.", M: "млн", B: "млрд" } };
 export const fmtLabel = (s: string, lang: string) => (lang === "en" ? s : s
   .replace(/\d{1,3}(?:,\d{3})+(?:\.\d+)?/g, (m) => Number(m.replace(/,/g, "")).toLocaleString(nfLocale(lang)))
-  .replace(/(?<![\w.,])(\d+(?:\.\d+)?)([KMB])(?![A-Za-z\d])/g, (_, n: string, u: string) => `${n.replace(".", ",")} ${KMB[lang]?.[u] ?? u}`));
+  .replace(/(?<![\w.,])(\d+(?:\.\d+)?)\s?([KMB])(?![A-Za-z\d])/g, (_, n: string, u: string) => `${n.replace(".", ",")} ${KMB[lang]?.[u] ?? u}`));
+
+/**
+ * audit 28.11 (texts): pages kept their own K/M helpers — /uk/lp/ "Фонд 30K USDT", "1,8K", sales "$21.5 M" — one compact
+ * coin-amount format for the whole site: "30K" en, "30 тис." uk, "1,8 тис." / "2,5 млн" uk/ru. fmtLabel also takes "21.5 M".
+ */
+export function compactNum(n: number, lang: string): string {
+  const s = n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`;
+  return dec(fmtLabel(s, lang), lang);
+}
 
 /**
  * audit 23.11 (round 5): machine-translation slips that came back in new translations / AI texts — fixed at render time so
@@ -121,9 +145,11 @@ const WORDING: Record<string, Array<[RegExp, string]>> = {
     [/(^|[^а-яіїєґ'])Підпишіть(?=[^а-яіїєґ'])/g, "$1Внесіть"], [/(^|[^а-яіїєґ'])підпишіть(?=[^а-яіїєґ'])/g, "$1внесіть"],
     // audit 2: "допущених" read like bureaucratese
     [/відповідних (нових )?користувачів/g, "$1користувачів, які відповідають умовам"], [/відповідні (нові )?користувачі/g, "$1користувачі, які відповідають умовам"],
-    [/Відповідні (нові )?користувачі/g, "Користувачі, які відповідають умовам"], [/вносячи відповідну криптовалюту/g, "вносячи підтримувану криптовалюту"],
+    [/Відповідні (нові )?користувачі/g, "Користувачі, які відповідають умовам"], [/допущених (нових )?користувачів/g, "$1користувачів, які відповідають умовам"], // audit 28.11 [/вносячи відповідну криптовалюту/g, "вносячи підтримувану криптовалюту"],
     [/відповідних активів/g, "зарахованих активів"], [/(^|\s)Season (\d+)/g, "$1Сезон $2"], [/передплат(и|у|а)(?= Kraken)/g, "підписк$1"],
     [/(розділіть|щоб розділити) /g, "отримайте частку з "],
+    // audit 28.11 (texts): a title starts with a capital — "Розділіть $10M — виграйте…" was missed
+    [/(^|[^а-яіїєґ'])Розділіть /g, "$1Отримайте частку з "],
     // final audit 24.11: "Subscribe to Simple Earn" is a deposit, not a newsletter — only before product words (channels keep "підпишіться")
     [/(^|[^а-яіїєґ'])Підпишіться на (?=(гнучк|строков|фіксован|продукт))/g, "$1Вкладіть кошти в "],
     [/(^|[^а-яіїєґ'])підпишіться на (?=(гнучк|строков|фіксован|продукт))/g, "$1вкладіть кошти в "],

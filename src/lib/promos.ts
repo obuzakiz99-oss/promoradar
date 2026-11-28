@@ -261,6 +261,12 @@ async function getPromosLive(): Promise<Collected> {
       // audit 23.11: OKX "8% APR paid over 3 months" was counted only until the promo's end (17 days)
       const over = (p.titleOrig ?? p.title).match(/\bpaid over (\d{1,2}) (month|week|day)s?\b/i);
       if (over && meta.aprPct !== undefined) meta.aprDays = +over[1] * ({ month: 30, week: 7, day: 1 } as Record<string, number>)[over[2].toLowerCase()];
+      // audit 28.11 (accuracy): Bitget rToken "Reward = Average Daily Net Increase × Applicable APR × (31/365)" — the calculator
+      // counted the 39 days left (+$214 on $10 000 instead of ≤ $170); a published "× (N/365)" formula sets the paid days
+      if (!meta.aprDays && meta.aprPct !== undefined) {
+        const f = d.blocks.map((b) => b.x).join(" ").match(/\bAPR\b[^.\n]{0,40}?[×x*]\s*\(?\s*(\d{1,3})\s*\/\s*365\s*\)?/i);
+        if (f && +f[1] >= 1 && +f[1] <= 365) meta.aprDays = +f[1];
+      }
       // what is actually paid (cash / voucher / points), claim window, review & payout days — with the quoted sentences
       const po = payoutOf(d.blocks.map((b) => (b.t === "tr" ? (b.cells ?? []).join(" | ") : b.x)));
       if (po) meta.payout = po;

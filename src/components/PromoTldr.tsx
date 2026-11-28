@@ -60,7 +60,10 @@ export function PromoTldr({ p, m, lang, futures }: { p: Promo; m: M; lang: Local
   const head = p.titleOrig ?? p.title;
   // "stays in a stablecoin" only when the money really goes into one: a USDT deposit/stake rule or a USDT Earn/APR offer —
   // not any bonus whose headline names USDT (MEXC "earn up to 150 USDT" tasks may include futures)
-  const stable = !hi && !mid && (m.minEntry ? STABLE.test(m.minEntry.unit) : (p.category === "earn" || m.aprPct !== undefined) && /\b(USDT|USDC|USD1|FDUSD|stablecoins?)\b/i.test(head));
+  // audit 28.11 (accuracy): Bitget rToken Boost (rewards in rNVDA stock tokens) and BYDFi "Buy Crypto" read "low: stays in a
+  // stablecoin" — a USDT threshold only measures the entry; buying crypto / stock tokens is not holding a stablecoin
+  const notStable = m.minEntry?.kind === "buy" || /\b(stocks?|shares?|rTokens?|buy crypto|purchase|tokeni[sz]ed)\b/i.test(head);
+  const stable = !hi && !mid && !notStable && (m.minEntry ? STABLE.test(m.minEntry.unit) : (p.category === "earn" || m.aprPct !== undefined) && /\b(USDT|USDC|USD1|FDUSD|stablecoins?)\b/i.test(head));
   // staking / Earn in an ordinary coin (OPG, PEARL…) is not "low risk": the coin itself can drop (27.11)
   const priceRisk = !hi && !mid && !stable && (p.category === "earn" || m.aprPct !== undefined || m.minEntry?.kind === "stake" || m.minEntry?.kind === "hold" || m.minEntry?.kind === "buy");
   // no deposit / trade rule and no product: the risk depends on the tasks — say that instead of promising "low"

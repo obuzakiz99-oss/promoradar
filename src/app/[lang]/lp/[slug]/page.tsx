@@ -1,5 +1,5 @@
 import { alt, withOg } from "@/lib/seo";
-import { plural, dec } from "@/lib/format";
+import { plural, dec, compactNum } from "@/lib/format";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
@@ -92,11 +92,12 @@ const X: Record<Locale, {
   },
 };
 
-const fmtNum = (n?: number, lang = "en") => dec(String((n === undefined ? "—" : n >= 1e9 ? `${+(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${+(n / 1e6).toFixed(2)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${+n.toFixed(2)}`)), lang);
+// audit 28.11 (texts): "Фонд винагород 30K USDT", "1,8K" on uk/ru — the shared compactNum gives "30 тис.", "1,8 тис."
+const fmtNum = (n?: number, lang = "en") => (n === undefined ? "—" : compactNum(n, lang));
 const fmtApr = (x?: number, lang = "en") => dec(String((x === undefined ? "—" : `${x >= 100 ? Math.round(x) : x.toFixed(2)}%`)), lang);
 // site-wide number format: uk/ru "$1 000", en "$1,000"
 // audit 26.11: a few tenths of a cent a day showed as "$0.00 /day" — under a cent reads "< $0.01"
-const usd = (x: number, lang: string) => (x >= 100 ? `$${num(Math.round(x), lang, 0)}` : x > 0 && x < 0.005 ? "< $0.01" : `$${x.toFixed(2)}`);
+const usd = (x: number, lang: string) => (x >= 100 ? `$${num(Math.round(x), lang, 0)}` : x > 0 && x < 0.005 ? "< $0.01" : `$${dec(x.toFixed(2), lang)}`); // audit 28.11: "$0.32", "$4.95/день" on uk/ru
 const STAKE_OF: Record<string, (x: string) => string> = { uk: (x) => `стейк ${x}`, en: (x) => `stake ${x}`, ru: (x) => `стейк ${x}` };
 const LP_SECTION = /launch ?pool|gem ?pool|pool ?x|boost ?hub|jumpstart/i;
 

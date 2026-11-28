@@ -1,5 +1,5 @@
 import type { Locale } from "./i18n";
-import { localNums } from "./format";
+import { compactUsd, localNums } from "./format";
 import type { Hedge, Pool, PoolProject } from "./pools";
 import type { EarnOffer } from "./earn";
 import type { DexPool } from "./dexpools";
@@ -148,7 +148,8 @@ type Key = keyof (typeof D)["uk"];
 const STABLE = new Set(["USDT", "USDC", "USD1", "USDG", "FDUSD", "U", "DAI", "USDE", "PYUSD", "TUSD"]);
 const MAJORS = new Set(["BTC", "ETH", "BNB", "SOL", "XRP", "GT", "KCS", "TON", "TRX", "DOGE", "ADA", "MX", "OKB", "XAUT"]);
 
-const usd = (n: number) => (n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`);
+// audit 28.11 (texts): "Великий фонд винагород $153K" on uk/ru — compactUsd gives "$153 тис."
+const usd = (n: number, lang: string) => compactUsd(n, lang);
 const pct = (n: number) => { const a = Math.abs(n); return `${a >= 100 ? Math.round(n) : a >= 10 ? n.toFixed(1) : n.toFixed(2)}%`; };
 const sign = (n: number) => `${n > 0 ? "+" : ""}${pct(n)}`;
 
@@ -216,7 +217,7 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
   if (stableStake) pros.push(f("stableStake"));
   else if (MAJORS.has(pool.stake)) pros.push(f("majorStake", "", pool.stake));
   if (apr >= 50) pros.push(f("highApr", pct(apr)));
-  if ((p.rewardUsd ?? 0) >= 100_000) pros.push(f("bigFund", usd(p.rewardUsd!)));
+  if ((p.rewardUsd ?? 0) >= 100_000) pros.push(f("bigFund", usd(p.rewardUsd!, lang)));
   if (pool.minStake && ctx.price && pool.minStake * ctx.price <= 50) pros.push(f("lowMin", `${pool.minStake} ${pool.stake}`));
   if (p.status === "live" && left > 24 * 7) pros.push(f("daysLeft", Math.floor(left / 24)));
 
@@ -229,14 +230,14 @@ export function poolPC(lang: Locale, p: PoolProject, pool: Pool, ctx: {
       if ((hc.hedgedApr ?? 0) > 5) pros.push(f("hedgedPos", pct(hc.hedgedApr!)));
     } else cons.push(f("noPerp", "", pool.stake));
     const depth = ctx.hedge[pool.stake]?.spotDepthUsd;
-    if (depth !== undefined && depth < 20_000 && !BIG.has(pool.stake) && !STABLE.has(pool.stake)) cons.push(f("thinBook", usd(depth), pool.stake));
+    if (depth !== undefined && depth < 20_000 && !BIG.has(pool.stake) && !STABLE.has(pool.stake)) cons.push(f("thinBook", usd(depth, lang), pool.stake));
   }
   if (pool.stake === p.token && !BIG.has(p.token)) cons.push(f("buyToken", "", p.token));
   if ((ctx.chgReward ?? 0) <= -10) cons.push(f("dump", sign(ctx.chgReward!), p.token));
   else if (!STABLE.has(p.token) && !BIG.has(p.token) && pool.stake !== p.token && (ctx.chgReward ?? 0) < 0) cons.push(f("rewardNew", "", p.token));
   if (pool.aprStart && apr && pool.aprStart > apr * 1.3) cons.push(f("aprFalling", pct(pool.aprStart)));
   if (pool.minStake && ctx.price && pool.minStake * ctx.price >= 1000) cons.push(f("highMin", `${pool.minStake.toLocaleString("en-US")} ${pool.stake}`));
-  if (pool.maxStake && ctx.price && pool.maxStake * ctx.price < 1000) cons.push(f("smallMax", usd(pool.maxStake * ctx.price)));
+  if (pool.maxStake && ctx.price && pool.maxStake * ctx.price < 1000) cons.push(f("smallMax", usd(pool.maxStake * ctx.price, lang)));
   if (pool.newUsers) cons.push(f("special"));
   if (p.status === "live" && left < 48) cons.push(f("endsSoon", left < 24 ? `${Math.max(1, Math.round(left))} ${({ uk: "год", en: "h", ru: "ч" } as const)[lang]}` : ({ uk: "2 дні", en: "2 days", ru: "2 дня" } as const)[lang]));
   if (stableStake && apr < 5) cons.push(f("lowApr"));
@@ -270,13 +271,13 @@ export function dexPC(lang: Locale, p: DexPool): PC {
   const rewardShare = p.apy > 0 ? (p.apyReward ?? 0) / p.apy : 0;
   if (p.stable) pros.push(f("stablePool"));
   if (!p.il) pros.push(f("noIl"));
-  if (p.tvl >= 100e6) pros.push(f("bigTvl", usd(p.tvl)));
+  if (p.tvl >= 100e6) pros.push(f("bigTvl", usd(p.tvl, lang)));
   if (rewardShare < 0.3 && (p.apyBase ?? 0) > 0) pros.push(f("feeYield"));
   if (p.apy30d && Math.abs(p.apy - p.apy30d) / Math.max(p.apy30d, 0.01) < 0.25) pros.push(f("stableApy", pct(p.apy30d)));
   if (p.il) cons.push(f("il"));
   if (rewardShare >= 0.5) cons.push(f("emissions", `${Math.round(rewardShare * 100)}%`));
   if (p.apy30d && p.apy > p.apy30d * 2 && p.apy > 10) cons.push(f("spike", pct(p.apy30d)));
-  if (p.tvl < 5e6) cons.push(f("smallTvl", usd(p.tvl)));
+  if (p.tvl < 5e6) cons.push(f("smallTvl", usd(p.tvl, lang)));
   if (p.apy >= 100) cons.push(f("extreme"));
   return { pros, cons };
 }

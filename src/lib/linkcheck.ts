@@ -40,6 +40,9 @@ function shortTypo(ob: string, b: string): boolean {
   if (b.length === ob.length + 1) return [...b].some((c, i) => i > 0 && c === b[i - 1] && b.slice(0, i) + b.slice(i + 1) === ob);
   if (b.length !== ob.length) return false;
   const diff = [...ob].map((c, i) => [c, b[i]]).filter(([x, y]) => x !== y);
+  // audit 28.11 (sections): two neighbouring letters swapped (kucion.com) was "unknown"; not the first letter (blank.com ≠ LBank)
+  const at = [...ob].findIndex((c, i) => c !== b[i]);
+  if (diff.length === 2 && at >= 1 && ob[at] === b[at + 1] && ob[at + 1] === b[at]) return true;
   return diff.length === 1 && ALIKE.has([...diff[0]].sort().join(""));
 }
 
@@ -79,7 +82,8 @@ export function checkLink(raw: string, off: Official): Verdict {
   const b = norm(base(reg));
   for (const d of off.domains) {
     const ob = norm(base(d.domain));
-    if (ob === b) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "tld", host };                       // binance.cc
+    // audit 28.11 (sections): 0kx.com / raydiurn.io (same ending, 0→o, rn→m) said "same name, other domain zone" — that is a typo
+    if (ob === b) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: base(d.domain).toLowerCase() === base(reg).toLowerCase() ? "tld" : "typo", host }; // binance.cc
     if (ob.length >= 8 ? lev(ob, b) <= 2 : ob.length >= 5 && shortTypo(ob, b)) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "typo", host }; // binanse.com
   }
   // brand name inside another domain: binance-bonus.com, bybit.rewards-claim.net, okx-airdrop.io
@@ -89,7 +93,8 @@ export function checkLink(raw: string, off: Official): Verdict {
   if (BIG.has(reg)) return { kind: "unknown", host, http };
   for (const d of off.domains) {
     const ob = norm(base(d.domain));
-    const re = ob.length >= 5 && !WORDY.has(ob) ? new RegExp(ob) : new RegExp(`(^|[.-])${ob}([.-]|$)`);
+    // audit 28.11 (sections): okxairdrop.io (short brand glued to a phishing word) was "unknown"
+    const re = ob.length >= 5 && !WORDY.has(ob) ? new RegExp(ob) : new RegExp(`(^|[.-])${ob}([.-]|$|(airdrop|bonus|claim|login|gift|reward|giveaway|wallet|support|verify)s?([.-]|$))`);
     if (re.test(ob.length >= 5 && !WORDY.has(ob) ? label : host.replace(/\.[^.]+$/, ""))) return { kind: "lookalike", venue: d.venue, domain: d.domain, why: "contains", host };
   }
   return { kind: "unknown", host, http };

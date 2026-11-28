@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { nfLocale, dec } from "@/lib/format";
+import { nfLocale, dec, parseAmount, AMOUNT_CHARS } from "@/lib/format";
 import type { Locale } from "@/lib/i18n";
 import type { Venue } from "@/lib/types";
 import type { Hedge, PoolProject } from "@/lib/pools";
@@ -25,7 +25,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
   const usd = (...a: Parameters<typeof usd0>) => dec(usd0(...a), lang);
   const T = TOOLS[lang];
   const [text, setText] = useState("1000");
-  const amount = Math.max(0, Number(text.replace(/[^\d.]/g, "")) || 0);
+  const amount = Math.max(0, parseAmount(text) || 0);
   const month = (apr: number, cap?: number) => (Math.min(amount, cap ?? Infinity) * apr) / 100 / 12;
 
   const hedged = useMemo(() => {
@@ -62,7 +62,7 @@ export function BestBoard({ lang, safe, pools, hedge, prices, exchanges, promos,
         <label htmlFor="best-amt" className="text-sm font-semibold text-ink-2">{T.amount}</label>
         <div className="relative w-56">
           <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 font-display text-xl text-ink-3">$</span>
-          <input id="best-amt" inputMode="decimal" value={text} onChange={(e) => setText(e.target.value.replace(/[^\d.]/g, "").slice(0, 12))}
+          <input id="best-amt" inputMode="decimal" value={text} onChange={(e) => setText(e.target.value.replace(AMOUNT_CHARS, "").slice(0, 12)) /* audit 28.11: decimal comma kept */}
             className="h-12 w-full rounded-xl border border-line-2 bg-bg/60 pl-8 pr-3 font-display text-2xl font-semibold text-ink focus:border-lime/60 focus:outline-none" />
         </div>
         <div className="flex gap-2">

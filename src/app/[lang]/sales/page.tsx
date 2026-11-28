@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CalendarTabs } from "@/components/SectionTabs";
 import { getDict, isLocale, type Locale } from "@/lib/i18n";
 import { getSales, SALES_SRC, type Sale, type PreIpoVenue } from "@/lib/sales";
-import { duration } from "@/lib/format";
+import { dec, duration, fmtLabel } from "@/lib/format";
 import { VenueLogo } from "@/components/VenueLogo";
 import { CalAdd } from "@/components/CalAdd";
 import { Hint } from "@/components/Hint";
@@ -89,7 +89,7 @@ export default async function SalesPage({ params }: { params: Params }) {
             {at ? `${s.status === "upcoming" ? T.starts : T.ends} ${duration(at - now, t.time)}` : <span className="font-sans font-normal text-ink-3">{T.noDate}</span>}
           </div>
           {(s.raised || s.valuation) && (
-            <div className="mt-0.5 font-mono text-xs text-ink-3">{s.raised ? `${T.raised} ${s.raised}` : ""}{s.raised && s.valuation ? " · " : ""}{s.valuation ? `${T.val} ${s.valuation}` : ""}</div>
+            <div className="mt-0.5 font-mono text-xs text-ink-3">{/* audit 28.11 (texts): scraped "$21.5 M" printed raw on uk/ru */}{s.raised ? `${T.raised} ${dec(fmtLabel(s.raised, lang), lang)}` : ""}{s.raised && s.valuation ? " · " : ""}{s.valuation ? `${T.val} ${dec(fmtLabel(s.valuation, lang), lang)}` : ""}</div>
           )}
         </div>
         <div data-tour="sales-actions" className="flex items-center gap-2">

@@ -155,7 +155,9 @@ export function factsOf(blocks: Block[]): Fact[] {
 const MON: Record<string, number> = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
 // whole month names only ("5 market" must not read as 5 March)
 const MRE = "(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)\\.?(?![a-z])";
-const TIME = "(\\d{1,2}):(\\d{2})(?::\\d{2})?\\s*(am|pm)?";
+// audit 28.11 (accuracy): Coinstore "Period: 2 PM, Nov 19 – 2 PM, Dec 3, 2026 (GMT+8)" — an hour without minutes was not read, the
+// promo showed 18 Nov 16:00 – 3 Dec 15:59 UTC instead of 19 Nov 06:00 – 3 Dec 06:00; minutes may be left out before am/pm
+const TIME = "(\\d{1,2})(?::(\\d{2})(?::\\d{2})?|(?=\\s*(?:am|pm)\\b))\\s*(am|pm)?";
 const D_ISO = new RegExp(`(\\d{4})[-/.](\\d{1,2})[-/.](\\d{1,2})(?:[ T,]+(?:at\\s*)?${TIME})?`, "gi");
 const D_MDY = new RegExp(`\\b${MRE}\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
 const D_DMY = new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+${MRE},?\\s+(\\d{4})(?:,?\\s*(?:at\\s*)?${TIME})?`, "gi");
@@ -174,7 +176,7 @@ export function datesIn(line: string, refMs?: number): Array<{ ms: number; hasTi
     let H = hh !== undefined ? Number(hh) : undefined, M = mm !== undefined ? Number(mm) : 0;
     if (H === undefined) {                                               // "14:00 on November 4, 2026"
       const b = line.slice(Math.max(0, i - 28), i).match(TIME_BEFORE);
-      if (b) { H = Number(b[1]); M = Number(b[2]); ap = b[3]; }
+      if (b) { H = Number(b[1]); M = b[2] ? Number(b[2]) : 0; ap = b[3]; }
     }
     if (H !== undefined && ap) { if (/pm/i.test(ap) && H < 12) H += 12; if (/am/i.test(ap) && H === 12) H = 0; }
     if (y < 2020 || y > 2035 || mo < 0 || mo > 11 || d < 1 || d > 31 || (H ?? 0) > 23) return;
@@ -759,6 +761,13 @@ function dropTail(blocks: Block[], head: string): Block[] {
     if (/^(#[\p{L}\d_]+[\s,]*)+$/u.test(x)) continue;                                             // hashtag lines
     if (/^©|^\d+D\s*\d+H\s*\d+M\s*\d+S$/i.test(x)) continue;                                       // copyright, frozen countdowns
     if ((x.match(/\|/g) ?? []).length >= 3 && /telegram|discord|twitter|reddit|website|download/i.test(x)) continue;   // social bars
+    // audit 28.11 (texts): OKX "⚜️ Registration | OKX Announcements | TG | DC | OKX Orbit | … | CN TG | CN DC", its "Our Socials:"
+    // heading and Biconomy "— Try it now —" stayed in the rules — a bar of 5+ short "|" parts is links, not a table row
+    if (b.t !== "tr" && (x.match(/\|/g) ?? []).length >= 5 && x.split("|").every((c) => c.trim().length <= 30)) continue;
+    if (b.t !== "tr" && x.length <= 60 && /^(our socials|follow our socials|наші сторінки в соцмережах|наши страницы в соцсетях|наші соцмережі|наши соцсети)\s*[:：]?\s*$/iu.test(x)) continue;
+    if (b.t !== "tr" && x.length <= 200 && /^\W{0,4}(please )?(verify|check) the authenticity of (all )?(links|urls|websites)/i.test(x)) continue;   // OKX "‼️Please verify the authenticity of all links…"
+    if (b.t !== "tr" && x.length <= 180 && /^\p{Extended_Pictographic}/u.test(x) && /\bstart your (earning )?journey\b|\band start earning\.?$/i.test(x)) continue;   // Biconomy "🔍 Search for … start your earning journey"
+    if (b.t !== "tr" && x.length <= 40 && /^[—–-]+\s*(try it now|спробуйте зараз|попробуйте сейчас)!?\s*[—–-]+$/iu.test(x)) continue;
     if (/^(download|завантаження)\s*[:：]?\s*$/i.test(x)) continue;
     if (/^(trending|in trend|hot now|popular)\s*[:：]/i.test(x) || /\byou are (about to|going to) (leave|go to|open)\b|\bthird[- ]party (app|application|website|site)\b/i.test(x)) continue;
     if (b.t !== "tr" && x.length <= 16 && /^[+\-–]?[\d\s,.+\-–/]+$/.test(x)) continue;   // stray counters ("+1-284", "+0")

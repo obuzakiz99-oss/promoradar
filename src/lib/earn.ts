@@ -8,6 +8,8 @@ export interface EarnOffer {
   apr: number;              // typical / base APR for any amount
   aprMax?: number;          // best tier (usually limited amount)
   tierNote?: string;        // e.g. "≤ 100 USDT"
+  // audit 28.11 (sections): income used only the base rate — Bitget USDT "4% до 6% ≤ 300K" paid 3,33/міс on $1 000 instead of 5,00
+  tierMax?: number;         // aprMax applies to the first tierMax coins, the rest earns apr
   days?: number;            // lock period for fixed products
   minAmount?: number;
   maxAmount?: number;       // per-user cap
@@ -39,6 +41,7 @@ async function binance(): Promise<EarnOffer[]> {
         exchange: "binance", coin: p.asset, type: fixed ? "fixed" : "flexible", apr: +base.toFixed(2),
         aprMax: max > base + 0.01 ? +max.toFixed(2) : undefined,
         tierNote: max > base + 0.01 && tier?.endAmount ? `≤ ${fmtAmt(Number(tier.endAmount))} ${p.asset}` : undefined,
+        tierMax: max > base + 0.01 && tier?.endAmount ? Number(tier.endAmount) || undefined : undefined,
         days: fixed ? Number(d.duration) : undefined, minAmount: n(d.minPurchaseAmount),
         url: `https://www.binance.com/en/simple-earn`,
       });
@@ -63,6 +66,7 @@ async function bybit(): Promise<EarnOffer[]> {
         exchange: "bybit", coin: p.coin, type: cat === "OnChain" ? "onchain" : "flexible", apr: base,
         aprMax: best && best > base + 0.01 ? best : undefined,
         tierNote: best && best > base + 0.01 && top?.max && top.max > 0 ? `≤ ${fmtAmt(top.max)} ${p.coin}` : undefined,
+        tierMax: best && best > base + 0.01 && top?.max && top.max > 0 ? top.max : undefined,
         minAmount: n(p.minStakeAmount), url: "https://www.bybit.com/en/earn/home",
         redeemHours: Number(p.redeemProcessingMinute) > 0 ? Number(p.redeemProcessingMinute) / 60 : undefined,
         via: p.swapCoin && p.swapCoin !== p.coin ? p.swapCoin : undefined,
@@ -123,6 +127,7 @@ async function bitget(): Promise<EarnOffer[]> {
       exchange: "bitget", coin: p.coinName, type: fixed ? "fixed" : "flexible", apr: +base.toFixed(2),
       aprMax: best > base + 0.01 ? +best.toFixed(2) : undefined,
       tierNote: best > base + 0.01 && top?.max ? `≤ ${fmtAmt(top.max)} ${p.coinName}` : undefined,
+      tierMax: best > base + 0.01 && top?.max ? top.max : undefined,
       days: fixed ? Number(p.period) : undefined, url: "https://www.bitget.com/earning/savings",
     });
   }

@@ -1,3 +1,4 @@
+import { earnYear } from "@/lib/earn-calc";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import type { EarnOffer } from "@/lib/earn";
@@ -38,7 +39,7 @@ export function EasyEarn({ offers, lang }: { offers: EarnOffer[]; lang: Locale }
             <VenueLogo v={venueOf(o.exchange)} size={32} rounded="rounded-lg" />
             <div className="min-w-0">
               <div className="font-bold text-ink">{VENUES[o.exchange].name} · <span className="text-lime">{num(o.apr, lang)}%</span></div>
-              <div className="text-xs text-ink-3">{T.per(num(Math.round((1000 * o.apr) / 100 / 12 * 10) / 10, lang, 1))}</div>
+              <div className="text-xs text-ink-3">{T.per(num(Math.round(earnYear(o, 1000) / 12 * 10) / 10, lang, 1)) /* audit 28.11: boosted tier counts */}</div>
             </div>
           </Link>
         ))}
