@@ -1,5 +1,5 @@
 {
- "at": 1795863295724,
+ "at": 1795865133185,
  "items": [
   {
    "id": "tg:Phemex_Announcements/8058",
@@ -335,6 +335,13 @@
    "url": "https://t.me/Phemex_Announcements/8002",
    "why": "ended",
    "of": "2026-11-19T14:00"
+  },
+  {
+   "id": "tg:Kucoin_News/37233",
+   "venue": "KuCoin",
+   "title": "New to KuCoin? — Sign up, place your first Futures trade (100+ USDT volume) and unlock a 100 USDT Futures…",
+   "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
+   "why": "news"
   },
   {
    "id": "tg:LBanknews/20873",
@@ -878,22 +885,6 @@
    "why": "news"
   },
   {
-   "id": "bitget:12560603900487",
-   "venue": "Bitget",
-   "title": "CandyBomb x rNVDA: Trade futures to share 90 rNVDA!",
-   "url": "https://www.bitget.com/support/articles/12560603900487",
-   "why": "ended",
-   "of": "2026-11-28T10:00"
-  },
-  {
-   "id": "bitget:12560603900486",
-   "venue": "Bitget",
-   "title": "CandyBomb x SOL: Trade futures to share 180 SOL!",
-   "url": "https://www.bitget.com/support/articles/12560603900486",
-   "why": "ended",
-   "of": "2026-11-28T10:00"
-  },
-  {
    "id": "bybit:wsot-2026-captains-call-watch-the-replay--arte378a592d8e9",
    "venue": "Bybit",
    "title": "WSOT 2026 Captains' Call: Watch the Replay",
@@ -1133,7 +1124,7 @@
    "title": "Binance Alpha Trading Competition: Trade Concrete (CT) and Share $200K Worth of Rewards (2026-11-27)",
    "url": "https://www.binance.com/en/support/announcement/detail/e6020e34cae84cb282b9e4dff1e0048c",
    "why": "small",
-   "perUserUsd": 52.9,
+   "perUserUsd": 53.34,
    "netUsd": 0.71
   },
   {
@@ -1166,7 +1157,7 @@
    "title": "Weekend Power Station: Register to Claim 75 XRP, Trade to Earn Another 150 XRP",
    "url": "https://www.gate.com/announcements/article/103027",
    "why": "raffle",
-   "perUserUsd": 140.595,
+   "perUserUsd": 140.88,
    "netUsd": -0.19
   },
   {
@@ -1182,7 +1173,7 @@
    "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
    "url": "https://www.gate.com/announcements/article/103024",
    "why": "small",
-   "perUserUsd": 68.2,
+   "perUserUsd": 68.1,
    "netUsd": 0.5
   },
   {
@@ -1245,7 +1236,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 884.3671980000001,
+   "perUserUsd": 887.4937487,
    "netUsd": -0.06
   },
   {
@@ -1387,7 +1378,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2196.8,
+   "perUserUsd": 2198.4,
    "netUsd": 0.53
   },
   {
@@ -1497,8 +1488,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5922.7300000000005,
-   "netUsd": 117.95
+   "perUserUsd": 5926.830000000001,
+   "netUsd": 118.04
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1778,7 +1769,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1404.8,
+   "perUserUsd": 1405.76,
    "netUsd": 0.38
   },
   {
@@ -1860,7 +1851,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1621.2,
+   "perUserUsd": 1616.8,
    "netUsd": 0.31
   },
   {
@@ -1917,7 +1908,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1365.45,
+   "perUserUsd": 1367.85,
    "netUsd": -0.6
   },
   {
@@ -2072,15 +2063,6 @@
    "netUsd": 0
   },
   {
-   "id": "tg:Kucoin_News/37233",
-   "venue": "KuCoin",
-   "title": "New to KuCoin? — Sign up, place your first Futures trade (100+ USDT volume) and unlock a 100 USDT Futures…",
-   "url": "https://www.kucoin.com/campaigns/Light_Up_Your_Trade?utm_source=Light_Up_Your_Trade&utm_medium=Community&utm_campaign=Light_Up_Your_Trade",
-   "why": "news",
-   "perUserUsd": 100,
-   "netUsd": 39.95
-  },
-  {
    "id": "binance:f4434fb5be2340a29beefd8f4c2502cd",
    "venue": "Binance",
    "title": "Binance Pay: Spend, Deposit, and Share Up to $140,000 Worth of Rewards This Black Friday!",
@@ -2198,7 +2180,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 131.808,
+   "perUserUsd": 131.904,
    "netUsd": 2.51
   },
   {
@@ -2225,7 +2207,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5922.7300000000005,
+   "perUserUsd": 5926.830000000001,
    "netUsd": 8.77
   },
   {
@@ -2686,8 +2668,8 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 24.665,
-   "netUsd": -0.51
+   "perUserUsd": 27.23,
+   "netUsd": -0.5
   },
   {
    "id": "tg:Bitget_Announcements/18436",
