@@ -1,5 +1,5 @@
 {
- "at": 1795877941811,
+ "at": 1795879759275,
  "items": [
   {
    "id": "tg:Phemex_Announcements/8058",
@@ -329,6 +329,13 @@
    "of": "2026-11-27T11:00"
   },
   {
+   "id": "tg:OKXAnnouncements/7428",
+   "venue": "OKX",
+   "title": "Bring your market view to the Anthropic IPO Carnival, with 250,000 USDT in rewards across our pre-IPO perps…",
+   "url": "https://www.okx.com/campaigns/anthropic-ipo-campaign?channelid=ACE505900",
+   "why": "news"
+  },
+  {
    "id": "biconomy:64464692560921",
    "venue": "Biconomy.com",
    "title": "Biconomy.com Earn – BTC & KAMIRAI Locked Products: Enjoy Up to 8.11% APR in Rewards!",
@@ -619,14 +626,6 @@
    "title": "Trade & Earn: Trade $TSLA, $NVDA, $AAPL & more to unlock up to 200 USDT in trading rewards!",
    "url": "https://t.me/Bitrue_official/11238",
    "why": "news"
-  },
-  {
-   "id": "gate:102812",
-   "venue": "Gate",
-   "title": "Gate Prediction Markets Crypto Kickoff Week: 20,000 USDT in First-Trade and Leaderboard Rewards",
-   "url": "https://www.gate.com/announcements/article/102812",
-   "why": "ended",
-   "of": "2026-11-24T08:00"
   },
   {
    "id": "binance:dd87c69ba67c4695bdd9836bca73ebb9",
@@ -1113,6 +1112,15 @@
    "netUsd": 4
   },
   {
+   "id": "gate:103037",
+   "venue": "Gate",
+   "title": "Auto-Invest Championship: Share 20,000 USDT and Win a 5% APR Boost Voucher",
+   "url": "https://www.gate.com/announcements/article/103037",
+   "why": "small",
+   "perUserUsd": 500,
+   "netUsd": 0.47
+  },
+  {
    "id": "tg:Kucoin_News/37336",
    "venue": "KuCoin",
    "title": "Final Call! — The KuCoin Crypto Loans November campaign is wrapping up",
@@ -1144,8 +1152,8 @@
    "title": "Binance Alpha Trading Competition: Trade Concrete (CT) and Share $200K Worth of Rewards (2026-11-27)",
    "url": "https://www.binance.com/en/support/announcement/detail/e6020e34cae84cb282b9e4dff1e0048c",
    "why": "small",
-   "perUserUsd": 52.12,
-   "netUsd": 0.69
+   "perUserUsd": 52.4,
+   "netUsd": 0.7
   },
   {
    "id": "tg:MEXCofficialNews/38898",
@@ -1157,11 +1165,44 @@
    "netUsd": 10
   },
   {
+   "id": "gate:103030",
+   "venue": "Gate",
+   "title": "Gate Web3 BountyDrop: Join the USDD Thanksgiving Airdrop and Share 500 USDD in Rewards",
+   "url": "https://www.gate.com/announcements/article/103030",
+   "why": "small",
+   "netUsd": -0.08
+  },
+  {
+   "id": "gate:103029",
+   "venue": "Gate",
+   "title": "Gate Live Mining Program Bonuses Distribution Announcement (November 16 - November 22)",
+   "url": "https://www.gate.com/announcements/article/103029",
+   "why": "social"
+  },
+  {
+   "id": "gate:103027",
+   "venue": "Gate",
+   "title": "Weekend Power Station: Register to Claim 75 XRP, Trade to Earn Another 150 XRP",
+   "url": "https://www.gate.com/announcements/article/103027",
+   "why": "raffle",
+   "perUserUsd": 140.94,
+   "netUsd": -0.19
+  },
+  {
    "id": "kucoin:361772",
    "venue": "KuCoin",
    "title": "GAIB (GAIB) Listing Campaign — 2,600,000 GAIB Giveaway",
    "url": "https://www.kucoin.com/announcement/en-gaib-gaib-listing-campaign-2600000-gaib-giveaway?lang=en_US",
    "why": "raffle"
+  },
+  {
+   "id": "gate:103024",
+   "venue": "Gate",
+   "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
+   "url": "https://www.gate.com/announcements/article/103024",
+   "why": "small",
+   "perUserUsd": 67.9,
+   "netUsd": 0.5
   },
   {
    "id": "tg:coinstore_global/10411",
@@ -1223,7 +1264,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 886.6004485,
+   "perUserUsd": 884.8138481000001,
    "netUsd": -0.06
   },
   {
@@ -1365,7 +1406,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2208.4,
+   "perUserUsd": 2206,
    "netUsd": 0.53
   },
   {
@@ -1475,8 +1516,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5931.540000000001,
-   "netUsd": 118.13
+   "perUserUsd": 5930.06,
+   "netUsd": 118.1
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1589,7 +1630,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1079.6799999999998,
+   "perUserUsd": 1070.1599999999999,
    "netUsd": 0.17
   },
   {
@@ -1748,7 +1789,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1408.32,
+   "perUserUsd": 1410.88,
    "netUsd": 0.38
   },
   {
@@ -1809,15 +1850,6 @@
    "netUsd": 0.1
   },
   {
-   "id": "gate:102916",
-   "venue": "Gate",
-   "title": "Gate Square × Trader Champions League S2: Share Strategies, Split 50,000 USDT & Win 10 GT",
-   "url": "https://www.gate.com/announcements/article/102916",
-   "why": "social",
-   "perUserUsd": 200,
-   "netUsd": 0.33
-  },
-  {
    "id": "tg:coinstore_global/10397",
    "venue": "Coinstore",
    "title": "PIXA Lucky Spin Campaign is Kicking Off",
@@ -1839,8 +1871,8 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1612.3999999999999,
-   "netUsd": 0.3
+   "perUserUsd": 1620.3999999999999,
+   "netUsd": 0.31
   },
   {
    "id": "tg:HTXGlobalAnnouncementChannel/15882",
@@ -1947,13 +1979,6 @@
    "why": "small",
    "perUserUsd": 3,
    "netUsd": 1.05
-  },
-  {
-   "id": "gate:102883",
-   "venue": "Gate",
-   "title": "Gate IPO Access Phase 3: Anthropic (ANT) Share Allocation Confirmed, Total Allocation: 92,100 ANT Sh..",
-   "url": "https://www.gate.com/announcements/article/102883",
-   "why": "news"
   },
   {
    "id": "tg:Kucoin_News/37246",
@@ -2151,8 +2176,8 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 132.504,
-   "netUsd": 2.53
+   "perUserUsd": 132.35999999999999,
+   "netUsd": 2.52
   },
   {
    "id": "bitget:12560603900606",
@@ -2178,7 +2203,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5931.540000000001,
+   "perUserUsd": 5930.06,
    "netUsd": 8.77
   },
   {
@@ -2617,14 +2642,6 @@
    "of": "tg:Bitrue_official/11258 (earn)"
   },
   {
-   "id": "tg:OKXAnnouncements/7428",
-   "venue": "OKX",
-   "title": "Bring your market view to the Anthropic IPO Carnival, with 250,000 USDT in rewards across our pre-IPO perps…",
-   "url": "https://www.okx.com/campaigns/anthropic-ipo-campaign?channelid=ACE505900",
-   "why": "small",
-   "netUsd": 4.17
-  },
-  {
    "id": "tg:coinwofficialchannel/8133",
    "venue": "CoinW",
    "title": "To celebrate the launch of ANT, linked to Anthropic, the company behind Claude, we’ve got 3 ways to earn…",
@@ -2646,7 +2663,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 27.625,
+   "perUserUsd": 27.57,
    "netUsd": -0.49
   },
   {
