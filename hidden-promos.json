@@ -1,5 +1,5 @@
 {
- "at": 1795850484340,
+ "at": 1795850696833,
  "items": [
   {
    "id": "kraken:https://blog.kraken.com/product/promotions/100000-kraken-pro-xstocks-trading-challenge",
@@ -1078,7 +1078,7 @@
    "title": "Binance Alpha Trading Competition: Trade Concrete (CT) and Share $200K Worth of Rewards (2026-11-27)",
    "url": "https://www.binance.com/en/support/announcement/detail/e6020e34cae84cb282b9e4dff1e0048c",
    "why": "small",
-   "perUserUsd": 52.48,
+   "perUserUsd": 52.7,
    "netUsd": 0.7
   },
   {
@@ -1111,7 +1111,7 @@
    "title": "Weekend Power Station: Register to Claim 75 XRP, Trade to Earn Another 150 XRP",
    "url": "https://www.gate.com/announcements/article/103027",
    "why": "raffle",
-   "perUserUsd": 141.69,
+   "perUserUsd": 141.63,
    "netUsd": -0.19
   },
   {
@@ -1127,7 +1127,7 @@
    "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
    "url": "https://www.gate.com/announcements/article/103024",
    "why": "small",
-   "perUserUsd": 67.5,
+   "perUserUsd": 67.6,
    "netUsd": 0.5
   },
   {
@@ -1208,7 +1208,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 915.6327050000001,
+   "perUserUsd": 915.1860549,
    "netUsd": -0.04
   },
   {
@@ -1359,7 +1359,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2204.4,
+   "perUserUsd": 2205.6,
    "netUsd": 0.53
   },
   {
@@ -1469,8 +1469,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5966.900000000001,
-   "netUsd": 118.84
+   "perUserUsd": 5971.900000000001,
+   "netUsd": 118.94
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1583,7 +1583,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1104.656,
+   "perUserUsd": 1105.664,
    "netUsd": 0.19
   },
   {
@@ -1750,7 +1750,7 @@
    "title": "LTC Trading Competition — Share 200 LTC!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64620266097817--LTC-Trading-Competition-Share-200-LTC",
    "why": "small",
-   "perUserUsd": 1410.56,
+   "perUserUsd": 1411.2,
    "netUsd": 0.38
   },
   {
@@ -1823,7 +1823,7 @@
    "title": "KCT Trading Competition — Share 19,940,180 KCT!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64568483041049--KCT-Trading-Competition-Share-19-940-180-KCT",
    "why": "small",
-   "perUserUsd": 1612,
+   "perUserUsd": 1613.2,
    "netUsd": 0.3
   },
   {
@@ -1889,7 +1889,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1373.8500000000001,
+   "perUserUsd": 1373.1000000000001,
    "netUsd": -0.6
   },
   {
@@ -2193,7 +2193,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 132.264,
+   "perUserUsd": 132.33599999999998,
    "netUsd": 2.52
   },
   {
@@ -2220,7 +2220,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5966.900000000001,
+   "perUserUsd": 5971.900000000001,
    "netUsd": 8.77
   },
   {
