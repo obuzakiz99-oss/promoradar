@@ -1,5 +1,5 @@
 {
- "at": 1795837380480,
+ "at": 1795839217708,
  "items": [
   {
    "id": "kraken:https://blog.kraken.com/product/promotions/100000-kraken-pro-xstocks-trading-challenge",
@@ -1054,8 +1054,8 @@
    "title": "Binance Alpha Trading Competition: Trade Concrete (CT) and Share $200K Worth of Rewards (2026-11-27)",
    "url": "https://www.binance.com/en/support/announcement/detail/e6020e34cae84cb282b9e4dff1e0048c",
    "why": "small",
-   "perUserUsd": 53.14,
-   "netUsd": 0.71
+   "perUserUsd": 53.87,
+   "netUsd": 0.72
   },
   {
    "id": "tg:MEXCofficialNews/38898",
@@ -1087,7 +1087,7 @@
    "title": "Weekend Power Station: Register to Claim 75 XRP, Trade to Earn Another 150 XRP",
    "url": "https://www.gate.com/announcements/article/103027",
    "why": "raffle",
-   "perUserUsd": 142.305,
+   "perUserUsd": 142.65,
    "netUsd": -0.18
   },
   {
@@ -1103,7 +1103,7 @@
    "title": "Daily Convert Program: Check In to Share 300,000 USDT and Win GT Rewards",
    "url": "https://www.gate.com/announcements/article/103024",
    "why": "small",
-   "perUserUsd": 69,
+   "perUserUsd": 68.8,
    "netUsd": 0.5
   },
   {
@@ -1184,7 +1184,7 @@
    "title": "TokenSpark — Biconomy × Clearpool: Share 400,000 CLEAR!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64773258141977--TokenSpark-Biconomy-Clearpool-Share-400-000-CLEAR",
    "why": "small",
-   "perUserUsd": 939.7518104000001,
+   "perUserUsd": 945.1116116000002,
    "netUsd": -0.03
   },
   {
@@ -1335,7 +1335,7 @@
    "title": "Spot Trading Tournament Season 12: Trade to Share Up to 400 BNB Token Vouchers",
    "url": "https://www.binance.com/en/support/announcement/detail/28ecba60435f4e35b7460e9ebc48ed48",
    "why": "small",
-   "perUserUsd": 2218.4,
+   "perUserUsd": 2222,
    "netUsd": 0.54
   },
   {
@@ -1454,8 +1454,8 @@
    "title": "Thanksgiving Fortune Frenzy — Trade, Spin & Win an iPhone 18 Pro Max, PS5 Pro + GTA VI & More!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64703476640409--Thanksgiving-Fortune-Frenzy-Trade-Spin-Win-an-iPhone-18-Pro-Max-PS5-Pro-GTA-VI-More",
    "why": "raffle",
-   "perUserUsd": 5996.96,
-   "netUsd": 119.44
+   "perUserUsd": 6003.18,
+   "netUsd": 119.56
   },
   {
    "id": "tg:Bitrue_official/11299",
@@ -1568,7 +1568,7 @@
    "title": "MON Trading Competition — Share 700,000 MON!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64664285362585--MON-Trading-Competition-Share-700-000-MON",
    "why": "small",
-   "perUserUsd": 1118.656,
+   "perUserUsd": 1116.6399999999999,
    "netUsd": 0.2
   },
   {
@@ -1882,7 +1882,7 @@
    "title": "ANTX & ANT Trading Carnival — Two Leaderboards, 20,000 USDT in Rewards!",
    "url": "https://biconomy.zendesk.com/hc/en-us/articles/64537604172953--ANTX-ANT-Trading-Carnival-Two-Leaderboards-20-000-USDT-in-Rewards",
    "why": "small",
-   "perUserUsd": 1373.7,
+   "perUserUsd": 1367.55,
    "netUsd": -0.6
   },
   {
@@ -2118,7 +2118,7 @@
    "title": "Phemex Turns 7 — AI Agent & Anniversary Lucky Draw!",
    "url": "https://t.me/Phemex_Announcements/7992",
    "why": "raffle",
-   "perUserUsd": 5996.96,
+   "perUserUsd": 6003.18,
    "netUsd": 250
   },
   {
@@ -2213,7 +2213,7 @@
    "title": "Trade Futures & Win: Complete Tasks to Share 200 BNB in Rewards!",
    "url": "https://www.binance.com/en/support/announcement/detail/846cac318e224304af0bcb4364305220",
    "why": "raffle",
-   "perUserUsd": 133.104,
+   "perUserUsd": 133.32,
    "netUsd": 2.54
   },
   {
@@ -2240,7 +2240,7 @@
    "title": "KuCoin PROOF: Tis the Season — Win Your Share of 550,000 USDT",
    "url": "https://www.kucoin.com/announcement/PROOFTisTheSeasonFuturesContest?lang=en_US",
    "why": "raffle",
-   "perUserUsd": 5996.96,
+   "perUserUsd": 6003.18,
    "netUsd": 8.77
   },
   {
@@ -2691,7 +2691,7 @@
    "title": "InfiniFi (INFI) Listing Campaign — 46,000 INFI Giveaway",
    "url": "https://www.kucoin.com/announcement/en-infinifi-infi-listing-campaign-46000-infi-giveaway?lang=en_US",
    "why": "small",
-   "perUserUsd": 26.825000000000003,
+   "perUserUsd": 26.425,
    "netUsd": -0.5
   },
   {
