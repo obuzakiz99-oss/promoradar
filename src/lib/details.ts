@@ -765,7 +765,7 @@ function dropTail(blocks: Block[], head: string): Block[] {
     // heading and Biconomy "— Try it now —" stayed in the rules — a bar of 5+ short "|" parts is links, not a table row
     if (b.t !== "tr" && (x.match(/\|/g) ?? []).length >= 5 && x.split("|").every((c) => c.trim().length <= 30)) continue;
     if (b.t !== "tr" && x.length <= 60 && /^(our socials|follow our socials|наші сторінки в соцмережах|наши страницы в соцсетях|наші соцмережі|наши соцсети)\s*[:：]?\s*$/iu.test(x)) continue;
-    if (b.t !== "tr" && x.length <= 200 && /^\W{0,4}(please )?(verify|check) the authenticity of (all )?(links|urls|websites)/i.test(x)) continue;   // OKX "‼️Please verify the authenticity of all links…"
+    if (b.t !== "tr" && x.length <= 200 && /^\W{0,4}(please )?(verify|check) the authenticity of (all )?([\w-]+ )?(links|urls|websites|channels)/i.test(x)) continue;   // OKX "‼️Please verify the authenticity of all links…"
     if (b.t !== "tr" && x.length <= 180 && /^\p{Extended_Pictographic}/u.test(x) && /\bstart your (earning )?journey\b|\band start earning\.?$/i.test(x)) continue;   // Biconomy "🔍 Search for … start your earning journey"
     if (b.t !== "tr" && x.length <= 40 && /^[—–-]+\s*(try it now|спробуйте зараз|попробуйте сейчас)!?\s*[—–-]+$/iu.test(x)) continue;
     if (/^(download|завантаження)\s*[:：]?\s*$/i.test(x)) continue;
